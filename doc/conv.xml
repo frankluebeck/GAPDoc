@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.5 2001-03-19 16:41:21 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.6 2001-06-06 14:39:17 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters</Heading>
@@ -231,8 +231,9 @@ useful strings and  go on with functions for parsing  and reformatting text.
 
 <#Include Label="SubstitutionSublist">
 
+<!-- moved into GAP library
 <#Include Label="NormalizedWhitespace">
-
+-->
 <#Include Label="StripBeginEnd">
 
 <#Include Label="StripEscapeSequences">

@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.4 2001-01-26 10:12:22 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.5 2001-06-06 14:39:17 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -389,12 +389,13 @@ end);
 ##  </ManSection>
 ##  <#/GAPDoc>
 ##  
-InstallGlobalFunction(NormalizedWhitespace, function(str)
-  local   res;
-  res := ShallowCopy(str);
-  NormalizeWhitespace(res);
-  return res;
-end);
+# moved into GAP library
+##  InstallGlobalFunction(NormalizedWhitespace, function(str)
+##    local   res;
+##    res := ShallowCopy(str);
+##    NormalizeWhitespace(res);
+##    return res;
+##  end);
 
 ##  <#GAPDoc Label="FormatParagraph">
 ##  <ManSection >

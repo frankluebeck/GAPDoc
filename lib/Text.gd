@@ -2,7 +2,7 @@
 ##
 #W  Text.gd                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gd,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $
+#H  @(#)$Id: Text.gd,v 1.2 2001-06-06 14:39:17 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -29,7 +29,6 @@ DeclareGlobalFunction("SubstitutionSublist");
 DeclareGlobalFunction("NumberDigits");
 DeclareGlobalFunction("DigitsNumber");
 DeclareGlobalFunction("StripBeginEnd");
-DeclareGlobalFunction("NormalizedWhitespace");
 DeclareGlobalFunction("FormatParagraph");
 DeclareGlobalFunction("StripEscapeSequences");
 DeclareGlobalFunction("WordsString");
