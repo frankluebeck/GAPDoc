@@ -2,7 +2,7 @@
 ##
 #W  Make.g                       GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Make.g,v 1.2 2001-01-17 15:31:20 gap Exp $
+#H  @(#)$Id: Make.g,v 1.3 2001-09-04 23:09:25 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -12,8 +12,18 @@
 ##  GAPDoc package.
 ##  
 
-BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname)
-  local  str, r, l, t, h, latex, null;
+##  args: path, main, files, bookname[, gaproot]
+BindGlobal("MakeGAPDocDoc", function(arg)
+  local path, main, files, bookname, gaproot, str, r, l, latex, null, t, h;
+  path := arg[1];
+  main := arg[2];
+  files := arg[3];
+  bookname := arg[4];
+  if IsBound(arg[5]) then
+    gaproot := arg[5];
+  else
+    gaproot := false;
+  fi;
   # ensure that path is directory object
   if IsString(path) then
     path := Directory(path);
@@ -67,7 +77,7 @@ BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname)
   PrintSixFile(Filename(path, "manual.six"), r, bookname);
   # produce html version
   Print("And finally the HTML version . . .\n");
-  h := GAPDoc2HTML(r, path);
+  h := GAPDoc2HTML(r, path, gaproot);
   GAPDoc2HTMLPrintHTMLFiles(h, path);
   if not IsExistingFile(Filename(path, "manual.html")) then
     Exec("sh -c \"cd ", Filename(path,""), "; ln -s chap0.html manual.html\"");

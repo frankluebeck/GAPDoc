@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.5 2001-01-24 14:05:12 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.6 2001-09-04 23:09:25 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -170,7 +170,7 @@ end;
 ##  
 ##  <#GAPDoc Label="GAPDoc2HTML">
 ##  <ManSection >
-##  <Func Arg="tree[, bibpath]" Name="GAPDoc2HTML" />
+##  <Func Arg="tree[, bibpath[, gaproot]]" Name="GAPDoc2HTML" />
 ##  <Returns>record  containing  HTML  files  as  strings  and  other
 ##  information</Returns>
 ##  <Description>
@@ -181,9 +181,16 @@ end;
 ##  HTML  version  of  the  document  which  can  be  read  with  any
 ##  Web-browser  and also  used with  &GAP;'s online  help (see  <Ref
 ##  BookName="Ref" Func="SetHelpViewer" />).  It includes title page,
-##  bibliography, and index. The  bibliography is made  from &BibTeX;
+##  bibliography, and  index. The bibliography is  made from &BibTeX;
 ##  databases.  Their  location  must  be  given  with  the  argument
-##  <A>bibpath</A> (as string or directory object).<P/>
+##  <A>bibpath</A>  (as string  or  directory object).  If the  third
+##  argument <A>gaproot</A> is given and is a string then this string
+##  is  interpreted  as  relative  path to  &GAP;'s  root  directory.
+##  Reference-URLs to external HTML-books  which begin with the &GAP;
+##  root path  are then  rewritten to start  with the  given relative
+##  path.  This  makes  the HTML-documentation  portable  provided  a
+##  package is  installed in some  standard location below  the &GAP;
+##  root.<P/>
 ##  
 ##  The  output is  a  record  with one  component  for each  chapter
 ##  (with  names   <C>"0"</C>,  <C>"1"</C>,  ...,   <C>"Bib"</C>, and
@@ -229,12 +236,11 @@ end;
 InstallGlobalFunction(GAPDoc2HTML, function(arg)
   local   r,  str,  linelength,  name;
   r := arg[1];
-  if Length(arg)=2 then
+  if Length(arg) > 1 then
     str := arg[2];
   else 
     str := [];
   fi;
-  
   if r.name = "WHOLEDOCUMENT" then
     if IsDirectory(str) then
       r.bibpath := str;
@@ -242,6 +248,11 @@ InstallGlobalFunction(GAPDoc2HTML, function(arg)
       r.bibpath := Directory(str);
     fi;
     str := [];
+    if Length(arg) > 2 and IsString(arg[3]) then
+      GAPDoc2HTMLProcs.RelPath := arg[3];
+    else
+      Unbind(GAPDoc2HTMLProcs.RelPath);
+    fi;
   fi;
 
   name := r.name;
@@ -1084,9 +1095,14 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
   if IsBound(r.attributes.BookName) then
     ref := GAPDoc2HTMLProcs.ResolveExternalRef(r.attributes.BookName, lab, 1);
     if ref <> fail and ref[6] <> fail then
+      if IsBound(GAPDoc2HTMLProcs.RelPath) and 
+         PositionSublist(ref[6], GAP_ROOT_PATHS[1]) = 1 then
+         ref[6] := Concatenation(GAPDoc2HTMLProcs.RelPath, "/", 
+                   ref[6]{[Length(GAP_ROOT_PATHS[1])+1..Length(ref[6])]});
+      fi;
       ref := Concatenation("<a href=\"", ref[6], "\"><b>", ref[1],
              "</b></a>");
-    elif ref <> fail then
+  elif ref <> fail then
       ref := Concatenation("<b>", ref[1], "</b>");
     else
       ref := Concatenation("<b>", "???", "</b>");
@@ -1109,7 +1125,7 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
     attr := GAPDoc2HTMLProcs.TextAttr.Func;
     txt := Concatenation(attr[1], r.attributes.(int[1]), attr[2]);
     # avoid reference to current subsection
-    if IsBound(r.root.labels.(lab)) and GAPDoc2HTMLProcs.SectionNumber(
+    if not IsBound(r.root.labels.(lab)) or GAPDoc2HTMLProcs.SectionNumber(
                         r.count, "Subsection") <> r.root.labels.(lab)[1] then
       Append(txt, Concatenation(" (", ref, ")"));
     fi;

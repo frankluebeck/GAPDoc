@@ -2,7 +2,7 @@
 ##
 #W  HelpBookHandler.g                GAPDoc                      Frank Lübeck
 ##
-#H  @(#)$Id: HelpBookHandler.g,v 1.5 2001-06-11 08:04:28 gap Exp $
+#H  @(#)$Id: HelpBookHandler.g,v 1.6 2001-09-04 23:09:25 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -156,7 +156,8 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
     fi;
     label := Concatenation("#s", String(a[3][2]),
                      "ss", String(a[3][3]));
-    return Concatenation("file://", fname, label);
+    # ??? return Concatenation("file:", fname, label);
+    return Concatenation("", fname, label);
   fi;
   
   if type = "dvi" then

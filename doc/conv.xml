@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.6 2001-06-06 14:39:17 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.7 2001-09-04 23:09:25 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters</Heading>
@@ -141,7 +141,7 @@ gap> GAPDoc2HTMLPrintHTMLFiles(h, path);
 </Log>
 
 <ManSection >
-<Func Arg="path, main, files, bookname" Name="MakeGAPDocDoc" />
+<Func Arg="path, main, files, bookname[, gaproot]" Name="MakeGAPDocDoc" />
 
 <Description>
 This  function  collects  all  the commands  for  producing  a  <C>dvi</C>-,
@@ -154,7 +154,10 @@ without the  <C>.xml</C> extension. The  argument <A>files</A> is a  list of
 (probably source code) files relative to <A>path</A> which contain pieces of
 documentation which must be included  in the document, see Chapter&nbsp;<Ref
 Chap="Distributing"/>. And <A>bookname</A>  is the name of the  book used by
-&GAP;'s online help.
+&GAP;'s online help.  The optional argument <A>gaproot</A> must  be a string
+which gives the relative path from  <A>path</A> to the &GAP; root directory.
+If  this is  given,  the HTML  files  are produced  with  relative paths  to
+external books.
 </Description>
 </ManSection>
 </Section>
