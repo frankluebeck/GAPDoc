@@ -1,7 +1,7 @@
 
 ##  GAPDoc                                             Frank Lübeck
 ##  
-##  $Id: Examples.g,v 1.2 2004-07-16 21:24:38 gap Exp $
+##  $Id: Examples.g,v 1.3 2005-03-01 14:13:45 gap Exp $
 ##  
 ##  Some utilities to extract contents of some elements. (First
 ##  experimental.)
@@ -79,7 +79,8 @@ end;
 ##  
 ##  # example:
 ##  
-##  path := DirectoriesPackageLibrary("singular", "doc/tmp");
+##  path := DirectoriesPackageLibrary("singular", "doc");
+##  SizeScreen([80,]);
 ##  TstExamples2( path, "singular", [] );
 ##  
 
