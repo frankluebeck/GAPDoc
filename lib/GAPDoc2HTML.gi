@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.25 2004-01-26 09:40:11 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.26 2004-03-05 16:22:38 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -552,9 +552,16 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
       Exec("rm -f tempCONV.html; ttm -L -r tempCONV.tex > tempCONV.html");
     elif r.mathmode = "Tth" then
       Print("tth.\n");
-      Exec("rm -f tempCONV.html; tth -w2 -r tempCONV.tex > tempCONV.html");
+      Exec("rm -f tempCONV.html; tth -w2 -r -u tempCONV.tex > tempCONV.html");
     fi; 
     math := StringFile("tempCONV.html");
+    # correct the <var> tags
+    math := SubstitutionSublist(math, "&lt; var &gt;", "<var>");
+    math := SubstitutionSublist(math, "&lt; /var &gt;", "</var>");
+    math := SubstitutionSublist(math, 
+                  "<mo>&lt;</mo><mi>var</mi><mo>&gt;</mo>", "<var>");
+    math := SubstitutionSublist(math, 
+                  "<mo>&lt;</mo><mo>/</mo><mi>var</mi><mo>&gt;</mo>", "</var>");
     r.MathList := [];
     pos := PositionSublist(math, "TeXFormulaeDelim");
     while pos <> fail do
