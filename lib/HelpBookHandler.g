@@ -2,7 +2,7 @@
 ##
 #W  HelpBookHandler.g                GAPDoc                      Frank Lübeck
 ##
-#H  @(#)$Id: HelpBookHandler.g,v 1.3 2001-01-26 10:12:22 gap Exp $
+#H  @(#)$Id: HelpBookHandler.g,v 1.4 2001-06-07 20:30:34 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -161,6 +161,12 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
   if type = "pdf" then
     return rec(file := info.pdffile, page := a[5]);
   fi;
+
+  if type = "secnr" then
+    return a{[3,2]};
+  fi;
+
+  return fail;
 end;
 
 ##  for ?<<,  ?>>,  ?<  and  ?>
