@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.24 2003-08-29 12:20:28 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.25 2004-01-26 09:40:11 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1620,7 +1620,8 @@ GAPDoc2HTMLProcs.Row := function(r, str, al)
       s := Concatenation(Filtered(s, IsString));
     fi;
     # throw away <p> tags in table entries
-    if s{[1..3]} = "<p>" and s{[Length(s)-5..Length(s)]} = "</p>\n\n" then
+    if Length(s) > 5 and s{[1..3]} = "<p>" and 
+                         s{[Length(s)-5..Length(s)]} = "</p>\n\n" then
       s := s{[4..Length(s)-6]};
     fi;
     Append(str, Concatenation("<td class=", al[i], ">", s, "</td>\n"));
