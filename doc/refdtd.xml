@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.3 2001-01-18 14:31:40 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.4 2001-01-19 09:33:09 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -10,7 +10,7 @@ Appendix&nbsp;<Ref Appendix="GAPDocdtd" />.<P/>
 
 We do  not give many examples  in this chapter  which is more intended  as a
 formal  reference for  all &GAPDoc;  elements. Instead  we provide  an extra
-document with book name <C>GAPDocExample</C> (also excessible from the &GAP;
+document with book name <C>GAPDocExample</C> (also accessible from the &GAP;
 online  help). This  uses  all  the constructs  introduced  in this  chapter
 and  you can  easily  compare the  source  code  and how  it  looks like  in
 the  different output  formats. Furthermore  recall that  many basic  things
@@ -66,11 +66,11 @@ A &GAPDoc; document contains on its  top level exactly one element with name
 </Listing>
 
 After the  keyword <C>ELEMENT</C> and the  name <C>Book</C> there is  a list
-in  parantheses.  This is  a  comma  separated  list  of names  of  elements
+in  parentheses.  This is  a  comma  separated  list  of names  of  elements
 which  can occur  (in  the given  order)  in the  content  of a  <C>Book</C>
 element.  Each  name  in  such  a  list  can  be  followed  by  one  of  the
 characters <Q><C>?</C></Q>, <Q><C>*</C></Q> or <Q><C>+</C></Q>, meaning that
-the corresponding element  can occur zero or one time,  an arbritrary number
+the corresponding element  can occur zero or one time,  an arbitrary  number
 of times,  or at least once,  respectively. Without such an  extra character
 the corresponding  element must occur exactly  once. Instead of one  name in
 this  list  there  can  also  be  a list  of  elements  names  separated  by
@@ -85,7 +85,7 @@ then  zero  or more  elements  of  type  <C>Appendix</C>, then  an  optional
 
 Note that <Emph>only</Emph> these elements are allowed in the content of the
 <C>Book</C> element.  No other elements  or text  is allowed in  between. An
-execption of this is that there may be whitespace between the end tag of one
+exception of this is that there may be whitespace between the end tag of one
 and the  start tag of  the next  element - this  should be ignored  when the
 document is processed to some output format. An element like this is called
 an element with <Q>element content</Q>.<P/>
@@ -136,7 +136,7 @@ DTD. It is defined as follows:
 <Listing Type="From gapdoc.dtd">
 <![CDATA[<!ENTITY % Text "%InnerText; | List | Enum | Table">]]>
 </Listing>
-This means, that every occurance of <Q><C>&percent;Text;</C></Q> in the DTD 
+This means, that every occurrence of <Q><C>&percent;Text;</C></Q> in the DTD 
 is replaced by the expression 
 <Label Name="Innertext"/>
 <Listing Type="From gapdoc.dtd"><![CDATA[%InnerText; | List | Enum | Table]]>
@@ -353,7 +353,7 @@ everywhere  in the  body of  the document  (and not  only within  sections).
 Secondly, the  chapter level may be  omitted. The exact rules  are described
 below. <P/>
 
-<E>Appendices</E>   are   a  flavor   of   chapters,   occuring  after   all
+<E>Appendices</E>   are   a  flavor   of   chapters,  occurring  after   all
 regular   chapters.  There   is  a   special  type   of  subsection   called
 <Q><C>ManSection</C></Q>. This is a subsection devoted to the description of
 a function, operation or variable. It is  analogous to a manpage in the UNIX
@@ -579,7 +579,7 @@ commas.<P/>
 
 The  name of  the function  is  also used  as label  for cross  referencing.
 When  the name  of the  function  appears in  the  text of  the document  it
-should <E>always</E>be  written with  the <C>Ref</C>  element, see&nbsp;<Ref
+should <E>always</E> be written with  the <C>Ref</C>  element, see&nbsp;<Ref
 Subsect="Ref" />. This allows to use a unique typesetting style for function
 names and automatic cross referencing.<P/>
 
@@ -830,7 +830,7 @@ The optional attribute <C>Style</C> can take only the values <C>Text</C> and
 controls, whether an explicit section  number is generated or text. Normally
 all references to sections generate numbers and references to a &GAP; object
 generate the name  of the corresponding object with some  additional link or
-sectioning information,  which is  the behaviour of  <C>Style="Text"</C>. In
+sectioning information,  which is  the behavior  of  <C>Style="Text"</C>. In
 case  <C>Style="Number"</C>  in all  cases  an  explicit section  number  is
 generated. So
 
@@ -1179,7 +1179,7 @@ element.
 </Listing>
 
 This  element  is  used  to  mark   something  as  a  <E>filename</E>  or  a
-<E>pathname</E> in  the filesystem. No  further markup elements  are allowed
+<E>pathname</E> in  the file system. No further markup elements  are allowed
 within this element.
 
 </Subsection>
@@ -1253,7 +1253,7 @@ It may appear in the output.
 </Listing>
 
 These two elements behave exactly  like the <C>Listing</C> element (see <Ref
-Subsect="Listing"/>). They are thought for protocolls of &GAP; sessions. The
+Subsect="Listing"/>). They are thought for protocols  of &GAP; sessions. The
 only difference between the two is that <C>Example</C> sections are intended
 to be subject  to an automatic manual checking mechanism  used to ensure the
 correctness of the &GAP; manual whereas <C>Log</C> is not touched by this.

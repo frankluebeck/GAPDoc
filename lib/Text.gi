@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.2 2001-01-18 14:31:41 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.3 2001-01-19 09:33:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -22,7 +22,7 @@
 ##  <Var Name="HEXDIGITS" />
 ##  <Description>
 ##  These variables contain sets of characters which are useful for
-##  textprocessing. They are defined as follows.<P/>
+##  text processing. They are defined as follows.<P/>
 ##  <List >
 ##  <Mark>WHITESPACE</Mark>
 ##  <Item><C>" &bslash;n&bslash;t&bslash;r"</C></Item>
@@ -74,7 +74,7 @@ InstallValue(HEXDIGITS, "0123456789ABCDEFabcdef");
 ##  your terminal configuration.<P/>
 ##  
 ##  The  escape  sequence <C>.delline</C>  deletes  the  content of  the
-##  current line and  <C>.home</C> moves the curser to  the beginning of
+##  current line and  <C>.home</C> moves the cursor to  the beginning of
 ##  the current line.
 ##  
 ##  <Listing Type="Example">
@@ -171,10 +171,10 @@ end);
 ##  Here <A>str</A> must  be a string and <A>delim</A>  a string with
 ##  two  different characters.  This function  searches the  smallest
 ##  position   <C>r</C>  of   the  character   <C><A>delim</A>[2]</C>
-##  in   <A>str</A>   such  that   the   number   of  occurences   of
+##  in   <A>str</A>   such  that   the   number   of  occurrences  of
 ##  <C><A>delim</A>[2]</C>    in    <A>str</A>   between    positions
 ##  <C><A>pos</A>+1</C>  and  <C>r</C> is  by  one  greater than  the
-##  corresponding number of occurences of <C><A>delim</A>[1]</C>.<P/>
+##  corresponding number of occurrences of <C><A>delim</A>[1]</C>.<P/>
 ##  
 ##  If such an <C>r</C> exists, it is returned. Otherwise <K>fail</K>
 ##  is returned.
@@ -220,14 +220,14 @@ end);
 ##  <Func Arg="list, sublist, new[, flag]" Name="SubstitutionSublist" />
 ##  <Returns>the changed list</Returns>
 ##  <Description>
-##  This function looks for (non-overlapping) occurences of a sublist
+##  This function looks for (non-overlapping) occurrences of a sublist
 ##  <A>sublist</A> in a list <A>list</A> (compare <Ref BookName="ref"
 ##  Oper="PositionSublist"  />) and  returns a  list where  these are
 ##  substituted with the list <A>new</A>.<P/>
 ##  
 ##  The  optional argument  <A>flag</A>  can  either be  <C>"all"</C>
 ##  (this is the default if not given) or <C>"one"</C>. In the second
-##  case only  the first occurence of  <A>sublist</A> is substituted.
+##  case only  the first occurrence of <A>sublist</A> is substituted.
 ##  <P/>
 ##  
 ##  If <A>sublist</A> does not  occur in <A>list</A> then <A>list</A>

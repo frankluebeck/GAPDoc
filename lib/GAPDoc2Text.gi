@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.4 2001-01-18 14:31:41 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.5 2001-01-19 09:33:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -214,7 +214,7 @@ end;
 ##  this is your <F>.gaprc</F> file).<P/>
 ##  
 ##  With the optional argument <A>width</A> a different length of the
-##  output text lines can be choosen. The default is 76 and all lines
+##  output text lines can be chosen.  The default is 76 and all lines
 ##  in the resulting text start with two spaces. This looks good on a
 ##  terminal with a standard width  of 80 characters and you probably
 ##  don't want to use this argument.

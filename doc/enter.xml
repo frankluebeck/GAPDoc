@@ -1,4 +1,4 @@
-<!-- $Id: enter.xml,v 1.2 2001-01-18 14:31:40 gap Exp $ -->
+<!-- $Id: enter.xml,v 1.3 2001-01-19 09:33:09 gap Exp $ -->
 <Chapter Label="HowEnter">
 <Heading>How To Type a &GAPDoc; Document</Heading>
 
@@ -52,7 +52,7 @@ see Subsection&nbsp;<Ref Subsect="GDent" /> below.)
 
 A   <Q>comment</Q>    in   XML   starts   with    the   character   sequence
 <Q><C>&tlt;!--</C></Q> and ends with the sequence <Q><C>--></C></Q>. Between
-these sequences there must not be two adjacent dashs <Q><C>--</C></Q>.
+these sequences there must not be two adjacent dashes <Q><C>--</C></Q>.
 
 </Subsection>
 
@@ -77,7 +77,7 @@ actual content.
 A <Q>name</Q> in XML (used for element and attribute identifiers, see below)
 must  start with  a letter  (in  the encoding  of  the document)  or with  a
 colon  <Q><C>:</C></Q> or  underscore <Q><C>&uscore;</C></Q>  character. The
-following  characters may  also  be digits,  dots  <Q><C>.</C></Q> or  dashs
+following  characters may  also  be digits,  dots  <Q><C>.</C></Q> or dashes
 <Q><C>-</C></Q>.<P/>
 
 This is  a simplified description  of the rules  in the standard,  which are
@@ -118,7 +118,7 @@ not  contain  the type  of  quote  used as  a  delimiter  or the  characters
 
 Note  especially  that  no  whitespace   is  allowed  between  the  starting
 <C>&tlt;</C> character and the element name or around the <Q><C>=</C></Q> of
-an attribute. The  quotes around an attribute value cannot  be ommitted. The
+an attribute. The  quotes around an attribute value cannot  be  omitted. The
 names of elements and attributes are <E>case sensitive</E>. 
 </Subsection>
 

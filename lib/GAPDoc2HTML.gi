@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.3 2001-01-18 14:31:41 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.4 2001-01-19 09:33:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -187,7 +187,7 @@ end;
 ##  
 ##  <List >
 ##  <Mark><C>text</C></Mark>
-##  <Item>the text of an HTML file  containig the whole chapter (as a
+##  <Item>the text of an HTML file containing the whole chapter (as a
 ##  string)</Item>
 ##  <Mark><C>ssnr</C></Mark>
 ##  <Item>list of subsection numbers in  this chapter (like <C>[3, 2,
@@ -1321,7 +1321,7 @@ GAPDoc2HTMLProcs.Caption1 := function(r, str)
   Append(str, "<br>\n");
 end;
 
-# cannot be choosen in HTML
+# cannot be chosen in HTML
 GAPDoc2HTMLProcs.HorLine := function(r, str)
 end;
 
@@ -1363,7 +1363,7 @@ end;
 ##  this   as   an   argument   for  one   of   the   commands   <Ref
 ##  BookName="Ref"  Func="DeclarePackageDocumentation"   />  or  <Ref
 ##  BookName="Ref"   Func="DeclarePackageAutoDocumentation"  />.   To
-##  tell  &GAP;  that   the  HTML  version  is   accesible  you  have
+##  tell  &GAP;  that   the  HTML  version  is  accessible  you  have
 ##  to  add  a  file  <F>manual.html</F>   which  is  a  link  to  or
 ##  a  copy   of  <F>chap0.html</F>.  You   may  also  want   to  put
 ##  a   file  <F>manual.css</F>   into  that   directory,  see   <Ref

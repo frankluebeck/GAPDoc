@@ -1,4 +1,4 @@
-<!-- $Id: distr.xml,v 1.1.1.1 2001-01-05 13:37:49 gap Exp $ -->
+<!-- $Id: distr.xml,v 1.2 2001-01-19 09:33:09 gap Exp $ -->
 <Chapter Label="Distributing">
 <Heading>Distributing a Document into Several Files</Heading>
 
@@ -59,7 +59,7 @@ sequence of lines stored under the label <C>Key</C>.
 </Item>
 
 <Item>
-Additionally, every occurance of a statement of the form
+Additionally, every occurrence of a statement of the form
 <Q><C>&tlt;&hash;Include SYSTEM "Filename"&tgt;</C></Q> is replaced by the
 whole file stored under the name <C>Filename</C> in the file system.
 </Item>
