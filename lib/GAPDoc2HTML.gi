@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.29 2004-05-06 13:13:33 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.30 2005-03-09 22:29:01 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1384,7 +1384,11 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
        int[1] in [ "Sect", "Subsect", "Chap", "Appendix"] and 
        IsBound(r.attributes.Style) and
        r.attributes.Style = "Text" then
-    txt := Concatenation("<b>", r.root.labeltexts.(lab), "</b>");
+    if IsBound(r.root.labeltexts.(lab)) then
+      txt := Concatenation("<b>", r.root.labeltexts.(lab), "</b>");
+    else
+      txt := "<b>???</b>";
+    fi;
     Append(txt, Concatenation(" (", ref, ")"));
   else
     txt := ref;

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.15 2004-09-06 13:54:28 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.16 2005-03-09 22:29:01 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -250,8 +250,17 @@ GAPDoc2LaTeXProcs.WHOLEDOCUMENT := function(r, str)
     fi;
     i := i+1;
   od;
-  ##  collect headings of labeled sections
+  ##  collect headings of labeled sections, here we must run through the
+  ##  whole parse tree first to know the headings of text style forward
+  ##  references
   GAPDoc2LaTeXProcs._labeledSections := rec();
+  ApplyToNodesParseTree(r, function(rr) 
+    if IsRecord(rr) and IsBound(rr.name)
+       and rr.name in ["Chapter", "Section", "Subsection", "Appendix"] then
+      # save heading for "Text" style references to section
+      GAPDoc2LaTeXProcs.(rr.name)(rr,"");
+    fi;
+  end);
 
   ##  now the actual work starts, we give the found processing instructions
   ##  to the Book handler
@@ -947,8 +956,12 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
         ref := Concatenation(" (\\textbf{", ref[1], "})");
       fi;
     elif IsBound(r.attributes.Style) and r.attributes.Style = "Text" then
+      if IsBound(GAPDoc2LaTeXProcs._labeledSections.(lab)) then
         ref := Concatenation("`", StripBeginEnd(
                 GAPDoc2LaTeXProcs._labeledSections.(lab), WHITESPACE), "'"); 
+      else
+        ref := "`???'";
+      fi;
     else
       # with sectioning references Label must be given
       lab := r.attributes.(int[1]);
