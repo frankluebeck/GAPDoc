@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.6 2002-05-20 22:08:57 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.7 2002-10-16 11:40:13 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -688,7 +688,7 @@ GAPDoc2LaTeXProcs.B := function(r, str)
 end;
 
 ##  verbatim GAP session
-GAPDoc2LaTeXProcs.ExampleSimple := function(r, str)
+GAPDoc2LaTeXProcs.Verb := function(r, str)
   local   cont,  a,  s;
   Append(str, "\n\\begin{verbatim}");
   cont := "";
@@ -707,6 +707,7 @@ GAPDoc2LaTeXProcs.ExampleSimple := function(r, str)
   Append(str, cont);
   Append(str, "\\end{verbatim}\n");
 end;
+
 GAPDoc2LaTeXProcs.ExampleLike := function(r, str, label)
   local   cont,  a,  s;
   Append(str, Concatenation("\n\\begin{Verbatim}[fontsize=\\small,",
