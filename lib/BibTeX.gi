@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.8 2002-04-21 22:42:30 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.9 2002-05-20 22:08:57 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -485,7 +485,7 @@ end);
 
 ##  arg: r[, i]  (for link to BibTeX)
 InstallGlobalFunction(PrintBibAsHTML, function(arg)
-  local   r,  i;
+  local   r,  i, str;
   r := arg[1];
   if Length(arg)=2 then
     i := arg[2];
@@ -497,6 +497,16 @@ InstallGlobalFunction(PrintBibAsHTML, function(arg)
     Print("Error: entry has no label . . .\n");
     return;
   fi;
+
+  # remove SGML markup characters
+  r := ShallowCopy(r);
+  for i in NamesOfComponents(r) do
+    str := "";
+    GAPDoc2HTMLProcs.PCDATAFILTER(rec(content := r.(i)), str);
+    if str <> r.(i) then
+      r.(i) := str;
+    fi;
+  od;
   
   if IsBound(r.mrnumber) then
 ##      Print("<p>\n[<a href=\"http://www.ams.org/mathscinet-getitem?mr=",

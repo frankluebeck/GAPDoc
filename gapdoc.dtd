@@ -4,7 +4,7 @@
      By Frank Lübeck and Max Neunhöffer
      ================================================================== -->
 
-<!-- $Id: gapdoc.dtd,v 1.5 2002-05-02 20:39:58 gap Exp $ -->
+<!-- $Id: gapdoc.dtd,v 1.6 2002-05-20 22:08:57 gap Exp $ -->
 
 <!-- Note that this definition goes "bottom-up" because entities can only
      be used after their definition in the file. -->
@@ -76,12 +76,12 @@
 <!ENTITY % InnerText "#PCDATA |
                       Alt |
                       Emph | E |
-                      Par | P | 
+                      Par | P | Br |
                       Keyword | K | Arg | A | Quoted | Q | Code | C | 
                       File | F | Button | B | Package |
                       M | Math | Display | 
                       Example | Listing | Log | Verb |
-                      URL | Email | Homepage | Cite | Label | 
+                      URL | Email | Homepage | Address | Cite | Label | 
                       Ref | Index" >
 
 
@@ -101,8 +101,11 @@
 <!-- The following is an empty element marking a paragraph boundary. -->
 
 <!ELEMENT Par EMPTY>    <!-- this is intentionally empty! -->
-<!ELEMENT P EMPTY>      <!-- this is intentionally empty! -->
+<!ELEMENT P EMPTY>      <!-- the same as shortcut  -->
 
+<!-- And a weak form of it, a forced line break. -->
+
+<!ELEMENT Br EMPTY>
 
 <!-- The following elements mark a word or sentence to be of a certain
      kind, such that it can  be typeset differently. They are terminal
@@ -179,6 +182,11 @@
 <!ELEMENT Email (#PCDATA|Alt)*>
 <!ELEMENT Homepage (#PCDATA|Alt)*>
 
+<!-- Those who still want to give postal addresses can use the following
+     element. Use <Br/> for specifying typical line breaks  -->
+
+<!ELEMENT Address (#PCDATA|Alt|Br)*>
+
 <!ELEMENT Cite EMPTY>
 <!ATTLIST Cite Key CDATA #REQUIRED
                Where CDATA #IMPLIED>
@@ -251,12 +259,14 @@
 
 <!-- The TitlePage consists of several sub-elements: -->
 
-<!ELEMENT TitlePage (Title, Subtitle?, Version?, Author+, Date?, Abstract?,
-                     Copyright? , Acknowledgements? , Colophon? )>
+<!ELEMENT TitlePage (Title, Subtitle?, Version?, TitleComment?, 
+                     Author+, Date?, Address?, Abstract?, Copyright?, 
+                     Acknowledgements? , Colophon? )>
 
 <!ELEMENT Title (%Text;)*>
 <!ELEMENT Subtitle (%Text;)*>
 <!ELEMENT Version (%Text;)*>
+<!ELEMENT TitleComment (%Text;)*>
 <!ELEMENT Author (%Text;)*>    <!-- There may be more than one Author! -->
 <!ELEMENT Date (%Text;)*>
 <!ELEMENT Abstract (%Text;)*>

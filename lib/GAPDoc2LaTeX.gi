@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.5 2002-05-15 23:07:20 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.6 2002-05-20 22:08:57 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -337,25 +337,34 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
     GAPDoc2LaTeXContent(l[1], str);
     Append(str, "}\\\\[1cm]\n");
   fi;
-  Append(str, "\\mbox{}\\\\[3cm]\n");
+  Append(str, "\\mbox{}\\\\[2cm]\n");
 
   # author name(s)
   l := Filtered(r.content, a-> a.name = "Author");
   for a in l do
     Append(str, "{\\large \\textbf{");
     GAPDoc2LaTeXContent(rec(content := Filtered(a.content, b->
-                        not b.name in ["Email", "Homepage"])), str);
+                   not b.name in ["Email", "Homepage", "Address"])), str);
     Append(str, "}}\\\\\n");
   od;
+
+  # extra comment for front page
+  l := Filtered(r.content, a-> a.name = "TitleComment");
+  if Length(l) > 0 then
+    Append(str, "\\mbox{}\\\\[2cm]\n\\begin{minipage}{12cm}\\noindent\n");
+    GAPDoc2LaTeXContent(l[1], str);
+    Append(str, "\\end{minipage}\n\n");
+  fi;
   Append(str, "\\end{center}\\vfill\n\n\\mbox{}\\\\\n");
   
-  # email and WWW-homepage of author(s), if given
+  # email, WWW-homepage and address of author(s), if given
+  l := Filtered(r.content, a-> a.name = "Author");
   for a in l do
     cont := List(a.content, b-> b.name);
-    if "Email" in cont or "Homepage" in cont then
-      Append(str, "{\\small \\noindent \\textbf{");
+    if "Email" in cont or "Homepage" in cont or "Address" in cont then
+      Append(str, "{\\mbox{}\\\\\n\\small \\noindent \\textbf{");
       GAPDoc2LaTeXContent(rec(content := Filtered(a.content, b->
-                             not b.name in ["Email", "Homepage"])), str);
+                   not b.name in ["Email", "Homepage", "Address"])), str);
       Append(str, "}");
       if "Email" in cont then
         Append(str, " --- Email: ");
@@ -366,9 +375,25 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
         Append(str, " --- Homepage: ");
         GAPDoc2LaTeX(a.content[Position(cont, "Homepage")], str);
       fi;
+      if "Address" in cont then
+        Append(str, "\\\\\n");
+        Append(str, " --- Address: \\begin{minipage}[t]{8cm}\\noindent\n");
+        GAPDoc2LaTeX(a.content[Position(cont, "Address")], str);
+        Append(str, "\\end{minipage}\n");
+      fi;
       Append(str, "}\\\\\n");
     fi;
   od;
+
+  # Address outside the Author elements
+  l := Filtered(r.content, a-> a.name = "Address");
+  if Length(l)>0 then
+    Append(str, "\n\\noindent ");
+    Append(str, "\\textbf{Address: }\\begin{minipage}[t]{8cm}\\noindent\n");
+    GAPDoc2LaTeXContent(l[1], str);
+    Append(str, "\\end{minipage}\n");
+  fi;
+  
   Append(str, "\\end{titlepage}\n\n\\newpage");
   
   #  to make physical page numbers same as document page numbers
@@ -566,6 +591,11 @@ end;
 ##  end of paragraph 
 GAPDoc2LaTeXProcs.P := function(r, str)
   Append(str, "\n\n");
+end;
+
+##  forced line break
+GAPDoc2LaTeXProcs.Br := function(r, str)
+  Append(str, "\\\\\n");
 end;
 
 ##  setting in typewriter
@@ -946,6 +976,11 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
   fi;
   Append(str, ref);
   return;
+end;
+
+# just process
+GAPDoc2LaTeXProcs.Address := function(r, str)
+  GAPDoc2LaTeXContent(r, str);
 end;
 
 GAPDoc2LaTeXProcs.Description := function(r, str)

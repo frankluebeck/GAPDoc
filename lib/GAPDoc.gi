@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.5 2001-07-20 13:59:25 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.6 2002-05-20 22:08:57 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -177,7 +177,8 @@ InstallGlobalFunction(AddParagraphNumbersGapDocTree, function(r)
   # these elements are paragraphs  
   parels := [ "List", "Enum", "Table", "Item", "Heading", "Attr", "Fam", 
               "Filt", "Func", "InfoClass", "Meth", "Oper", "Prop", "Var",
-              "Display", "Example", "Listing", "Log"];
+              "Display", "Example", "Listing", "Log", "Address", 
+              "TitleComment"];
   # reset counter
   cssp := [0, 0, 0, 1];
   # the counter setting recursive function
@@ -194,7 +195,7 @@ InstallGlobalFunction(AddParagraphNumbersGapDocTree, function(r)
         elif a.name in ["Subsection", "ManSection", "Abstract", "Copyright",
                 "TableOfContents", "Acknowledgements", "Colophon"] then
           cssp := [cssp[1], cssp[2], cssp[3]+1, 1];
-        elif a.name = "P" or a.name in parels then
+        elif a.name in ["P", "Par"] or a.name in parels then
           cssp := [cssp[1], cssp[2], cssp[3], cssp[4]+1];
         elif a.name = "Appendix" then
           # here we number with capital letters

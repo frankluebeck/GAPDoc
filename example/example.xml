@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- $Id: example.xml,v 1.6 2002-04-21 22:42:30 gap Exp $ -->
+<!-- $Id: example.xml,v 1.7 2002-05-20 22:08:57 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
  [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&tgt;</Alt>'>]>
@@ -11,16 +11,28 @@
   <Title>A Complete Example (&see; <Ref Sect="One"/>)</Title>
   <Subtitle>Every element shows up</Subtitle>
   <Version>Version 1.0</Version>
+  <TitleComment>
+  If the subtitle ist not sufficient, this &tlt;TitleComment&tgt; 
+  element can be used for a slightly longer text on the front page.
+  </TitleComment>
   <Author>Frank Lübeck 
           <Email>Frank.Luebeck@Math.RWTH-Aachen.De</Email> 
+  <Address>
+  Lehrstuhl D für Mathematik<Br/> Templergraben 
+  64<Br/> 52062 Aachen<Br/> (Germany)
+  </Address>
   </Author>
   <Author>Max Neunhöffer
           <Email>Max.Neunhoeffer@Math.RWTH-Aachen.De</Email>
   </Author>
   <Date>December 2000</Date>
+  <Address>
+  Lehrstuhl D für Mathematik<Br/> Templergraben 
+  64<Br/> 52062 Aachen<Br/> (Germany)
+  </Address>
   <Abstract>This document tries to use all elements that exist in &GAPDoc;.
             In addition, the final output not only contains the usual
-            content, but also an appendix with the source text. There
+            content, but also an appendix<Br/> with the source text. There
             are also links from the usual content to the corresponding
             source text. This should enable new users to learn &GAPDoc;
             quickly.

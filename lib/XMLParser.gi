@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.7 2002-05-02 20:39:58 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.8 2002-05-20 22:08:57 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -491,8 +491,8 @@ end);
 ##  This function parses an  XML-document stored in string <A>str</A>
 ##  and returns the document in form of a tree.<P/>
 ##  
-##  A node in  this tree looks corresponds either to  an XML element,
-##  or some  parsed character  data. In  the first  case it  looks as
+##  A node in  this tree either  corresponds to  an XML element,
+##  or to some  parsed character  data. In  the first  case it  looks as
 ##  follows:
 ##  
 ##  <Listing Type="Example Node">

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.9 2001-11-16 15:20:48 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.10 2002-05-20 22:08:57 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -65,12 +65,12 @@ GAPDoc2TextProcs.TextAttr.Emph := Concatenation(TextAttr.normal, TextAttr.6);
 GAPDoc2TextProcs.TextAttr.Ref := TextAttr.bold;
 
 GAPDoc2TextProcs.ParEls := 
-[ "Display", "Example", "Log", "Listing", "List", "Enum", "Item", "Table", 
-  "TitlePage", "Abstract", "Copyright", "Acknowledgements", "Colophon", 
-  "TableOfContents", "Bibliography", "TheIndex", "Subsection", "ManSection", 
-  "Description", "Returns", "Section", "Chapter", "Appendix", "Body", "Book", 
-  "WHOLEDOCUMENT", "Attr", "Fam", "Filt", "Func", "Heading", "InfoClass", 
-  "Meth", "Oper", "Prop", "Var", "Verb" ];
+[ "Display", "Example", "Log", "Listing", "List", "Enum", "Item", "Table",
+"TitlePage", "Address", "TitleComment", "Abstract", "Copyright",
+"Acknowledgements", "Colophon", "TableOfContents", "Bibliography", "TheIndex",
+"Subsection", "ManSection", "Description", "Returns", "Section", "Chapter",
+"Appendix", "Body", "Book", "WHOLEDOCUMENT", "Attr", "Fam", "Filt", "Func",
+"Heading", "InfoClass", "Meth", "Oper", "Prop", "Var", "Verb" ];
 
 ##  arg: a list of strings
 ##  nothing for now, may be enhanced and documented later. 
@@ -251,6 +251,9 @@ InstallGlobalFunction(GAPDoc2Text, function(arg)
     if IsDirectory(str) then
       r.bibpath := str;
     else
+      if Length(str) = 0 then
+        str := ".";
+      fi;
       r.bibpath := Directory(str);
     fi;
     str := "";
@@ -278,18 +281,30 @@ BindGlobal("GAPDoc2TextContent", function(r, l)
   local   par,  cont,  count,  s,  a;
   
   # utility: append counter and formatted paragraph to l
-  par := function(s)
-    if Length(s)>0 then
-      s := FormatParagraph(s, r.root.linelength - Length(r.root.indent), 
-                           "both", [r.root.indent, ""]);
-      if Length(s)>0 then
-        GAPDoc2TextProcs.P(0, s);
-        Add(l, count);
-        Add(l, s);
+  par := function(s, name)
+    local sn, ss, pos;
+    # extra call for each part until a forced line break
+    pos := Position(s, '\004');
+    sn := "";
+    while pos <> 0 do
+      if pos = fail then
+        ss := s;
+        pos := 0;
+      else
+        ss := s{[1..pos-1]};
+        s := s{[pos+1..Length(s)]};
+        pos := Position(s, '\004');
       fi;
+      Append(sn, FormatParagraph(ss, r.root.linelength -
+                   Length(r.root.indent), "both", [r.root.indent, ""]));
+    od;
+    if Length(sn)>0 then
+      GAPDoc2TextProcs.P(0, sn);
+      Add(l, count);
+      Add(l, sn);
     fi;
   end;
-  
+
   # if not containing paragraphs, then l is string to append to
   if not r.name in GAPDoc2TextProcs.ParEls then
     for a in r.content do
@@ -304,7 +319,7 @@ BindGlobal("GAPDoc2TextContent", function(r, l)
   s := "";
   for a in cont do
     if a.count <> count  then
-      par(s);
+      par(s, a.name);
       count := a.count;
       s := "";
     fi;
@@ -317,7 +332,7 @@ BindGlobal("GAPDoc2TextContent", function(r, l)
     fi;
   od;
   if Length(s)>0 then
-    par(s);
+    par(s, 0);
   fi;
 end);
 
@@ -456,7 +471,7 @@ GAPDoc2TextProcs.Body := GAPDoc2TextContent;
 
 ##  the title page,  the most complicated looking function
 GAPDoc2TextProcs.TitlePage := function(r, par)
-  local   strn,  l,  s,  a,  aa,  cont,  ss;
+  local   strn,  l,  s,  a,  aa,  cont,  ss, st, stmp, ind;
   
   strn := "\n\n";
   
@@ -515,7 +530,8 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
   for a in l do
     s := "";
     aa := ShallowCopy(a);
-    aa.content := Filtered(a.content, b-> not b.name in ["Email", "Homepage"]);
+    aa.content := Filtered(a.content, b-> 
+                  not b.name in ["Email", "Homepage", "Address"]);
     GAPDoc2TextContent(aa, s);
     s := FormatParagraph(s, r.root.linelength, "center");
     Append(strn, s);
@@ -523,30 +539,70 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
   od;
   Append(strn, "\n\n");
   
+  # short comment for front page
+  l := Filtered(r.content, a-> a.name = "TitleComment");
+  if Length(l)>0 then
+    # format narrower than later text
+    st := "";
+    r.root.linelength := r.root.linelength - 10;
+    s := r.root.indent;
+    r.root.indent := Concatenation(s, "          ");
+    GAPDoc2TextContent(l[1], st);
+    r.root.indent := s;
+    r.root.linelength := r.root.linelength + 10;
+    Append(strn, st);
+    Append(strn, "\n\n");
+  fi;
+  
   # email and WWW-homepage of author(s), if given
+  l := Filtered(r.content, a-> a.name = "Author");
   for a in l do
     cont := List(a.content, b-> b.name);
     if "Email" in cont or "Homepage" in cont then
       s := "";
       aa := ShallowCopy(a);
       aa.content := Filtered(a.content, b-> not b.name in 
-                            ["Email", "Homepage"]);
+                            ["Email", "Homepage", "Address"]);
       GAPDoc2TextContent(aa, s);
       NormalizeWhitespace(s);
       Append(strn, s);
       
       if "Email" in cont then
-        Append(strn, " --- Email: ");
+        Append(strn, "\n    Email:    ");
         GAPDoc2Text(a.content[Position(cont, "Email")], strn);
       fi;
       if "Homepage" in cont then
         Append(strn, "\n");
-        Append(strn, "   --- Homepage: ");
+        Append(strn, "    Homepage: ");
         GAPDoc2Text(a.content[Position(cont, "Homepage")], strn);
+      fi;
+      if "Address" in cont then
+        Append(strn, "\n");
+        stmp := "";
+        ind := a.root.indent;
+        a.root.indent := Concatenation(ind, "              ");
+        GAPDoc2TextContent(a.content[Position(cont, "Address")], stmp);
+        a.root.indent := ind;
+        stmp[2]{Length(ind)+[1..14]} := "    Address:  ";
+        Append(strn, stmp);
       fi;
       Append(strn, "\n");
     fi;
   od;
+
+  # if an address is given outside the <Author> element(s)
+  l := Filtered(r.content, a-> a.name = "Address");
+  if Length(l) > 0 then
+    Append(strn, "\n\n");
+    stmp := "";
+    ind := r.root.indent;
+    r.root.indent := Concatenation(ind, "         ");
+    GAPDoc2TextContent(l[1], stmp);
+    r.root.indent := ind;
+    stmp[2]{Length(ind)+[1..9]} := "Address: ";
+    Append(strn, stmp);
+  fi; 
+  
   Append(strn, "\n-------------------------------------------------------\n");
   
   Add(par, r.count);
@@ -594,6 +650,11 @@ GAPDoc2TextProcs.Homepage := GAPDoc2TextProcs.URL;
 GAPDoc2TextProcs.Email := function(r, str)
   # we add the `mailto://' phrase
   GAPDoc2TextProcs.URL(r, str, "mailto:");
+end;
+
+GAPDoc2TextProcs.Address := function(r, str)
+  # just process the text
+  GAPDoc2TextContent(r, str);
 end;
 
 ##  utility: generate a chapter or (sub)section-number string 
@@ -803,6 +864,16 @@ GAPDoc2TextProcs.P := function(r, str)
       i := i-1;
     od;
   fi;
+end;
+
+##  end of line, same as with .P, but no empty line 
+GAPDoc2TextProcs.Br := function(r, str)
+  # we use character \004 to mark forced line breaks, used in 'par' above
+  Add(str, '\004');
+##    GAPDoc2TextProcs.P(r, str);
+##    if Length(str) > 0 and str[Length(str)] = '\n' then
+##      Unbind(str[Length(str)]);
+##    fi;
 end;
 
 ##  wrapping text attributes

@@ -2,7 +2,7 @@
 ##
 #W  getdtd.g                     GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: getdtd.g,v 1.2 2001-01-17 15:31:20 gap Exp $
+#H  @(#)$Id: getdtd.g,v 1.3 2002-05-20 22:08:57 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -15,7 +15,7 @@
 ##  changed.
 ##  
 #Revision.getdtd.g :=
-#    "@(#)$Id: getdtd.g,v 1.2 2001-01-17 15:31:20 gap Exp $";
+#    "@(#)$Id: getdtd.g,v 1.3 2002-05-20 22:08:57 gap Exp $";
 
 
 
@@ -120,7 +120,7 @@ PrintTo("GAPDocDtdInfo.g","GAPDOCDTDINFO:=",DTDINFO,";\n");
 s:=StringFile("GAPDocDtdInfo.g"); 
 s:=Filtered(s, x-> not x in WHITESPACE);  
 Add(s,'\n');
-WriteToFile("GAPDocDtdInfo.g",s);  
+FileString("GAPDocDtdInfo.g",s);  
 Read("GAPDocDtdInfo.g");
 Print(GAPDOCDTDINFO);
 
