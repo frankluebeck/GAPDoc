@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- $Id: example.xml,v 1.8 2002-05-27 09:02:43 gap Exp $ -->
+<!-- $Id: example.xml,v 1.9 2004-07-16 21:20:52 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
  [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&tgt;</Alt>'>]>
@@ -107,12 +107,13 @@
   </ManSection>
 
   <ManSection>
-   <Meth Name="MyOperation" Label="for bla" Arg="x"
+   <Meth Name="MyOperation" Label="for bla" Arg="x[, good_hint]"
          Comm="for bla arguments"/>
    <Description>
     This is the super-fast method for the operation
     <Ref Oper="MyOperation"/> if the argument <A>x</A> is in the
-    representation <Ref Filt="IsBla"/>.
+    representation <Ref Filt="IsBla"/>. It will become even faster if
+    the optional argument <A>good&uscore;hint</A> is given.
    </Description>
   </ManSection>
 
@@ -591,12 +592,13 @@ This is an appendix.
   </ManSection>
 
   <ManSection>
-   <Meth Name="MyOperation" Label="for bla" Arg="x"
+   <Meth Name="MyOperation" Label="for bla" Arg="x[, good_hint]"
          Comm="for bla arguments"/>
    <Description>
     This is the super-fast method for the operation
     <Ref Oper="MyOperation"/> if the argument <A>x</A> is in the
-    representation <Ref Filt="IsBla"/>.
+    representation <Ref Filt="IsBla"/>. It will become even faster if
+    the optional argument <A>good&uscore;hint</A> is given.
    </Description>
   </ManSection>
 

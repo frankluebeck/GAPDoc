@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.10 2002-12-23 10:03:20 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.11 2004-07-16 21:20:53 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -450,7 +450,8 @@ InstallGlobalFunction(GetElement, function(str, pos)
         el := GetETag(str, pos+2);
         if res.name <> el.name then
           ParseError(str, pos, Concatenation("wrong end tag, expecting \"</",
-                  res.name, ">\""));
+                  res.name, ">\" (starts line ",
+                  String(LineNumberStringPosition(str, res.start)[1]), ")"));
         else
           res.stop := el.next - 1;
           res.next := el.next;

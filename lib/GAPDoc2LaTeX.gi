@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.13 2004-05-06 13:13:33 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.14 2004-07-16 21:20:53 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -811,7 +811,8 @@ GAPDoc2LaTeXProcs.LikeFunc := function(r, str, typ)
   Append(str, nam);
   if IsBound(r.attributes.Arg) then
     Append(str, "( ");
-    Append(str, NormalizedArgList(r.attributes.Arg));
+    Append(str, GAPDoc2LaTeXProcs.EscapeUsBs(
+                NormalizedArgList(r.attributes.Arg)));
     Append(str, " )");
   fi;
   # possible label
