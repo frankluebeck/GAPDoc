@@ -2,12 +2,13 @@
 ##
 #A  read.g                  GAPDoc              Frank Lübeck / Max Neunhöffer
 ##
-#H  @(#)$Id: read.g,v 1.1.1.1 2001-01-05 13:37:46 gap Exp $
+#H  @(#)$Id: read.g,v 1.2 2003-06-20 15:29:01 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck and Max Neunhöffer,  
 #Y  Lehrstuhl D für Mathematik,  RWTH Aachen
 ##
 
+# change to ReadPackage(...) after 4.4
 ReadPkg("gapdoc", "lib/PrintUtil.gi");
 ReadPkg("gapdoc", "lib/Text.gi");
 ReadPkg("gapdoc", "lib/ComposeXML.gi");

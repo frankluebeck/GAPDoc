@@ -1,14 +1,20 @@
 #############################################################################
 ##  
-##  PkgInfo file for the    GAPDoc    package.                  Frank Lübeck
-##  
+##  PackageInfo.g for the package `GAPDoc'                       Frank Lübeck
+
+##  With a new release of the package at least the entries .Version, .Date and
+##  .ArchiveURL must be updated.
 
 SetPackageInfo( rec(
-PkgName := "GAPDoc",
-Version := "0.99",
-Date := "02/04/2002",
-PkgInfoCVSRevision := "$Id: PkgInfo.g,v 1.2 2003-02-19 02:16:39 gap Exp $",
-ArchiveURL := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-0r99",
+
+CVSVERSION := "$Id: PackageInfo.g,v 1.1 2003-06-20 15:29:01 gap Exp $",
+
+PackageName := "GAPDoc",
+Subtitle := "A Meta Package for GAP Documentation",
+Version := "0.999",
+Date := "20/06/2003",
+ArchiveURL := 
+          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-0.999",
 ArchiveFormats := ".tar.bz2",
 Persons := [
   rec(
@@ -19,7 +25,8 @@ Persons := [
   Email := "Frank.Luebeck@Math.RWTH-Aachen.De",
   WWWHome := "http://www.math.rwth-aachen.de/~Frank.Luebeck",
   Place := "Aachen",
-  Institution := "Lehrstuhl D für Mathematik, RWTH Aachen"
+  Institution := "Lehrstuhl D für Mathematik, RWTH Aachen",
+  PostalAddress := "Dr. Frank Lübeck\nLehrstuhl D für Mathematik\nRWTH Aachen\nTemplergraben 64\n52062 Aachen\nGERMANY\n"
   ),
   rec(
   LastName := "Neunhöffer",
@@ -29,19 +36,26 @@ Persons := [
   Email := "Max.Neunhoeffer@Math.RWTH-Aachen.De",
   WWWHome := "http://www.math.rwth-aachen.de/~Max.Neunhoeffer",
   Place := "Aachen",
-  Institution := "Lehrstuhl D für Mathematik, RWTH Aachen"
+  Institution := "Lehrstuhl D für Mathematik, RWTH Aachen",
+  PostalAddress := "Dr. Max Neunhöffer\nLehrstuhl D für Mathematik\nRWTH Aachen\nTemplergraben 64\n52062 Aachen\nGERMANY\n"
   )
 ],
 Status := "deposited",
+
+# CommunicatedBy := "Mike Atkinson (St. Andrews)",
 #CommunicatedBy := "",
+# AcceptDate := "08/1999",
 #AcceptDate := "",
-README_URL := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/README",
-PkgInfoURL := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/PkgInfo.g",
-AbstractHTML := "This package contains a definition of a structure for <span class='pkgname'>GAP</span> (package) documentation, based on XML. It also contains  conversion programs for producing text-, DVI-, PDF- or HTML-versions of such documents.",
+README_URL := 
+"http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/README",
+PackageInfoURL := 
+"http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/PackageInfo.g",
+AbstractHTML := "This package contains a definition of a structure for <span class='pkgname'>GAP</span> (package) documentation, based on XML. It also contains  conversion programs for producing text-, DVI-, PDF- or HTML-versions of such documents, with hyperlinks if possible.",
 PackageWWWHome := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc",
 PackageDoc := [rec(
   BookName := "GAPDoc",
-  Archive := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-doc-0r99.tar.bz2",
+#  Archive := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-doc-0r99.tar.bz2",
+  ArchiveURLSubset := ["doc"],
   HTMLStart := "doc/chap0.html",
   PDFFile := "doc/manual.pdf",
   SixFile := "doc/manual.six",
@@ -50,7 +64,8 @@ PackageDoc := [rec(
   ),
   rec(
   BookName := "GAPDoc Example",
-  Archive := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-example-0r99.tar.bz2",
+#  Archive := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-example-0r99.tar.bz2",
+  ArchiveURLSubset := ["example"],
   HTMLStart := "example/chap0.html",
   PDFFile := "example/manual.pdf",
   SixFile := "example/manual.six",
@@ -67,19 +82,17 @@ Dependencies := rec(
 ),
 AvailabilityTest := ReturnTrue,
 AutoLoad := true,
-
-# the banner
-BannerString := Concatenation(
+BannerString := Concatenation( 
 "    ######################################################################\n",
 "    ##                                                                  ##\n",
-"    ##          GAPDoc 0.99 (a GAP documentation meta-package)          ##\n",
+"    ##         GAPDoc ", ~.Version, " (a GAP documentation meta-package)          ##\n",
 "    ##                                                                  ##\n",
 "    ##   Questions and remarks to: Frank.Luebeck@Math.RWTH-Aachen.De    ##\n",
 "    ##                             Max.Neunhoeffer@Math.RWTH-Aachen.De  ##\n",
 "    ##                                                                  ##\n",
 "    ######################################################################\n\n"
 ),
-Keywords := ["GAP documentation", "help system", "XML"]
+Keywords := ["GAP documentation", "help system", "XML", "pdf", "hyperlink"]
 ));
 
 

@@ -1,0 +1,11 @@
+#!/bin/sh
+#  $Id: pack,v 1.1 2003-06-20 15:29:01 gap Exp $
+if let "$# != 2"; then
+  echo "Usage: pack dir version  (like:  pack edim 1.2)"
+  echo "(produces a dir-version.tar.bz2  file)"
+  exit
+fi
+
+
+find $1 -regex ".*\(/CVS\|CVS/.*\|~\|/pack\|\.aux\|\.log\)" | tar cv $1 --exclude-from - |bzip2 -c -9 > $1-$2.tar.bz2
+
