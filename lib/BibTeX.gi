@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.9 2002-05-20 22:08:57 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.10 2002-08-29 08:15:08 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -483,6 +483,57 @@ InstallGlobalFunction(WriteBibFile, function(file, bib)
   PrintTo1(file, f);
 end);
 
+# a utility for translating LaTeX macros for non ascii characters into
+# HTML entities; also removing {}'s, and "\-" hyphenation hints.
+BindGlobal("LaTeXToHTMLString", function(str)
+  local trans_bs, trans_qq, i, pos;
+  # macros for accents starting with '\', add new entries - somehow more
+  # frequent ones first - as they become necessary
+  trans_bs := [ ["\\\"a","&auml;"], ["\\\"o","&ouml;"], ["\\\"u","&uuml;"],
+                ["\\\"{a}","&auml;"], ["\\\"{o}","&ouml;"], 
+                ["\\\"{u}","&uuml;"], ["\\\"{s}","&szlig;"], 
+                ["\\\"s","&szlig;"], ["\\3","&szlig;"], ["\\ss","&szlig;"],
+                ["\\\"A","&Auml;"], ["\\\"O","&Ouml;"], ["\\\"U","&Uuml;"],
+                ["\\'e","&eacute;"], ["\\`e","&egrave;"], 
+                ["\\'E","&Eacute;"], ["\\`E","&Egrave;"],
+                ["\\'a","&aacute;"], ["\\`a","&agrave;"],
+                ["\\c{c}", "&ccedil;"], ["\\c c", "&ccedil;"], 
+                # long Hungarian umlaut, substituted by unicode entity
+                #    (see http://www.unicode.org/charts/)
+                ["\\H{o}", "&#x0151;"], ["\\H o", "&#x0151;"],
+                ["\\'A","&Aacute;"], ["\\'I","&Iacute;"], ["\\'O","&Oacute;"],
+                ["\\'U","&Uacute;"], ["\\'i","&iacute;"],
+                ["\\'o","&oacute;"], ["\\'u","&uacute;"],
+                ["\\`A","&Agrave;"], ["\\`I","&Igrave;"], ["\\`O","&Ograve;"],
+                ["\\`U","&Ugrave;"], ["\\`i","&igrave;"],
+                ["\\`o","&ograve;"], ["\\`u","&ugrave;"] 
+                ];
+  # and some starting with '"' from 'german' styles
+  trans_qq := [ ["\"a","&auml;"], ["\"o","&ouml;"], ["\"u","&uuml;"],
+                ["\"s","&szlig;"],  ["\"A","&Auml;"], ["\"O","&Ouml;"], 
+                ["\"U","&Uuml;"] ];
+                
+  i := 0; pos := Position(str, '\\');
+  while pos <> fail and i < Length(trans_bs) do
+    i := i + 1;
+    str := ReplacedString(str, trans_bs[i][1], trans_bs[i][2]);
+    pos := Position(str, '\\');
+  od;
+  i := 0; pos := Position(str, '\"');
+  while pos <> fail and i < Length(trans_qq) do
+    i := i + 1;
+    str := ReplacedString(str, trans_qq[i][1], trans_qq[i][2]);
+    pos := Position(str, '\"');
+  od;
+  # throw away {}'s and "\-"'s
+  if Position(str, '{') <> fail then
+    str := Filtered(str, c-> c <> '{' and c <> '}');
+  fi;
+  str := ReplacedString(str, "\\-", "");
+
+  return str;
+end);
+                
 ##  arg: r[, i]  (for link to BibTeX)
 InstallGlobalFunction(PrintBibAsHTML, function(arg)
   local   r,  i, str;
@@ -498,7 +549,8 @@ InstallGlobalFunction(PrintBibAsHTML, function(arg)
     return;
   fi;
 
-  # remove SGML markup characters
+  # remove SGML markup characters in entries and translate
+  # LaTeX macros for accented characters to HTML, remove {}'s
   r := ShallowCopy(r);
   for i in NamesOfComponents(r) do
     str := "";
@@ -506,6 +558,7 @@ InstallGlobalFunction(PrintBibAsHTML, function(arg)
     if str <> r.(i) then
       r.(i) := str;
     fi;
+    r.(i) := LaTeXToHTMLString(r.(i));
   od;
   
   if IsBound(r.mrnumber) then
