@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.6 2001-01-24 14:05:12 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.7 2001-02-05 14:40:56 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -901,6 +901,8 @@ GAPDoc2TextProcs.ExampleLike := function(r, par, label)
       Add(str, '-');
     od;
   fi;
+  Append(str, GAPDoc2TextProcs.TextAttr.reset);
+  Add(str, '\n');
   cont := "";
   for a in r.content do 
     # here we try to avoid reformatting
@@ -913,11 +915,18 @@ GAPDoc2TextProcs.ExampleLike := function(r, par, label)
     fi;
   od;
   cont := SplitString(cont, "\n", "");
+  # delete first line, if whitespace only
+  if Length(cont) > 0 and ForAll(cont[1], x-> x in WHITESPACE) then
+    cont := cont{[2..Length(cont)]};
+  fi;
   cont := Concatenation(List(cont, a-> Concatenation(r.root.indent, 
-                        "  ", a, "\n")));
+                        "  ", GAPDoc2TextProcs.TextAttr.Example, a, 
+                        GAPDoc2TextProcs.TextAttr.reset, "\n")));
   Append(str, cont);
-  Append(str, Concatenation(r.root.indent, RepeatedString('-', len), 
-                                  GAPDoc2TextProcs.TextAttr.reset, "\n\n"));
+  Append(str, Concatenation(r.root.indent,
+                            GAPDoc2TextProcs.TextAttr.Example, 
+                            RepeatedString('-', len), 
+                            GAPDoc2TextProcs.TextAttr.reset, "\n\n"));
   Add(par, r.count);
   Add(par, str);
 end;

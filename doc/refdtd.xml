@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.5 2001-01-24 14:05:11 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.6 2001-02-05 14:40:56 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -105,8 +105,8 @@ declared as <C>&hash;IMPLIED</C>. </Subsection>
 <Index Key="TitlePage"><C>TitlePage</C></Index>
 
 <Listing Type="From gapdoc.dtd"><![CDATA[
-<!ELEMENT TitlePage (Title , Subtitle?, Version?, Author+ , Date? , 
-                     Abstract? , Copyright? , Acknowledgements? , Colophon? )>]]>
+<!ELEMENT TitlePage (Title, Subtitle?, Version?, Author+, Date?, Abstract?,
+                     Copyright? , Acknowledgements? , Colophon? )>]]>
 </Listing>
 
 Within this element  information for the title page is  collected. Note that
@@ -1109,7 +1109,7 @@ This element is used to emphasize some piece of text. It may contain
 
 <Listing Type="From gapdoc.dtd">
 <![CDATA[<!ELEMENT Quoted (%InnerText;)*>   <!-- Quoted (in quotes) text -->
-<!ELEMENT Q (%InnerText;)*>        <!-- Quoted (in quotes) text (shortcut) -->]]>
+<!ELEMENT Q (%InnerText;)*>        <!-- Quoted text (shortcut) -->]]>
 </Listing>
 
 This element  is used to put  some piece of text  into <Q>&nbsp;</Q>-quotes.
@@ -1189,7 +1189,7 @@ within this element.
 <Index Key="B"><C>B</C></Index>
 
 <Listing Type="From gapdoc.dtd">
-<![CDATA[<!ELEMENT Button (#PCDATA|Alt)*>   <!-- "Button" (also Menu, Key, or such) -->
+<![CDATA[<!ELEMENT Button (#PCDATA|Alt)*>   <!-- "Button" (also Menu, Key, ...) -->
 <!ELEMENT B (#PCDATA|Alt)*>        <!-- "Button" (shortcut) -->]]>
 </Listing>
 
@@ -1287,9 +1287,11 @@ formulae or <C>Table</C>s.
 <Index Key="Math"><C>Math</C></Index>
 <Index Key="Display"><C>Display</C></Index>
 
-<Listing Type="From gapdoc.dtd">
-<![CDATA[<!ELEMENT Math (#PCDATA |A|Arg)*>   <!-- Normal TeX math mode formula -->
-<!ELEMENT Display (#PCDATA |A|Arg)*>  <!-- TeX displayed math mode formula -->]]>
+<Listing Type="From gapdoc.dtd"><![CDATA[
+<!-- Normal TeX math mode formula -->
+<!ELEMENT Math (#PCDATA|A|Arg|Alt)*>   
+<!-- TeX displayed math mode formula -->
+<!ELEMENT Display (#PCDATA|A|Arg|Alt)*>]]>
 </Listing>
 
 These elements are  used for mathematical formulae. As  described in section
@@ -1322,9 +1324,9 @@ Subsect="Alt" /> and&nbsp;<Ref Subsect="Verb" />).
 <Subsection Label="M"><Heading><C>&tlt;M&tgt;</C></Heading>
 <Index Key="M"><C>M</C></Index>
 
-<Listing Type="From gapdoc.dtd">
-<![CDATA[<!ELEMENT M (#PCDATA | A|Arg)*>  <!-- Mathematical identifier, only short words,
-                         letters, indices, and exponents are allowed -->]]>
+<Listing Type="From gapdoc.dtd"><![CDATA[
+<!-- Math with well defined translation to text output -->
+<!ELEMENT M (#PCDATA|A|Arg|Alt)*>]]>
 </Listing>
 
 The <Q><C>M</C></Q>  element type  is intended for  formulae in  the running
@@ -1426,7 +1428,7 @@ tables.
 
 <Listing Type="From gapdoc.dtd">
 <![CDATA[<!ELEMENT Alt (%InnerText;)*>  <!-- This is only to allow "Only" and
-                                         "Not" attributes for normal text -->
+                                    "Not" attributes for normal text -->
 <!ATTLIST Alt Only CDATA #IMPLIED
               Not  CDATA #IMPLIED>]]>
 </Listing>
