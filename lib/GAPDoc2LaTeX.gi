@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.11 2003-08-29 12:20:28 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.12 2003-09-25 12:57:01 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -951,10 +951,10 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
     ref := GAPDoc2LaTeXProcs.ResolveExternalRef(
                                         r.attributes.BookName, lab, 1);
     if ref = fail then
-      ref := Concatenation(" (", lab, "???)");
+      ref := Concatenation(" ", lab, "??? ");
     else
       # the search text for online help including book name
-      ref := Concatenation(" (\\textbf{", ref[1], "})");
+      ref := Concatenation(" \\textbf{", ref[1], "}");
     fi;
   else
     lab := r.attributes.Label;
