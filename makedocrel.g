@@ -2,7 +2,7 @@
 ##
 #A  makedocrel.g                          GAPDoc                 Frank Lübeck
 ##  
-#H  @(#)$Id: makedocrel.g,v 1.2 2001-11-16 16:49:21 gap Exp $
+#H  @(#)$Id: makedocrel.g,v 1.3 2003-02-19 17:46:33 gap Exp $
 ##  
 ##  Rebuild the  whole documentation, provided sufficiently  good (pdf)LaTeX
 ##  is  available.   This  version  produces  relative   paths  to  external
@@ -18,8 +18,8 @@ MakeGAPDocDoc("doc", "gapdoc", ["../lib/BibTeX.gi",
 
 # now load it (for cross reference in example)
 Print("\n========== converting example document for GAPDoc ================\n");
-DeclarePackageDocumentation("GAPDoc", "doc", "GAPDoc", 
-"Package for Preparing GAP Documentation");
+HELP_ADD_BOOK("GAPDoc", "Package for Preparing GAP Documentation",
+                DirectoriesPackageLibrary("gapdoc","doc")[1]);
 
 # example
 MakeGAPDocDoc("example", "example", [], "GAPDocExample", "../../..");
