@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.6 2001-02-05 14:40:56 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.7 2001-09-21 13:06:25 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -583,10 +583,10 @@ should <E>always</E> be written with  the <C>Ref</C>  element, see&nbsp;<Ref
 Subsect="Ref" />. This allows to use a unique typesetting style for function
 names and automatic cross referencing.<P/>
 
-If the optional <C>Label</C> attribute is  given, it is appended to the name
-of the  function for cross referencing  purposes. The text of  the label can
-also  appear  in the  document  text.  So, it  should  be  a kind  of  short
-explanation.
+If the  optional <C>Label</C>  attribute is  given, it  is appended  (with a
+colon <C>:</C> in between) to the name of the function for cross referencing
+purposes. The text of the label can also appear in the document text. So, it
+should be a kind of short explanation.
 
 <Listing Type="Example">
 <![CDATA[<Func Arg="x[, y]" Name="LibFunc" Label="for my objects"/>]]>
