@@ -2,7 +2,7 @@
 ##
 #W  PrintUtil.gd                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: PrintUtil.gd,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $
+#H  @(#)$Id: PrintUtil.gd,v 1.2 2001-07-05 09:50:30 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -26,8 +26,4 @@ DeclareGlobalFunction("StringView");
 DeclareGlobalFunction("PrintFormattedString");
 DeclareGlobalFunction("Page");
 DeclareGlobalFunction("PageDisplay");
-
-##  fast copy of file into string and vice versa
-DeclareGlobalFunction("StringFile");
-DeclareGlobalFunction("FileString");
 

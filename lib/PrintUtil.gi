@@ -2,7 +2,7 @@
 ##
 #W  PrintUtil.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: PrintUtil.gi,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $
+#H  @(#)$Id: PrintUtil.gi,v 1.2 2001-07-05 09:50:30 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -165,6 +165,7 @@ InstallGlobalFunction(PageDisplay, function(x)
   Pager(rec(lines := str, formatted:=true));
 end);
 
+
 ##  <#GAPDoc Label="StringFile">
 ##  <ManSection >
 ##  <Func Arg="filename" Name="StringFile" />
@@ -172,48 +173,22 @@ end);
 ##  <Description>
 ##  The  function <Ref  Func="StringFile" />  returns the  content of
 ##  file  <A>filename</A> as  a string.  This works  efficiently with
-##  arbitrary (binary or text) files.<P/>
+##  arbitrary (binary or text) files. If something went wrong,   this 
+##  function returns <K>fail</K>.
+##  <P/>
 ##  
 ##  Conversely  the function  <Ref  Func="FileString"  /> writes  the
 ##  content of a string <A>str</A>  into the file <A>filename</A>. If
 ##  the  optional third  argument <A>append</A>  is given  and equals
 ##  <K>true</K> then  the content  of <A>str</A>  is appended  to the
-##  file. Otherwise previous content of the file is deleted.<P/>
+##  file. Otherwise  previous  content  of  the file is deleted. This 
+##  function returns the number of  bytes  written  or <K>fail</K> if 
+##  something went wrong.<P/>
 ##  
 ##  Both functions are quite efficient, even with large files. 
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
 ##  
-InstallGlobalFunction(StringFile, function(name)
-  local   f,  str;
-  f := InputTextFile(name);
-  if f=fail then
-    return fail;
-  fi;
-  str := READ_STRING_FILE(f![1]);
-  CloseStream(f);
-  return str;
-end);
-
-# arg: filename, string[, append]   (default for append is false) 
-InstallGlobalFunction(FileString, function(arg)
-  local   name,  str,  append,  out;
-  name := arg[1];
-  str := arg[2];
-  if Length(arg)>2 then
-    append := arg[3];
-  else
-    append := false;
-  fi;
-  out := OutputTextFile(name, append);
-  if out=fail then
-    return fail;
-  fi;
-  IS_STRING_CONV(str);
-  WRITE_STRING_FILE_NC(out![1], str);
-  CloseStream(out);
-  return Length(str);
-end);
-
+##  moved into lib/string.g{d,i}
 
