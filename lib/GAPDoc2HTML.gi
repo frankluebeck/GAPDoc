@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.23 2003-06-05 06:40:06 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.24 2003-08-29 12:20:28 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -132,6 +132,7 @@ GAPDoc2HTMLProcs.Head1MML := "\
 \n\
 <html xmlns=\"http://www.w3.org/1999/xhtml\">\n\
 <head>\n\
+<link rel=\"stylesheet\" type=\"text/css\" href=\"mathml.css\" />\n\
 <title>GAP (";
 
 GAPDoc2HTMLProcs.Head2 := "\
@@ -139,7 +140,6 @@ GAPDoc2HTMLProcs.Head2 := "\
 <meta http-equiv=\"content-type\" content=\"text/html; charset=iso-8859-1\" />\n\
 <meta name=\"generator\" content=\"GAPDoc2HTML\" />\n\
 <link rel=\"stylesheet\" type=\"text/css\" href=\"manual.css\" />\n\
-<link rel=\"stylesheet\" type=\"text/css\" href=\"mathml.css\" />\n\
 </head>\n<body>\n";
 
 GAPDoc2HTMLProcs.Tail := "\n\

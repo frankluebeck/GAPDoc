@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.10 2003-08-28 15:32:30 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.11 2003-08-29 12:20:28 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -557,7 +557,7 @@ GAPDoc2LaTeXProcs.Bibliography := function(r, str)
   if IsBound(r.attributes.Style) then
     st := r.attributes.Style;
   else
-    st := "plain";
+    st := "alpha";
   fi;
 
   # page number info for online help

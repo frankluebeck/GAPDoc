@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.12 2002-12-23 10:03:20 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.13 2003-08-29 12:20:28 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -637,21 +637,21 @@ InstallGlobalFunction(PrintBibAsHTML, function(arg)
     Print(",\n Chapter ", r.chapter);
   fi;
   if IsBound(r.note) then
-    Print("<br>\n(", r.note, ")<br>\n");
+    Print("<br />\n(", r.note, ")<br />\n");
   fi;
   if IsBound(r.notes) then
-    Print("<br>\n(", r.notes, ")<br>\n");
+    Print("<br />\n(", r.notes, ")<br />\n");
   fi;
  
   if IsBound(r.BUCHSTABE) then
-    Print("<br>\nEinsortiert unter ", r.BUCHSTABE, ".<br>\n");
+    Print("<br />\nEinsortiert unter ", r.BUCHSTABE, ".<br />\n");
   fi;
   if IsBound(r.LDFM) then
-    Print("Signatur ", r.LDFM, ".<br>\n");
+    Print("Signatur ", r.LDFM, ".<br />\n");
   fi;
   if IsBound(r.BUCHSTABE) and i>=0 then
     Print("<a href=\"HTMLldfm", r.BUCHSTABE, ".html#", i, 
-          "\"><span style=\"color: red;\">BibTeX Eintrag</span></a>\n<br>");
+          "\"><span style=\"color: red;\">BibTeX Eintrag</span></a>\n<br />");
   fi;
   Print("</p>\n\n");
 end);
