@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.9 2002-05-27 09:02:43 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.10 2002-05-29 07:58:58 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -1472,13 +1472,21 @@ tables.
               Not  CDATA #IMPLIED>]]>
 </Listing>
 
-Of  course exactly  one of  the two  attributes must  occur in  one element.
-The   following  values   are  allowed   as  of   now:  <Q><C>LaTeX</C></Q>,
-<Q><C>HTML</C></Q>, and <Q><C>Text</C></Q>. If  the <C>Only</C> attribute is
-specified then only the corresponding  converter will include the content of
-the  element  into the  output  document.  If  the <C>Not</C>  attribute  is
-specified  the  corresponding  converter  will ignore  the  content  of  the
-element. <P/>
+Of course exactly one  of the two attributes must occur  in one element. The
+attribute values must be one word or a list of words, separated by spaces or
+commas. The words  which are currently recognized by  the converter programs
+contained  in  &GAPDoc;  are: <Q><C>LaTeX</C></Q>,  <Q><C>HTML</C></Q>,  and
+<Q><C>Text</C></Q>. If the <C>Only</C> attribute  is specified then only the
+corresponding converter  will include  the content of  the element  into the
+output document. If the <C>Not</C>  attribute is specified the corresponding
+converter will ignore the content of the element. You can use other words to
+specify special alternatives for other converters of &GAPDoc; documents.<P/>
+
+We fix  a rule for  handling the content of  an <C>Alt</C> element  which is
+relevant for <C>HTML</C> output. In  this content the special XML characters
+<C>&tlt;</C>, <C>&tgt;</C> and <C>&tamp;</C> are not escaped. This allows to
+put  HTML text  directly  in  the &GAPDoc;  document,  probably enclosed  in
+<C>&lt;![CDATA[</C> and <C>]]&tgt;</C>. <P/>
 
 Within  the element  only <C>&percent;InnerText;</C>  (see <Ref  Text="here"
 Label="InnerText"/>) is  allowed. This  is to  ensure that  the same  set of

@@ -1,5 +1,5 @@
-<!-- $Id: app3k1.xml,v 1.1.1.1 2001-01-05 13:37:49 gap Exp $ -->
-<Appendix Label="app:3k+1"><Heading>The file <F>3k+1.xml</F></Heading>
+<!-- $Id: app3k1.xml,v 1.2 2002-05-29 07:58:58 gap Exp $ -->
+<Appendix Label="app:3k+1"><Heading>The File <F>3k+1.xml</F></Heading>
 
 Here is the complete source of the example &GAPDoc; document <F>3k+1.xml</F>
 discussed in Section&nbsp;<Ref Sect="sec:3k+1expl" />.
@@ -8,7 +8,7 @@ discussed in Section&nbsp;<Ref Sect="sec:3k+1expl" />.
 <![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--   A complete "fake package" documentation   
-   $Id: app3k1.xml,v 1.1.1.1 2001-01-05 13:37:49 gap Exp $
+   $Id: app3k1.xml,v 1.2 2002-05-29 07:58:58 gap Exp $
 -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd">

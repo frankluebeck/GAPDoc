@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.16 2002-05-27 09:02:43 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.17 2002-05-29 07:58:58 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1031,18 +1031,24 @@ end;
 ##  simple maths, here we try to substitute TeX command to something which
 ##  looks ok in text mode
 GAPDoc2HTMLProcs.M := function(r, str)
-  local s, ss;
+  local s, ss, save;
   if r.root.mathmode in ["MathML", "Tth"] then
     GAPDoc2HTMLProcs.MathConvHelper(r, str, "$", "$");
     return;
   fi;
   s := "";
   GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATANOFILTER;
+  # a hack, since we want to allow <A> in formulae
+  save := GAPDoc2HTMLProcs.TextAttr.Arg;
+  GAPDoc2HTMLProcs.TextAttr.Arg := ["TEXTaTTRvARBEGIN", "TEXTaTTRvAREND"];
   GAPDoc2HTMLContent(r, s);
+  GAPDoc2HTMLProcs.TextAttr.Arg := save;
   GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATAFILTER;
   s := TextM(s);
   ss := "";
   GAPDoc2HTMLProcs.PCDATAFILTER(rec(content := s), ss);
+  ss := SubstitutionSublist(ss, "TEXTaTTRvARBEGIN", save[1]);
+  ss := SubstitutionSublist(ss, "TEXTaTTRvAREND", save[2]);
   Append(str, ss);
 end;
 

@@ -1,10 +1,14 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.1 2002-05-02 20:39:58 gap Exp $
+         $Id: TODO,v 1.2 2002-05-29 07:58:57 gap Exp $
 
 - maybe add links to "the" example in the reference section of doc?
+  (not so sure, if this is necessary).
 
-- adjust doc: inside <Alt> content for HTML the special chars for HTML are 
-  *not* escaped. (allows direct HTML code, inside CDATA sects)
+- check, if everywhere the <A>, <Arg> elements inside <M>, <Math>, <Display>
+  are handled correctly.
+
+- should the bibliography and the index appear in the table of contents?
+  (if yes, in all output versions)
 
