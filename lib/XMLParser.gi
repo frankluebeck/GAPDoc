@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.9 2002-05-23 15:41:37 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.10 2002-12-23 10:03:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -491,9 +491,8 @@ end);
 ##  This function parses an  XML-document stored in string <A>str</A>
 ##  and returns the document in form of a tree.<P/>
 ##  
-##  A node in  this tree either  corresponds to  an XML element,
-##  or to some  parsed character  data. In  the first  case it  looks as
-##  follows:
+##  A node  in this tree  corresponds to an  XML element, or  to some
+##  parsed character data. In the first case it looks as follows:
 ##  
 ##  <Listing Type="Example Node">
 ##  rec( name := "Book",
@@ -619,8 +618,8 @@ end);
 ##  />.<P/>
 ##  
 ##  The function <Ref Func="AddRootParseTree" /> is an application of
-##  this.  It adds  to all  nodes a  component <C>.root</C>  which is
-##  assigned to  the top  node <A>tree</A>.  These components  can be
+##  this.  It adds  to all  nodes a  component <C>.root</C>  to which 
+##  the top node tree <A>tree</A> is assigned. These components can be
 ##  removed afterwards with <Ref Func="RemoveRootParseTree" />.
 ##  </Description>
 ##  </ManSection>

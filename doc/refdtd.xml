@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.11 2002-12-04 23:54:46 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.12 2002-12-23 10:03:20 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -331,7 +331,7 @@ element. If  it is present,  a table of  contents is generated  and inserted
 into  the  document. Note  that  because  this  element  is declared  to  be
 <C>EMPTY</C> one can use the abbreviation
 
-<Listing Type="From gapdoc.dtd">
+<Listing Type="Example">
 <![CDATA[<TableOfContents/>]]>
 </Listing>
 
@@ -604,9 +604,9 @@ A possible heading is generated automatically from the first element.
 <Listing Type="From gapdoc.dtd">
 <![CDATA[<!ELEMENT Func EMPTY>
 <!ATTLIST Func Name  CDATA #REQUIRED
-          Label CDATA #IMPLIED
-          Arg   CDATA #REQUIRED
-          Comm  CDATA #IMPLIED>]]>
+               Label CDATA #IMPLIED
+               Arg   CDATA #REQUIRED
+               Comm  CDATA #IMPLIED>]]>
 </Listing>
 
 This element is used within a <C>ManSection</C> element to specify the usage
@@ -681,12 +681,12 @@ This element is used within a <C>ManSection</C> element to specify the
 usage of a method. The attributes are used exactly in the same
 way as in the <C>Func</C> element (see <Ref Subsect="Func"/>). <P/>
 
-Due  to the  fact that  it  often happens  that many  methods are  installed
-for  the  same  operation  it  seems to  be  interesting  to  document  them
-independently. This is  possible by using the same method  name in different
-<C>ManSection</C>s. It is  however required that these subsections and those
-describing  the  corresponding  operation  are  distinguished  by  different
-<C>Label</C> attributes.
+Frequently,  an  operation  is  implemented by  several  different  methods.
+Therefore it seems to be interesting to document them independently. This is
+possible  by using  the same  method name  in different  <C>ManSection</C>s.
+It  is  however  required  that   these  subsections  and  those  describing
+the  corresponding operation  are  distinguished  by different  <C>Label</C>
+attributes.
 
 </Subsection>
 
@@ -916,12 +916,12 @@ unique under all <C>Label</C> elements.
                Where CDATA #IMPLIED>]]>
 </Listing>
 
-This element is for bibliography citations. It is <C>EMPTY</C> by definition.
-The attribute <C>Key</C> is the key for a lookup in a &BibTeX; database
-that has to be specified in the <C>Bibliography</C> element (see 
-<Ref Subsect="Bibliography"/>). The value of the <C>Where</C> attribute
-specifies the position in the document as in the corresponding
-&LaTeX; syntax <C>&bslash;cite[...]&obrace;...&cbrace;</C>. 
+This  element  is   for  bibliography  citations.  It   is  <C>EMPTY</C>  by
+definition. The attribute  <C>Key</C> is the key for a  lookup in a &BibTeX;
+database that  has to be  specified in the <C>Bibliography</C>  element (see
+<Ref  Subsect="Bibliography"/>). The  value  of  the <C>Where</C>  attribute
+specifies  the position  in the  document  as in  the corresponding  &LaTeX;
+syntax <C>&bslash;cite[Where value]&obrace;Key value&cbrace;</C>.
 </Subsection>
 
 
@@ -989,7 +989,7 @@ format like HTML the converter can produce a link with a
 
 This element type  is the special case of an  URL specifying a WWW-homepage.
 The content of the  element should be the valid URL  specifying a world wide
-web page. In  comparison with the <C>URL</C> element the  address is visible
+web page. In  contrast to     the <C>URL</C> element the  address is visible
 in all output formats.
 
 </Subsection>
@@ -1278,7 +1278,7 @@ should  <E>not</E> use  the  character entities  described  in section  <Ref
 Subsect="GDent"/> but instead type the characters directly. Only the general
 XML rules  from section  <Ref Sect="EnterXML"/>  apply. Note  especially the
 usage  of <C>&tlt;![CDATA[</C>  sections described  there. It  is guaranteed
-that all  characters use a  fixed width font for  typesetting <C>Listing</C>
+that all  converters use a  fixed width font for  typesetting <C>Listing</C>
 elements. Compare also the usage of the <C>Code</C> and <C>C</C> elements in
 <Ref Subsect="Code"/>. <P/>
 

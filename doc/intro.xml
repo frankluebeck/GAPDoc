@@ -1,18 +1,18 @@
-<!-- $Id: intro.xml,v 1.5 2001-11-16 15:20:47 gap Exp $ -->
+<!-- $Id: intro.xml,v 1.6 2002-12-23 10:03:20 gap Exp $ -->
 <Chapter Label="ch:intro"><Heading>Introduction and Example</Heading>
 
 The main  purpose of  the &GAPDoc; package  is to define  a file  format for
-documentation  of &GAP;-programs  and -packages.  The problem  is that  such
-documentation should be  readable in several output formats.  For example it
-should be  possible to read the  documentation inside the terminal  in which
-&GAP; is running  (a text mode) and  there should be a  printable version in
-high typesetting  quality (produced by  some version  of &TeX;). It  is also
-popular to view  &GAP;'s online help with a Web-browser  via an HTML-version
-of  the documentation.  Nowadays one  can  use &LaTeX;  and standard  viewer
-programs to produce  and view on the screen  <C>dvi</C>- or <C>pdf</C>-files
-with full support of internal  and external hyperlinks. Certainly there will
-be other  interesting document formats  and tools  in this direction  in the
-future. <P/>
+documentation of &GAP;-programs and -packages (see <Cite Key="GAP4" />). The
+problem  is that  such documentation  should be  readable in  several output
+formats. For example it should be  possible to read the documentation inside
+the terminal in which  &GAP; is running (a text mode) and  there should be a
+printable version in  high typesetting quality (produced by  some version of
+&TeX;). It  is also popular to  view &GAP;'s online help  with a Web-browser
+via an HTML-version  of the documentation. Nowadays one can  use &LaTeX; and
+standard viewer  programs to produce and  view on the screen  <C>dvi</C>- or
+<C>pdf</C>-files  with full  support  of internal  and external  hyperlinks.
+Certainly there will be other interesting document formats and tools in this
+direction in the future. <P/>
 
 Our aim is to find a <Emph>format for writing</Emph> the documentation which
 allows a relatively easy translation  into the output formats just mentioned
@@ -70,7 +70,7 @@ characters).
 
 <Listing Type="from 3k+1.xml">
 <![CDATA[<!--   A complete "fake package" documentation   
-   $Id: intro.xml,v 1.5 2001-11-16 15:20:47 gap Exp $
+   $Id: intro.xml,v 1.6 2002-12-23 10:03:20 gap Exp $
 -->
 ]]></Listing>
 
@@ -166,9 +166,9 @@ certain <Q>special  characters</Q> must be  typed via entities,  for example
 XML markup.  But also  the special  characters in  &LaTeX; are  written with
 entities,  since  they  need  a  different  handling  in  a  &LaTeX;  and  a
 text  output  format,  see&nbsp;<Ref  Subsect="XMLspchar"  />  and&nbsp;<Ref
-Subsect="GDspchar" /> for more details.  It is possible to define additional
-entities for  your document inside the  <C>&lt;!DOCTYPE ...</C> declaration,
-see&nbsp;<Ref Subsect="GDent" />. <P/>
+Subsect="GDspchar"  />   for  more  details.   It  is  possible   to  define
+additional entities for your document inside the <C>&lt;!DOCTYPE ...&gt;</C>
+declaration, see&nbsp;<Ref Subsect="GDent" />. <P/>
 
 Note  that elements  in  XML must  always  be properly  nested,  as in  this
 example. A construct like <C><![CDATA[<a><b>...</a></b>]]></C> is <E>not</E>

@@ -1,15 +1,18 @@
-<!-- $Id: distr.xml,v 1.2 2001-01-19 09:33:09 gap Exp $ -->
+<!-- $Id: distr.xml,v 1.3 2002-12-23 10:03:20 gap Exp $ -->
 <Chapter Label="Distributing">
 <Heading>Distributing a Document into Several Files</Heading>
 
-In  &GAPDoc; there  are facilities  to  distribute a  document into  several
-files.  This  is  for  example  interesting,  if  one  wants  to  store  the
+In  &GAPDoc; there  are  facilities  to distribute  a  single document  over
+several files.  This is for example  interesting, if one wants  to store the
 documentation of some code  in the same file as the code  itself. Or, if one
-just wants  to store chapters  of a  document in separate  files. Basically,
-there  is only  a set  of conventions  how this  is done  and some  tools to
-collect the text for further processing. <P/>
+just wants  to store chapters  of a  document in separate  files.  There  is 
+a set  of conventions  how this  is done  and some tools to collect the text 
+for further processing. <P/>
 
 <Section Label="DistrConv">
+<Index Key="Include"><C>&tlt;&hash;Include&tgt;</C></Index>
+<Index Key="GAPDoc"><C>&tlt;&hash;GAPDoc&tgt;</C></Index>
+
 <Heading>The Conventions</Heading>
 
 Pieces of documentation that shall be incorporated into another document

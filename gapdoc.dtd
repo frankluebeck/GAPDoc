@@ -4,7 +4,7 @@
      By Frank Lübeck and Max Neunhöffer
      ================================================================== -->
 
-<!-- $Id: gapdoc.dtd,v 1.7 2002-05-24 15:57:21 gap Exp $ -->
+<!-- $Id: gapdoc.dtd,v 1.8 2002-12-23 10:03:20 gap Exp $ -->
 
 <!-- Note that this definition goes "bottom-up" because entities can only
      be used after their definition in the file. -->
@@ -230,8 +230,8 @@
 <!-- ==================================================================
      The following  describes the normal documentation  text which can
      occur  at various  places in  the document.  It does  not contain
-     further sectioning elements. As  opposed to the InnerText element
-     it can contain environments like enumerations, lists, and such.
+     further sectioning elements. In addition to InnerText it can contain 
+     environments like enumerations, lists, and such.
      ================================================================== -->
 
 <!ENTITY % Text "%InnerText; | List | Enum | Table">
@@ -323,7 +323,7 @@
      Arguments   are  separated   by  whitespace,   commas  count   as
      whitespace. -->
 
-<!-- Note further that  even if Name and Label are  CDATA (and not ID)
+<!-- Note further that although Name and Label are  CDATA (and not ID)
      Label must make up a unique identifier. -->
 
 <!ELEMENT Oper EMPTY>

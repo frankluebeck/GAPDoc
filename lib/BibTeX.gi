@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.11 2002-12-04 23:54:47 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.12 2002-12-23 10:03:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -157,7 +157,7 @@ end);
 ##  corresponding position  the full  text for such  an abbreviation.
 ##  <P/>
 ##  
-##  The  records  in entries  store  key-value  pairs of  a  &BibTeX;
+##  The records in <C>entries</C> store key-value pairs of a &BibTeX;
 ##  reference in the  form <C>rec(key1 = value1,  ...)</C>. The names
 ##  of  the  keys are  converted  to  lower  case.  The type  of  the
 ##  reference (i.e.,  book, article,  ...) and  the citation  key are
@@ -167,7 +167,7 @@ end);
 ##  
 ##  <Listing Type="my.bib">
 ##  @string{ j  = "Important Journal" }
-##  @article{ AX2000, Author=  "Fritz A. First and Sec, X. Y.", 
+##  @article{ AB2000, Author=  "Fritz A. First and Sec, X. Y.", 
 ##  TITLE="Short", journal = j, year = 2000 }
 ##  </Listing> 
 ##  
@@ -304,6 +304,7 @@ end);
 ##  We continue the example from <Ref  Func="ParseBibFiles"  />.
 ##  
 ##  <Example>
+##  gap> NormalizeNameAndKey(bib[1][1]);
 ##  gap> bib[1][1];
 ##  rec( Type := "article", Label := "AB2000", 
 ##    author := "First, F. A. and Sec, X. Y. ", title := "Short", 

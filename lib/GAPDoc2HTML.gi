@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.18 2002-12-04 23:54:47 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.19 2002-12-23 10:03:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -263,8 +263,8 @@ end;
 ##  
 ##  The  output is  a  record  with one  component  for each  chapter
 ##  (with  names   <C>"0"</C>,  <C>"1"</C>,  ...,   <C>"Bib"</C>, and
-##  <C>"Ind"</C>).  Each  such  component   is  also  a  record  with
-##  components 
+##  <C>"Ind"</C>).  Each  such  component   is again  a  record  with
+##  the following components: 
 ##  
 ##  <List >
 ##  <Mark><C>text</C></Mark>

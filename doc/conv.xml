@@ -1,9 +1,9 @@
-<!-- $Id: conv.xml,v 1.9 2002-12-05 15:02:57 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.10 2002-12-23 10:03:20 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters</Heading>
 
-The &GAPDoc;  package contains a  set of programs  which allow to  convert a
+The &GAPDoc; package contains a set of programs which allow us to  convert a
 &GAPDoc; book  into several output  versions and  to make them  available to
 &GAP;'s online help.<P/>
 
@@ -71,8 +71,8 @@ series of commands like in the following example.
 cd /my/book/path
 latex MyBook
 bibtex MyBook
-makeindex MyBook
 latex MyBook
+makeindex MyBook
 latex MyBook
 mv MyBook.dvi manual.dvi
 dvips -o manual.ps manual.dvi
@@ -105,8 +105,8 @@ bibliography we have  to tell <Ref Func="GAPDoc2Text"/> the  location of the
 &BibTeX; database by specifying a <C>path</C> as second argument.
 
 <Log>
-t := GAPDoc2Text(r, path);;
-GAPDoc2TextPrintTextFiles(t, path);
+gap> t := GAPDoc2Text(r, path);;
+gap> GAPDoc2TextPrintTextFiles(t, path);
 </Log>
 
 This   command   constructs   all    parts   of   the   document   including
@@ -128,7 +128,7 @@ gap> PrintSixFile(Filename(path, "manual.six"), r, bookname);
 </Log>
 
 Finally  we  produce   an  HTML  version  of  the  document   and  write  it
-(chapter wise) into   files  <F>chap0.html</F>,  <F>chap1.html</F>   and  so
+(chapter-wise) into   files  <F>chap0.html</F>,  <F>chap1.html</F>   and  so
 on.  They  can  be  read  with   any  Web-browser.  The  commands  are  <Ref
 Func="GAPDoc2HTML"/>  and <Ref  Func="GAPDoc2HTMLPrintHTMLFiles"/>. We  also
 add a link from <F>manual.html</F> to  <F>chap0.html</F>. You may also add a
@@ -233,7 +233,7 @@ Key="La85" Where="Appendix B"/>.
 <Heading>Text Utilities</Heading>
 
 This  section describes  some utility  functions for  handling texts  within
-&GAP;. They are used  by other functions in the &GAPDoc;  package but may be
+&GAP;. They are used  by  the  functions in the &GAPDoc;  package but may be
 useful for other  purposes as well. We start with  some variables containing
 useful strings and  go on with functions for parsing  and reformatting text.
 <P/>
