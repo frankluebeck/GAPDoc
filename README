@@ -40,11 +40,11 @@ INSTALLATION
 Just unpack one of the archives in the "pkg" subdirectory of your GAP 
 installation. The archive is available in several formats:
 
-   gapdoc-0.9.zoo     (use the "unzoo" or "unzoo.exe" from the GAP homepage)
-   gapdoc-0.9.tar.gz  (GNU tar archive, gzip'ed)
-   gapdoc-0.9.tar.bz2 (GNU tar archive, bzip2'ed)
-   gapdoc-0.9.zip     (with UNIX style line breaks in text files)
-   gapdoc-0.9-w.zip   (with DOS/Windows style line breaks in text files)
+   gapdoc-0.99.zoo     (use the "unzoo" or "unzoo.exe" from the GAP homepage)
+   gapdoc-0.99.tar.gz  (GNU tar archive, gzip'ed)
+   gapdoc-0.99.tar.bz2 (GNU tar archive, bzip2'ed)
+   gapdoc-0.99.zip     (with UNIX style line breaks in text files)
+   gapdoc-0.99-w.zip   (with DOS/Windows style line breaks in text files)
 
 Unpacking generates a subdirectory "gapdoc". 
 
