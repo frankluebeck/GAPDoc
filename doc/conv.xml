@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.8 2002-05-27 09:02:43 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.9 2002-12-05 15:02:57 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters</Heading>
@@ -147,6 +147,12 @@ gap> GAPDoc2HTMLPrintHTMLFiles(h, path);
 This  function  collects  all  the commands  for  producing  a  <C>dvi</C>-,
 <C>pdf</C>-, postscript-, text-  and HTML-version of a  &GAPDoc; document as
 described in Section&nbsp;<Ref Sect="MakeDoc"/>.<P/>
+
+<Emph>Note:</Emph> If this function works for you depends on your
+operating system and installed software. It will probably work on most
+<C>UNIX</C> systems with a standard &LaTeX; installation. If the
+function doesn't work for you look at the source code and adjust it to
+your system. <P/>
 
 Here  <A>path</A> must  be the  directory  (as string  or directory  object)
 containing  the  main  file  <A>main</A>  of the  document  (given  with  or
