@@ -1,7 +1,7 @@
 
 ##  GAPDoc                                             Frank Lübeck
 ##  
-##  $Id: Examples.g,v 1.1 2003-12-04 15:09:06 gap Exp $
+##  $Id: Examples.g,v 1.2 2004-07-16 21:24:38 gap Exp $
 ##  
 ##  Some utilities to extract contents of some elements. (First
 ##  experimental.)
@@ -50,4 +50,36 @@ TstExamples := function(r)
   GetTexts(r, ["Example"], res);
   return res;
 end;
+
+# From Marco
+##  ReadPackage("GAPDoc","lib/Examples.g");
+##  
+##  TstExamples2 := function ( path, main, files )
+##      local  str, r, examples, temp_dir, file;
+##  
+##      str := ComposedXMLString( path, Concatenation( main, ".xml" ), files );
+##      r := ParseTreeXMLString( str );
+##  
+##  #Print(TstExamples( r ));
+##  
+##      examples := Concatenation( "gap> START_TEST( \"Test by GapDoc\" );\n",
+##         TstExamples( r ),
+##         "\ngap> STOP_TEST( \"test\", 10000 );\n",
+##         "Test by GapDoc\nGAP4stones: fail\n" );
+##  
+##      temp_dir := DirectoryTemporary( "gapdoc" );
+##      file := Filename( temp_dir, "testfile" );
+##      PrintTo( file, examples );
+##  
+##      ReadTest( file );
+##  
+##      RemoveFile( file );
+##      RemoveFile( temp_dir![1] );
+##  end;
+##  
+##  # example:
+##  
+##  path := DirectoriesPackageLibrary("singular", "doc/tmp");
+##  TstExamples2( path, "singular", [] );
+##  
 

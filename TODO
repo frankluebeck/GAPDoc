@@ -1,7 +1,7 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.3 2004-06-02 14:38:41 gap Exp $
+         $Id: TODO,v 1.4 2004-07-16 21:24:38 gap Exp $
 
 - maybe add links to "the" example in the reference section of doc?
   (not so sure, if this is necessary).
@@ -14,3 +14,7 @@
 
 - consider http://psyx.org/hermes/doc.html for translations from LaTeX to
   MathML.
+
+- finalize lib/Examples.g for builtin manual example tester and include and
+  document it.
+
