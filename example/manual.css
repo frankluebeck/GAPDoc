@@ -1,5 +1,5 @@
 /* gapdoc.css        Frank Lübeck */
-/* $Id: manual.css,v 1.5 2001-11-26 13:57:32 gap Exp $  */
+/* $Id: manual.css,v 1.6 2001-11-28 14:20:49 gap Exp $  */
 
 body { 
   background: #fffbd7; 
@@ -8,11 +8,8 @@ body {
   margin-bottom: 15px;
   margin-left: 10px;
   margin-right: 10px;
+  font-family: Helvetica,Verdana,Arial,sans-serif;
   text-align: justify;
-}
-
-p,h1,h2,h3,h4,ul,ol,li,div,td,th,address,blockquote,b,i,code,var { 
-  font-family: Helvetica,Lucida,Times; 
 }
 
 h1 { font-size: 200%; }
@@ -49,11 +46,11 @@ td, th {
 } 
 
 table.func { 
-  padding: 3pt; 
+  padding: 0pt 1ex; 
   margin-left: 1ex;
   margin-right: 1ex;
   background-color: transparent;
-  line-height: 1.1; 
+  /* line-height: 1.1; */ 
   width: 100%; 
 }
 
@@ -67,6 +64,7 @@ table.example {
 table.example td {
   border-style: none;
   border-width: 0pt;
+  padding: 0ex 1ex;
 }
 
 table.chlink {
@@ -123,13 +121,13 @@ td.chlink1 {
 }
 
 pre { 
-  font-family: "Courier New",Courier; 
+  font-family: "Courier New",Courier,monospace; 
   font-size: 100%; 
   color:#284d49; 
 }
 
 tt,code { 
-  font-family: "Courier New",Courier; 
+  font-family: "Courier New",Courier,monospace; 
   font-size: 100%; 
   color: #284d49; }
 

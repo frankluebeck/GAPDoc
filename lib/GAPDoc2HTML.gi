@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.9 2001-11-26 13:57:32 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.10 2001-11-28 14:20:49 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -36,6 +36,31 @@
 ##  bibliography (via  BibTeX-data files) and  index. For this we  have to
 ##  process a document twice (similar to LaTeX).
 ##  
+
+##  Small utility to through away SGML markup
+BindGlobal("FilterSGMLMarkup", function(str)
+  local p2, p1, res;
+  p2 := Position(str, '<');
+  if p2 = fail then
+    return str;
+  fi;
+  p1 := 0;
+  res := "";
+  while p2 <> fail do
+    Append(res, str{[p1+1..p2-1]});
+    p1 := Position(str, '>', p2);
+    if p1 = fail then
+      return res;
+    fi;
+    p2 := Position(str, '<', p1);
+    if p2 = fail then
+      Append(res, str{[p1+1..Length(str)]});
+      return res;
+    fi;
+  od;
+end);
+
+    
 
 InstallValue(GAPDoc2HTMLProcs, rec());
 
@@ -120,13 +145,15 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     if n=0 then
       Append(tt, "Contents");
     elif IsInt(n) then
-      Append(tt, Concatenation("Chapter ", String(n), ": ", r.chaptitle.(n)));
+      Append(tt, Concatenation("Chapter ", String(n), ": ", 
+             FilterSGMLMarkup(r.chaptitle.(n))));
     elif n="Bib" then
       Append(tt, "References");
     elif n="Ind" then
       Append(tt, "Index");
     else
-      Append(tt, Concatenation("Appendix ", n, ": ", r.chaptitle.(n)));
+      Append(tt, Concatenation("Appendix ", n, ": ", 
+             FilterSGMLMarkup(r.chaptitle.(n))));
     fi;
     Append(files.(n).text, tt);
     Append(files.(n).text, GAPDoc2HTMLProcs.Head2);
@@ -198,6 +225,24 @@ end;
 ##  <C>"Ind"</C>).  Each  such  component   is  also  a  record  with
 ##  components
 ##  
+##  The   HTML   code   produced   with   this   converter   conforms
+##  to    the   W3C    specification    HTML    4.01   strict,    see
+##  <URL>http://www.w3.org/TR/html401</URL>. This means in particular
+##  that  the  code  doesn't  contain  any  explicit  font  or  color
+##  information.  The  layout information  for  a  browser should  be
+##  specified in  a cascading  style sheet  (CSS) file.  The &GAPDoc;
+##  package contains an  example of such a style sheet,  see the file
+##  <File>gapdoc.css</File>  in the  root directory  of the  package.
+##  This  file  conforms  to  the  W3C  specification  CSS  2.0,  see
+##  <URL>http://www.w3.org/TR/REC-CSS2</URL>. You may  just copy that
+##  file as <File>manual.css</File> into the directory which contains
+##  the HTML version  of your documentation. But, of  course, you are
+##  free to adjust it for your  package, e.g., change colors or other
+##  layout  details, add  a background  image, ...  Each of  the HTML
+##  files produced  by the converters  contains a link to  this local
+##  style sheet file called <File>manual.css</File>.
+##  
+##  
 ##  <List >
 ##  <Mark><C>text</C></Mark>
 ##  <Item>the text of an HTML file containing the whole chapter (as a
@@ -210,14 +255,6 @@ end;
 ##  
 ##  The  result can  be  written  into files  with  the command  <Ref
 ##  Func="GAPDoc2HTMLPrintHTMLFiles" />.<P/>
-##  
-##  Each of  these HTML-files  has a link  to the  <Q>Cascading Style
-##  Sheet</Q> file <F>manual.css</F> in  the local directory (see any
-##  book about  HTML if you don't  know what this means).  An example
-##  for such  a file is contained  in the &GAPDoc; package  under the
-##  name <F>gapdoc.css</F>.  You can copy it  into your documentation
-##  directory and  adjust it according  to your wishes  (e.g., change
-##  colors or add a background image for browsers which can show it).
 ##  
 ##  Mathematical  formulae  are  handled  as in  the  text  converter
 ##  <Ref  Func="GAPDoc2Text"/>.  We don't  want  to  assume that  the
