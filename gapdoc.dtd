@@ -4,7 +4,7 @@
      By Frank Lübeck and Max Neunhöffer
      ================================================================== -->
 
-<!-- $Id: gapdoc.dtd,v 1.4 2001-02-05 14:40:55 gap Exp $ -->
+<!-- $Id: gapdoc.dtd,v 1.5 2002-05-02 20:39:58 gap Exp $ -->
 
 <!-- Note that this definition goes "bottom-up" because entities can only
      be used after their definition in the file. -->
@@ -27,11 +27,11 @@
      meanings in either XML or LaTeX: -->
      
 <!ENTITY tamp 
-  "<Alt Only='LaTeX'>\&amp;</Alt><Alt Not='LaTeX'>&amp;</Alt>">
+  "<Alt Only='LaTeX'>\&amp;</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;amp;</Alt><Alt Not='HTML'>&amp;</Alt></Alt>">
 <!ENTITY tlt 
-  "<Alt Only='LaTeX'>{\textless}</Alt><Alt Not='LaTeX'>&lt;</Alt>">
+  "<Alt Only='LaTeX'>{\textless}</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;lt;</Alt><Alt Not='HTML'>&lt;</Alt></Alt>">
 <!ENTITY tgt 
-  "<Alt Only='LaTeX'>{\textgreater}</Alt><Alt Not='LaTeX'>&gt;</Alt>">
+  "<Alt Only='LaTeX'>{\textgreater}</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;gt;</Alt><Alt Not='HTML'>&gt;</Alt></Alt>">
 <!ENTITY hash "<Alt Only='LaTeX'>\#</Alt><Alt Not='LaTeX'>#</Alt>">
 <!ENTITY dollar "<Alt Only='LaTeX'>\$</Alt><Alt Not='LaTeX'>$</Alt>">
 <!ENTITY percent 

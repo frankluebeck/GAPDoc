@@ -1,0 +1,10 @@
+
+           Some reminders for the authors
+
+         $Id: TODO,v 1.1 2002-05-02 20:39:58 gap Exp $
+
+- maybe add links to "the" example in the reference section of doc?
+
+- adjust doc: inside <Alt> content for HTML the special chars for HTML are 
+  *not* escaped. (allows direct HTML code, inside CDATA sects)
+

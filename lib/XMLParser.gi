@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.6 2001-11-16 15:20:48 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.7 2002-05-02 20:39:58 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -117,9 +117,9 @@ BindGlobal("ENTITYDICT", rec(
  amp := "&#38;#38;",
  apos := "&#39;",
  quot := "&#34;",
- tamp := "<Alt Only='LaTeX'>\\&amp;</Alt><Alt Not='LaTeX'>&amp;</Alt>",
- tlt := "<Alt Only='LaTeX'>{\\textless}</Alt><Alt Not='LaTeX'>&lt;</Alt>",
- tgt := "<Alt Only='LaTeX'>{\\textgreater}</Alt><Alt Not='LaTeX'>&gt;</Alt>",
+ tamp := "<Alt Only='LaTeX'>\\&amp;</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;amp;</Alt><Alt Not='HTML'>&amp;</Alt></Alt>",
+ tlt := "<Alt Only='LaTeX'>{\\textless}</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;lt;</Alt><Alt Not='HTML'>&lt;</Alt></Alt>",
+ tgt := "<Alt Only='LaTeX'>{\\textgreater}</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;gt;</Alt><Alt Not='HTML'>&gt;</Alt></Alt>",
  hash := "<Alt Only='LaTeX'>\\#</Alt><Alt Not='LaTeX'>#</Alt>",
  dollar := "<Alt Only='LaTeX'>\\$</Alt><Alt Not='LaTeX'>$</Alt>",
  percent := "<Alt Only='LaTeX'>\\&#37;</Alt><Alt Not='LaTeX'>&#37;</Alt>",
