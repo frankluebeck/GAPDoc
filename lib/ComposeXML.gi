@@ -2,7 +2,7 @@
 ##
 #W  ComposeXML.gi                GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: ComposeXML.gi,v 1.2 2001-01-17 15:31:20 gap Exp $
+#H  @(#)$Id: ComposeXML.gi,v 1.3 2001-07-11 11:21:37 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -41,6 +41,8 @@
 ##  </ManSection>
 ##  <#/GAPDoc>
 ##  
+# reset this if not found files or chunks should not run into an error
+XMLCOMPOSEERROR := true;
 InstallGlobalFunction(ComposedXMLString, function(path, main, source)
   local pieces, f, str, i, j, pre, pos, name, piece, a, b, len, res;  
   
@@ -106,16 +108,26 @@ InstallGlobalFunction(ComposedXMLString, function(path, main, source)
     piece := SplitString(res{[i+9..pos-1]}, "", "\"= ");
     if piece[1]="SYSTEM" then
       str := StringFile(Filename(path, piece[2]));
-      if str=fail then
+      if str=fail and XMLCOMPOSEERROR=true then
         Error("Cannot include file ", Filename(path, piece[2]));
+      elif str=fail then
+        res := Concatenation(res{[1..i-1]}, 
+               "\n\nMISSING FILE ", Filename(path, piece[2]), "\n\n", 
+               res{[pos+1..Length(res)]});
+      else 
+        res := Concatenation(res{[1..i-1]}, str, res{[pos+1..Length(res)]});
       fi;
-      res := Concatenation(res{[1..i-1]}, str, res{[pos+1..Length(res)]});
     elif piece[1]="Label" then 
-      if not IsBound(pieces.(piece[2])) then
+      if not IsBound(pieces.(piece[2])) and XMLCOMPOSEERROR=true then
         Error("Did not find chunk ", piece[2]);
-      fi;
-      res := Concatenation(res{[1..i-1]}, pieces.(piece[2]), 
+      elif not IsBound(pieces.(piece[2])) then
+        res := Concatenation(res{[1..i-1]}, "\n\nMISSING CHUNK ",
+                             piece[2], "\n\n",
+                             res{[pos+1..Length(res)]});
+      else
+        res := Concatenation(res{[1..i-1]}, pieces.(piece[2]), 
                                                res{[pos+1..Length(res)]});
+      fi;
     fi;
     i := i-1;
     i := PositionSublist(res, "<\#Include ", i);
