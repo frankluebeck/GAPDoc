@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.2 2001-01-17 15:31:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -574,6 +574,7 @@ end);
 ##  <#GAPDoc Label="ApplyToNodesParseTree">
 ##  <ManSection >
 ##  <Func Arg="tree, fun" Name="ApplyToNodesParseTree" />
+##  <Returns>nothing</Returns>
 ##  <Func Arg="tree" Name="AddRootParseTree" />
 ##  <Func Arg="tree" Name="RemoveRootParseTree" />
 ##  <Description>

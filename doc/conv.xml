@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.1.1.1 2001-01-05 13:37:49 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.2 2001-01-17 15:31:19 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters</Heading>
@@ -130,7 +130,10 @@ gap> PrintSixFile(Filename(path, "manual.six"), r, bookname);
 Finally  we  produce   an  HTML  version  of  the  document   and  write  it
 (chapterwise)  into   files  <F>chap0.html</F>,  <F>chap1.html</F>   and  so
 on.  They  can  be  read  with   any  Web-browser.  The  commands  are  <Ref
-Func="GAPDoc2HTML"/> and <Ref Func="GAPDoc2HTMLPrintHTMLFiles"/>.
+Func="GAPDoc2HTML"/>  and <Ref  Func="GAPDoc2HTMLPrintHTMLFiles"/>. We  also
+add a link from <F>manual.html</F> to  <F>chap0.html</F>. You may also add a
+file <F>manual.css</F>, see <Ref Func="GAPDoc2HTMLPrintHTMLFiles"/> for more
+details.
 
 <Log>
 gap> h := GAPDoc2HTML(r);;
@@ -199,8 +202,9 @@ documents.
 <Section Label="ParseBib">
 <Heading>Parsing &BibTeX; Files</Heading>
 
-Here are functions for parsing,  normalizing and printing reference lists in
-&BibTeX; format.
+Here are  functions for  parsing, normalizing  and printing  reference lists
+in  &BibTeX;  format. The  reference  describing  this format  is&nbsp;<Cite
+Key="La85" Where="Appendix B"/>.
 
 <#Include Label="ParseBibFiles">
 

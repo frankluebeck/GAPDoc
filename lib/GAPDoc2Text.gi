@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.1.1.1 2001-01-05 13:37:49 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.2 2001-01-17 15:31:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -52,6 +52,7 @@ GAPDoc2TextProcs.TextAttr.Func := Concatenation(TextAttr.bold, TextAttr.4);
 GAPDoc2TextProcs.TextAttr.Arg := Concatenation(TextAttr.normal, TextAttr.4);
 GAPDoc2TextProcs.TextAttr.Example := Concatenation(TextAttr.normal, TextAttr.5);
 GAPDoc2TextProcs.TextAttr.Package := TextAttr.bold;
+GAPDoc2TextProcs.TextAttr.Returns := TextAttr.bold;
 GAPDoc2TextProcs.TextAttr.URL := TextAttr.4;
 GAPDoc2TextProcs.TextAttr.Mark := Concatenation(TextAttr.bold, TextAttr.3);
 
@@ -67,7 +68,7 @@ GAPDoc2TextProcs.ParEls :=
 [ "Display", "Example", "Log", "Listing", "List", "Enum", "Item", "Table", 
   "TitlePage", "Abstract", "Copyright", "Acknowledgements", "Colophon", 
   "TableOfContents", "Bibliography", "TheIndex", "Subsection", "ManSection", 
-  "Description", "Section", "Chapter", "Appendix", "Body", "Book", 
+  "Description", "Returns", "Section", "Chapter", "Appendix", "Body", "Book", 
   "WHOLEDOCUMENT", "Attr", "Fam", "Filt", "Func", "Heading", "InfoClass", 
   "Meth", "Oper", "Prop", "Var" ];
 
@@ -159,6 +160,8 @@ end;
 ##  <#GAPDoc Label="GAPDoc2Text">
 ##  <ManSection >
 ##  <Func Arg="tree[, bibpath][, width]" Name="GAPDoc2Text" />
+##  <Returns>record  containing  text  files  as  strings  and  other
+##  information</Returns>
 ##  <Description>
 ##  The   argument  <A>tree</A>   for   this  function   is  a   tree
 ##  describing  a   &GAPDoc;  XML   document  as  returned   by  <Ref
@@ -179,14 +182,14 @@ end;
 ##  <List >
 ##  <Mark><C>text</C></Mark>
 ##  <Item>the text of the whole chapter as a string</Item>
-##  <Mark>ssnr</Mark>
+##  <Mark><C>ssnr</C></Mark>
 ##  <Item>list of subsection numbers in  this chapter (like <C>[3, 2,
 ##  1]</C>  for  chapter&nbsp;3,  section&nbsp;2,  subsection&nbsp;1)
 ##  </Item>
-##  <Mark>linenr</Mark>
+##  <Mark><C>linenr</C></Mark>
 ##  <Item>corresponding list  of line  numbers where  the subsections
 ##  start</Item>
-##  <Mark>len</Mark>
+##  <Mark><C>len</C></Mark>
 ##  <Item>number of lines of this chapter</Item>
 ##  </List>
 ##  
@@ -828,76 +831,13 @@ end;
 ##  simple maths, here we try to substitute TeX command to something which
 ##  looks ok in text mode
 GAPDoc2TextProcs.M := function(r, str)
-  local   subs,  s,  ss,  ls,  i,  j,  wd;
-  # We do the following substitutions (for other TeX commands only the
-  # backslash is removed.  Furthermore {} are changed to ().
-  subs := rec(
-              ldots := "...",
-              mid := "|",
-              left := "",
-              right := "",
-              mathbb := "",
-              cdot := "*",
-              geq := ">=",
-              leq := "<=",
-              pmod := "mod",
-              equiv := "=",
-              rightarrow := "->",
-              to := "->",
-              longrightarrow := "-->",
-              mapsto := "->",            # or |->  ????
-              leftarrow := "<-",
-              langle := "<",
-              rangle := ">"
-              );
+  local s;
   s := "";
-  # no filtering here
-  GAPDoc2TextProcs.PCDATA := GAPDoc2TextProcs.PCDATANOFILTER;
-  GAPDoc2TextContent(r, s);
-  GAPDoc2TextProcs.PCDATA := GAPDoc2TextProcs.PCDATAFILTER;
-  ss := "";
-  ls := Length(s);
-  i := 1;
-  while i<=ls do
-    if s[i] = '\\' and i<ls then
-      if not s[i+1] in LETTERS then
-        Add(ss, s[i+1]);
-        i := i+2;
-      else
-        j := i+2;
-        while j<=ls and s[j] in LETTERS do
-          j := j+1;
-        od;
-        wd := s{[i+1..j-1]};
-        if IsBound(subs.(wd)) then
-          Append(ss, subs.(wd));
-        else
-          Append(ss, wd);
-        fi;
-        i := j;
-      fi;
-    elif s[i] = '{' then
-      Add(ss, '(');  #???
-      i := i+1;
-    elif s[i] = '}' then
-      Add(ss, ')');
-      i := i+1;
-    else
-      j := i+1;
-      while j <= ls and not (s[j] in "\\{}") do
-        j := j+1;
-      od;
-      if i = 1 and j > ls then
-        ss := s;
-      else
-        Append(ss, s{[i..j-1]});
-      fi;
-      i := j;
-    fi;
-  od;
-  Append(str, ss);
-#Print("\n------------\n",s,"\n",ss,"\n"); 
+  GAPDoc2HTMLContent(r, s);
+  s := TextM(s);
+  Append(str, s);
 end;
+
 
 ##  in Txt this is shown in TeX format
 GAPDoc2TextProcs.Math := function(r, str)
@@ -1255,14 +1195,37 @@ GAPDoc2TextProcs.Ref := function(r, str)
 end;
 
 GAPDoc2TextProcs.Description := function(r, par)
-  local l;
+  local l, tmp;
   l := [];
   GAPDoc2TextContent(r, l);
-  if Length(l) > 0 then
-    l[2] := Concatenation("\n", l[2]);
+  # Add an empty line in front if not yet there
+  if Length(par) > 0 and Length(par[Length(par)]) > 1 then
+    tmp := par[Length(par)];
+  else
+    tmp := "";
+  fi;
+  if tmp[Length(tmp)-1] <> '\n' then
+    Add(tmp, '\n');
   fi;
   Append(par, l);
 end;
+
+GAPDoc2TextProcs.Returns := function(r, par)
+  local ind, l;
+  l := [];
+  ind := r.root.indent;
+  r.root.indent := Concatenation(ind, "          ");
+  GAPDoc2TextContent(r, l);
+  if Length(l) > 0 then
+    l[2] := Concatenation(l[2]{[1..Length(r.root.indent) - 10]},
+              GAPDoc2TextProcs.TextAttr.Returns, "Returns:", 
+              GAPDoc2TextProcs.TextAttr.reset,
+              l[2]{[Length(r.root.indent)-1..Length(l[2])]});
+    Append(par, l);
+  fi;
+  r.root.indent := ind;
+end;
+
 
 GAPDoc2TextProcs.ManSection := function(r, par)
   local   funclike,  i,  num,  s, strn;
@@ -1510,16 +1473,38 @@ GAPDoc2TextProcs.Caption1 := function(r, str)
                                                   "both", ["     ", ""]));
 end;
 
+##  
 ##  <#GAPDoc Label="GAPDoc2TextPrintTextFiles">
 ##  <ManSection >
 ##  <Func Arg="t[, path]" Name="GAPDoc2TextPrintTextFiles" />
+##  <Returns>nothing</Returns>
 ##  <Description>
 ##  The  first   argument  must   be  a   result  returned   by  <Ref
 ##  Func="GAPDoc2Text"/>. The second argument is a path for the files
 ##  to write, it can be given as string or directory object. The text
 ##  of  each  chapter is  written  into  a  separate file  with  name
 ##  <F>chap0.txt</F>,  <F>chap1.txt</F>, ...,  <F>chapBib.txt</F> and
-##  <F>chapInd.txt</F>.
+##  <F>chapInd.txt</F>.<P/>
+##  
+##  If  you want  to  make  your document  accessible  via the  &GAP;
+##  online  help you  must  put at  least these  files  for the  text
+##  version  into a  directory and  use  the name  of this  directory
+##  as  an  argument for  one  of  the commands  <Ref  BookName="Ref"
+##  Func="DeclarePackageDocumentation"  />   or  <Ref  BookName="Ref"
+##  Func="DeclarePackageAutoDocumentation"  />. Furthermore  you need
+##  to put the  file <F>manual.six</F> into this  directory, see <Ref
+##  Func="PrintSixFile" />. <P/>
+##  
+##  Optionally you can add the <C>dvi</C>- and <C>pdf</C>-versions of
+##  the  document which  are produced  with <Ref  Func="GAPDoc2LaTeX"
+##  />   to  this   directory.  The   files  must   have  the   names
+##  <F>manual.dvi</F>   and  <F>manual.pdf</F>,   respectively.  Also
+##  you  can  add  the  files  of  the  HTML  version  produced  with
+##  <Ref   Func="GAPDoc2HTML"  />   to  this   directory,  see   <Ref
+##  Func="GAPDoc2HTMLPrintHTMLFiles"  />.  The handler  functions  in
+##  &GAP;  for this  help format  detect automatically  which of  the
+##  optional formats of a book are actually available.
+##  
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>

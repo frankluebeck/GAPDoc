@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gd                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gd,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $
+#H  @(#)$Id: GAPDoc.gd,v 1.2 2001-01-17 15:31:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -15,4 +15,5 @@ DeclareGlobalFunction("CheckAndCleanGapDocTree");
 DeclareGlobalFunction("AddParagraphNumbersGapDocTree");
 DeclareGlobalFunction("AddPageNumbersToSix");
 DeclareGlobalFunction("PrintSixFile");
+DeclareGlobalFunction("TextM");
 

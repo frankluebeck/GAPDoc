@@ -1,4 +1,4 @@
-<!-- $Id: intro.xml,v 1.1.1.1 2001-01-05 13:37:49 gap Exp $ -->
+<!-- $Id: intro.xml,v 1.2 2001-01-17 15:31:19 gap Exp $ -->
 <Chapter Label="ch:intro"><Heading>Introduction and Example</Heading>
 
 The main  purpose of  the &GAPDoc; package  is to define  a file  format for
@@ -20,13 +20,15 @@ and which hopefully  makes it easy to translate to  future output formats as
 well. <P/>
 
 To make  documentation written  in the &GAPDoc;  format directly  usable, we
-also provide a set of programs which produce text-, hyperlinked &LaTeX;- and
-HTML-output versions of  a &GAPDoc; document. These  programs run completely
-inside  &GAP;,  i.e.,  no  external  programs  are  needed.  You  only  need
-<C>latex</C>  and  <C>pdflatex</C>  to  process the  &LaTeX;  output.  These
-programs are described in Chapter&nbsp;<Ref Chap="ch:conv"/>.
+also  provide a  set of  programs, called  converters, which  produce text-,
+hyperlinked &LaTeX;- and HTML-output versions  of a &GAPDoc; document. These
+programs are developed by the first named author. They run completely inside
+&GAP;, i.e., no external programs are needed. You only need <C>latex</C> and
+<C>pdflatex</C> to process the &LaTeX;  output. These programs are described
+in Chapter&nbsp;<Ref Chap="ch:conv"/>.
 
 <Section Label="sec:XML"><Heading>XML</Heading>
+<Index >XML</Index>
 
 The definition  of the  &GAPDoc; format uses  XML, the  <Q>eXtendible Markup
 Language</Q>.  This  is a  standard  (defined  by  the W3C  consortium,  see
@@ -70,7 +72,7 @@ characters).
 
 <Listing Type="from 3k+1.xml">
 <![CDATA[<!--   A complete "fake package" documentation   
-   $Id: intro.xml,v 1.1.1.1 2001-01-05 13:37:49 gap Exp $
+   $Id: intro.xml,v 1.2 2001-01-17 15:31:19 gap Exp $
 -->
 ]]></Listing>
 

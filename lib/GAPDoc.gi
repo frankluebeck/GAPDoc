@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.2 2001-01-17 15:31:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -14,6 +14,7 @@
 ##  <#GAPDoc Label="CheckAndCleanGapDocTree">
 ##  <ManSection >
 ##  <Func Arg="tree" Name="CheckAndCleanGapDocTree" />
+##  <Returns>nothing</Returns>
 ##  <Description>
 ##  The argument  <A>tree</A> of this  function is a parse  tree from
 ##  <Ref Func="ParseTreeXMLString" /> of some &GAPDoc; document. This
@@ -117,6 +118,7 @@ end);
 ##  <#GAPDoc Label="AddParagraphNumbersGapDocTree">
 ##  <ManSection >
 ##  <Func Arg="tree" Name="AddParagraphNumbersGapDocTree" />
+##  <Returns>nothing</Returns>
 ##  <Description>
 ##  The argument  <A>tree</A> must  be an XML  tree returned  by <Ref
 ##  Func="ParseTreeXMLString" /> applied to a &GAPDoc; document. This
@@ -188,6 +190,7 @@ end);
 ##  <#GAPDoc Label="AddPageNumbersToSix">
 ##  <ManSection >
 ##  <Func Arg="tree, pnrfile" Name="AddPageNumbersToSix" />
+##  <Returns>nothing</Returns>
 ##  <Description>
 ##  Here   <A>tree</A>  must   be  the   XML  tree   of  a   &GAPDoc;
 ##  document,   returned   by  <Ref   Func="ParseTreeXMLString"   />.
@@ -218,6 +221,7 @@ end);
 ##  <#GAPDoc Label="PrintSixFile">
 ##  <ManSection >
 ##  <Func Arg="tree, bookname, fname" Name="PrintSixFile" />
+##  <Returns>nothing</Returns>
 ##  <Description>
 ##  This  function  prints  the  <C>.six</C>  file  <A>fname</A>  for
 ##  a   &GAPDoc;   document   stored   in   <A>tree</A>   with   name
@@ -267,4 +271,78 @@ PrintGAPDocElementTemplates := function ( file )
   od;
   return;
 end;
+
+BindGlobal("TEXTMTRANSLATIONS",
+  rec(
+     ldots := "...",
+     mid := "|",
+     left := "",
+     right := "",
+     mathbb := "",
+     mathop := "",
+     limits := "",
+     cdot := "*",
+     ast := "*",
+     geq := ">=",
+     leq := "<=",
+     pmod := "mod ",
+     equiv := "=",
+     rightarrow := "->",
+     hookrightarrow := "->",
+     to := "->",
+     longrightarrow := "-->",
+     Rightarrow := "=>",
+     Longrightarrow := "==>",
+     Leftarrow := "<=",
+     iff := "<=>",
+     mapsto := "->",            #  "|->"  looks ugly!
+     leftarrow := "<-",
+     langle := "<",
+     rangle := ">",
+     setminus := "\\"
+     )
+);
+
+
+InstallGlobalFunction(TextM, function(str)
+  local subs, res, i, j;
+  subs := Immutable(Set(NamesOfComponents(TEXTMTRANSLATIONS)));
+  res := "";
+  i := 1;
+  while i <= Length(str) do
+    # handle macros
+    if str[i] = '\\' then
+      j := i+1;
+      while j <= Length(str) and str[j] in LETTERS do
+        j := j+1;
+      od;
+      if str{[i+1..j-1]} in subs then
+        Append(res, TEXTMTRANSLATIONS.(str{[i+1..j-1]}));
+      else
+        Append(res, str{[i+1..j-1]});
+      fi;
+      i := j;
+    elif str[i] = '{' then
+      if i < Length(str) and str[i+1] = '{' then
+        Add(res, '{');
+        i := i + 2;
+      else
+        i := i + 1;
+      fi;
+    elif str[i] = '}' then
+      if i < Length(str) and str[i+1] = '}' then
+        Add(res, '}');
+        i := i + 2;
+      else
+        i := i + 1;
+      fi;
+    else 
+      Add(res, str[i]);
+      i := i + 1;
+    fi;
+  od;
+  NormalizeWhitespace(res);
+  return res;
+end);
+
 

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.2 2001-01-17 15:31:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -27,6 +27,7 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  <#GAPDoc Label="GAPDoc2LaTeX">
 ##  <ManSection >
 ##  <Func Arg="tree" Name="GAPDoc2LaTeX" />
+##  <Returns>&LaTeX; document as string</Returns>
 ##  <Description>
 ##  The   argument  <A>tree</A>   for   this  function   is  a   tree
 ##  describing  a   &GAPDoc;  XML   document  as  returned   by  <Ref
@@ -767,7 +768,7 @@ end;
 ##  this produces an implicit index entry and a label entry
 GAPDoc2LaTeXProcs.LikeFunc := function(r, str, typ)
   local   nam,  namclean, lab;
-  Append(str, "\\textcolor{FuncColor}{$\\Diamond$\\ \\texttt{");
+  Append(str, "\\noindent\\textcolor{FuncColor}{$\\Diamond$\\ \\texttt{");
   nam := r.attributes.Name;
   namclean := GAPDoc2LaTeXProcs.DeleteUsBs(nam);
   # we allow _ and \ here
@@ -937,7 +938,14 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
 end;
 
 GAPDoc2LaTeXProcs.Description := function(r, str)
+  Append(str, "\n\n");
   GAPDoc2LaTeXContent(r, str);
+end;
+
+GAPDoc2LaTeXProcs.Returns := function(r, str)
+  Append(str, "\\textbf{\\indent Returns:\\ }\n");
+  GAPDoc2LaTeXContent(r, str); 
+  Append(str,"\n\n");
 end;
 
 GAPDoc2LaTeXProcs.ManSection := function(r, str)

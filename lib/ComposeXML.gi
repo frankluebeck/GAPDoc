@@ -2,7 +2,7 @@
 ##
 #W  ComposeXML.gi                GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: ComposeXML.gi,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $
+#H  @(#)$Id: ComposeXML.gi,v 1.2 2001-01-17 15:31:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -14,6 +14,7 @@
 ##  <#GAPDoc Label="ComposedXMLString">
 ##  <ManSection >
 ##  <Func Arg="path, main, source" Name="ComposedXMLString" />
+##  <Returns>XML document as string</Returns>
 ##  <Description>
 ##  This function returns a string containing a &GAPDoc; XML document
 ##  constructed from several source files.<P/>

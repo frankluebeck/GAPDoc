@@ -2,7 +2,7 @@
 ##
 #W  getdtd.g                     GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: getdtd.g,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $
+#H  @(#)$Id: getdtd.g,v 1.2 2001-01-17 15:31:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -14,23 +14,22 @@
 ##  This is  not read by  the package and  only used when  gapdoc.dtd is
 ##  changed.
 ##  
-Revision.getdtd.g :=
-    "@(#)$Id: getdtd.g,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $";
+#Revision.getdtd.g :=
+#    "@(#)$Id: getdtd.g,v 1.2 2001-01-17 15:31:20 gap Exp $";
 
 
-Read("stringutil.g");
 
 # some hacks instead of writing a dtd-parser
 
 dtd := StringFile("gapdoc.dtd");;
 
-pos := PositionSubstring(dtd, "<!ELEMENT");
+pos := PositionSublist(dtd, "<!ELEMENT");
 elementdecs := [];
 while pos <> fail do
   pos2 := Position(dtd, '>', pos);
   Add(elementdecs, dtd{[pos+10..pos2-1]});
   pos := pos2;
-  pos := PositionSubstring(dtd, "<!ELEMENT", pos);
+  pos := PositionSublist(dtd, "<!ELEMENT", pos);
 od;
 
 elements := [];
@@ -41,7 +40,7 @@ for a in elementdecs do
   elementcontents.(wds[1]) := Set(wds{[2..Length(wds)]});
 od;
 
-pos := PositionSubstring(dtd, "% InnerText");
+pos := PositionSublist(dtd, "% InnerText");
 pos2 := Position(dtd, '>', pos);
 innertxt := WordsString(dtd{[pos+13..pos2]});
 txt := Concatenation(innertxt, [ "Enum", "List", "Table" ]);
@@ -63,13 +62,13 @@ for x in elements do
   fi;
 od;
 
-pos := PositionSubstring(dtd, "<!ATTLIST");
+pos := PositionSublist(dtd, "<!ATTLIST");
 elementatts := [];
 while pos <> fail do
   pos2 := Position(dtd, '>', pos);
   Add(elementatts, dtd{[pos+10..pos2-1]});
   pos := pos2;
-  pos := PositionSubstring(dtd, "<!ATTLIST", pos);
+  pos := PositionSublist(dtd, "<!ATTLIST", pos);
 od;
 
 elementattributes := rec();

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- $Id: example.xml,v 1.1.1.1 2001-01-05 13:37:49 gap Exp $ -->
+<!-- $Id: example.xml,v 1.2 2001-01-17 15:31:20 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
  [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&tgt;</Alt>'>]>
@@ -70,6 +70,7 @@
 
   <ManSection>
    <Func Name="f" Arg="x[,y]" Comm="calculates something"/>
+   <Returns>an element in <Ref Filt="IsBlubb" /> or <K>fail</K>.</Returns>
    <Description>
     This function calculates something.
    </Description>
@@ -146,7 +147,7 @@
   </ManSection>
 
   <ManSection>
-   <InfoClass Name="BlibbsLib" Comm="InfoClass for the library of blibbs"/>
+   <InfoClass Name="InfoBlibbs" Comm="InfoClass for the library of blibbs"/>
    <Description>
     This info class is used throughout the library of blibbs.
    </Description>
@@ -300,7 +301,7 @@ We distinguish among others references
  to attributes (see <Ref Attr="NumberBlobbs"/>), 
  to variables (<Ref Var="AllBlibbs"/>), 
  to families (see <Ref Fam="BlibbsFamily"/>),
- and to info classes (see <Ref InfoClass="BlibbsLib"/>).
+ and to info classes (see <Ref InfoClass="InfoBlibbs"/>).
 <P/>
 
 There are also references to labels: see <Ref Text="here" Label="there"/>,
@@ -500,7 +501,7 @@ This is an appendix.
 <Section Label="Three">
 <Heading>First Chapter (Source)</Heading>
 
-[<Ref Text="Back" Label="ThreeBack"/>]
+[<Ref  Label="ThreeBack"/>]
 
 <Listing>
 <![CDATA[<Section Label="FirstSect"><Heading>Normal subsections</Heading>
@@ -526,7 +527,7 @@ This is an appendix.
 
 <Section Label="Four"><Heading>ManSections (Source)</Heading>
 
-[<Ref Text="Back" Label="FourBack"/>]
+[<Ref Label="FourBack"/>]
 
 <Listing>
 <![CDATA[<Section><Heading>ManSections</Heading>
@@ -609,7 +610,7 @@ This is an appendix.
   </ManSection>
 
   <ManSection>
-   <InfoClass Name="BlibbsLib" Comm="InfoClass for the library of blibbs"/>
+   <InfoClass Name="InfoBlibbs" Comm="InfoClass for the library of blibbs"/>
    <Description>
     This info class is used throughout the library of blibbs.
    </Description>
@@ -623,7 +624,7 @@ This is an appendix.
 
 <Section Label="Five"><Heading>Various Types of Text (Source)</Heading>
 
-[<Ref Text="Back" Label="FiveBack"/>]
+[<Ref Label="FiveBack"/>]
 
 <Listing>
 <![CDATA[<Chapter><Heading>Other Markup</Heading>
@@ -675,7 +676,7 @@ that are possible in &GAPDoc;:
 
 <Section Label="Six"><Heading>Verbatim-like text (Source)</Heading>
 
-[<Ref Text="Back" Label="SixBack"/>]
+[<Ref Label="SixBack"/>]
 
 <Listing>
 <![CDATA[There are also three elements to typeset <Q>verbatim-like</Q> text.
@@ -728,7 +729,7 @@ true
 
 <Section Label="Seven"><Heading>Formulae (Source)</Heading>
 
-[<Ref Text="Back" Label="SevenBack"/>]
+[<Ref Label="SevenBack"/>]
 
 <Listing>
 <![CDATA[<Section><Heading>Formulae</Heading>
@@ -761,7 +762,7 @@ matters for text (or HTML) output).
 
 <Section Label="Eight"><Heading>Crossreferencing (Source)</Heading>
 
-[<Ref Text="Back" Label="EightBack"/>]
+[<Ref Label="EightBack"/>]
 
 <Listing>
 <![CDATA[<Section Label="Cross"><Heading>Crossreferencing</Heading>
@@ -785,7 +786,7 @@ We distinguish among others references
  to attributes (see <Ref Attr="NumberBlobbs"/>), 
  to variables (<Ref Var="AllBlibbs"/>), 
  to families (see <Ref Fam="BlibbsFamily"/>),
- and to info classes (see <Ref InfoClass="BlibbsLib"/>).
+ and to info classes (see <Ref InfoClass="InfoBlibbs"/>).
 <P/>
 
 There are also references to labels: see <Ref Text="here" Label="there"/>,
@@ -829,7 +830,7 @@ One can generate index entries as follows (look up the words
 
 <Section Label="Nine"><Heading>Lists and Tables (Source)</Heading>
 
-[<Ref Text="Back" Label="NineBack"/>]
+[<Ref Label="NineBack"/>]
 
 <Listing>
 <![CDATA[<Section><Heading>Lists and Tables</Heading>
@@ -882,7 +883,7 @@ Here is a <E>table</E>:
 <Section Label="Ten">
 <Heading>Entities and Special Characters (Source)</Heading>
 
-[<Ref Text="Back" Label="TenBack"/>]
+[<Ref Label="TenBack"/>]
 
 <Listing>
 <![CDATA[<Section><Heading>Entities and Special Characters</Heading>
@@ -944,7 +945,7 @@ And here are the predefined entities in &GAPDoc;:
 
 <Section Label="Eleven"><Heading>Appendix (Source)</Heading>
 
-[<Ref Text="Back" Label="ElevenBack"/>]
+[<Ref Label="ElevenBack"/>]
 
 <Listing Type="GAPDoc source">
 <![CDATA[<Appendix><Heading>An Appendix</Heading>

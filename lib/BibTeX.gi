@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.2 2001-01-17 15:31:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -144,6 +144,8 @@ end);
 ##  <#GAPDoc Label="ParseBibFiles">
 ##  <ManSection >
 ##  <Func Arg="bibfile" Name="ParseBibFiles" />
+##  <Returns>list <C>[list of bib-records, list of abbrevs, list  of 
+##  expansions</C></Returns>
 ##  <Description>
 ##  This function parses a file <A>bibfile</A> (if this file does not
 ##  exist the  extension <C>.bib</C> is appended)  in &BibTeX; format
@@ -283,6 +285,7 @@ end);
 ##  <#GAPDoc Label="NormalizeNameAndKey">
 ##  <ManSection >
 ##  <Func Arg="r" Name="NormalizeNameAndKey" />
+##  <Returns>nothing</Returns>
 ##  <Description>
 ##  This  function  normalizes  in  a record  describing  a  &BibTeX;
 ##  reference  (see <Ref  Func="ParseBibFiles" />) the  <C>author</C>
@@ -549,14 +552,14 @@ InstallGlobalFunction(PrintBibAsHTML, function(arg)
   if IsBound(r.notes) then
     Print("<br>\n(", r.notes, ")<br>\n");
   fi;
-  
+ 
   if IsBound(r.BUCHSTABE) then
     Print("<br>\nEinsortiert unter ", r.BUCHSTABE, ".<br>\n");
   fi;
   if IsBound(r.LDFM) then
     Print("Signatur ", r.LDFM, ".<br>\n");
   fi;
-  if i>=0 then
+  if IsBound(r.BUCHSTABE) and i>=0 then
     Print("<a href=\"HTMLldfm", r.BUCHSTABE, ".html#", i, 
           "\"><font color=red>BibTeX Eintrag</font></a>\n<br>");
   fi;
