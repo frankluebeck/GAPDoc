@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.6 2001-09-12 07:25:26 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.7 2001-11-26 13:57:32 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -504,7 +504,7 @@ InstallGlobalFunction(PrintBibAsHTML, function(arg)
     Print("<p>\n[<a href=\"http://www.ams.org/mathscinet-getitem?mr=",
       r.mrnumber, "\">", r.Label, "</a>]   ");
   else
-    Print("<p>\n[<font color=\"#8e0000\">", r.Label, "</font>]   ");
+    Print("<p>\n[<span style=\"color: #8e0000;\">", r.Label, "</span>]   ");
   fi;
   if IsBound(r.author) then
     Print("<b>",r.author,"</b> ");
@@ -543,7 +543,7 @@ InstallGlobalFunction(PrintBibAsHTML, function(arg)
     Print(",\n ", r.series);
   fi;
   if IsBound(r.volume) then
-    Print(",\n <emph>", r.volume, "</emph>");
+    Print(",\n <em>", r.volume, "</em>");
   fi;
   if IsBound(r.number) then
     Print(" (", r.number, ")");
@@ -575,7 +575,7 @@ InstallGlobalFunction(PrintBibAsHTML, function(arg)
   fi;
   if IsBound(r.BUCHSTABE) and i>=0 then
     Print("<a href=\"HTMLldfm", r.BUCHSTABE, ".html#", i, 
-          "\"><font color=red>BibTeX Eintrag</font></a>\n<br>");
+          "\"><span style=\"color: red;\">BibTeX Eintrag</span></a>\n<br>");
   fi;
   Print("</p>\n\n");
 end);

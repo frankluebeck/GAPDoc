@@ -1,35 +1,171 @@
 /* gapdoc.css        Frank Lübeck */
-/* $Id: manual.css,v 1.2 2001-01-24 14:05:11 gap Exp $  */
+/* $Id: manual.css,v 1.3 2001-11-26 13:57:32 gap Exp $  */
 
-body { background:#fffbd7; color:#000000; margin-top:15px; margin-bottom:15px; }
+body { 
+  background: #fffbd7; 
+  color: #000000; 
+  margin-top: 15px; 
+  margin-bottom: 15px;
+  margin-left: 10px;
+  margin-right: 10px;
+  text-align: justify;
+}
 
-p,h1,h2,h3,h4,ul,ol,li,div,td,th,address,blockquote,nobr,b,i,code,var
-                { font-family:Helvetica,Lucida,Times; font-size:12pt; }
+p,h1,h2,h3,h4,ul,ol,li,div,td,th,address,blockquote,b,i,code,var { 
+  font-family: Helvetica,Lucida,Times; 
+}
 
-h1 { font-size:22pt; }
-h2 { font-size:18pt; }
-h3 { font-size:18pt; }
-h4 { font-size:14pt; }
-h5 { font-size:12pt; }
+h1 { font-size: 200%; }
+h2 { font-size: 160%; }
+h3 { font-size: 160%; }
+h4 { font-size: 130%; }
+h5 { font-size: 100%; }
 
-p.func {background-color:#efef00; margin: 0pt 1cm; }
-table.func { cellpadding:0pt; cellspacing:0pt; line-height:10pt; width:"100%"; }
+.pcenter {
+  text-align: center;
+}
 
-table.example {background-color:#efefd7; border-style:none; border-width:thin; width:"100%"}
+.pleft {
+  text-align: left;
+}
 
-table.chlink {background-color:#dddddd; border-style:none; border-width:thin;   width:"100%"; }
+.pright {
+  text-align: right;
+}
 
-pre { font-family:"Courier New",Courier; font-size:10pt; color:#284d49; }
-tt,code { font-family:"Courier New",Courier; font-size:12pt; color:#284d49; }
-var {color:#cf0000;}
+div.func {
+  background-color: #eeeac6; 
+  margin: 0pt 0pt; 
+}
 
-pre.normal {color:#000000}
+table {
+  margin-left: auto;
+  margin-right: auto;
+}
 
-code.func {color:#006500}
-code.keyw {color:#ff0000}
-code.file {color:#8e4510}
+td, th {
+  border-collapse: collapse;
+  border-style: none;
+} 
 
-a:link { color:#00008e; text-decoration:none; }
-a:visited { color:#00008e; text-decoration:none; }
-a:active { color:#000000; text-decoration:none; }
+table.func { 
+  padding: 3pt; 
+  margin-left: 1ex;
+  margin-right: 1ex;
+  background-color: transparent;
+  line-height: 1.1; 
+  width: 100%; 
+}
+
+table.example {
+  background-color: #efefd7; 
+  border-style: none; 
+  border-width: 0pt; 
+  padding: 0px;  
+  width: 100%
+}
+table.example td {
+  border-style: none;
+  border-width: 0pt;
+}
+
+table.chlink {
+  background-color: #dddddd; 
+  border-style: none; 
+  border-width: thin;  
+  text-align: center;
+  /* width: 100%;  */
+}
+
+table.chlink td {
+  border-style: groove;
+  border-width: thin;
+}
+
+table.GAPDocTable {
+  border-collapse: collapse;
+  border-style: none;
+  border-color: black;
+}
+
+table.GAPDocTable  td, table.GAPDocTable  th {
+  padding: 3pt;
+  border-width: thin;
+  border-style: solid;
+  border-color: #555555;
+}
+
+caption.GAPDocTable {
+  caption-side: bottom;
+  width: 70%;
+  margin-top: 1em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+td.tdleft {
+  text-align: left;
+}
+
+td.tdright {
+  text-align: right;
+}
+
+td.tdcenter {
+  text-align: center;
+}
+
+div.chlink {
+  text-align: center;
+}
+td.chlink1 {
+  background-color: #cccccc;
+}
+
+pre { 
+  font-family: "Courier New",Courier; 
+  font-size: 100%; 
+  color:#284d49; 
+}
+
+tt,code { 
+  font-family: "Courier New",Courier; 
+  font-size: 100%; 
+  color: #284d49; }
+
+var {
+  color: #cf0000;
+}
+
+pre.normal {
+  color: #000000;
+}
+
+code.func {
+  color: #006500;
+}
+code.keyw {
+  color: #ff0000;
+}
+code.file {
+  color: #8e4510;
+}
+
+p.foot {
+  font-size: 60%;
+  font-style: normal;
+}
+
+a:link { 
+  color: #00008e; 
+  text-decoration: none; 
+}
+a:visited { 
+  color: #00008e; 
+  text-decoration: none; 
+}
+a:active { 
+  color: #000000; 
+  text-decoration: none; 
+}
 
