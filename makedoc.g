@@ -2,7 +2,7 @@
 ##
 #A  makedoc.g                             GAPDoc                 Frank Lübeck
 ##  
-#H  @(#)$Id: makedoc.g,v 1.4 2003-02-19 17:46:33 gap Exp $
+#H  @(#)$Id: makedoc.g,v 1.5 2003-11-20 22:02:15 gap Exp $
 ##  
 ##  Rebuild the whole documentation, provided sufficiently good (pdf)LaTeX
 ##  is available. 
@@ -26,4 +26,6 @@ MakeGAPDocDoc("example", "example", [], "GAPDocExample");
 # from first chapter
 Print("\n========== converting small example from introduction ============\n");
 MakeGAPDocDoc("3k+1", "3k+1", [], "ThreeKPlusOne");
+
+GAPDocManualLab("GAPDoc");
 
