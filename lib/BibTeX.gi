@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.2 2001-01-17 15:31:20 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.3 2001-01-18 14:31:41 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -409,6 +409,7 @@ end);
 ##  <#GAPDoc Label="WriteBibFile">
 ##  <ManSection >
 ##  <Func Arg="bibfile, bib" Name="WriteBibFile" />
+##  <Returns>nothing</Returns>
 ##  <Description>
 ##  This  is   the  converse  of  <Ref  Func="ParseBibFiles"/>.  Here
 ##  <A>bib</A>  must  have  a  format  as  it  is  returned  by  <Ref

@@ -4,7 +4,7 @@
      By Frank Lübeck and Max Neunhöffer
      ================================================================== -->
 
-<!-- $Id: gapdoc.dtd,v 1.2 2001-01-17 15:31:19 gap Exp $ -->
+<!-- $Id: gapdoc.dtd,v 1.3 2001-01-18 14:31:40 gap Exp $ -->
 
 <!-- Note that this definition goes "bottom-up" because entities can only
      be used after their definition in the file. -->
@@ -80,11 +80,9 @@
                       Keyword | K | Arg | A | Quoted | Q | Code | C | 
                       File | F | Button | B | Package |
                       M | Math | Display | 
-                      Example | Listing | Log | 
+                      Example | Listing | Log | Verb |
                       URL | Email | Homepage | Cite | Label | 
                       Ref | Index" >
-
-<!-- Do we need additional entries in the TableOfContents??? -->
 
 
 <!ELEMENT Alt (%InnerText;)*>     <!-- This is only to allow "Only" and
@@ -160,6 +158,12 @@
                                             listed code, may appear in
                                             output -->
 
+<!-- One  further  verbatim element,  this is truely  verbatim without
+     any processing and intended  for ASCII substitutes of complicated
+     displayed formulae or tables. -->
+
+<!ELEMENT Verb  (#PCDATA)> 
+
 <!-- The following  elements are  for cross-referencing  purposes like
      URLs, citations,  references, and  the index. All  these elements
      are  terminal and  need special  methods  to make  up the  actual
@@ -170,7 +174,7 @@
                                           that have links like HTML -->
 
 <!-- The following two are actually URLs, but the element name determines
-     the type : -->
+     the type. -->
      
 <!ELEMENT Email (#PCDATA|Alt)*>
 <!ELEMENT Homepage (#PCDATA|Alt)*>
@@ -200,7 +204,7 @@
 
               Label     CDATA #IMPLIED
               BookName  CDATA #IMPLIED
-              Style (Text | Number) #IMPLIED>  <!-- normally automatic -->
+              Style (Text|Number) #IMPLIED>  <!-- normally automatic -->
 
 <!-- Note that  only one attribute  of Ref is used  normally. BookName
      and  Style  can  be  specified in  addition  to  handle  external

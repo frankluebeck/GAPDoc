@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.2 2001-01-18 14:31:41 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -166,6 +166,7 @@ end);
 ##  <#GAPDoc Label="PositionMatchingDelimiter">
 ##  <ManSection >
 ##  <Func Arg="str, delim, pos" Name="PositionMatchingDelimiter" />
+##  <Returns>position as integer or <K>fail</K></Returns>
 ##  <Description>
 ##  Here <A>str</A> must  be a string and <A>delim</A>  a string with
 ##  two  different characters.  This function  searches the  smallest
@@ -217,6 +218,7 @@ end);
 ##  <#GAPDoc Label="SubstitutionSublist">
 ##  <ManSection >
 ##  <Func Arg="list, sublist, new[, flag]" Name="SubstitutionSublist" />
+##  <Returns>the changed list</Returns>
 ##  <Description>
 ##  This function looks for (non-overlapping) occurences of a sublist
 ##  <A>sublist</A> in a list <A>list</A> (compare <Ref BookName="ref"
@@ -276,7 +278,9 @@ end);
 ##  <#GAPDoc Label="NumberDigits">
 ##  <ManSection >
 ##  <Func Arg="str, base" Name="NumberDigits" />
+##  <Returns>integer</Returns>
 ##  <Func Arg="n, base" Name="DigitsNumber" />
+##  <Returns>string</Returns>
 ##  <Description>
 ##  The argument  <A>str</A> of  <Ref Func="NumberDigits" />  must be
 ##  a  string  consisting  only  of an  optional  leading  <C>'-'</C>
@@ -336,6 +340,7 @@ end);
 ##  <#GAPDoc Label="StripBeginEnd">
 ##  <ManSection >
 ##  <Func Arg="list, strip" Name="StripBeginEnd" />
+##  <Returns>changed string</Returns>
 ##  <Description>
 ##  Here <A>list</A>  and <A>strip</A>  must be lists.  This function
 ##  returns the  sublist of list  which does not contain  the leading
@@ -373,6 +378,7 @@ end);
 ##  <#GAPDoc Label="NormalizedWhitespace">
 ##  <ManSection >
 ##  <Func Arg="str" Name="NormalizedWhitespace" />
+##  <Returns>new string with white space normalized</Returns>
 ##  <Description>
 ##  This  function  gets  a  string  <A>str</A>  and  returns  a  new
 ##  string  which  is a  copy  of  <A>str</A> with  normalized  white
@@ -393,6 +399,7 @@ end);
 ##  <#GAPDoc Label="FormatParagraph">
 ##  <ManSection >
 ##  <Func Arg="str[, len[, flush[, attr]]]" Name="FormatParagraph" />
+##  <Returns>the formatted paragraph as string</Returns>
 ##  <Description>
 ##  This function formats a text given  in the string <A>str</A> as a
 ##  paragraph. The optional arguments have the following meaning:
@@ -598,6 +605,7 @@ end);
 ##  <#GAPDoc Label="StripEscapeSequences">
 ##  <ManSection >
 ##  <Func Arg="str" Name="StripEscapeSequences" />
+##  <Returns>string without escape sequences</Returns>
 ##  <Description>
 ##  This  function  returns  the  string one  gets  from  the  string
 ##  <A>str</A> by  removing all escape sequences  which are explained
@@ -643,6 +651,7 @@ end);
 ##  <#GAPDoc Label="WordsString">
 ##  <ManSection >
 ##  <Func Arg="str" Name="WordsString" />
+##  <Returns>list of strings containing the words</Returns>
 ##  <Description>
 ##  This returns  the list of  words of a  text stored in  the string
 ##  <A>str</A>. All non-letters are considered as word boundaries and

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.3 2001-01-18 08:48:30 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.4 2001-01-18 14:31:41 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -70,7 +70,7 @@ GAPDoc2TextProcs.ParEls :=
   "TableOfContents", "Bibliography", "TheIndex", "Subsection", "ManSection", 
   "Description", "Returns", "Section", "Chapter", "Appendix", "Body", "Book", 
   "WHOLEDOCUMENT", "Attr", "Fam", "Filt", "Func", "Heading", "InfoClass", 
-  "Meth", "Oper", "Prop", "Var" ];
+  "Meth", "Oper", "Prop", "Var", "Verb" ];
 
 ##  arg: a list of strings
 ##  nothing for now, may be enhanced and documented later. 
@@ -937,6 +937,28 @@ GAPDoc2TextProcs.Listing := function(r, par)
   fi;
 end;
 
+##  Verb is without any formatting
+GAPDoc2TextProcs.Verb := function(r, par)
+  local cont, s, pos, a;
+  cont := "";
+  for a in r.content do 
+    # here we try to avoid reformatting
+    if IsString(a.content) then
+      Append(cont, a.content); 
+    else
+      s := "";
+      GAPDoc2Text(a, s);
+      Append(cont, s);
+    fi;
+  od;
+  # delete first line if it contains only whitespace
+  pos := Position(cont, '\n');
+  if pos <> fail and ForAll(cont{[1..pos]}, x-> x in WHITESPACE) then
+    cont := cont{[pos..Length(cont)]};
+  fi;
+  Append(par, [r.count, cont]);
+end;
+
 ##  explicit labels
 GAPDoc2TextProcs.Label := function(r, str)
   r.root.labels.(r.attributes.Name) :=
@@ -1320,9 +1342,20 @@ GAPDoc2TextProcs.TheIndex := function(r, par)
   fi;
 end;
 
+GAPDoc2TextProcs.AltYes := function(r)
+  if (not IsBound(r.attributes.Only) and not IsBound(r.attributes.Not)) or
+     (IsBound(r.attributes.Only) and 
+      "Text" in SplitString(r.attributes.Only, "", " ,"))  or
+     (IsBound(r.attributes.Not) and 
+     not "Text" in SplitString(r.attributes.Not, "", " ,")) then
+    return true;
+  else
+    return false;
+  fi;
+end;
+
 GAPDoc2TextProcs.Alt := function(r, str)
-  if (IsBound(r.attributes.Only) and r.attributes.Only = "Text") or
-     (IsBound(r.attributes.Not) and r.attributes.Not <> "Text") then
+  if GAPDoc2TextProcs.AltYes(r) then
     GAPDoc2TextContent(r, str);
   fi;
 end;
@@ -1342,8 +1375,7 @@ GAPDoc2TextProcs.EntityValue := GAPDoc2TextProcs.PCDATA;
 
 GAPDoc2TextProcs.Table := function(r, str)
   local cap, align, i, j, z, a, b, t, l, s, d, m;
-  if (IsBound(r.attributes.Only) and r.attributes.Only <> "Text") or
-     (IsBound(r.attributes.Not) and r.attributes.Not = "Text") then
+  if not GAPDoc2TextProcs.AltYes(r) then
     return;
   fi;
   # head part of table and tabular

@@ -6,8 +6,8 @@ GAPDOCDTDINFO:=[ rec(
       content := [ "PCDATA", "Alt", "Emph", "E", "Par", "P", "Keyword", "K", 
           "Arg", "A", "Quoted", "Q", "Code", "C", "File", "F", "Button", "B", 
           "Package", "M", "Math", "Display", "Example", "Listing", "Log", 
-          "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" ] ), 
-  rec(
+          "Verb", "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" 
+         ] ), rec(
       name := "Emph",
       attr := [  ],
       reqattr := [  ],
@@ -15,8 +15,8 @@ GAPDOCDTDINFO:=[ rec(
       content := [ "PCDATA", "Alt", "Emph", "E", "Par", "P", "Keyword", "K", 
           "Arg", "A", "Quoted", "Q", "Code", "C", "File", "F", "Button", "B", 
           "Package", "M", "Math", "Display", "Example", "Listing", "Log", 
-          "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" ] ), 
-  rec(
+          "Verb", "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" 
+         ] ), rec(
       name := "E",
       attr := [  ],
       reqattr := [  ],
@@ -24,8 +24,8 @@ GAPDOCDTDINFO:=[ rec(
       content := [ "PCDATA", "Alt", "Emph", "E", "Par", "P", "Keyword", "K", 
           "Arg", "A", "Quoted", "Q", "Code", "C", "File", "F", "Button", "B", 
           "Package", "M", "Math", "Display", "Example", "Listing", "Log", 
-          "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" ] ), 
-  rec(
+          "Verb", "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" 
+         ] ), rec(
       name := "Par",
       attr := [  ],
       reqattr := [  ],
@@ -96,8 +96,8 @@ GAPDOCDTDINFO:=[ rec(
       content := [ "PCDATA", "Alt", "Emph", "E", "Par", "P", "Keyword", "K", 
           "Arg", "A", "Quoted", "Q", "Code", "C", "File", "F", "Button", "B", 
           "Package", "M", "Math", "Display", "Example", "Listing", "Log", 
-          "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" ] ), 
-  rec(
+          "Verb", "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" 
+         ] ), rec(
       name := "Q",
       attr := [  ],
       reqattr := [  ],
@@ -105,8 +105,8 @@ GAPDOCDTDINFO:=[ rec(
       content := [ "PCDATA", "Alt", "Emph", "E", "Par", "P", "Keyword", "K", 
           "Arg", "A", "Quoted", "Q", "Code", "C", "File", "F", "Button", "B", 
           "Package", "M", "Math", "Display", "Example", "Listing", "Log", 
-          "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" ] ), 
-  rec(
+          "Verb", "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" 
+         ] ), rec(
       name := "M",
       attr := [  ],
       reqattr := [  ],
@@ -134,6 +134,11 @@ GAPDOCDTDINFO:=[ rec(
       content := [ "PCDATA" ] ), rec(
       name := "Listing",
       attr := [ "Type" ],
+      reqattr := [  ],
+      type := "mixed",
+      content := [ "PCDATA" ] ), rec(
+      name := "Verb",
+      attr := [  ],
       reqattr := [  ],
       type := "mixed",
       content := [ "PCDATA" ] ), rec(
@@ -173,8 +178,8 @@ GAPDOCDTDINFO:=[ rec(
       content := [ "PCDATA", "Alt", "Emph", "E", "Par", "P", "Keyword", "K", 
           "Arg", "A", "Quoted", "Q", "Code", "C", "File", "F", "Button", "B", 
           "Package", "M", "Math", "Display", "Example", "Listing", "Log", 
-          "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" ] ), 
-  rec(
+          "Verb", "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" 
+         ] ), rec(
       name := "Item",
       attr := [  ],
       reqattr := [  ],
@@ -183,7 +188,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Homepage", "Index", "K", "Keyword", "Label", "List", "Listing", 
           "Log", "M", "Math", "P", "PCDATA", "Package", "Par", "Q", "Quoted", 
-          "Ref", "Table", "URL" ] ), rec(
+          "Ref", "Table", "URL", "Verb" ] ), rec(
       name := "Mark",
       attr := [  ],
       reqattr := [  ],
@@ -191,8 +196,8 @@ GAPDOCDTDINFO:=[ rec(
       content := [ "PCDATA", "Alt", "Emph", "E", "Par", "P", "Keyword", "K", 
           "Arg", "A", "Quoted", "Q", "Code", "C", "File", "F", "Button", "B", 
           "Package", "M", "Math", "Display", "Example", "Listing", "Log", 
-          "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" ] ), 
-  rec(
+          "Verb", "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" 
+         ] ), rec(
       name := "BigMark",
       attr := [  ],
       reqattr := [  ],
@@ -200,8 +205,8 @@ GAPDOCDTDINFO:=[ rec(
       content := [ "PCDATA", "Alt", "Emph", "E", "Par", "P", "Keyword", "K", 
           "Arg", "A", "Quoted", "Q", "Code", "C", "File", "F", "Button", "B", 
           "Package", "M", "Math", "Display", "Example", "Listing", "Log", 
-          "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" ] ), 
-  rec(
+          "Verb", "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" 
+         ] ), rec(
       name := "List",
       attr := [ "Not", "Only" ],
       reqattr := [  ],
@@ -233,8 +238,8 @@ GAPDOCDTDINFO:=[ rec(
       content := [ "PCDATA", "Alt", "Emph", "E", "Par", "P", "Keyword", "K", 
           "Arg", "A", "Quoted", "Q", "Code", "C", "File", "F", "Button", "B", 
           "Package", "M", "Math", "Display", "Example", "Listing", "Log", 
-          "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" ] ), 
-  rec(
+          "Verb", "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" 
+         ] ), rec(
       name := "TitlePage",
       attr := [  ],
       reqattr := [  ],
@@ -249,7 +254,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Homepage", "Index", "K", "Keyword", "Label", "List", "Listing", 
           "Log", "M", "Math", "P", "PCDATA", "Package", "Par", "Q", "Quoted", 
-          "Ref", "Table", "URL" ] ), rec(
+          "Ref", "Table", "URL", "Verb" ] ), rec(
       name := "Subtitle",
       attr := [  ],
       reqattr := [  ],
@@ -258,7 +263,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Homepage", "Index", "K", "Keyword", "Label", "List", "Listing", 
           "Log", "M", "Math", "P", "PCDATA", "Package", "Par", "Q", "Quoted", 
-          "Ref", "Table", "URL" ] ), rec(
+          "Ref", "Table", "URL", "Verb" ] ), rec(
       name := "Version",
       attr := [  ],
       reqattr := [  ],
@@ -267,7 +272,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Homepage", "Index", "K", "Keyword", "Label", "List", "Listing", 
           "Log", "M", "Math", "P", "PCDATA", "Package", "Par", "Q", "Quoted", 
-          "Ref", "Table", "URL" ] ), rec(
+          "Ref", "Table", "URL", "Verb" ] ), rec(
       name := "Author",
       attr := [  ],
       reqattr := [  ],
@@ -276,7 +281,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Homepage", "Index", "K", "Keyword", "Label", "List", "Listing", 
           "Log", "M", "Math", "P", "PCDATA", "Package", "Par", "Q", "Quoted", 
-          "Ref", "Table", "URL" ] ), rec(
+          "Ref", "Table", "URL", "Verb" ] ), rec(
       name := "Date",
       attr := [  ],
       reqattr := [  ],
@@ -285,7 +290,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Homepage", "Index", "K", "Keyword", "Label", "List", "Listing", 
           "Log", "M", "Math", "P", "PCDATA", "Package", "Par", "Q", "Quoted", 
-          "Ref", "Table", "URL" ] ), rec(
+          "Ref", "Table", "URL", "Verb" ] ), rec(
       name := "Abstract",
       attr := [  ],
       reqattr := [  ],
@@ -294,7 +299,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Homepage", "Index", "K", "Keyword", "Label", "List", "Listing", 
           "Log", "M", "Math", "P", "PCDATA", "Package", "Par", "Q", "Quoted", 
-          "Ref", "Table", "URL" ] ), rec(
+          "Ref", "Table", "URL", "Verb" ] ), rec(
       name := "Copyright",
       attr := [  ],
       reqattr := [  ],
@@ -303,7 +308,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Homepage", "Index", "K", "Keyword", "Label", "List", "Listing", 
           "Log", "M", "Math", "P", "PCDATA", "Package", "Par", "Q", "Quoted", 
-          "Ref", "Table", "URL" ] ), rec(
+          "Ref", "Table", "URL", "Verb" ] ), rec(
       name := "Acknowledgements",
       attr := [  ],
       reqattr := [  ],
@@ -312,7 +317,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Homepage", "Index", "K", "Keyword", "Label", "List", "Listing", 
           "Log", "M", "Math", "P", "PCDATA", "Package", "Par", "Q", "Quoted", 
-          "Ref", "Table", "URL" ] ), rec(
+          "Ref", "Table", "URL", "Verb" ] ), rec(
       name := "Colophon",
       attr := [  ],
       reqattr := [  ],
@@ -321,7 +326,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Homepage", "Index", "K", "Keyword", "Label", "List", "Listing", 
           "Log", "M", "Math", "P", "PCDATA", "Package", "Par", "Q", "Quoted", 
-          "Ref", "Table", "URL" ] ), rec(
+          "Ref", "Table", "URL", "Verb" ] ), rec(
       name := "TableOfContents",
       attr := [  ],
       reqattr := [  ],
@@ -342,7 +347,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Heading", "Homepage", "Index", "K", "Keyword", "Label", "List", 
           "Listing", "Log", "M", "Math", "P", "PCDATA", "Package", "Par", 
-          "Q", "Quoted", "Ref", "Table", "URL" ] ), rec(
+          "Q", "Quoted", "Ref", "Table", "URL", "Verb" ] ), rec(
       name := "ManSection",
       attr := [ "Label" ],
       reqattr := [  ],
@@ -357,7 +362,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Homepage", "Index", "K", "Keyword", "Label", "List", "Listing", 
           "Log", "M", "Math", "P", "PCDATA", "Package", "Par", "Q", "Quoted", 
-          "Ref", "Table", "URL" ] ), rec(
+          "Ref", "Table", "URL", "Verb" ] ), rec(
       name := "Description",
       attr := [  ],
       reqattr := [  ],
@@ -366,7 +371,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Homepage", "Index", "K", "Keyword", "Label", "List", "Listing", 
           "Log", "M", "Math", "P", "PCDATA", "Package", "Par", "Q", "Quoted", 
-          "Ref", "Table", "URL" ] ), rec(
+          "Ref", "Table", "URL", "Verb" ] ), rec(
       name := "Func",
       attr := [ "Arg", "Comm", "Label", "Name" ],
       reqattr := [ "Arg", "Name" ],
@@ -410,8 +415,8 @@ GAPDOCDTDINFO:=[ rec(
       content := [ "PCDATA", "Alt", "Emph", "E", "Par", "P", "Keyword", "K", 
           "Arg", "A", "Quoted", "Q", "Code", "C", "File", "F", "Button", "B", 
           "Package", "M", "Math", "Display", "Example", "Listing", "Log", 
-          "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" ] ), 
-  rec(
+          "Verb", "URL", "Email", "Homepage", "Cite", "Label", "Ref", "Index" 
+         ] ), rec(
       name := "Section",
       attr := [ "Label" ],
       reqattr := [  ],
@@ -421,7 +426,7 @@ GAPDOCDTDINFO:=[ rec(
           "Heading", "Homepage", "Index", "K", "Keyword", "Label", "List", 
           "Listing", "Log", "M", "ManSection", "Math", "P", "PCDATA", 
           "Package", "Par", "Q", "Quoted", "Ref", "Subsection", "Table", 
-          "URL" ] ), rec(
+          "URL", "Verb" ] ), rec(
       name := "Chapter",
       attr := [ "Label" ],
       reqattr := [  ],
@@ -430,7 +435,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Heading", "Homepage", "Index", "K", "Keyword", "Label", "List", 
           "Listing", "Log", "M", "Math", "P", "PCDATA", "Package", "Par", 
-          "Q", "Quoted", "Ref", "Section", "Table", "URL" ] ), rec(
+          "Q", "Quoted", "Ref", "Section", "Table", "URL", "Verb" ] ), rec(
       name := "Appendix",
       attr := [ "Label" ],
       reqattr := [  ],
@@ -439,7 +444,7 @@ GAPDOCDTDINFO:=[ rec(
           "Display", "E", "Email", "Emph", "Enum", "Example", "F", "File", 
           "Heading", "Homepage", "Index", "K", "Keyword", "Label", "List", 
           "Listing", "Log", "M", "Math", "P", "PCDATA", "Package", "Par", 
-          "Q", "Quoted", "Ref", "Section", "Table", "URL" ] ), rec(
+          "Q", "Quoted", "Ref", "Section", "Table", "URL", "Verb" ] ), rec(
       name := "Body",
       attr := [  ],
       reqattr := [  ],
@@ -448,7 +453,7 @@ GAPDOCDTDINFO:=[ rec(
           "Code", "Display", "E", "Email", "Emph", "Enum", "Example", "F", 
           "File", "Homepage", "Index", "K", "Keyword", "Label", "List", 
           "Listing", "Log", "M", "Math", "P", "PCDATA", "Package", "Par", 
-          "Q", "Quoted", "Ref", "Section", "Table", "URL" ] ), rec(
+          "Q", "Quoted", "Ref", "Section", "Table", "URL", "Verb" ] ), rec(
       name := "Book",
       attr := [ "Name" ],
       reqattr := [ "Name" ],

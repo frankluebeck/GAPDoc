@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.2 2001-01-17 15:31:19 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.3 2001-01-18 14:31:40 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -150,7 +150,7 @@ which is then expanded further because of the following definition:
                       Keyword | K | Arg | A | Quoted | Q | Code | C | 
                       File | F | Button | B | Package |
                       M | Math | Display | 
-                      Example | Listing | Log | 
+                      Example | Listing | Log | Verb |
                       URL | Email | Homepage | Cite | Label | 
                       Ref | Index" >]]> 
 </Listing>
@@ -1260,8 +1260,27 @@ correctness of the &GAP; manual whereas <C>Log</C> is not touched by this.
 
 </Subsection>
 
+<Subsection Label="Verb"><Heading>&tlt;Verb&tgt;</Heading>
+
+There is one further type of verbatim-like element. 
+
+<Listing Type="From gapdoc.dtd">
+<![CDATA[<!ELEMENT Verb  (#PCDATA)> ]]>
+</Listing>
+
+The  content of  such an  element is  guaranteed to  be put  into an  output
+version exactly as it  is using some fixed width font.  Before the content a
+new line is started. If the line after  the end of the start tag consists of
+whitespace only then this part of the content is skipped.<P/>
+
+This element is intended to be  used together with the <C>Alt</C> element to
+specify  pre-formatted  ASCII  alternatives for  complicated  <C>Display</C>
+formulae or <C>Table</C>s.
+
+</Subsection>
+
 </Section>
-<Section Label="MathForm"><Heading>Mathematical Formulae</Heading>
+<Section Label="MathForm"><Heading>Elements for Mathematical Formulae</Heading>
 
 <Subsection Label="Math"><Heading><C>&tlt;Math&tgt;</C> 
                               and <C>&tlt;Display&tgt;</C></Heading>
@@ -1275,7 +1294,7 @@ correctness of the &GAP; manual whereas <C>Log</C> is not touched by this.
 
 These elements are  used for mathematical formulae. As  described in section
 <Ref Sect="GDformulae"/> they correspond to  &LaTeX;'s math and display math
-mode respectively. <P/>
+mode  respectively.<P/>
 
 The formulae  are typed in  as in  &LaTeX;, <E>except</E> that  the standard
 XML  entities,   see&nbsp;<Ref  Subsect="XMLent"   />  (in   particular  the
@@ -1295,7 +1314,7 @@ there  is a  well  defined translation  into  text, which  can  be used  for
 text  and HTML  output versions  of  the document.  So, if  possible try  to
 avoid the  <C>Math</C> and  <C>Display</C> elements  or provide  useful text
 substitutes for complicated formulae  via <C>Alt</C> elements (see&nbsp;<Ref
-Subsect="Alt" />.
+Subsect="Alt" /> and&nbsp;<Ref Subsect="Verb" />).
 
 </Subsection>
 

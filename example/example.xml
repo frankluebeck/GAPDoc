@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- $Id: example.xml,v 1.2 2001-01-17 15:31:20 gap Exp $ -->
+<!-- $Id: example.xml,v 1.3 2001-01-18 14:31:41 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
  [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&tgt;</Alt>'>]>
@@ -266,13 +266,32 @@ Then there are <E>displayed formulae</E>:
    \sum_{k=1}^d \left( \sum_{i,j} x_i y_j h_{ijk} \right) b_k 
 </Display>
 
-If possible, use the <C>Alt</C> element to specify a better readable
-text version of such a formula.<P/>
+If possible,  use the <C>Alt</C> element  to specify a better  readable text
+version of such a formula as in the following example:<P/>
+
+<Alt Not="Text,HTML"><Display>
+   \Longrightarrow \quad \left(\sum_{i=1}^d x_i b_i \right) \cdot
+   \left(\sum_{j=1}^d y_j b_j \right) =
+   \sum_{k=1}^d \left( \sum_{i,j} x_i y_j h_{ijk} \right) b_k 
+</Display></Alt>
+<Alt Only="Text,HTML"><Verb>
+         d                d                 d   
+       -----            -----             -----  -----                 
+        \                \                 \      \                    
+ ==> (   )  x_i b_i )(    )  y_i b_i ) =    )  (   )  x_i y_j h_ijk ) b_k
+        /                /                 /      /                    
+       -----            -----             -----  -----                
+       i = 1            i = 1             k = 1   i,j                
+</Verb><P/></Alt>
 
 For small formulae without <Q>difficult</Q> parts use the <C>M</C>
 element: <M>b_i</M>,
 <M>x^2</M>, <M>x^2 + 2x + 1 = (x + 1)^2</M> (Note that here whitespace 
-matters for text (or HTML) output).
+matters for text (or HTML) output.<P/>
+
+Here are two formulae containing less than characters which are special 
+characters for XML: 
+<M><![CDATA[a < b < c < d]]></M> and  <M>e &lt; f</M>.
 
 </Section>
 
@@ -394,7 +413,7 @@ Here is a <E>table</E>:
 
 Here is the table of special characters:
 
-<Table Align="|c|c|c|c|c|c|c|c|c|c|c|c|c|c|" Label="charsInCDATA"> 
+<Table Align="|c|c|c|c|c|c|c|c|c|c|c|c|c|" Label="charsInCDATA"> 
  <Caption>Special characters in character data</Caption>
  <HorLine/> <Row> 
   <Item><C>&tamp;</C></Item>
@@ -746,14 +765,32 @@ Then there are <E>displayed formulae</E>:
    \sum_{k=1}^d \left( \sum_{i,j} x_i y_j h_{ijk} \right) b_k 
 </Display>
 
-If possible, use the <C>Alt</C> element to specify a better readable
-text version of such a formula.<P/>
+If possible,  use the <C>Alt</C> element  to specify a better  readable text
+version of such a formula as in the following example:<P/>
+
+<Alt Not="Text,HTML"><Display>
+   \Longrightarrow \quad \left(\sum_{i=1}^d x_i b_i \right) \cdot
+   \left(\sum_{j=1}^d y_j b_j \right) =
+   \sum_{k=1}^d \left( \sum_{i,j} x_i y_j h_{ijk} \right) b_k 
+</Display></Alt>
+<Alt Only="Text,HTML"><Verb>
+         d                d                 d   
+       -----            -----             -----  -----                 
+        \                \                 \      \                    
+ ==> (   )  x_i b_i )(    )  y_i b_i ) =    )  (   )  x_i y_j h_ijk ) b_k
+        /                /                 /      /                    
+       -----            -----             -----  -----                
+       i = 1            i = 1             k = 1   i,j                
+</Verb><P/></Alt>
 
 For small formulae without <Q>difficult</Q> parts use the <C>M</C>
 element: <M>b_i</M>,
 <M>x^2</M>, <M>x^2 + 2x + 1 = (x + 1)^2</M> (Note that here whitespace 
-matters for text (or HTML) output).
+matters for text (or HTML) output).<P/>
 
+Here are two formulae containing less than characters which are special
+characters for XML:
+<M><![CDATA[a < b < c < d]]]]>&gt;<![CDATA[</M> and  <M>e &lt; f</M>.
 </Section>]]>
 </Listing>
 

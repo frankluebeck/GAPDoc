@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.2 2001-01-17 15:31:20 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.3 2001-01-18 14:31:41 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -66,7 +66,7 @@ GAPDoc2HTMLProcs.ParEls :=
   "TableOfContents", "Bibliography", "TheIndex", "Subsection", "ManSection", 
   "Description", "Returns", "Section", "Chapter", "Appendix", "Body", "Book", 
   "WHOLEDOCUMENT", "Attr", "Fam", "Filt", "Func", "InfoClass", 
-  "Meth", "Oper", "Prop", "Var" ];
+  "Meth", "Oper", "Prop", "Var", "Verb" ];
 
 ##  arg: a list of strings
 ##  for now only ??????
@@ -257,7 +257,7 @@ end);
 
 ##  recursion through the tree and collecting paragraphs
 BindGlobal("GAPDoc2HTMLContent", function(r, l)
-  local   par,  cont,  count,  s,  a;
+  local par, cont, i, count, s, a;
   
   # utility: append counter and formatted paragraph to l
   par := function(s)
@@ -280,6 +280,16 @@ BindGlobal("GAPDoc2HTMLContent", function(r, l)
   
   # otherwise we have to collect text and paragraphs
   cont := r.content;
+  # checking for alternatives
+  i := 1;
+  while i < Length(cont) do
+    if cont[i].name = "Alt" and GAPDoc2HTMLProcs.AltYes(cont[i]) then
+      cont := Concatenation(cont{[1..i-1]}, cont[i].content,
+              cont{[i+1..Length(cont)]});
+    else
+      i := i + 1;
+    fi;
+  od;
   count := r.count;
   s := "";
   for a in cont do
@@ -786,9 +796,7 @@ GAPDoc2HTMLProcs.M := function(r, str)
   local s, ss;
   s := "";
   GAPDoc2HTMLContent(r, s);
-  ss := "";
-  GAPDoc2HTMLProcs.PCDATAFILTER(rec(content := TextM(s)), ss);
-  Append(str, ss);
+  Append(str, TextM(s));
 end;
 
 ##  in HTML this is shown in TeX format
@@ -866,6 +874,27 @@ GAPDoc2HTMLProcs.Log := function(r, par)
 end;
 GAPDoc2HTMLProcs.Listing := function(r, par)
   GAPDoc2HTMLProcs.ExampleLike(r, par, "Code");
+end;
+
+GAPDoc2HTMLProcs.Verb := function(r, par)
+  local cont, s, a;
+  cont := "<pre class=\"normal\">";
+  for a in r.content do 
+    # here we try to avoid reformatting
+    if IsString(a.content) then
+      GAPDoc2HTMLProcs.PCDATA(a, cont); 
+    else
+      s := "";
+      GAPDoc2HTML(a, s);
+      Append(cont, s);
+    fi;
+  od;
+  Append(cont, "</pre>\n");
+  if IsString(par) then
+    Append(par, cont);
+  else
+    Append(par, [r.count, cont]);
+  fi;
 end;
 
 ##  explicit labels
@@ -1079,6 +1108,12 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
                         r.count, "Subsection") <> r.root.labels.(lab)[1] then
       Append(txt, Concatenation(" (", ref, ")"));
     fi;
+  elif Length(int)>0 and 
+       int[1] in [ "Sect", "Subsect", "Chap", "Appendix"] and 
+       IsBound(r.attributes.Style) and
+       r.attributes.Style = "Text" then
+    txt := Concatenation("<b>", r.root.labeltexts.(lab), "</b>");
+    Append(txt, Concatenation(" (", ref, ")"));
   else
     txt := ref;
   fi;
@@ -1205,9 +1240,20 @@ GAPDoc2HTMLProcs.TheIndex := function(r, par)
   fi;
 end;
 
+GAPDoc2HTMLProcs.AltYes := function(r)
+  if (not IsBound(r.attributes.Only) and not IsBound(r.attributes.Not)) or
+     (IsBound(r.attributes.Only) and 
+      "HTML" in SplitString(r.attributes.Only, "", " ,"))  or
+     (IsBound(r.attributes.Not) and 
+     not "HTML" in SplitString(r.attributes.Not, "", " ,")) then
+    return true;
+  else
+    return false;
+  fi;
+end;
+
 GAPDoc2HTMLProcs.Alt := function(r, str)
-  if (IsBound(r.attributes.Only) and r.attributes.Only = "HTML") or
-           (IsBound(r.attributes.Not) and r.attributes.Not <> "HTML") then
+  if GAPDoc2HTMLProcs.AltYes(r) then
     GAPDoc2HTMLContent(r, str);
   fi;
 end;
@@ -1222,17 +1268,11 @@ GAPDoc2HTMLProcs.Arg := GAPDoc2HTMLProcs.A;
 GAPDoc2HTMLProcs.Quoted := GAPDoc2HTMLProcs.Q;
 GAPDoc2HTMLProcs.Par := GAPDoc2HTMLProcs.P;
 
-##  <!ELEMENT Table ( Caption?, (Row | HorLine)+ )>
-##  <!ELEMENT Row   ( Item+ )>
-##  <!ELEMENT HorLine EMPTY>
-##  <!ELEMENT Caption ( %InnerText; )*>
-
-
+# tables and utilities, not so nice since | and <Horline/> cannot be handled
 GAPDoc2HTMLProcs.Table := function(r, s)
   local str, cap, al,  a, i;
   str := "";
-  if (IsBound(r.attributes.Only) and r.attributes.Only <> "HTML") or
-     (IsBound(r.attributes.Not) and r.attributes.Not = "HTML") then
+  if not GAPDoc2HTMLProcs.AltYes(r) then
     return;
   fi;
   # label
@@ -1301,7 +1341,7 @@ GAPDoc2HTMLProcs.Row := function(r, str, al)
     Append(str, "<td>&#160;</td>\n");
     i := i+1;
   od;
-  Append(str, "<tr>\n");
+  Append(str, "</tr>\n");
 end;
 
 

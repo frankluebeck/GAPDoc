@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.2 2001-01-17 15:31:20 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.3 2001-01-18 14:31:41 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -455,6 +455,7 @@ end);
 ##  <#GAPDoc Label="ParseTreeXMLString">
 ##  <ManSection >
 ##  <Func Arg="str" Name="ParseTreeXMLString" />
+##  <Returns>a record which is root of a tree structure</Returns>
 ##  <Description>
 ##  This function parses an  XML-document stored in string <A>str</A>
 ##  and returns the document in form of a tree.<P/>
