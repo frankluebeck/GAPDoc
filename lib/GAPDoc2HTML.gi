@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.7 2001-11-16 15:20:48 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.8 2001-11-16 16:49:21 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -100,7 +100,7 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
   local   files,  n,  tt,  i, chnrs, chlink, prev, next, toplink;
   
   chnrs := Set(List([2,4..Length(l)], i-> l[i-1][1]));
-  chlink := "\n<div align=\"center\">\n<table class=\"chlink\"><tr><td bgcolor=\"#cccccc\">Goto Chapter: </td>";
+  chlink := "\n<p class=\"pcenter\"><table class=\"chlink\"><tr><td class=\"chlink1\">Goto Chapter: </td>";
   for n in chnrs do
     Append(chlink, Concatenation("<td><a href=\"chap", String(n), ".html\">"));
     if n = 0 then
@@ -110,7 +110,7 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     fi;
     Append(chlink,"</a></td>");
   od;
-  Append(chlink, "</tr></table></p><br>\n</div>\n");
+  Append(chlink, "</tr></table></p><br>\n");
   
   # putting the paragraphs together (one string (file) for each chapter)
   files := rec();
@@ -136,8 +136,9 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     n := files.(l[i-1][1]);
     if Length(n.ssnr)=0 or l[i-1]{[1..3]} <> n.ssnr[Length(n.ssnr)] then
       Add(n.ssnr, l[i-1]{[1..3]});
-      Append(n.text, Concatenation("<a name=\"", GAPDoc2HTMLProcs.SectionLabel(
-              l[i-1], "Subsection")[2], "\"></a>\n"));
+      Append(n.text, Concatenation("<p><a name=\"", 
+              GAPDoc2HTMLProcs.SectionLabel(
+              l[i-1], "Subsection")[2], "\"></a></p>\n"));
     fi;
 
     Append(n.text, l[i]);
@@ -417,7 +418,7 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
     PrintTo1(stream, function()
     for a in need do
       # an anchor for links from the citations
-      Print("\n<a name=\"biB", a.Label, "\"></a>\n"); 
+      Print("\n<p><a name=\"biB", a.Label, "\"></a></p>\n"); 
       PrintBibAsHTML(a, true); 
     od;
     end);
@@ -834,7 +835,7 @@ GAPDoc2HTMLProcs.Display := function(r, par)
   od;
   GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATAFILTER;
   Append(s, " \\]");
-  s := Concatenation("<p><div align=\"center\">", s, "</div></p>\n\n");
+  s := Concatenation("<p class=\"pcenter\">", s, "</p>\n\n");
   Add(par, r.count);
   Add(par, s);
 end;
@@ -1302,7 +1303,7 @@ GAPDoc2HTMLProcs.Table := function(r, s)
               attributes := rec(Name := r.attributes.Label)), str);
   fi;
   # alignments, have always borders and lines
-  Append(str, "<p align=\"center\"><table border=4>\n");
+  Append(str, "<p class=\"pcenter\"><table border=4>\n");
   al := Filtered(r.attributes.Align, x-> x <> '|');
   for i in [1..Length(al)] do
     if al[i] = 'c' then

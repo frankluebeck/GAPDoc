@@ -2,7 +2,7 @@
 ##
 #A  makedoc.g                             GAPDoc                 Frank Lübeck
 ##  
-#H  @(#)$Id: makedoc.g,v 1.2 2001-01-18 08:48:30 gap Exp $
+#H  @(#)$Id: makedoc.g,v 1.3 2001-11-16 16:49:21 gap Exp $
 ##  
 ##  Rebuild the whole documentation, provided sufficiently good (pdf)LaTeX
 ##  is available. 
@@ -17,7 +17,8 @@ MakeGAPDocDoc("doc", "gapdoc", ["../lib/BibTeX.gi",
 
 # now load it (for cross reference in example)
 Print("\n========== converting example document for GAPDoc ================\n");
-DeclarePackageDocumentation("gapdoc","doc");
+DeclarePackageDocumentation("GAPDoc", "doc", "GAPDoc", 
+"Package for Preparing GAP Documentation");
 
 # example
 MakeGAPDocDoc("example", "example", [], "GAPDocExample");
