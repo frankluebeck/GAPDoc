@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.7 2001-11-26 13:57:32 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.8 2002-04-21 22:42:30 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -513,16 +513,17 @@ InstallGlobalFunction(PrintBibAsHTML, function(arg)
     Print("(", r.editor, ",Ed.)");
   fi;
   if IsBound(r.title) then
-    Print(",\n <i>", r.title, "</i>");
+    # throw out {}'s
+    Print(",\n <i>", Filtered(r.title, x -> not x in "{}"), "</i>");
   fi;
   if IsBound(r.booktitle) then
     if r.Type in ["inproceedings", "incollection"] then
       Print(" in ");
     fi;
-    Print(",\n <i>", r.booktitle, "</i>");
+    Print(",\n <i>", Filtered(r.booktitle, x -> not x in "{}"), "</i>");
   fi;
   if IsBound(r.subtitle) then
-    Print(",\n <i> -- ", r.subtitle, "</i>");
+    Print(",\n <i> -- ",Filtered(r.subtitle, x -> not x in "{}"), "</i>");
   fi;
   if IsBound(r.journal) then
     Print(",\n ", r.journal);

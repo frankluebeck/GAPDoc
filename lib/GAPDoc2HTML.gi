@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.10 2001-11-28 14:20:49 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.11 2002-04-21 22:42:30 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -787,8 +787,8 @@ end;
 GAPDoc2HTMLProcs.PCDATAFILTER := function(r, str)
   local s, a;
   s := r.content;
-  if Position(s, '<') <> fail or Position(s, '&') <> fail or 
-     Position(s, '>') <> fail then
+  if not IsBound(r.HTML) and (Position(s, '<') <> fail or 
+       Position(s, '&') <> fail or Position(s, '>') <> fail) then
     for a in s do 
       if a='<' then
         Append(str, "&lt;");
@@ -1304,11 +1304,24 @@ GAPDoc2HTMLProcs.TheIndex := function(r, par)
 end;
 
 GAPDoc2HTMLProcs.AltYes := function(r)
+  local mark;
+  # recursively mark text as HTML code (no excaping of HTML markup)
+  mark := function(r)
+    local a;
+    if IsString(r.content) then
+      r.HTML := true;
+    elif IsList(r.content) then
+      for a in r.content do
+        mark(a);
+      od;
+    fi;
+  end;
   if (not IsBound(r.attributes.Only) and not IsBound(r.attributes.Not)) or
      (IsBound(r.attributes.Only) and 
       "HTML" in SplitString(r.attributes.Only, "", " ,"))  or
      (IsBound(r.attributes.Not) and 
      not "HTML" in SplitString(r.attributes.Not, "", " ,")) then
+    mark(r);
     return true;
   else
     return false;
