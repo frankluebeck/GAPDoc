@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.4 2001-01-24 14:05:11 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.5 2001-03-19 16:41:21 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters</Heading>
@@ -60,7 +60,7 @@ a file, we choose <F>MyBook.tex</F>.
 
 <Log>
 gap> l := GAPDoc2LaTeX(r);;
-gap> FileString(Filename(path, Concatenation(main, ".tex")), l);
+gap> FileString(Filename(path, Concatenation(bookname, ".tex")), l);
 </Log>
 
 Assuming that you  have a sufficiently good installation  of &TeX; available
