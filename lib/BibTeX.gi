@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.10 2002-08-29 08:15:08 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.11 2002-12-04 23:54:47 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -344,6 +344,12 @@ InstallGlobalFunction(NormalizeNameAndKey, function(b)
       fi;
     fi;
   od;
+  if not IsBound(b.keylong) then
+    b.keylong := "xxx";
+  fi;
+  if not IsBound(b.key) then
+    b.key := "xxx";
+  fi;
 end);
 
 
@@ -569,6 +575,8 @@ InstallGlobalFunction(PrintBibAsHTML, function(arg)
   else
     Print("<p>\n[<span style=\"color: #8e0000;\">", r.Label, "</span>]   ");
   fi;
+  # we assume with the "," delimiters that at least one of .author,
+  # .editor or .title exist
   if IsBound(r.author) then
     Print("<b>",r.author,"</b> ");
   fi;
@@ -576,8 +584,11 @@ InstallGlobalFunction(PrintBibAsHTML, function(arg)
     Print("(", r.editor, ",Ed.)");
   fi;
   if IsBound(r.title) then
+    if IsBound(r.author) or IsBound(r.editor) then
+      Append(str, ",\n ");
+    fi;
     # throw out {}'s
-    Print(",\n <i>", Filtered(r.title, x -> not x in "{}"), "</i>");
+    Print("<i>", Filtered(r.title, x -> not x in "{}"), "</i>");
   fi;
   if IsBound(r.booktitle) then
     if r.Type in ["inproceedings", "incollection"] then
@@ -672,6 +683,8 @@ InstallGlobalFunction(PrintBibAsText, function(arg)
   fi;
   Append(str, "] ");
   Append(str, TextAttr.reset);
+  # we assume with the "," delimiters that at least one of .author,
+  # .editor or .title exist
   if IsBound(r.author) then
     Append(str, Concatenation(bold ,r.author, TextAttr.reset));
   fi;
@@ -679,7 +692,10 @@ InstallGlobalFunction(PrintBibAsText, function(arg)
     Append(str, Concatenation(" (", r.editor, ",Ed.) "));
   fi;
   if IsBound(r.title) then
-    Append(str, Concatenation(", ", emph, r.title, TextAttr.reset));
+    if IsBound(r.author) or IsBound(r.editor) then
+      Append(str, ", ");
+    fi;
+    Append(str, Concatenation(emph, r.title, TextAttr.reset));
   fi;
   if IsBound(r.booktitle) then
     Append(str, ", ");

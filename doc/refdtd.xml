@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.10 2002-05-29 07:58:58 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.11 2002-12-04 23:54:46 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -857,21 +857,29 @@ is possible  (for example  in HTML).  If this is  not possible,  the section
 number is  typeset. This type  of reference is  also used for  references to
 tables (see <Ref Subsect="Table"/>).<P/>
 
+<!--
 Optionally an external reference into another book can be specified by using
 the  <C>BookName</C>  attribute. In  this  case  the <C>Label</C>  attribute
 <E>must</E> be specified and refers to a  search string as in the &GAP; help
 system. It  is guaranteed that the  reference points to the  position in the
 other book, that the &GAP; help system finds as first match if one types the
 value of the <C>Label</C> element after a question mark.<P/>
+-->
+
+An  external reference  into  another book  can be  specified  by using  the
+<C>BookName</C> attribute.  In this case  the <C>Label</C> attribute  or, if
+this  is not  given, the  function  or section  like attribute,  is used  to
+resolve the reference. The generated reference  points to the first hit when
+asking <Q>?book name: label</Q> inside &GAP;.<P/>
 
 The optional attribute <C>Style</C> can take only the values <C>Text</C> and
 <C>Number</C>. It  can be used  with references  to sectioning units  and it
-controls, whether an explicit section  number is generated or text. Normally
-all references to sections generate numbers and references to a &GAP; object
-generate the name  of the corresponding object with some  additional link or
-sectioning information,  which is  the behavior  of  <C>Style="Text"</C>. In
-case  <C>Style="Number"</C>  in all  cases  an  explicit section  number  is
-generated. So
+gives a hint  to the converter programs, whether an  explicit section number
+is generated or  text. Normally all references to  sections generate numbers
+and references  to a  &GAP; object  generate the  name of  the corresponding
+object with  some additional  link or sectioning  information, which  is the
+behavior of <C>Style="Text"</C>. In  case <C>Style="Number"</C> in all cases
+an explicit section number is generated. So
 
 <Listing Type="Example">
 <![CDATA[<Ref Subsect="Func" Style="Text"/> described in section 

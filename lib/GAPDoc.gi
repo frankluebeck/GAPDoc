@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.6 2002-05-20 22:08:57 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.7 2002-12-04 23:54:47 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -130,7 +130,8 @@ InstallGlobalFunction(CheckAndCleanGapDocTree, function(arg)
   if name = "Ref" then
     if IsBound(r.attributes.BookName) and not
        IsBound(r.attributes.Label) then
-      typ := Difference(NamesOfComponents(r.attributes), ["BookName"]);
+      typ := Difference(NamesOfComponents(r.attributes), ["BookName",
+             "Style", "Text"]);
       if Length(typ) <> 1 then
         ParseError(str, r.start, Concatenation(
                         "Ref with strange attribute set: ", typ));

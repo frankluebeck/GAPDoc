@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.17 2002-05-29 07:58:58 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.18 2002-12-04 23:54:47 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1336,7 +1336,8 @@ end;
 GAPDoc2HTMLProcs.Ref := function(r, str)
   local int,  txt,  ref,  lab,  attr,  sectlike;
   
-  int := Difference(NamesOfComponents(r.attributes), ["BookName", "Label"]);
+  int := Difference(NamesOfComponents(r.attributes), ["BookName", "Label",
+         "Style"]);
   if Length(int)>0 and int[1] <> "Text" then
     lab := r.attributes.(int[1]);
   else
@@ -1353,9 +1354,17 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
          ref[6] := Concatenation(GAPDoc2HTMLProcs.RelPath, "/", 
                    ref[6]{[Length(GAP_ROOT_PATHS[1])+1..Length(ref[6])]});
       fi;
-      ref := Concatenation("<a href=\"", ref[6], "\"><b>", ref[1],
-             "</b></a>");
-  elif ref <> fail then
+      if IsBound(r.attributes.Style) and r.attributes.Style = "Number" then
+        ref := Concatenation("<a href=\"", ref[6], "\"><b>",
+               r.attributes.BookName, " ", ref[2], "</b></a>");
+      elif IsBound(r.attributes.Text) then
+        ref := Concatenation("<a href=\"", ref[6], "\"><b>", r.attributes.Text,
+               "</b></a>");
+      else
+        ref := Concatenation("<a href=\"", ref[6], "\"><b>", ref[1],
+               "</b></a>");
+      fi;
+    elif ref <> fail then
       ref := Concatenation("<b>", ref[1], "</b>");
     else
       ref := Concatenation("<b>", "???", "</b>");
