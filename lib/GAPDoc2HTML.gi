@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.13 2002-05-20 22:08:57 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.14 2002-05-23 15:41:36 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -111,6 +111,19 @@ GAPDoc2HTMLProcs.Head1 := "\
 <head>\n\
 <title>GAP (";
 
+GAPDoc2HTMLProcs.Head1MML := "\
+<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n\
+<?xml-stylesheet type=\"text/xsl\" href=\"mathml.xsl\"?>\n\
+\n\
+<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN\"\n\
+       \"http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd\" [\n\
+       <!ENTITY mathml \"http://www.w3.org/1998/Math/MathML\">\n\
+       ] >\n\
+\n\
+<html xmlns=\"http://www.w3.org/1999/xhtml\">\n\
+<head>\n\
+<title>GAP (";
+
 GAPDoc2HTMLProcs.Head2 := "\
 </title>\n\
 <meta http-equiv=\"content-type\" content=\"text/html; charset=iso-8859-1\" />\n\
@@ -144,7 +157,12 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
   # putting the paragraphs together (one string (file) for each chapter)
   files := rec();
   for n in chnrs do
-    files.(n) := rec(text := ShallowCopy(GAPDoc2HTMLProcs.Head1), ssnr := []);
+    if r.root.mathmode = "MathML" then
+      files.(n) := rec(text := 
+                   ShallowCopy(GAPDoc2HTMLProcs.Head1MML), ssnr := []);
+    else
+      files.(n) := rec(text := ShallowCopy(GAPDoc2HTMLProcs.Head1), ssnr := []);
+    fi;
     tt := Concatenation(r.bookname, ") - ");
     if n=0 then
       Append(tt, "Contents");
@@ -167,7 +185,7 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     n := files.(l[i-1][1]);
     if Length(n.ssnr)=0 or l[i-1]{[1..3]} <> n.ssnr[Length(n.ssnr)] then
       Add(n.ssnr, l[i-1]{[1..3]});
-      Append(n.text, Concatenation("<p><a name=\"", 
+      Append(n.text, Concatenation("<p><a id=\"", 
               GAPDoc2HTMLProcs.SectionLabel(
               l[i-1], "Subsection")[2], "\"></a></p>\n"));
     fi;
@@ -278,6 +296,13 @@ end;
 InstallGlobalFunction(GAPDoc2HTML, function(arg)
   local   r,  str,  linelength,  name;
   r := arg[1];
+  # first check for the mode
+  if arg[Length(arg)] = "MathML" then
+    r.mathmode := "MathML";
+    arg := arg{[1..Length(arg)-1]};
+  else
+    r.mathmode := "Text";
+  fi;
   if Length(arg) > 1 then
     str := arg[2];
   else 
@@ -375,8 +400,8 @@ end);
   
 ##  write head and foot of HTML file.
 GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
-  local   i,  pi,  t,  el,  a,  str,  bib,  keys,  need,  labels,  
-          diff,  text,  stream;
+  local i, pi, t, el, math, pos, pos1, str, bib, keys, need, 
+        labels, diff, text, stream, a, attin, remdiv;
   
   ##  add paragraph numbers to all nodes of the document
   AddParagraphNumbersGapDocTree(r);
@@ -409,6 +434,12 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
     i := i+1;
   od;
   
+  # setup for MathML with ttm
+  if r.mathmode = "MathML" then
+    r.TTMInput := "";
+    r.MathCount := 0;
+  fi;
+  
   ##  Now the actual work starts, we give the processing instructions found
   ##  so far to the Book handler.
   ##  We call the Book handler twice and produce index, bibliography, toc
@@ -420,6 +451,42 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   # now the toc is ready
   Print("#I  table of contents complete.\n");
   r.toctext := r.toc;
+  
+  # MathML translation
+  if r.mathmode = "MathML" then
+    # remove <div> tags
+    remdiv := function(s)
+      local pos, pos1;
+      pos := PositionSublist(s, "<div");
+      while pos <> fail do
+        pos1 := Position(s, '>', pos);
+        s := Concatenation(s{[1..pos-1]}, s{[pos1+1..Length(s)]});
+        pos := PositionSublist(s, "<div");
+      od;
+      pos := PositionSublist(s, "</div");
+      while pos <> fail do
+        pos1 := Position(s, '>', pos);
+        s := Concatenation(s{[1..pos-1]}, s{[pos1+1..Length(s)]});
+        pos := PositionSublist(s, "</div");
+      od;
+      return s;
+    end;
+    Print("#I  translating formulae to MathML.\n");
+    FileString("tempMATHML.tex", r.TTMInput);
+    Exec("rm -f tempMATHML.html; ttm -r tempMATHML.tex > tempMATHML.html");
+    math := StringFile("tempMATHML.html");
+    r.MathMLList := [];
+    pos := PositionSublist(math, "TTMFormulaeDelim");
+    while pos <> fail do
+      pos1 := PositionSublist(math, "TTMFormulaeDelim", pos);
+      if pos1 <> fail then
+        Add(r.MathMLList, remdiv(math{[pos+16..pos1-1]}));
+      else
+        Add(r.MathMLList, remdiv(math{[pos+16..Length(math)]}));
+      fi;
+      pos := pos1;
+    od;
+  fi;
   
   # .index has entries of form [sorttext, subtext, numbertext, entrytext]
   Print("#I  producing the index . . .\n");
@@ -464,7 +531,7 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
     PrintTo1(stream, function()
     for a in need do
       # an anchor for links from the citations
-      Print("\n<p><a name=\"biB", a.Label, "\"></a></p>\n"); 
+      Print("\n<p><a id=\"biB", a.Label, "\"></a></p>\n"); 
       PrintBibAsHTML(a, true); 
     od;
     end);
@@ -799,8 +866,12 @@ GAPDoc2HTMLProcs.PCDATAFILTER := function(r, str)
     Append(str, s);
   fi;
 end;
-#  XXX unnecessary to distinguish?
-GAPDoc2HTMLProcs.PCDATANOFILTER := GAPDoc2HTMLProcs.PCDATAFILTER;
+# and without filter (e.g., for collecting formulae  
+GAPDoc2HTMLProcs.PCDATANOFILTER := function(r, str)
+  Append(str, r.content);
+end;
+
+GAPDoc2HTMLProcs.PCDATAFILTER;
 ## default is with filter
 GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATAFILTER;
 
@@ -847,10 +918,39 @@ GAPDoc2HTMLProcs.A := function(r, str)
   GAPDoc2HTMLProcs.WrapAttr(r, str, "Arg");
 end;
 
+GAPDoc2HTMLProcs.MathMLHelper := function(r, str, db, de)
+  local s, x;
+  if IsBound(r.root.MathMLList) then
+    # MathML already available
+    r.root.MathCount := r.root.MathCount + 1;
+    Append(str, r.root.MathMLList[r.root.MathCount]);
+  else 
+    # add to input for 'ttm'
+    if IsString(r.content) then
+      s := r.content;
+    else
+      s := "";
+      GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATANOFILTER;
+      for x in r.content do 
+        GAPDoc2HTML(x, s);
+      od;
+      GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATAFILTER;
+    fi;
+    s := Concatenation("TTMFormulaeDelim", db, s, de);
+    Append(r.root.TTMInput, s);
+    Append(str, "FORMULA");
+  fi;
+end;
+  
+
 ##  simple maths, here we try to substitute TeX command to something which
 ##  looks ok in text mode
 GAPDoc2HTMLProcs.M := function(r, str)
   local s, ss;
+  if r.root.mathmode = "MathML" then
+    GAPDoc2HTMLProcs.MathMLHelper(r, str, "$", "$");
+    return;
+  fi;
   s := "";
   GAPDoc2HTMLContent(r, s);
   s := TextM(s);
@@ -861,6 +961,10 @@ end;
 
 ##  in HTML this is shown in TeX format
 GAPDoc2HTMLProcs.Math := function(r, str)
+  if r.root.mathmode = "MathML" then
+    GAPDoc2HTMLProcs.MathMLHelper(r, str, "$", "$");
+    return;
+  fi;
   Add(str, '$');
   GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATANOFILTER;
   GAPDoc2HTMLContent(r, str);
@@ -870,7 +974,18 @@ end;
 
 ##  displayed maths (also in TeX format, but centered paragraph in itself)
 GAPDoc2HTMLProcs.Display := function(r, par)
-  local   s, a;
+  local   s, a, str;
+  if r.root.mathmode = "MathML" then
+    str := "";
+##      GAPDoc2HTMLProcs.MathMLHelper(r, str, "\\[", "\\]\n\n");
+##      Add(par, r.count);
+##      Add(par, Concatenation("<p class=\"formula\">", str, "</p>\n"));
+    GAPDoc2HTMLProcs.MathMLHelper(r, str, "$", "$");
+    Add(par, r.count);
+    Add(par, Concatenation("<table width=\"100%\"><tr><td align=\"center\">",
+             str, "</td></tr></table>\n"));
+    return;
+  fi;
   s := "\\[";
   GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATANOFILTER;
   for a in r.content do

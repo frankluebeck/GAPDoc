@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.8 2002-05-20 22:08:57 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.9 2002-05-23 15:41:37 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -579,7 +579,7 @@ InstallGlobalFunction(DisplayXMLStructure, function(doc)
       return;
     fi;
     if IsBound(doc.count) then
-      c := doc.count;
+      c := String(doc.count);
     else
       c := "";
     fi;
