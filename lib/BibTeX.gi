@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.4 2001-01-24 14:05:12 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.5 2001-09-03 13:12:26 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -226,11 +226,16 @@ InstallGlobalFunction(ParseBibFiles, function(arg)
       else
         # type and label of entry
         r := rec(Type := s);
-        pb := Position(str, ',', p);
-        r.Label := StripBeginEnd(str{[p+1..pb-1]}, WHITESPACE);
-        p := pb;
         # end of bibtex entry, for better recovery from errors
         ende := PositionMatchingDelimiter(str, "{}", p);
+        pb := Position(str, ',', p);
+        if not IsInt(pb) or pb > ende then 
+          # doesn't seem to be a correct entry, ignore
+          p := Position(str, '@', ende);
+          continue;
+        fi;
+        r.Label := StripBeginEnd(str{[p+1..pb-1]}, WHITESPACE);
+        p := pb;
         # get the components
         pb := Position(str, '=', p);
         while pb<>fail and pb < ende do
@@ -253,7 +258,8 @@ InstallGlobalFunction(ParseBibFiles, function(arg)
             r.(comp) := str{[p+1..pb-1]};
           else 
             pb := p+1;
-            while (not str[pb] in WHITESPACE) and str[pb] <> ',' do
+            while (not str[pb] in WHITESPACE) and str[pb] <> ',' and 
+                       str[pb] <> '}' do
               pb := pb+1;
             od;
             s := str{[p..pb-1]};
