@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- $Id: example.xml,v 1.4 2001-02-05 14:40:56 gap Exp $ -->
+<!-- $Id: example.xml,v 1.5 2001-11-16 15:20:47 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
  [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&tgt;</Alt>'>]>
 
-<Book Name="Example">
+<Book Name="GAPDoc Example">
 
 <TitlePage>
   <Title>A Complete Example (&see; <Ref Sect="One"/>)</Title>
@@ -324,7 +324,7 @@ We distinguish among others references
 <P/>
 
 There are also references to labels: see <Ref Text="here" Label="there"/>,
-to other books: see <Ref Sect="What is a DTD" BookName="gapdoc"/> or
+to other books: see <Ref Sect="What is a DTD" BookName="GAPDoc"/> or
 <Ref Oper="IsSubgroup" BookName="ref"/> in the &GAP; reference
 manual.
 <P/>

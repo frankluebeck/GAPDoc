@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.5 2001-01-26 10:12:22 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.6 2001-11-16 15:20:48 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -277,7 +277,7 @@ InstallGlobalFunction(GetSTag, function(str, pos)
       # must allow    &xyz;  for entity resolution as well
       if not str[pos2[2]+1] = delim  then
         if str[pos2[2]+1] = '&' then
-          ent := GetEnt(str, pos2[2]+1);
+          ent := GetEnt(str, pos2[2]+2);
           Append(atval, str{[pos2[1]..pos2[2]]});
           Append(atval, ent.content);
           pos2 := ent.next;

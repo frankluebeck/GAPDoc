@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.8 2001-07-11 23:01:07 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.9 2001-11-16 15:20:48 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -447,6 +447,7 @@ end;
 
 # just process content ??? putting together here
 GAPDoc2TextProcs.Book := function(r, par, pi)
+  r.root.Name := r.attributes.Name;
   GAPDoc2TextContent(r, par);
 end;
 
@@ -709,8 +710,9 @@ GAPDoc2TextProcs.TableOfContents := function(r, par)
   Add(par, r.count);
   if IsBound(r.root.toctext) then
     Add(par, Concatenation("\n\n", GAPDoc2TextProcs.TextAttr.Heading,
-          "Content", GAPDoc2TextProcs.TextAttr.reset, "\n\n", r.root.toctext,
-          "\n\n-------------------------------------------------------\n"));
+        "Content (", r.root.Name, ")", GAPDoc2TextProcs.TextAttr.reset, 
+        "\n\n", r.root.toctext,
+        "\n\n-------------------------------------------------------\n"));
   else
     Add(par,"TOC\n-----------\n");
   fi;
@@ -877,9 +879,9 @@ end;
 
 ##  quoted text
 GAPDoc2TextProcs.Q := function(r, str)
-  Append(str, "`");
+  Append(str, "\"");
   GAPDoc2TextContent(r, str);
-  Append(str, "'");
+  Append(str, "\"");
 end;
 
 ##  Package names

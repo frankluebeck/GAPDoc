@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.6 2001-09-04 23:09:25 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.7 2001-11-16 15:20:48 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -846,9 +846,9 @@ end;
 
 ##  quoted text
 GAPDoc2HTMLProcs.Q := function(r, str)
-  Append(str, "``");
+  Append(str, "\"");
   GAPDoc2HTMLContent(r, str);
-  Append(str, "''");
+  Append(str, "\"");
 end;
 
 ##  Package names
@@ -935,9 +935,9 @@ GAPDoc2HTMLProcs.Cite := function(r, str)
     # here we include a link to the corresponding entry in bibliography 
     Append(str, Concatenation("<a href=\"chapBib.html#biB", key, "\">[", 
                                                   r.root.biblabels[pos]));
-    if IsBound(r.attributes.Place) then
+    if IsBound(r.attributes.Where) then
       Append(str, ", ");
-      Append(str, r.attributes.Place);
+      Append(str, r.attributes.Where);
     fi;
     Append(str, "]</a>");
   fi;

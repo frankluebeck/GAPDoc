@@ -2,13 +2,13 @@
 ##
 #A  init.g                  GAPDoc              Frank Lübeck / Max Neunhöffer
 ##
-#H  @(#)$Id: init.g,v 1.3 2001-08-09 07:41:39 gap Exp $
+#H  @(#)$Id: init.g,v 1.4 2001-11-16 15:20:47 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck and Max Neunhöffer,  
 #Y  Lehrstuhl D für Mathematik,  RWTH Aachen
 ##
 
-DeclareAutoPackage("gapdoc", "0.9", ReturnTrue);
+DeclareAutoPackage("GAPDoc", "0.9", ReturnTrue);
 DeclarePackageAutoDocumentation("GAPDoc", "doc", "GAPDoc", 
 "Package for Preparing GAP Documentation");
 DeclarePackageAutoDocumentation("GAPDoc", "example", "GAPDoc Example",
@@ -17,18 +17,18 @@ DeclarePackageAutoDocumentation("GAPDoc", "example", "GAPDoc Example",
 #DeclarePackage("gapdoc", "0.9", ReturnTrue);
 #DeclarePackageDocumentation("gapdoc", "doc");
 
-ReadPkg("gapdoc", "banner.g");
+ReadPkg("GAPDoc", "banner.g");
 
-ReadPkg("gapdoc", "lib/PrintUtil.gd");
-ReadPkg("gapdoc", "lib/Text.gd");
-ReadPkg("gapdoc", "lib/ComposeXML.gd");
-ReadPkg("gapdoc", "lib/XMLParser.gd");
-ReadPkg("gapdoc", "lib/GAPDoc.gd");
-ReadPkg("gapdoc", "lib/BibTeX.gd");
-ReadPkg("gapdoc", "lib/GAPDoc2LaTeX.gd");
-ReadPkg("gapdoc", "lib/GAPDoc2Text.gd");
-ReadPkg("gapdoc", "lib/GAPDoc2HTML.gd");
+ReadPkg("GAPDoc", "lib/PrintUtil.gd");
+ReadPkg("GAPDoc", "lib/Text.gd");
+ReadPkg("GAPDoc", "lib/ComposeXML.gd");
+ReadPkg("GAPDoc", "lib/XMLParser.gd");
+ReadPkg("GAPDoc", "lib/GAPDoc.gd");
+ReadPkg("GAPDoc", "lib/BibTeX.gd");
+ReadPkg("GAPDoc", "lib/GAPDoc2LaTeX.gd");
+ReadPkg("GAPDoc", "lib/GAPDoc2Text.gd");
+ReadPkg("GAPDoc", "lib/GAPDoc2HTML.gd");
 
 # The handler functions for GAP's help system are read now:
-ReadPkg("gapdoc", "lib/HelpBookHandler.g");
+ReadPkg("GAPDoc", "lib/HelpBookHandler.g");
 

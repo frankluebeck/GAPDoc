@@ -1,4 +1,4 @@
-<!-- $Id: intro.xml,v 1.4 2001-01-24 14:05:11 gap Exp $ -->
+<!-- $Id: intro.xml,v 1.5 2001-11-16 15:20:47 gap Exp $ -->
 <Chapter Label="ch:intro"><Heading>Introduction and Example</Heading>
 
 The main  purpose of  the &GAPDoc; package  is to define  a file  format for
@@ -70,7 +70,7 @@ characters).
 
 <Listing Type="from 3k+1.xml">
 <![CDATA[<!--   A complete "fake package" documentation   
-   $Id: intro.xml,v 1.4 2001-01-24 14:05:11 gap Exp $
+   $Id: intro.xml,v 1.5 2001-11-16 15:20:47 gap Exp $
 -->
 ]]></Listing>
 
@@ -105,10 +105,9 @@ element  also  has an  <Q>attribute</Q>  <C>Name</C>  whose <Q>value</Q>  is
 If  you know  HTML, this  will  look familiar  to  you. But  there are  some
 important  differences:  The element  name  <C>Book</C>  and attribute  name
 <C>Name</C>  are  <E>case sensitive</E>.  The  value  of an  attribute  must
-<E>always</E> be enclosed in quotes and  no whitespace is allowed around the
-<Q>=</Q> in the  assignment of  the  attribute  value. In  XML  <E>every</E>
-element has a start and end tag  (which can be combined for elements defined
-as <Q>empty</Q>, see for example <C>&lt;TableOfContents/&gt;</C> below).
+<E>always</E> be enclosed in quotes. In XML <E>every</E> element has a start
+and end tag (which can be combined for elements defined as <Q>empty</Q>, see
+for example <C>&lt;TableOfContents/&gt;</C> below).
 <P/>
 
 If   you   know   &LaTeX;,   you   are   familiar   with   quite   different
