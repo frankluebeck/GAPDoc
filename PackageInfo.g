@@ -7,7 +7,7 @@
 
 SetPackageInfo( rec(
 
-CVSVERSION := "$Id: PackageInfo.g,v 1.2 2003-06-20 16:08:29 gap Exp $",
+CVSVERSION := "$Id: PackageInfo.g,v 1.3 2003-08-29 12:46:54 gap Exp $",
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
@@ -60,7 +60,7 @@ PackageDoc := [rec(
   PDFFile := "doc/manual.pdf",
   SixFile := "doc/manual.six",
   LongTitle := "a meta package for GAP documentation",
-  AutoLoad := true
+  Autoload := true
   ),
   rec(
   BookName := "GAPDoc Example",
@@ -70,7 +70,7 @@ PackageDoc := [rec(
   PDFFile := "example/manual.pdf",
   SixFile := "example/manual.six",
   LongTitle := "example help book for GAPDoc",
-  AutoLoad := false
+  Autoload := false
   )],
 Dependencies := rec(
   GAP := "4.3",
@@ -81,7 +81,7 @@ Dependencies := rec(
               "http://www.latex-project.org"]]
 ),
 AvailabilityTest := ReturnTrue,
-AutoLoad := true,
+Autoload := true,
 BannerString := Concatenation( 
 "    ######################################################################\n",
 "    ##                                                                  ##\n",
