@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.22 2003-06-04 11:20:00 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.23 2003-06-05 06:40:06 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1161,7 +1161,6 @@ GAPDoc2HTMLProcs.Verb := function(r, par)
   od;
   Append(str, cont);
   Append(str, "\n</pre>\n\n");
-Print("GUCK: ",str, NamesOfComponents(r), par, "\n");  
   Add(par, r.count);
   Add(par, str);
 end;
