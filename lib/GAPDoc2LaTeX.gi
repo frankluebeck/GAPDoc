@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.7 2002-10-16 11:40:13 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.8 2002-12-23 12:12:50 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1017,7 +1017,7 @@ GAPDoc2LaTeXProcs.ManSection := function(r, str)
           GAPDoc2LaTeXProcs.EscapeUsBs(f.attributes.Name), lab, "}}\n"));
   # page number info for online help
   Append(str, Concatenation("\\logpage{", 
-          GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}\n"));
+          GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}\\nobreak\n"));
   # to avoid references to local subsection in description:
   GAPDoc2LaTeXProcs._currentSubsection := r.count{[1..3]};
   Append(str, "{");
