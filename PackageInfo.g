@@ -7,7 +7,7 @@
 
 SetPackageInfo( rec(
 
-CVSVERSION := "$Id: PackageInfo.g,v 1.1 2003-06-20 15:29:01 gap Exp $",
+CVSVERSION := "$Id: PackageInfo.g,v 1.2 2003-06-20 16:08:29 gap Exp $",
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
@@ -55,7 +55,7 @@ PackageWWWHome := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc",
 PackageDoc := [rec(
   BookName := "GAPDoc",
 #  Archive := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-doc-0r99.tar.bz2",
-  ArchiveURLSubset := ["doc"],
+  ArchiveURLSubset := ["doc", "example"],
   HTMLStart := "doc/chap0.html",
   PDFFile := "doc/manual.pdf",
   SixFile := "doc/manual.six",
@@ -65,7 +65,7 @@ PackageDoc := [rec(
   rec(
   BookName := "GAPDoc Example",
 #  Archive := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-example-0r99.tar.bz2",
-  ArchiveURLSubset := ["example"],
+  ArchiveURLSubset := ["example", "doc"],
   HTMLStart := "example/chap0.html",
   PDFFile := "example/manual.pdf",
   SixFile := "example/manual.six",
