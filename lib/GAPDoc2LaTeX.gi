@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.9 2003-02-07 03:39:31 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.10 2003-08-28 15:32:30 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -204,6 +204,7 @@ GAPDoc2LaTeXProcs.Head3 := Concatenation([
 "\n"]);
                                    
 GAPDoc2LaTeXProcs.Tail := Concatenation( 
+"\\newpage\n",
 "\\immediate\\write\\pagenrlog{[\"End\"], \\arabic{page}];}\n",
 "\\immediate\\closeout\\pagenrlog\n",
 "\\end{document}\n");
@@ -558,6 +559,7 @@ GAPDoc2LaTeXProcs.Bibliography := function(r, str)
   else
     st := "plain";
   fi;
+
   # page number info for online help
   Append(str, Concatenation("\\def\\bibname{References\\logpage{", 
           GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}}\n"));

@@ -2,7 +2,7 @@
 ##
 #W  Make.g                       GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Make.g,v 1.4 2002-05-27 09:02:44 gap Exp $
+#H  @(#)$Id: Make.g,v 1.5 2003-08-28 15:32:30 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -63,8 +63,9 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   "; makeindex ", main, null,
   "; ", latex, main, null,
   "; rm -f ", main, ".aux\""));
-  Print("2 x pdflatex, \c");
+  Print("3 x pdflatex, \c");
   Exec(Concatenation("sh -c \" cd ", Filename(path,""),
+  "; pdf", latex, main, null,
   "; pdf", latex, main, null,
   "; pdf", latex, main, null,"\""));
   Print("dvips\n");
