@@ -1,7 +1,7 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.2 2002-05-29 07:58:57 gap Exp $
+         $Id: TODO,v 1.3 2004-06-02 14:38:41 gap Exp $
 
 - maybe add links to "the" example in the reference section of doc?
   (not so sure, if this is necessary).
@@ -12,3 +12,5 @@
 - should the bibliography and the index appear in the table of contents?
   (if yes, in all output versions)
 
+- consider http://psyx.org/hermes/doc.html for translations from LaTeX to
+  MathML.
