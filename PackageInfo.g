@@ -7,7 +7,7 @@
 
 SetPackageInfo( rec(
 
-CVSVERSION := "$Id: PackageInfo.g,v 1.4 2004-03-29 11:42:21 gap Exp $",
+CVSVERSION := "$Id: PackageInfo.g,v 1.5 2004-05-24 15:08:47 gap Exp $",
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
@@ -73,7 +73,7 @@ PackageDoc := [rec(
   Autoload := false
   )],
 Dependencies := rec(
-  GAP := "4.3",
+  GAP := "4.4",
   NeededOtherPackages := [],
   SuggestedOtherPackages := [],
   ExternalConditions := 
