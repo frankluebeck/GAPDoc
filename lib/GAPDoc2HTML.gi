@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.28 2004-05-03 14:52:36 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.29 2004-05-06 13:13:33 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -107,7 +107,7 @@ GAPDoc2HTMLProcs.Head1 := "\
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n\
          \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n\
 \n\
-<html xmlns=\"http://www.w3.org/1999/xhtml\">\n\
+<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
 <head>\n\
 <title>GAP (";
 
@@ -117,7 +117,7 @@ GAPDoc2HTMLProcs.Head1Trans := "\
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\
          \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\
 \n\
-<html xmlns=\"http://www.w3.org/1999/xhtml\">\n\
+<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n\
 <head>\n\
 <title>GAP (";
 
@@ -130,7 +130,7 @@ GAPDoc2HTMLProcs.Head1MML := "\
        <!ENTITY mathml \"http://www.w3.org/1998/Math/MathML\">\n\
        ] >\n\
 \n\
-<html xmlns=\"http://www.w3.org/1999/xhtml\">\n\
+<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
 <head>\n\
 <link rel=\"stylesheet\" type=\"text/css\" href=\"mathml.css\" />\n\
 <title>GAP (";

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.12 2003-09-25 12:57:01 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.13 2004-05-06 13:13:33 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -178,6 +178,7 @@ GAPDoc2LaTeXProcs.Head2 := GAPDoc2LaTeXProcs.Head2dvi;
 ##  head - part 3
 GAPDoc2LaTeXProcs.Head3 := Concatenation([
 "        a4paper=true,bookmarks=false,pdftitle={Written with GAPDoc},\n",
+"        pdfcreator={LaTeX with hyperref package / GAPDoc},\n",
 "        colorlinks=true,backref=page,breaklinks=true,linkcolor=RoyalBlue,\n",
 "        citecolor=RoyalGreen,filecolor=RoyalRed,\n",
 "        urlcolor=RoyalRed,pagecolor=RoyalBlue]{hyperref}\n",
@@ -295,7 +296,7 @@ GAPDoc2LaTeXProcs.Body := GAPDoc2LaTeXContent;
 
 ##  the title page,  the most complicated looking function
 GAPDoc2LaTeXProcs.TitlePage := function(r, str)
-  local   l,  a,  s,  cont;
+  local   l,  ll, a,  s,  cont;
   
   # page number info for online help
   Append(str, Concatenation("\\logpage{", 
@@ -309,6 +310,10 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
   GAPDoc2LaTeXContent(l[1], s);
   Append(str, s);
   Append(str, "}}\\\\[1cm]\n");
+  # set title in info part of PDF document
+  Append(str, "\\hypersetup{pdftitle=");
+  Append(str, s);
+  Append(str, "}\n");
   
   # the title is also used for the page headings
   Append(str, "\\markright{\\scriptsize \\mbox{}\\hfill ");
@@ -342,12 +347,20 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
 
   # author name(s)
   l := Filtered(r.content, a-> a.name = "Author");
+  # collect author list for PDF info
+  ll := [];
   for a in l do
     Append(str, "{\\large \\textbf{");
+    s := "";
     GAPDoc2LaTeXContent(rec(content := Filtered(a.content, b->
-                   not b.name in ["Email", "Homepage", "Address"])), str);
+                   not b.name in ["Email", "Homepage", "Address"])), s);
+    Append(str, s);
+    Add(ll, s);
     Append(str, "}}\\\\\n");
   od;
+  Append(str, "\\hypersetup{pdfauthor=");
+  Append(str, JoinStringsWithSeparator(ll, "; "));
+  Append(str, "}\n");
 
   # extra comment for front page
   l := Filtered(r.content, a-> a.name = "TitleComment");
