@@ -2,7 +2,7 @@
 ##
 #W  HelpBookHandler.g                GAPDoc                      Frank Lübeck
 ##
-#H  @(#)$Id: HelpBookHandler.g,v 1.6 2001-09-04 23:09:25 gap Exp $
+#H  @(#)$Id: HelpBookHandler.g,v 1.7 2002-04-30 15:02:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -138,8 +138,13 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
   fi;
   
   if type = "text" then
-    str := StringFile(Filename(info.directory, Concatenation("chap",
-                   String(a[3][1]), ".txt")));
+    fname := Filename(info.directory, Concatenation("chap", String(a[3][1]),
+             ".txt"));
+    str := StringFile(fname);
+    if str = fail then
+      return rec(lines := Concatenation("Sorry, file '", fname, "' seems to ",
+                 "be corrupted.\n"), formatted := true);
+    fi;
     if not IsBound(ANSI_COLORS) or ANSI_COLORS <> true then
       # strip escape sequences
       str := StripEscapeSequences(str);
