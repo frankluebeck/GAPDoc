@@ -2,14 +2,14 @@
 ##
 #A  init.g                  GAPDoc              Frank Lübeck / Max Neunhöffer
 ##
-#H  @(#)$Id: init.g,v 1.9 2003-06-20 23:17:03 gap Exp $
+#H  @(#)$Id: init.g,v 1.10 2004-03-29 11:50:55 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck and Max Neunhöffer,  
 #Y  Lehrstuhl D für Mathematik,  RWTH Aachen
 ##
 
 # delete this after 4.4
-DeclareAutoPackage("GAPDoc", "0.999", ReturnTrue);
+DeclareAutoPackage("GAPDoc", "0.9999", ReturnTrue);
 DeclarePackageAutoDocumentation("GAPDoc", "doc", "GAPDoc", 
 "Package for Preparing GAP Documentation");
 DeclarePackageAutoDocumentation("GAPDoc", "example", "GAPDoc Example",
