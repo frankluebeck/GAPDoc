@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.3 2001-01-19 09:33:10 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.4 2001-01-26 10:12:22 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -94,7 +94,7 @@ InstallValue(HEXDIGITS, "0123456789ABCDEFabcdef");
 ##  <#/GAPDoc>
 ##  
 InstallValue(TextAttr, rec());
-TextAttr.CSI := [CHAR_INT(27), '['];
+TextAttr.CSI := "\033[";
 TextAttr.reset := Concatenation(TextAttr.CSI, "0m");
 TextAttr.normal := Concatenation(TextAttr.CSI, "22m");
 TextAttr.bold := Concatenation(TextAttr.CSI, "1m");

@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.4 2001-01-24 14:05:12 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.5 2001-01-26 10:12:22 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -68,32 +68,45 @@ BindGlobal("GetChars", function(str, pos, chars)
   fi;
 end);
 
-# printing of error message for non-well formed XML document,
-# also shows some text around position of error.
-BindGlobal("ParseError", function(str, pos, comment)
-  local   p,  l,  nl;
+# returns for string, position:  [line number, [begin..end position of
+# line]] (range without the '\n') 
+BindGlobal("LineNumberStringPosition", function(str, pos)
+  local p, nl, l;
   p := 0;
+  l := 0;
   nl := 0;
   while p<>fail and p < pos do
     l := p;
     p := Position(str, '\n', p);
     nl := nl+1;
   od;
-  Print("XML Parse Error: Line ");
-  if pos = p then
-    Print(nl-1);
-  else
-    Print(nl);
-  fi;
   if p=fail then
     p := Length(str)+1;
   fi;
-  Print(" Character ", pos-l, "\n-----------\n", 
-        str{[l+1..p-1]}, "\n");
-  if pos-l-1>=1 then
-    Print(List([1..pos-l-1], i-> ' '));
+
+  if pos = p then
+    nl := nl - 1;
   fi;
-  Print("^", "\n-----------\n", comment, "\n");
+  return [nl, [l+1..p-1]];
+end);
+
+# printing of error message for non-well formed XML document,
+# also shows some text around position of error.
+BindGlobal("ParseError", function(str, pos, comment)
+  local Show, nl;
+  # for examination of error
+  Show := function()
+    Pager(rec(lines := str, start := nl[1]));
+  end;
+  nl := LineNumberStringPosition(str, pos);
+  Print("XML Parse Error: Line ", nl[1]);
+  Print(" Character ", pos-nl[2][1]+1, "\n-----------\n", 
+        str{nl[2]}, "\n");
+  if pos-nl[2][1] >= 1 then
+    Print(List([1..pos-nl[2][1]], i-> ' '));
+  fi;
+  Print("^", "\n-----------\n", comment, "\n!!! Type `Show();' to watch the",
+  " input string in pager - starting with\n    line containing error !!!\n");
   Error();
 end);
 
@@ -161,12 +174,19 @@ InstallGlobalFunction(GetEnt, function(str, pos)
   pos1 := Position(str, ';', pos-1);
   if pos1=pos then
     ParseError(str, pos, "empty entity name not allowed");
+  elif pos1 = fail then
+    ParseError(str, pos, "no semicolon in entity reference");
   fi;
   nam := str{[pos..pos1-1]};
   if not IsBound(ENTITYDICT.(nam)) then
-    ParseError(str, pos, "don't know entity name");
+    # XXX error or better going on here?
+##      ParseError(str, pos, "don't know entity name");
+    Print("WARNING: Entity with name `", nam, "' not known!\n",
+          "         (Specify in <!DOCTYPE ...> tag!)\n");
+    doc := Concatenation("UNKNOWNEntity(", nam, ")");
+  else
+    doc := ENTITYDICT.(nam);
   fi;
-  doc := ENTITYDICT.(nam);
   i := 1;
   res := "";
   while i <= Length(doc) do
@@ -200,6 +220,7 @@ InstallGlobalFunction(GetSTag, function(str, pos)
     res.name := "WHOLEDOCUMENT";
     res.next := 1;
     res.content := [];
+    res.input := str;
     return res;
   fi;
   # name of element
@@ -230,13 +251,23 @@ InstallGlobalFunction(GetSTag, function(str, pos)
     fi;
     # reading attribute value
     attr := str{[pos..pos2-1]};
-    if not (str[pos2] = '=' and str[pos2+1] in "\"'") then
-      ParseError(str, pos2, Concatenation("attribute must be specified ",
-              "in form \'attr=\"text\"\'"));
+##      if not (str[pos2] = '=' and str[pos2+1] in "\"'") then
+##        ParseError(str, pos2, Concatenation("attribute must be specified ",
+##                "in form \'attr=\"text\"\'"));
+##      fi;
+##      delim := str[pos2+1];
+    # can be white space around =
+    pos2 := GetChars(str, pos2, WHITESPACE);
+    if pos2 = fail or str[pos2] <> '=' then
+      ParseError(str, pos2, "expecting '=' for attribute value");
     fi;
-    delim := str[pos2+1];
+    pos2 := GetChars(str, pos2+1, WHITESPACE);
+    if pos2 = fail or not str[pos2] in "\"'" then
+      ParseError(str, pos2, "expecting quotes for attribute value");
+    fi;
+    delim := str[pos2];
     atval := "";
-    pos2 := pos2 + 2;
+    pos2 := pos2 + 1;
     while str[pos2] <> delim do
       # we allow     attr='fkjf"fafds'   as well, see AnnStd 2.3  
       pos2 := GetWord(str, pos2, "", "<&\"'");
@@ -265,7 +296,7 @@ InstallGlobalFunction(GetSTag, function(str, pos)
     pos2 := pos2+1;
     pos := GetChars(str, pos2, WHITESPACE);
     if pos=fail then
-      ParseError(str, pos2, "documents ends in tag");
+      ParseError(str, pos2, "document ends in tag");
     fi;
   od;
   if str[pos] = '/' then
@@ -344,7 +375,7 @@ InstallGlobalFunction(GetElement, function(str, pos)
         # processing instruction (PI), we repeat it literally
         pos2 := PositionSublist(str, "?>", pos+2);
         if pos2=fail then
-          ParseError(str,pos+2, "document ends within processing instruction");
+          ParseError(str, pos+2, "document ends within processing instruction");
         fi;
         Add(res.content, rec(name := "XMLPI", 
                 content := str{[pos+2..pos2-1]}));
@@ -484,14 +515,18 @@ end);
 ##       content := "text without markup "     )
 ##  </Listing>
 ##  
-##  This  function   checks  whether   the  XML  document   is  <Emph>well
+##  This function checks whether  the  XML  document   is  <Emph>well
 ##  formed</Emph>, see  <Ref Chap="XMLvalid"  /> for  an explanation.
-##  If an  error in  the XML  structure is found,  a break  loop is
+##  If   an  error in  the XML  structure is found,  a break  loop is
 ##  entered and the text around the position where the problem starts
-##  is  shown.  All  entities  are  resolved  when  they  are  either
-##  entities  defined  in the  &GAPDoc;  package  (in particular  the
-##  standard XML entities) or if  their definition is included in the
-##  <C>&lt;!DOCTYPE ..></C> tag of the document.<P/>
+##  is shown. With  <C>Show();</C> one can browse  the original input
+##  in  the <Ref  BookName="Ref" Func="Pager"  />, starting  with the
+##  line where the error occurred.
+##  
+##  All entities are  resolved when they are  either entities defined
+##  in the &GAPDoc; package (in particular the standard XML entities)
+##  or if their definition is included in the <C>&lt;!DOCTYPE ..></C>
+##  tag of the document.<P/>
 ##  
 ##  Note  that  <Ref  Func="ParseTreeXMLString"  />  does  not  parse
 ##  and  interpret the  corresponding document  type definition  (the
@@ -575,7 +610,6 @@ end);
 ##  <#GAPDoc Label="ApplyToNodesParseTree">
 ##  <ManSection >
 ##  <Func Arg="tree, fun" Name="ApplyToNodesParseTree" />
-##  <Returns>nothing</Returns>
 ##  <Func Arg="tree" Name="AddRootParseTree" />
 ##  <Func Arg="tree" Name="RemoveRootParseTree" />
 ##  <Description>

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.3 2001-01-24 14:05:12 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.4 2001-01-26 10:12:22 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -21,12 +21,14 @@
 ##  function  does an  (incomplete)  validity check  of the  document
 ##  according to the document  type declaration in <F>gapdoc.dtd</F>.
 ##  It also does some additional  checks which cannot be described in
-##  the DTD (like checking whether  chapters and sections have a heading).
+##  the DTD (like checking whether chapters and sections have a heading).
 ##  For elements  with element  content the whitespace  between these
 ##  elements is removed.<P/>
 ##  
-##  In case of an error the break loop is entered and the position of
-##  the error in the original XML document is printed.
+##  In case  of an error the  break loop is entered  and the position
+##  of  the error  in  the  original XML  document  is printed.  With
+##  <C>Show();</C>  one can  browse the  original input  in the  <Ref
+##  BookName="Ref" Func="Pager" />.
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
@@ -36,8 +38,20 @@
 Add(GAPDOCDTDINFO, rec(name := "WHOLEDOCUMENT", attr := [  ], 
             reqattr := [  ], type := "elements", content := ["Book"]));
 BindGlobal("GAPDOCDTDINFOELS", List(GAPDOCDTDINFO, a-> a.name));
-InstallGlobalFunction(CheckAndCleanGapDocTree, function(r)
-  local   name,  pos,  type,  c,  namc,  l,  namattr, typ;
+InstallGlobalFunction(CheckAndCleanGapDocTree, function(arg)
+  local r, str, name, pos, type, namc, l, i, namattr, typ, c;
+  # we save orignal XML input string if available (as r.input on top
+  # level and as second argument in recursive calls of this function)
+  # This allows to browse the input if an error occurs.
+  r := arg[1];
+  if Length(arg) > 1 then
+    str := arg[2];
+  elif IsBound(r.input) then
+    str := r.input;
+  else
+    str := "input string not available";
+  fi;
+  
   name := r.name;
   if name = "PCDATA" then
     return true;
@@ -47,23 +61,33 @@ InstallGlobalFunction(CheckAndCleanGapDocTree, function(r)
   fi;
   pos := Position(GAPDOCDTDINFOELS, name);
   if pos=fail then
-    Error("element ", name, " not known (starts position ", r.start, ")");
+    ParseError(str, r.start, Concatenation("element ", name, " not known"));
   fi;
   type := GAPDOCDTDINFO[pos].type;
   # checking content
   if type = "empty" then
+    # case that empty element is not input as such 
+    if IsList(r.content) and Length(r.content) = 0 then
+      r.content := EMPTYCONTENT;
+    fi;
     if not r.content = EMPTYCONTENT then
-      Error("element ", name, " must be empty (starts ", r.start, ")");
+      ParseError(str, r.start, Concatenation("element ", name, 
+                      " must be empty"));
     fi;
   elif type = "elements" then
+    # white space between elements is ignored
+    r.content := Filtered(r.content, c-> c.name <> "PCDATA" or not
+                          ForAll(c.content, x-> x in WHITESPACE));
     for c in r.content do 
       namc := c.name;
       if not ((Length(namc)>2 and namc{[1..3]}="XML") or
               (namc = "PCDATA" and ForAll(c.content, x-> x in
                       WHITESPACE)) or
               namc in GAPDOCDTDINFO[pos].content) then
-        Error("Wrong element in ", name, ": ", namc," (starts ",
-              r.start, ")");
+        ParseError(str, r.start, Concatenation("Wrong element in ", 
+                        name, ": ", namc));
+      else
+        
       fi;
     od;
     r.content := Filtered(r.content, a-> a.name <> "PCDATA");
@@ -72,23 +96,34 @@ InstallGlobalFunction(CheckAndCleanGapDocTree, function(r)
                  = "XML") or c.name in 
               GAPDOCDTDINFO[pos].content);
     if false in l then
-      Error("Wrong element in ", name, ": ", r.content[Position(l,
-              false)].name ," (starts ",
-            r.start, ")");
+      ParseError(str, r.start, Concatenation("Wrong element in ", 
+                      name, ": ", r.content[Position(l, false)].name));
     fi;
+    # compactifying sequences of PCDATA entries
+    i := 1;
+    while i < Length(r.content) do
+      if r.content[i].name = "PCDATA" and r.content[i+1].name = "PCDATA" then
+        Append(r.content[i].content, r.content[i+1].content);
+        r.content := r.content{Concatenation([1..i], [i+2..Length(r.content)])};
+      else
+        i := i + 1;
+      fi;
+    od;
   fi;
   
   # checking existing attributes:
   namattr := NamesOfComponents(r.attributes);
   for c in namattr do
     if not c in GAPDOCDTDINFO[pos].attr then
-      Error("Attribute ", c, " not declared for ", name);
+      ParseError(str, r.start, Concatenation("Attribute ", c, 
+                      " not declared for ", name));
     fi;
   od;
   # checking required attributes
   for c in GAPDOCDTDINFO[pos].reqattr do
     if not c in namattr then
-      Error("Attribute ", c, " must be given in element ", name);
+      ParseError(str, r.start, Concatenation("Attribute ", c, 
+                      " must be given in element ", name));
     fi;
   od;
   # some extra checks
@@ -97,20 +132,20 @@ InstallGlobalFunction(CheckAndCleanGapDocTree, function(r)
        IsBound(r.attributes.Label) then
       typ := Difference(NamesOfComponents(r.attributes), ["BookName"]);
       if Length(typ) <> 1 then
-        Error("Ref with strange attribute set (position ", r.start, "): ", 
-              typ);
+        ParseError(str, r.start, Concatenation(
+                        "Ref with strange attribute set: ", typ));
       fi;
     fi;
   elif name in [ "Chapter", "Section", "Subsection" ] and not "Heading"
     in List(r.content, a-> a.name) then
-    Error("Chapter, Section or Subsection must have a heading (position ",
-          r.start, ")");
+    ParseError(str, r.start, 
+                    "Chapter, Section or Subsection must have a heading");
   fi;
   
   if r.content = EMPTYCONTENT then
     return true;
   else
-    return ForAll(r.content, x-> CheckAndCleanGapDocTree(x));
+    return ForAll(r.content, x-> CheckAndCleanGapDocTree(x, str));
   fi;
 end);
 
@@ -125,8 +160,8 @@ end);
 ##  function adds to each node  of the tree a component <C>.count</C>
 ##  which is of form <C>[Chapter[, Section[, Subsection, Paragraph] ]
 ##  ]</C>.  Here  the first  three  numbers  should  be the  same  as
-##  produced  by the  &LaTeX; version  of the  document. Text  before
-##  the first chapter  is counted as  chapter <C>0</C> and  similarly for
+##  produced  by the &LaTeX; version of the document. Text before the
+##  first chapter  is counted as  chapter <C>0</C> and  similarly for
 ##  sections and subsections. Some  elements are always considered to
 ##  start a new paragraph.
 ##  </Description>
@@ -235,12 +270,9 @@ end);
 ##  
 InstallGlobalFunction(PrintSixFile, function(file, r, bookname)
   local   f;
-  # We cannot print strings with escape sequences directly,
-  # so we translate them into numbers.
   f := function(a)
     local   res;
     res := ShallowCopy(a);
-    res[1] := List(res[1], INT_CHAR);
     res[2] := STRING_LOWER(res[2]);
     return res;
   end;

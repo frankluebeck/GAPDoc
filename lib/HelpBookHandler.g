@@ -2,7 +2,7 @@
 ##
 #W  HelpBookHandler.g                GAPDoc                      Frank Lübeck
 ##
-#H  @(#)$Id: HelpBookHandler.g,v 1.2 2001-01-18 14:31:41 gap Exp $
+#H  @(#)$Id: HelpBookHandler.g,v 1.3 2001-01-26 10:12:22 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -36,11 +36,6 @@ HELP_BOOK_HANDLER.GapDocGAP.ReadSix := function(stream)
   Read(stream);
   res := HELPBOOKINFOSIXTMP;
   Unbind(HELPBOOKINFOSIXTMP);
-  # translate strings back from numbers (they contain escape sequences)
-  for a in res.entries do
-    a[1] := List(a[1], CHAR_INT);
-    ConvertToStringRep(a[1]);
-  od;
   
   # if no ANSI_COLORS we strip the escape sequences:
   if not IsBound(ANSI_COLORS) or ANSI_COLORS <> true then

@@ -1,4 +1,4 @@
-<!-- $Id: enter.xml,v 1.4 2001-01-24 14:05:11 gap Exp $ -->
+<!-- $Id: enter.xml,v 1.5 2001-01-26 10:12:22 gap Exp $ -->
 <Chapter Label="HowEnter">
 <Heading>How To Type a &GAPDoc; Document</Heading>
 
@@ -111,16 +111,17 @@ directly  followed (without  whitespace) by  an element  name (see&nbsp;<Ref
 Subsect="XMLnames"/>),  optional  attributes,  optional  whitespace,  and  a
 greater-than-character <Q><C>&tgt;</C></Q>.<P/>
 
-An <Q>attribute</Q> consists  of some whitespace and then  its name directly
-followed by an equal sign <Q><C>=</C></Q>, and the attribute value, which is
-enclosed  either  in  single  or  double quotes.  The  attribute  value  may
-not  contain  the type  of  quote  used as  a  delimiter  or the  characters
-<Q><C>&tlt;</C></Q> and <Q><C>&tamp;</C></Q>.<P/>
+An  <Q>attribute</Q>  consists   of  some  whitespace  and   then  its  name
+followed by  an equal sign  <Q><C>=</C></Q> which is optionally  enclosed by
+whitespace,  and the  attribute value,  which is  enclosed either  in single
+or  double  quotes.  The  attribute  value  may  not  contain  the  type  of
+quote  used  as  a  delimiter  or  the  characters  <Q><C>&tlt;</C></Q>  and
+<Q><C>&tamp;</C></Q>.<P/>
 
 Note  especially  that  no  whitespace   is  allowed  between  the  starting
-<Q><C>&tlt;</C></Q>   character  and   the  element   name  or   around  the
-<Q><C>=</C></Q> of an attribute. The quotes around an attribute value cannot
-be omitted. The names of  elements and attributes are <E>case sensitive</E>.
+<Q><C>&tlt;</C></Q> character  and the  element name.  The quotes  around an
+attribute value cannot be omitted. The  names of elements and attributes are
+<E>case sensitive</E>.
 </Subsection>
 
 <Subsection Label="XMLendtag">
