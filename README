@@ -1,0 +1,76 @@
+
+
+   GAPDoc  --- A GAP 4 package for preparing documentation of GAP programs
+
+                        Frank Lübeck
+                       Max Neunhöffer
+            (Lehrstuhl D für Mathematik, RWTH Aachen)              
+
+This package provides:
+
+-  Utilities to *use* the documentation of other packages which is written
+   in GAPDoc format. If you don't want to write your own (package) 
+   documentation, read on after "INSTALLATION" below.
+
+-  The description of a markup language for GAP documentation (which is
+   defined using the XML standard).
+
+-  Three example documents using this language: The GAPDoc documentation
+   itself, a short example which demonstrates all constructs defined  in
+   the GAPDoc language, and a very short example explained in the
+   introduction of the main documentation.
+
+-  A mechanism for distributing  documentation among several files,
+   including source code files.
+
+-  GAP programs (written by the first named author) which produce from 
+   documentation written in the GAPDoc language several document formats:
+      * text format with color markup for onscreen browsing.
+      * LaTeX format and from this PDF- and DVI-versions with hyperlinks.
+      * HTML (4.01 strict) format for reading with a Web-browser.
+
+For further information see:
+   http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/
+
+
+
+
+INSTALLATION
+
+Just unpack one of the archives in the "pkg" subdirectory of your GAP 
+installation. The archive is available in several formats:
+
+   gapdoc-0.9.zoo     (use the "unzoo" or "unzoo.exe" from the GAP homepage)
+   gapdoc-0.9.tar.gz  (GNU tar archive, gzip'ed)
+   gapdoc-0.9.tar.bz2 (GNU tar archive, bzip2'ed)
+   gapdoc-0.9.zip     (with UNIX style line breaks in text files)
+   gapdoc-0.9-w.zip   (with DOS/Windows style line breaks in text files)
+
+Unpacking generates a subdirectory "gapdoc". 
+
+To tell GAP about this package add the following line to the file "ALLPKG"
+in the "pkg" directory.
+
+GAPDoc         # meta package for preparing GAP (package) documentation
+
+That's it! (Maybe you want to read the help section "?SetHelpViewer" 
+in the GAP reference manual.)
+
+
+Installation *outside the GAP main directory*: When you don't have access to
+the directory of your main GAP installation you can also install the package
+by unpacking inside a directory "MYGAPDIR/pkg". (Don't forget to call "gap"
+with the '-l ";MYGAPDIR"' option.) The only drawback with this installation
+is that in the HTML version of the package documentation the links to the
+main GAP manuals don't work. You can correct this by recompiling the 
+HTML version of the documentation: Say "cd gapdoc; gap makedoc.g". (You need
+latex, pdflatex, bibtex, makeidx on your system.)
+
+For questions, suggestions, ... write to
+
+   Frank.Luebeck@Math.RWTH-Aachen.De
+
+
+Frank Lübeck
+
+
