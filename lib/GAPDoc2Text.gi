@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.7 2001-02-05 14:40:56 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.8 2001-07-11 23:01:07 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -426,7 +426,11 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   GAPDoc2TextProcs.Book(r.content[i], par, pi);
   # adding .six entries from index
   for a in r.index do
-    Add(r.six, [Concatenation(a[4], " ", a[2]), a[3], a[5]]);
+    if Length(a[2]) > 0 then
+      Add(r.six, [Concatenation(a[4], " ", a[2]), a[3], a[5]]);
+    else
+      Add(r.six, [a[4],  a[3], a[5]]);
+    fi;
   od;
   
   ##  remove the links to the root  ???
