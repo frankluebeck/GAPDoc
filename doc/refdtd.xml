@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.12 2002-12-23 10:03:20 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.13 2003-02-07 21:38:00 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -613,8 +613,9 @@ This element is used within a <C>ManSection</C> element to specify the usage
 of a  function. The <C>Name</C> attribute  is required and its  value is the
 name of the function. The value  of the <C>Arg</C> attribute (also required)
 contains  the full  list of  arguments including  optional parts,  which are
-denoted by  square brackets.  The arguments are  separated by  whitespace or
-commas.<P/>
+denoted  by  square  brackets.  The  argument  names  can  be  separated  by
+whitespace, commas or  the square brackets for the  optional arguments, like
+<C><![CDATA["grp[, elm]"]]></C> or <C><![CDATA["xx[y[z] ]"]]></C>.<P/>
 
 The  name of  the function  is  also used  as label  for cross  referencing.
 When  the name  of the  function  appears in  the  text of  the document  it
