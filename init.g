@@ -2,7 +2,7 @@
 ##
 #A  init.g                  GAPDoc              Frank Lübeck / Max Neunhöffer
 ##
-#H  @(#)$Id: init.g,v 1.8 2003-06-20 15:29:01 gap Exp $
+#H  @(#)$Id: init.g,v 1.9 2003-06-20 23:17:03 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck and Max Neunhöffer,  
 #Y  Lehrstuhl D für Mathematik,  RWTH Aachen
@@ -26,6 +26,7 @@ ReadPkg("GAPDoc", "lib/BibTeX.gd");
 ReadPkg("GAPDoc", "lib/GAPDoc2LaTeX.gd");
 ReadPkg("GAPDoc", "lib/GAPDoc2Text.gd");
 ReadPkg("GAPDoc", "lib/GAPDoc2HTML.gd");
+ReadPkg("gapdoc", "lib/Make.g");
 
 # The handler functions for GAP's help system are read now:
 ReadPkg("GAPDoc", "lib/HelpBookHandler.g");
