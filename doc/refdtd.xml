@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.7 2001-09-21 13:06:25 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.8 2002-05-24 15:57:21 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -105,8 +105,9 @@ declared as <C>&hash;IMPLIED</C>. </Subsection>
 <Index Key="TitlePage"><C>TitlePage</C></Index>
 
 <Listing Type="From gapdoc.dtd"><![CDATA[
-<!ELEMENT TitlePage (Title, Subtitle?, Version?, Author+, Date?, Abstract?,
-                     Copyright? , Acknowledgements? , Colophon? )>]]>
+<!ELEMENT TitlePage (Title, Subtitle?, Version?, TitleComment?, 
+                     Author+, Date?, Address?, Abstract?, Copyright?, 
+                     Acknowledgements? , Colophon? )>]]>
 </Listing>
 
 Within this element  information for the title page is  collected. Note that
@@ -146,12 +147,12 @@ which is then expanded further because of the following definition:
 <![CDATA[<!ENTITY % InnerText "#PCDATA |
                       Alt |
                       Emph | E |
-                      Par | P | 
+                      Par | P | Br |
                       Keyword | K | Arg | A | Quoted | Q | Code | C | 
                       File | F | Button | B | Package |
                       M | Math | Display | 
                       Example | Listing | Log | Verb |
-                      URL | Email | Homepage | Cite | Label | 
+                      URL | Email | Homepage | Address | Cite | Label | 
                       Ref | Index" >]]> 
 </Listing>
 
@@ -205,6 +206,21 @@ word <Q>Version</Q> in front of the text in this element.
 </Subsection>
 
 
+<Subsection><Heading><C>&tlt;TitleComment&tgt;</C></Heading>
+<Index Key="TitleComment"><C>TitleComment</C></Index>
+
+<Listing Type="From gapdoc.dtd">
+<![CDATA[<!ELEMENT TitleComment (%Text;)*>]]>
+</Listing>
+
+Sometimes a title  and subtitle are not sufficient to  give a rough idea
+about the content  of a package. In this case  use this optional element
+to  specify an  additional text  for the  front page  of the  book. This
+text  should be  short, use  the <C>Abstract</C>  element (see&nbsp;<Ref
+Subsect="elAbstract"/>) for longer explanations.
+
+</Subsection>
+
 <Subsection><Heading><C>&tlt;Author&tgt;</C></Heading>
 <Index Key="Author"><C>Author</C></Index>
 
@@ -216,6 +232,9 @@ As noted  in the comment there  may be more  than one element of  this type.
 This  elements  should  contain  the  name of  an  author  and  probably  an
 <C>Email</C>-address  and/or WWW-<C>Homepage</C>  element  for this  author,
 see&nbsp;<Ref Subsect="elEmail" /> and&nbsp;<Ref Subsect="elHomepage" />.
+You can also specify an individual postal address here, instead of using
+the <C>Address</C> element described below, see&nbsp;<Ref
+Subsect="elAddress" />.
 
 </Subsection>
 
@@ -231,8 +250,26 @@ Only character data is allowed in this element which gives a date for the
 document. No automatic formatting is done. 
 </Subsection>
 
+<Subsection Label="elAddress"><Heading><C>&tlt;Address&tgt;</C></Heading>
+<Index Key="Date"><C>Address</C></Index>
 
-<Subsection><Heading><C>&tlt;Abstract&tgt;</C></Heading>
+<Listing Type="From gapdoc.dtd">
+<![CDATA[<!ELEMENT Address (#PCDATA|Alt|Br)*>]]>
+</Listing>
+
+This element can be used to specify a postal address of the author or
+authors. If there are several authors with different addresses then put
+the <C>Address</C> elements inside the <C>Author</C> elements. <P/>
+
+Use the <C>Br</C> element (see&nbsp;<Ref Subsect="Br"/>) to mark the line 
+breaks in the usual formatting of the address on a letter.<P/>
+
+Usually this element must not appear at all since a postal address is
+easy to find via a link to a personal web page.
+</Subsection>
+
+
+<Subsection Label="elAbstract"><Heading><C>&tlt;Abstract&tgt;</C></Heading>
 <Index Key="Abstract"><C>Abstract</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -1309,7 +1346,7 @@ The only  element type that  is allowed within  the formula elements  is the
 <C>Arg</C> or <C>A</C> element (see  <Ref Subsect="Arg"/>), which is used to
 typeset identifiers that are arguments to &GAP; functions or operations.<P/>
 
-In text and HTML output these formula  are shown as &LaTeX; source code. For
+In text and HTML output these formulae are shown as &LaTeX; source code. For
 simple  formulae (and  you should  try to  make all  your formulae  simple!)
 there  is the  element  <C>M</C> (see&nbsp;<Ref  Subsect="M"  />) for  which
 there  is a  well  defined translation  into  text, which  can  be used  for
@@ -1455,7 +1492,7 @@ chapters, sections, and subsections show up in all output formats.
 
 <Listing Type="From gapdoc.dtd">
 <![CDATA[<!ELEMENT Par EMPTY>    <!-- this is intentionally empty! -->
-<!ELEMENT P EMPTY>      <!-- this is intentionally empty! -->]]>
+<!ELEMENT P EMPTY>      <!-- the same as shortcut  -->]]>
 </Listing>
 
 This <C>EMPTY</C>  element marks  the boundary of  paragraphs. Note  that an
@@ -1471,6 +1508,21 @@ enclose each  paragraph in extra tags.  The introduction of the  <C>P</C> or
 conversion program for &GAPDoc; documents.)
 
 </Subsection>
+
+<Subsection Label="Br"><Heading><C>&tlt;Br&tgt;</C></Heading>
+<Index Key="Br"><C>Br</C></Index>
+
+<Listing Type="From gapdoc.dtd"> 
+<![CDATA[<!ELEMENT Br EMPTY>     <!-- a forced line break  -->]]>
+</Listing>
+
+This element can be used to force a line break in the output versions of
+a &GAPDoc; element, it does not start a new paragraph. 
+Please, do not use this instead of a <C>Par</C> element, this would
+often lead to ugly output versions of your document.
+
+</Subsection> 
+
 
 </Section>
 </Chapter>

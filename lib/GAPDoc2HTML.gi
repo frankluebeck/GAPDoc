@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.14 2002-05-23 15:41:36 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.15 2002-05-24 15:57:21 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -111,6 +111,16 @@ GAPDoc2HTMLProcs.Head1 := "\
 <head>\n\
 <title>GAP (";
 
+GAPDoc2HTMLProcs.Head1Trans := "\
+<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n\
+\n\
+<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\
+                      \"DTD/xhtml1-transitional.dtd\">\n\
+\n\
+<html xmlns=\"http://www.w3.org/1999/xhtml\">\n\
+<head>\n\
+<title>GAP (";
+
 GAPDoc2HTMLProcs.Head1MML := "\
 <?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n\
 <?xml-stylesheet type=\"text/xsl\" href=\"mathml.xsl\"?>\n\
@@ -160,6 +170,9 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     if r.root.mathmode = "MathML" then
       files.(n) := rec(text := 
                    ShallowCopy(GAPDoc2HTMLProcs.Head1MML), ssnr := []);
+    elif r.root.mathmode = "Tth" then
+      files.(n) := rec(text :=
+                   ShallowCopy(GAPDoc2HTMLProcs.Head1Trans), ssnr := []);
     else
       files.(n) := rec(text := ShallowCopy(GAPDoc2HTMLProcs.Head1), ssnr := []);
     fi;
@@ -185,9 +198,9 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     n := files.(l[i-1][1]);
     if Length(n.ssnr)=0 or l[i-1]{[1..3]} <> n.ssnr[Length(n.ssnr)] then
       Add(n.ssnr, l[i-1]{[1..3]});
-      Append(n.text, Concatenation("<p><a id=\"", 
-              GAPDoc2HTMLProcs.SectionLabel(
-              l[i-1], "Subsection")[2], "\"></a></p>\n"));
+      tt := GAPDoc2HTMLProcs.SectionLabel(l[i-1], "Subsection")[2];
+      Append(n.text, Concatenation("<p><a id=\"", tt, "\" name=\"", tt, 
+                                   "\"></a></p>\n"));
     fi;
 
     Append(n.text, l[i]);
@@ -245,25 +258,7 @@ end;
 ##  The  output is  a  record  with one  component  for each  chapter
 ##  (with  names   <C>"0"</C>,  <C>"1"</C>,  ...,   <C>"Bib"</C>, and
 ##  <C>"Ind"</C>).  Each  such  component   is  also  a  record  with
-##  components
-##  
-##  The   HTML   code   produced   with   this   converter   conforms
-##  to    the   W3C    specification    HTML    4.01   strict,    see
-##  <URL>http://www.w3.org/TR/html401</URL>. This means in particular
-##  that  the  code  doesn't  contain  any  explicit  font  or  color
-##  information.  The  layout information  for  a  browser should  be
-##  specified in  a cascading  style sheet  (CSS) file.  The &GAPDoc;
-##  package contains an  example of such a style sheet,  see the file
-##  <File>gapdoc.css</File>  in the  root directory  of the  package.
-##  This  file  conforms  to  the  W3C  specification  CSS  2.0,  see
-##  <URL>http://www.w3.org/TR/REC-CSS2</URL>. You may  just copy that
-##  file as <File>manual.css</File> into the directory which contains
-##  the HTML version  of your documentation. But, of  course, you are
-##  free to adjust it for your  package, e.g., change colors or other
-##  layout  details, add  a background  image, ...  Each of  the HTML
-##  files produced  by the converters  contains a link to  this local
-##  style sheet file called <File>manual.css</File>.
-##  
+##  components 
 ##  
 ##  <List >
 ##  <Mark><C>text</C></Mark>
@@ -274,6 +269,25 @@ end;
 ##  1]</C>  for  chapter&nbsp;3,  section&nbsp;2,  subsection&nbsp;1)
 ##  </Item>
 ##  </List>
+##  
+##  The   HTML   code   produced   with   this   converter   conforms
+##  to   the  W3C   specification   <Q>XHTML   1.0  strict</Q>,   see
+##  <URL>http://www.w3.org/TR/xhtml1</URL>.  First, this  means  that
+##  the   HTML   files   are   valid   XML   files.   Secondly,   the
+##  extension  <Q>strict</Q>   says  in  particular  that   the  code
+##  doesn't  contain  any explicit  font  or  color information.  The
+##  layout  information   for  a  browser  should   be  specified  in
+##  a  cascading  style  sheet   (CSS)  file.  The  &GAPDoc;  package
+##  contains  an  example  of  such  a  style  sheet,  see  the  file
+##  <File>gapdoc.css</File>  in the  root directory  of the  package.
+##  This  file  conforms  to  the  W3C  specification  CSS  2.0,  see
+##  <URL>http://www.w3.org/TR/REC-CSS2</URL>. You may  just copy that
+##  file as <File>manual.css</File> into the directory which contains
+##  the HTML version  of your documentation. But, of  course, you are
+##  free to adjust it for your  package, e.g., change colors or other
+##  layout  details, add  a background  image, ...  Each of  the HTML
+##  files produced  by the converters  contains a link to  this local
+##  style sheet file called <File>manual.css</File>.
 ##  
 ##  The  result can  be  written  into files  with  the command  <Ref
 ##  Func="GAPDoc2HTMLPrintHTMLFiles" />.<P/>
@@ -297,8 +311,8 @@ InstallGlobalFunction(GAPDoc2HTML, function(arg)
   local   r,  str,  linelength,  name;
   r := arg[1];
   # first check for the mode
-  if arg[Length(arg)] = "MathML" then
-    r.mathmode := "MathML";
+  if arg[Length(arg)] in ["MathML", "Tth"] then
+    r.mathmode := arg[Length(arg)];
     arg := arg{[1..Length(arg)-1]};
   else
     r.mathmode := "Text";
@@ -434,9 +448,9 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
     i := i+1;
   od;
   
-  # setup for MathML with ttm
-  if r.mathmode = "MathML" then
-    r.TTMInput := "";
+  # setup for external conversion of maths (MathML with ttm, tth, ...)
+  if r.mathmode in ["MathML", "Tth"] then
+    r.ConvInput := "";
     r.MathCount := 0;
   fi;
   
@@ -452,37 +466,44 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   Print("#I  table of contents complete.\n");
   r.toctext := r.toc;
   
-  # MathML translation
-  if r.mathmode = "MathML" then
-    # remove <div> tags
-    remdiv := function(s)
-      local pos, pos1;
-      pos := PositionSublist(s, "<div");
-      while pos <> fail do
-        pos1 := Position(s, '>', pos);
-        s := Concatenation(s{[1..pos-1]}, s{[pos1+1..Length(s)]});
-        pos := PositionSublist(s, "<div");
-      od;
-      pos := PositionSublist(s, "</div");
-      while pos <> fail do
-        pos1 := Position(s, '>', pos);
-        s := Concatenation(s{[1..pos-1]}, s{[pos1+1..Length(s)]});
-        pos := PositionSublist(s, "</div");
-      od;
-      return s;
-    end;
-    Print("#I  translating formulae to MathML.\n");
-    FileString("tempMATHML.tex", r.TTMInput);
-    Exec("rm -f tempMATHML.html; ttm -r tempMATHML.tex > tempMATHML.html");
-    math := StringFile("tempMATHML.html");
-    r.MathMLList := [];
-    pos := PositionSublist(math, "TTMFormulaeDelim");
+  # utility to remove <div> tags
+  remdiv := function(s)
+    local pos, pos1;
+    pos := PositionSublist(s, "<div");
     while pos <> fail do
-      pos1 := PositionSublist(math, "TTMFormulaeDelim", pos);
+      pos1 := Position(s, '>', pos);
+      s := Concatenation(s{[1..pos-1]}, s{[pos1+1..Length(s)]});
+      pos := PositionSublist(s, "<div");
+    od;
+    pos := PositionSublist(s, "</div");
+    while pos <> fail do
+      pos1 := Position(s, '>', pos);
+      s := Concatenation(s{[1..pos-1]}, s{[pos1+1..Length(s)]});
+      pos := PositionSublist(s, "</div");
+    od;
+    return s;
+  end;
+
+  # MathML or Tth translation
+  if r.mathmode in ["MathML", "Tth"] then
+    Print("#I  translating formulae with \c");
+    FileString("tempCONV.tex", r.ConvInput);
+    if r.mathmode = "MathML" then
+      Print("ttm.\n");
+      Exec("rm -f tempCONV.html; ttm -r tempCONV.tex > tempCONV.html");
+    elif r.mathmode = "Tth" then
+      Print("tth.\n");
+      Exec("rm -f tempCONV.html; tth -w2 -r tempCONV.tex > tempCONV.html");
+    fi; 
+    math := StringFile("tempCONV.html");
+    r.MathList := [];
+    pos := PositionSublist(math, "TeXFormulaeDelim");
+    while pos <> fail do
+      pos1 := PositionSublist(math, "TeXFormulaeDelim", pos);
       if pos1 <> fail then
-        Add(r.MathMLList, remdiv(math{[pos+16..pos1-1]}));
+        Add(r.MathList, remdiv(math{[pos+16..pos1-1]}));
       else
-        Add(r.MathMLList, remdiv(math{[pos+16..Length(math)]}));
+        Add(r.MathList, remdiv(math{[pos+16..Length(math)]}));
       fi;
       pos := pos1;
     od;
@@ -531,7 +552,8 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
     PrintTo1(stream, function()
     for a in need do
       # an anchor for links from the citations
-      Print("\n<p><a id=\"biB", a.Label, "\"></a></p>\n"); 
+      Print("\n<p><a id=\"biB", a.Label, "\" name=\"biB", a.Label, 
+            "\"></a></p>\n"); 
       PrintBibAsHTML(a, true); 
     od;
     end);
@@ -918,14 +940,14 @@ GAPDoc2HTMLProcs.A := function(r, str)
   GAPDoc2HTMLProcs.WrapAttr(r, str, "Arg");
 end;
 
-GAPDoc2HTMLProcs.MathMLHelper := function(r, str, db, de)
+GAPDoc2HTMLProcs.MathConvHelper := function(r, str, db, de)
   local s, x;
-  if IsBound(r.root.MathMLList) then
-    # MathML already available
+  if IsBound(r.root.MathList) then
+    # conversion already available
     r.root.MathCount := r.root.MathCount + 1;
-    Append(str, r.root.MathMLList[r.root.MathCount]);
+    Append(str, r.root.MathList[r.root.MathCount]);
   else 
-    # add to input for 'ttm'
+    # add to input for converter
     if IsString(r.content) then
       s := r.content;
     else
@@ -936,8 +958,8 @@ GAPDoc2HTMLProcs.MathMLHelper := function(r, str, db, de)
       od;
       GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATAFILTER;
     fi;
-    s := Concatenation("TTMFormulaeDelim", db, s, de);
-    Append(r.root.TTMInput, s);
+    s := Concatenation("TeXFormulaeDelim", db, s, de);
+    Append(r.root.ConvInput, s);
     Append(str, "FORMULA");
   fi;
 end;
@@ -947,12 +969,14 @@ end;
 ##  looks ok in text mode
 GAPDoc2HTMLProcs.M := function(r, str)
   local s, ss;
-  if r.root.mathmode = "MathML" then
-    GAPDoc2HTMLProcs.MathMLHelper(r, str, "$", "$");
+  if r.root.mathmode in ["MathML", "Tth"] then
+    GAPDoc2HTMLProcs.MathConvHelper(r, str, "$", "$");
     return;
   fi;
   s := "";
+  GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATANOFILTER;
   GAPDoc2HTMLContent(r, s);
+  GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATAFILTER;
   s := TextM(s);
   ss := "";
   GAPDoc2HTMLProcs.PCDATAFILTER(rec(content := s), ss);
@@ -961,37 +985,38 @@ end;
 
 ##  in HTML this is shown in TeX format
 GAPDoc2HTMLProcs.Math := function(r, str)
-  if r.root.mathmode = "MathML" then
-    GAPDoc2HTMLProcs.MathMLHelper(r, str, "$", "$");
+  if r.root.mathmode in ["MathML", "Tth"] then
+    GAPDoc2HTMLProcs.MathConvHelper(r, str, "$", "$");
     return;
   fi;
   Add(str, '$');
-  GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATANOFILTER;
+##    GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATANOFILTER;
   GAPDoc2HTMLContent(r, str);
-  GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATAFILTER;
+##    GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATAFILTER;
   Add(str, '$');
 end;
 
 ##  displayed maths (also in TeX format, but centered paragraph in itself)
 GAPDoc2HTMLProcs.Display := function(r, par)
   local   s, a, str;
-  if r.root.mathmode = "MathML" then
+  if r.root.mathmode in ["MathML", "Tth"] then
     str := "";
 ##      GAPDoc2HTMLProcs.MathMLHelper(r, str, "\\[", "\\]\n\n");
 ##      Add(par, r.count);
 ##      Add(par, Concatenation("<p class=\"formula\">", str, "</p>\n"));
-    GAPDoc2HTMLProcs.MathMLHelper(r, str, "$", "$");
+    GAPDoc2HTMLProcs.MathConvHelper(r, str, "\n\\[", "\\]\n\n");
     Add(par, r.count);
-    Add(par, Concatenation("<table width=\"100%\"><tr><td align=\"center\">",
+    Add(par, Concatenation("<table class=\"display\"><tr>",
+             "<td class=\"display\">",
              str, "</td></tr></table>\n"));
     return;
   fi;
   s := "\\[";
-  GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATANOFILTER;
+##    GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATANOFILTER;
   for a in r.content do
     GAPDoc2HTML(a, s);
   od;
-  GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATAFILTER;
+##    GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATAFILTER;
   Append(s, " \\]");
   s := Concatenation("<p class=\"pcenter\">", s, "</p>\n\n");
   Add(par, r.count);
