@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.4 2002-04-21 22:42:30 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.5 2002-05-15 23:07:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -149,7 +149,7 @@ GAPDoc2LaTeXProcs.Head1x := Concatenation([
 "\\sloppy\n",
 "\\pagestyle{myheadings}\n",
 "\\usepackage{amssymb}\n",
-"\\usepackage{isolatin1}\n",
+"\\usepackage[latin1]{inputenc}\n",
 "\\usepackage{makeidx}\n",
 "\\makeindex\n",
 "\\usepackage{color}\n",
@@ -927,6 +927,11 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
   
   # neutral reference to a label
   if IsBound(r.attributes.BookName) then
+    if IsBound(r.attributes.Label) then
+      lab := r.attributes.Label;
+    else
+      lab := "_X_X_X";
+    fi;
     ref := GAPDoc2LaTeXProcs.ResolveExternalRef(
                                         r.attributes.BookName, lab, 1);
     if ref = fail then

@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.5 2001-06-06 14:39:17 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.6 2002-05-15 23:07:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -284,7 +284,7 @@ end);
 ##  <Description>
 ##  The argument  <A>str</A> of  <Ref Func="NumberDigits" />  must be
 ##  a  string  consisting  only  of an  optional  leading  <C>'-'</C>
-##  and characters  in <C>"0123456789abcdefABCDEF</C>,  describing an
+##  and characters  in  <C>0123456789abcdefABCDEF</C>,  describing an
 ##  integer  in  base <A>base</A>  with  <M>2  \leq <A>base</A>  \leq
 ##  16</M>. This function returns the corresponding integer.<P/>
 ##  

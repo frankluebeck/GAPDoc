@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.11 2002-04-21 22:42:30 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.12 2002-05-15 23:07:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -37,7 +37,7 @@
 ##  process a document twice (similar to LaTeX).
 ##  
 
-##  Small utility to through away SGML markup
+##  Small utility to throw away SGML markup
 BindGlobal("FilterSGMLMarkup", function(str)
   local p2, p1, res;
   p2 := Position(str, '<');
@@ -211,14 +211,14 @@ end;
 ##  BookName="Ref" Func="SetHelpViewer" />).  It includes title page,
 ##  bibliography, and  index. The bibliography is  made from &BibTeX;
 ##  databases.  Their  location  must  be  given  with  the  argument
-##  <A>bibpath</A>  (as string  or  directory object).  If the  third
-##  argument <A>gaproot</A> is given and is a string then this string
-##  is  interpreted  as  relative  path to  &GAP;'s  root  directory.
-##  Reference-URLs to external HTML-books  which begin with the &GAP;
-##  root path  are then  rewritten to start  with the  given relative
-##  path.  This  makes  the HTML-documentation  portable  provided  a
-##  package is  installed in some  standard location below  the &GAP;
-##  root.<P/>
+##  <A>bibpath</A> (as string  or directory object, if  not given the
+##  current directory is used).  If the third argument <A>gaproot</A>
+##  is  given and  is a  string then  this string  is interpreted  as
+##  relative  path  to  &GAP;'s  root  directory.  Reference-URLs  to
+##  external HTML-books which begin with the &GAP; root path are then
+##  rewritten to start  with the given relative path.  This makes the
+##  HTML-documentation portable  provided a  package is  installed in
+##  some standard location below the &GAP; root.<P/>
 ##  
 ##  The  output is  a  record  with one  component  for each  chapter
 ##  (with  names   <C>"0"</C>,  <C>"1"</C>,  ...,   <C>"Bib"</C>, and
@@ -283,6 +283,9 @@ InstallGlobalFunction(GAPDoc2HTML, function(arg)
     if IsDirectory(str) then
       r.bibpath := str;
     else
+      if Length(str) = 0 then
+        str := ".";
+      fi;
       r.bibpath := Directory(str);
     fi;
     str := [];
