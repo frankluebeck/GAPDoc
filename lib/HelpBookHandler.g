@@ -2,7 +2,7 @@
 ##
 #W  HelpBookHandler.g                GAPDoc                      Frank Lübeck
 ##
-#H  @(#)$Id: HelpBookHandler.g,v 1.4 2001-06-07 20:30:34 gap Exp $
+#H  @(#)$Id: HelpBookHandler.g,v 1.5 2001-06-11 08:04:28 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -46,7 +46,7 @@ HELP_BOOK_HANDLER.GapDocGAP.ReadSix := function(stream)
   
   # in position 6 of each entry we put the corresponding search string
   for a in res.entries do
-    a[6] := STRING_LOWER(StripEscapeSequences(a[1]));
+    a[6] := SIMPLE_STRING(StripEscapeSequences(a[1]));
     NormalizeWhitespace(a[6]);
   od;
   
@@ -126,11 +126,16 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
     return a;
   fi;
   
+  a := info.entries[entrynr];
+  
+  # section number info
+  if type = "secnr" then
+    return a{[3,2]};
+  fi;
+
   if not type in info.types then 
     return fail;
   fi;
-  
-  a := info.entries[entrynr];
   
   if type = "text" then
     str := StringFile(Filename(info.directory, Concatenation("chap",
@@ -162,20 +167,35 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
     return rec(file := info.pdffile, page := a[5]);
   fi;
 
-  if type = "secnr" then
-    return a{[3,2]};
-  fi;
-
   return fail;
 end;
 
+##  cache list of chapter numbers, but only if we need them
+HELP_BOOK_HANDLER.GapDocGAP.ChapNumbers := function(info)
+  local l, sp;
+  if not IsBound(info.ChapNumbers) then
+    l := Set(List(info.entries,a->a[3][1]));
+    sp := IntersectionSet(l, ["Bib", "Ind"]);
+    l := Difference(l, sp);
+    Append(l, sp);
+    info.ChapNumbers := l;
+  fi;
+end;
+
 ##  for ?<<,  ?>>,  ?<  and  ?>
-HELP_BOOK_HANDLER.GapDocGAP.MatchBeginChap := function(book, entrynr)
-  local   info,  ent,  cnr,  nr;
+HELP_BOOK_HANDLER.GapDocGAP.MatchPrevChap := function(book, entrynr)
+  local info, chnums, ent, cnr, new, nr;
   info := HELP_BOOK_INFO(book);
+  HELP_BOOK_HANDLER.GapDocGAP.ChapNumbers(info);
+  chnums := info.ChapNumbers;
   ent := info.entries;
-  cnr := [ent[entrynr][3], 0, 0];
-  nr := First([1..Length(ent)], i-> ent[i][3]=cnr);
+  cnr := ent[entrynr][3];
+  if cnr[2] <> 0 or cnr[3] <> 0 or cnr[1] = chnums[1] then
+    new := [cnr[1], 0, 0];
+  else
+    new := [chnums[Position(chnums, cnr[1])-1], 0, 0];
+  fi;
+  nr := First([1..Length(ent)], i-> ent[i][3] = new);
   if nr = fail then
     # return current
     nr := entrynr;
@@ -184,20 +204,38 @@ HELP_BOOK_HANDLER.GapDocGAP.MatchBeginChap := function(book, entrynr)
 end;
 
 HELP_BOOK_HANDLER.GapDocGAP.MatchNextChap := function(book, entrynr)
-  local   info,  ent,  old,  chnrs,  pos,  cnr,  nr;
+##    local   info,  ent,  old,  chnrs,  pos,  cnr,  nr;
+##    info := HELP_BOOK_INFO(book);
+##    HELP_BOOK_HANDLER.GapDocGAP.ChapNumbers(info);
+##    ent := info.entries;
+##    old := ent[entrynr][3];
+##    # this handles appendices as chapters 
+##    chnrs := Set(Difference(List(ent, a-> a[1]), ["Bib", "Ind"]));
+##    pos := Position(chnrs, old[1]);
+##    if pos < Length(chnrs) then
+##      cnr := [chnrs[pos+1], 0, 0];
+##    else
+##      # no next chapter, return the last 
+##      cnr := [old[1], 0, 0];
+##    fi;
+##    nr := First([1..Length(ent)], i-> ent[i][3]=cnr);
+##    if nr = fail then
+##      # return current
+##      nr := entrynr;
+##    fi;
+##    return [info, nr];
+  local info, chnums, ent, cnr, new, nr;
   info := HELP_BOOK_INFO(book);
+  HELP_BOOK_HANDLER.GapDocGAP.ChapNumbers(info);
+  chnums := info.ChapNumbers;
   ent := info.entries;
-  old := ent[entrynr][3];
-  # this handles appendices as chapters 
-  chnrs := Set(Difference(List(ent, a-> a[1]), ["Bib", "Ind"]));
-  pos := Position(chnrs, old[1]);
-  if pos < Length(chnrs) then
-    cnr := [chnrs[pos+1], 0, 0];
+  cnr := ent[entrynr][3];
+  if cnr[1] = chnums[Length(chnums)] then
+    new := [cnr[1], 0, 0];
   else
-    # no next chapter, return the last 
-    cnr := [old[1], 0, 0];
+    new := [chnums[Position(chnums, cnr[1])+1], 0, 0];
   fi;
-  nr := First([1..Length(ent)], i-> ent[i][3]=cnr);
+  nr := First([1..Length(ent)], i-> ent[i][3] = new);
   if nr = fail then
     # return current
     nr := entrynr;

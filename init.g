@@ -2,18 +2,18 @@
 ##
 #A  init.g                  GAPDoc              Frank Lübeck / Max Neunhöffer
 ##
-#H  @(#)$Id: init.g,v 1.1.1.1 2001-01-05 13:37:46 gap Exp $
+#H  @(#)$Id: init.g,v 1.2 2001-06-11 08:04:27 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck and Max Neunhöffer,  
 #Y  Lehrstuhl D für Mathematik,  RWTH Aachen
 ##
 
 DeclareAutoPackage("gapdoc", "0.9", ReturnTrue);
-DeclarePackageAutoDocumentation("gapdoc", "doc");
-DeclarePackageAutoDocumentation("gapdoc", "example");
-if "pkg/gapdoc/example" in HELP_BOOKS then
-  HELP_BOOKS[Length(HELP_BOOKS)-2] := "gapdocexample";
-fi;
+DeclarePackageAutoDocumentation("GAPDoc", "doc", "GAPDoc", 
+"Package for Preparing GAP Documentation");
+DeclarePackageAutoDocumentation("GAPDoc", "example", "GAPDoc Example",
+"Extensive Example for GAPDoc");
+
 #DeclarePackage("gapdoc", "0.9", ReturnTrue);
 #DeclarePackageDocumentation("gapdoc", "doc");
 
