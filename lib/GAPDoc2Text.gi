@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.5 2001-01-19 09:33:10 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.6 2001-01-24 14:05:12 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -200,7 +200,7 @@ end;
 ##  <F>manual.six</F>  information which  is  used  for searching  in
 ##  &GAP;'s  online help.  This is  stored in  <C><A>tree</A>.six</C>
 ##  and   can  be   printed  into   a  <F>manual.six</F>   file  with
-##  <Ref   Func="PrintSixFile"  />   (preferred  after   producing  a
+##  <Ref   Func="PrintSixFile"  />   (preferably  after   producing  a
 ##  &LaTeX;  version  of   the  document  as  well   and  adding  the
 ##  page  number  information  to  <C><A>tree</A>.six</C>,  see  <Ref
 ##  Func="GAPDoc2LaTeX"   />   and  <Ref   Func="AddPageNumbersToSix"
@@ -1515,7 +1515,7 @@ end;
 ##  Func="GAPDoc2Text"/>. The second argument is a path for the files
 ##  to write, it can be given as string or directory object. The text
 ##  of  each  chapter is  written  into  a  separate file  with  name
-##  <F>chap0.txt</F>,  <F>chap1.txt</F>, ...,  <F>chapBib.txt</F> and
+##  <F>chap0.txt</F>,  <F>chap1.txt</F>, ...,  <F>chapBib.txt</F>, and
 ##  <F>chapInd.txt</F>.<P/>
 ##  
 ##  If  you want  to  make  your document  accessible  via the  &GAP;

@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.4 2001-01-19 09:33:09 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.5 2001-01-24 14:05:11 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -428,7 +428,7 @@ element, containing the heading of the chapter. Here is its definition:
 This  element  is  used  for  headings  in  <C>Chapter</C>,  <C>Section</C>,
 <C>Subsection</C>,  and  <C>Appendix</C>  elements.   It  may  only  contain
 <C>&percent;InnerText;</C>   (for  a   description   see  <Ref   Text="here"
-Label="InnerText"/>.<P/>
+Label="InnerText"/>).<P/>
 
 Each of  the mentioned sectioning  elements must contain exactly  one direct
 <C>Heading</C>  element  (i.e.,  one  which  is  not  contained  in  another
@@ -613,9 +613,9 @@ function and, if present, the text of the <C>Label</C> attribute as subentry
                Comm  CDATA #IMPLIED>]]>
 </Listing>
 
-This  element is  used within  a  <C>ManSection</C> element  to specify  the
-synopsis of an operation. The attributes are used exactly in the same way as
-in the <C>Func</C> element (see <Ref Subsect="Func"/>). <P/>
+This element is used within a <C>ManSection</C> element to specify the usage
+of an operation. The  attributes are used exactly in the same  way as in the
+<C>Func</C> element (see <Ref Subsect="Func"/>). <P/>
 
 Note  that multiple  descriptions  of  the same  operation  may  occur in  a
 document because  there may  be several  declarations in  &GAP;. Furthermore
@@ -645,7 +645,7 @@ way as in the <C>Func</C> element (see <Ref Subsect="Func"/>). <P/>
 Due  to the  fact that  it  often happens  that many  methods are  installed
 for  the  same  operation  it  seems to  be  interesting  to  document  them
 independently. This is  possible by using the same method  name in different
-<C>ManSection</C>s. It is  however required that these  subsection and those
+<C>ManSection</C>s. It is  however required that these subsections and those
 describing  the  corresponding  operation  are  distinguished  by  different
 <C>Label</C> attributes.
 
@@ -953,7 +953,7 @@ in all output formats.
 
 The &GAPDoc; system offers some limited access to structural elements
 like lists, enumerations, and tables. Although it is possible to use
-all &LaTeX; constructs one has always to think about other output
+all &LaTeX; constructs one always has to think about other output
 formats. The elements in this section are guaranteed to produce something
 reasonable in all output formats.
 
@@ -1436,8 +1436,8 @@ The   following  values   are  allowed   as  of   now:  <Q><C>LaTeX</C></Q>,
 <Q><C>HTML</C></Q>, and <Q><C>Text</C></Q>. If  the <C>Only</C> attribute is
 specified then only the corresponding  converter will include the content of
 the  element  into the  output  document.  If  the <C>Not</C>  attribute  is
-specified the corresponding converter will ignore the content of the element
-into the output document. <P/>
+specified  the  corresponding  converter  will ignore  the  content  of  the
+element. <P/>
 
 Within  the element  only <C>&percent;InnerText;</C>  (see <Ref  Text="here"
 Label="InnerText"/>) is  allowed. This  is to  ensure that  the same  set of

@@ -1,0 +1,3 @@
+
+rm -f {doc,3k+1,example}/*.{aux,log,dvi,ps,pdf,bbl,ilg,ind,idx,out,html,tex,pnr,txt,blg,toc,six,brf}
+

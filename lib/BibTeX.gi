@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.3 2001-01-18 14:31:41 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.4 2001-01-24 14:05:12 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -145,7 +145,7 @@ end);
 ##  <ManSection >
 ##  <Func Arg="bibfile" Name="ParseBibFiles" />
 ##  <Returns>list <C>[list of bib-records, list of abbrevs, list  of 
-##  expansions</C></Returns>
+##  expansions]</C></Returns>
 ##  <Description>
 ##  This function parses a file <A>bibfile</A> (if this file does not
 ##  exist the  extension <C>.bib</C> is appended)  in &BibTeX; format

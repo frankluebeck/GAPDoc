@@ -1,4 +1,4 @@
-<!-- $Id: intro.xml,v 1.3 2001-01-19 09:33:09 gap Exp $ -->
+<!-- $Id: intro.xml,v 1.4 2001-01-24 14:05:11 gap Exp $ -->
 <Chapter Label="ch:intro"><Heading>Introduction and Example</Heading>
 
 The main  purpose of  the &GAPDoc; package  is to define  a file  format for
@@ -32,13 +32,12 @@ in Chapter&nbsp;<Ref Chap="ch:conv"/>.
 
 The definition  of the  &GAPDoc; format uses  XML, the  <Q>eXtendible Markup
 Language</Q>.  This  is a  standard  (defined  by  the W3C  consortium,  see
-<URL>http:/www.w3c.org</URL>) which lays down a  syntax for adding markup to
+<URL>http://www.w3c.org</URL>) which lays down a syntax for adding markup to
 a document  or to  some data.  It allows to  define document  structures via
 introducing markup <E>elements</E> and  certain relations between them. This
 is done  in a  <E>document type  definition</E>. The  file <F>gapdoc.dtd</F>
 contains such  a document  type definition  and is the  central part  of the
-&GAPDoc; package.
-<P/>
+&GAPDoc; package. <P/>
 
 The easiest way for getting a good idea about this is probably to look at an
 example. The Appendix&nbsp;<Ref Appendix="app:3k+1"  /> contains a short but
@@ -59,8 +58,7 @@ In  this  section  we  recall  the   lines  from  the  example  document  in
 Appendix&nbsp;<Ref Appendix="app:3k+1" /> and give some explanations.
 
 <Listing Type="from 3k+1.xml">
-<![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
-]]>
+<![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?> ]]>
 </Listing>
 
 This line just tells a human reader and computer programs that the file is a
@@ -72,7 +70,7 @@ characters).
 
 <Listing Type="from 3k+1.xml">
 <![CDATA[<!--   A complete "fake package" documentation   
-   $Id: intro.xml,v 1.3 2001-01-19 09:33:09 gap Exp $
+   $Id: intro.xml,v 1.4 2001-01-24 14:05:11 gap Exp $
 -->
 ]]></Listing>
 
@@ -108,7 +106,7 @@ If  you know  HTML, this  will  look familiar  to  you. But  there are  some
 important  differences:  The element  name  <C>Book</C>  and attribute  name
 <C>Name</C>  are  <E>case sensitive</E>.  The  value  of an  attribute  must
 <E>always</E> be enclosed in quotes and  no whitespace is allowed around the
-<Q>=</Q>in  the  assignment of  the  attribute  value. In  XML  <E>every</E>
+<Q>=</Q> in the  assignment of  the  attribute  value. In  XML  <E>every</E>
 element has a start and end tag  (which can be combined for elements defined
 as <Q>empty</Q>, see for example <C>&lt;TableOfContents/&gt;</C> below).
 <P/>
@@ -154,8 +152,8 @@ It just adds information about the <E>meaning</E> of pieces of text. <P/>
 Within the <C>Copyright</C> element there are two more things to learn about
 XML markup. The <C>&tlt;P/&tgt;</C> is a  complete element. It is a combined
 start and end  tag. This shortcut is allowed for  elements which are defined
-to be  always <Q>empty</Q>, i.e., to  have no content. You  may have guessed
-already that <C>&tlt;P/&tgt;</C> is used as a paragraph separator. Note that
+to be  always <Q>empty</Q>, i.e., to  have no content. You  may have already
+guessed that <C>&tlt;P/&tgt;</C> is used as a paragraph separator. Note that
 empty lines do not separate paragraphs (as in &LaTeX;). <P/>
 
 The  other construct  we see  here  is <C>&tamp;copyright;</C>.  This is  an
@@ -246,7 +244,7 @@ A few lines further on we find two non-internal references.
 
 The  first within  the <Q>Cite</Q>-element  is the  citation of  a book.  In
 &GAPDoc;  we use  the widely  used  &BibTeX; database  format for  reference
-lists. This  does not use  XML but has a  well documented structure  with is
+lists. This  does not use  XML but has a  well documented structure which is
 easy  to parse.  And  many  people have  collections  of references  readily
 available in this format. The reference list in an  output version of the
 document is produced with the empty element 

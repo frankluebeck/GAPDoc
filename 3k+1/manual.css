@@ -1,5 +1,5 @@
 /* gapdoc.css        Frank Lübeck */
-/* $Id: manual.css,v 1.1 2001-01-18 14:43:51 gap Exp $  */
+/* $Id: manual.css,v 1.2 2001-01-24 14:05:10 gap Exp $  */
 
 body { background:#fffbd7; color:#000000; margin-top:15px; margin-bottom:15px; }
 
@@ -16,6 +16,8 @@ p.func {background-color:#efef00; margin: 0pt 1cm; }
 table.func { cellpadding:0pt; cellspacing:0pt; line-height:10pt; width:"100%"; }
 
 table.example {background-color:#efefd7; border-style:none; border-width:thin; width:"100%"}
+
+table.chlink {background-color:#dddddd; border-style:none; border-width:thin;   width:"100%"; }
 
 pre { font-family:"Courier New",Courier; font-size:10pt; color:#284d49; }
 tt,code { font-family:"Courier New",Courier; font-size:12pt; color:#284d49; }

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.4 2001-01-19 09:33:10 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.5 2001-01-24 14:05:12 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -100,12 +100,17 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
   local   files,  n,  tt,  i, chnrs, chlink, prev, next, toplink;
   
   chnrs := Set(List([2,4..Length(l)], i-> l[i-1][1]));
-  chlink := "\n<font size=\"-2\">Goto Chapter: ";
+  chlink := "\n<div align=\"center\">\n<table class=\"chlink\"><tr><td bgcolor=\"#cccccc\">Goto Chapter: </td>";
   for n in chnrs do
-    Append(chlink, Concatenation("<a href=\"chap", String(n), ".html\">[",
-                   String(n), "]</a>"));
+    Append(chlink, Concatenation("<td><a href=\"chap", String(n), ".html\">"));
+    if n = 0 then
+      Append(chlink, "Top");
+    else
+      Append(chlink, String(n));
+    fi;
+    Append(chlink,"</a></td>");
   od;
-  Append(chlink, "</p><br>\n\n");
+  Append(chlink, "</tr></table></p><br>\n</div>\n");
   
   # putting the paragraphs together (one string (file) for each chapter)
   files := rec();
@@ -125,7 +130,7 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     fi;
     Append(files.(n).text, tt);
     Append(files.(n).text, GAPDoc2HTMLProcs.Head2);
-    Append(files.(n).text, Concatenation("<p align=\"center\">", chlink));
+    Append(files.(n).text, Concatenation("<p>", chlink));
   od;
   for i in [2,4..Length(l)] do
     n := files.(l[i-1][1]);
@@ -138,25 +143,25 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     Append(n.text, l[i]);
   od;
   
-  toplink := "<a href=\"chap0.html\">[Top of Book]</a>";
+  toplink := "<td><a href=\"chap0.html\">Top of Book</a></td>";
   for i in [1..Length(chnrs)] do
     if i > 1 then
-      prev := Concatenation("<a href=\"chap", String(chnrs[i-1]),
-            ".html\">[Previous Chapter]</a>");
+      prev := Concatenation("<td><a href=\"chap", String(chnrs[i-1]),
+            ".html\">Previous Chapter</a></td>");
     else
       prev := "";
     fi;
     if i < Length(chnrs) then
-      next := Concatenation("<a href=\"chap", String(chnrs[i+1]),
-            ".html\">[Next Chapter]</a>");
+      next := Concatenation("<td><a href=\"chap", String(chnrs[i+1]),
+            ".html\">Next Chapter</a></td>");
     else
       next := "";
     fi;
     n := chnrs[i];
-    Append(files.(n).text, Concatenation("\n<p align=\"center\">",
-           "<font size=\"-2\">",
-           toplink, prev, next, "</font><br>\n\n"));
+    Append(files.(n).text, Concatenation("\n<div align=\"center\">\n<table class=\"chlink\"><tr>",
+           toplink, prev, next, "</tr></table>\n<br>\n\n"));
     Append(files.(n).text,  chlink);
+    Append(files.(n).text, "\n</div>\n");
     Append(files.(n).text, GAPDoc2HTMLProcs.Tail);
   od;
   return files;
@@ -176,12 +181,12 @@ end;
 ##  HTML  version  of  the  document  which  can  be  read  with  any
 ##  Web-browser  and also  used with  &GAP;'s online  help (see  <Ref
 ##  BookName="Ref" Func="SetHelpViewer" />).  It includes title page,
-##  bibliography and  index. The  bibliography is made  from &BibTeX;
+##  bibliography, and index. The  bibliography is made  from &BibTeX;
 ##  databases.  Their  location  must  be  given  with  the  argument
 ##  <A>bibpath</A> (as string or directory object).<P/>
 ##  
 ##  The  output is  a  record  with one  component  for each  chapter
-##  (with  names   <C>"0"</C>,  <C>"1"</C>,  ...,   <C>"Bib"</C>  and
+##  (with  names   <C>"0"</C>,  <C>"1"</C>,  ...,   <C>"Bib"</C>, and
 ##  <C>"Ind"</C>).  Each  such  component   is  also  a  record  with
 ##  components
 ##  
@@ -1355,7 +1360,7 @@ end;
 ##  Func="GAPDoc2HTML"/>. The second argument is a path for the files
 ##  to write, it can be given as string or directory object. The text
 ##  of  each  chapter is  written  into  a  separate file  with  name
-##  <F>chap0.html</F>,  <F>chap1.html</F>,  ...,  <F>chapBib.html</F>
+##  <F>chap0.html</F>,  <F>chap1.html</F>,  ...,  <F>chapBib.html</F>,
 ##  and <F>chapInd.html</F>.<P/>
 ##  
 ##  You   can   make   these   files   accessible   via   the   &GAP;

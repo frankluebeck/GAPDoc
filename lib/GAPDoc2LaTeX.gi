@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.2 2001-01-17 15:31:20 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.3 2001-01-24 14:05:12 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -160,7 +160,8 @@ GAPDoc2LaTeXProcs.Head1x := Concatenation([
 "\\definecolor{LightBlue}{rgb}{0.8544,0.9511,1.0000}\n",
 "\\definecolor{Black}{rgb}{0.0,0.0,0.0}\n",
 "\\definecolor{FuncColor}{rgb}{1.0,0.0,0.0}\n",
-"\\definecolor{SecColor}{rgb}{0.0,0.0,1.0}\n",
+"%% strange name because of pdflatex bug:\n",
+"\\definecolor{Chapter }{rgb}{0.0,0.0,1.0}\n",
 "\n",
 "\\usepackage{fancyvrb}\n",
 "\n",
@@ -175,10 +176,10 @@ GAPDoc2LaTeXProcs.Head2 := GAPDoc2LaTeXProcs.Head2dvi;
 
 ##  head - part 3
 GAPDoc2LaTeXProcs.Head3 := Concatenation([
-"            a4paper=true,\n",
-"            colorlinks=true,backref=page,breaklinks=true,linkcolor=RoyalBlue,\n",
-"            citecolor=RoyalGreen,filecolor=RoyalRed,\n",
-"            urlcolor=RoyalRed,pagecolor=RoyalBlue]{hyperref}\n",
+"        a4paper=true,bookmarks=false,pdftitle={Written with GAPDoc},\n",
+"        colorlinks=true,backref=page,breaklinks=true,linkcolor=RoyalBlue,\n",
+"        citecolor=RoyalGreen,filecolor=RoyalRed,\n",
+"        urlcolor=RoyalRed,pagecolor=RoyalBlue]{hyperref}\n",
 "\n",
 "% write page numbers to a .pnr log file for online help\n",
 "\\newwrite\\pagenrlog\n",
@@ -445,9 +446,9 @@ GAPDoc2LaTeXProcs.URL := function(arg)
     s := Concatenation(s{[1..p-1]}, "\\\#", s{[p+1..Length(s)]});
     p := Position(s, '\#', p+1);
   od;
-  Append(str, "}{\\texttt ");
+  Append(str, "}{\\texttt{");
   Append(str, s);
-  Append(str, "}");
+  Append(str, "}}");
 end;
 
 GAPDoc2LaTeXProcs.Homepage := GAPDoc2LaTeXProcs.URL;
@@ -468,7 +469,7 @@ GAPDoc2LaTeXProcs.ChapSect := function(r, str, sect)
   if posh <> fail then      
     GAPDoc2LaTeXProcs.Heading1(r.content[posh], s);
   fi;
-  Append(str, "\\textcolor{SecColor}{");
+  Append(str, "\\textcolor{Chapter }{");
   Append(str, s);
   Append(str, "}}");
   # label for references
@@ -690,7 +691,11 @@ GAPDoc2LaTeXProcs.ExampleLike := function(r, str, label)
       Append(cont, s);
     fi;
   od;
-  cont := SplitString(cont, "", "\n");
+  cont := SplitString(cont, "\n", "");
+  # if first line has white space only, we remove it
+  if Length(cont) > 0 and ForAll(cont[1], x-> x in WHITESPACE) then
+    cont := cont{[2..Length(cont)]};
+  fi;
   cont := Concatenation(List(cont, a-> Concatenation("  ", a, "\n")));
   Append(str, cont);
   Append(str, "\\end{Verbatim}\n");
@@ -966,7 +971,7 @@ GAPDoc2LaTeXProcs.ManSection := function(r, str)
   else
     lab := "";
   fi;
-  Append(str, Concatenation("\n\n\\subsection{\\textcolor{SecColor}{", 
+  Append(str, Concatenation("\n\n\\subsection{\\textcolor{Chapter }{", 
           GAPDoc2LaTeXProcs.EscapeUsBs(f.attributes.Name), lab, "}}\n"));
   # page number info for online help
   Append(str, Concatenation("\\logpage{", 
@@ -975,7 +980,7 @@ GAPDoc2LaTeXProcs.ManSection := function(r, str)
   GAPDoc2LaTeXProcs._currentSubsection := r.count{[1..3]};
   Append(str, "{");
   GAPDoc2LaTeXContent(r, str);
-  Append(str, "}\n");
+  Append(str, "}\n\n");
   Unbind(GAPDoc2LaTeXProcs._currentSubsection);
 end;
 

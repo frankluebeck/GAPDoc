@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.3 2001-01-18 14:31:41 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.4 2001-01-24 14:05:12 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -484,9 +484,9 @@ end);
 ##       content := "text without markup "     )
 ##  </Listing>
 ##  
-##  This  function   checks  if   the  XML  document   is  <Emph>well
+##  This  function   checks  whether   the  XML  document   is  <Emph>well
 ##  formed</Emph>, see  <Ref Chap="XMLvalid"  /> for  an explanation.
-##  When an  error in  the XML  structure is found,  a break  loop is
+##  If an  error in  the XML  structure is found,  a break  loop is
 ##  entered and the text around the position where the problem starts
 ##  is  shown.  All  entities  are  resolved  when  they  are  either
 ##  entities  defined  in the  &GAPDoc;  package  (in particular  the

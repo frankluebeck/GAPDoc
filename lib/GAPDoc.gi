@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.2 2001-01-17 15:31:20 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.3 2001-01-24 14:05:12 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -21,7 +21,7 @@
 ##  function  does an  (incomplete)  validity check  of the  document
 ##  according to the document  type declaration in <F>gapdoc.dtd</F>.
 ##  It also does some additional  checks which cannot be described in
-##  the DTD (like checking if  chapters and sections have a heading).
+##  the DTD (like checking whether  chapters and sections have a heading).
 ##  For elements  with element  content the whitespace  between these
 ##  elements is removed.<P/>
 ##  
@@ -126,7 +126,7 @@ end);
 ##  which is of form <C>[Chapter[, Section[, Subsection, Paragraph] ]
 ##  ]</C>.  Here  the first  three  numbers  should  be the  same  as
 ##  produced  by the  &LaTeX; version  of the  document. Text  before
-##  first chapter  is counted as  chapter <C>0</C> and  similarly for
+##  the first chapter  is counted as  chapter <C>0</C> and  similarly for
 ##  sections and subsections. Some  elements are always considered to
 ##  start a new paragraph.
 ##  </Description>

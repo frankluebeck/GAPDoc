@@ -1,4 +1,4 @@
-<!-- $Id: enter.xml,v 1.3 2001-01-19 09:33:09 gap Exp $ -->
+<!-- $Id: enter.xml,v 1.4 2001-01-24 14:05:11 gap Exp $ -->
 <Chapter Label="HowEnter">
 <Heading>How To Type a &GAPDoc; Document</Heading>
 
@@ -68,6 +68,7 @@ processing instruction.
 
 </Subsection>
 
+&nbsp;<P/>
 And now  we turn  to those  parts of  the document  which contribute  to its
 actual content.
 
@@ -117,9 +118,9 @@ not  contain  the type  of  quote  used as  a  delimiter  or the  characters
 <Q><C>&tlt;</C></Q> and <Q><C>&tamp;</C></Q>.<P/>
 
 Note  especially  that  no  whitespace   is  allowed  between  the  starting
-<C>&tlt;</C> character and the element name or around the <Q><C>=</C></Q> of
-an attribute. The  quotes around an attribute value cannot  be  omitted. The
-names of elements and attributes are <E>case sensitive</E>. 
+<Q><C>&tlt;</C></Q>   character  and   the  element   name  or   around  the
+<Q><C>=</C></Q> of an attribute. The quotes around an attribute value cannot
+be omitted. The names of  elements and attributes are <E>case sensitive</E>.
 </Subsection>
 
 <Subsection Label="XMLendtag">
@@ -147,7 +148,7 @@ An <Q>entity</Q> in XML is a macro for some substitution text. There are two
 types of entities. <P/>
 
 A <Q>character entity</Q> can be used  to specify characters in the encoding
-of the document  (can be useful for entering non-ascii  characters which you
+of the document  (can be useful for entering non-ASCII  characters which you
 cannot  manage to  type  in  directly). They  are  entered  with a  sequence
 <Q><C>&tamp;&hash;</C></Q>, directly followed by  either some decimal digits
 or an  <Q><C>x</C></Q> and some  hexadecimal digits, directly followed  by a
@@ -192,7 +193,7 @@ further interpreted  as XML  text. All  the rules explained  so far  in this
 section  do <E>not  apply</E>  to such  a  part of  the  document. The  only
 document  content which  cannot be  entered directly  inside a  <C>CDATA</C>
 statement  is the  sequence <Q><C>]]&tgt;</C></Q>.  This can  be entered  as
-<Q><C>]]&tamp;gt;</C></Q>.
+<Q><C>]]&tamp;gt;</C></Q> outside the <C>CDATA</C> statement.
 
 <Listing Type="Example">
 A nesting of tags like <![CDATA[<a> <b> </a> </b>]]> is not allowed.
