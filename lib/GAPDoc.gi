@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.8 2003-02-07 03:39:31 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.9 2003-06-04 11:20:00 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -178,7 +178,7 @@ InstallGlobalFunction(AddParagraphNumbersGapDocTree, function(r)
   # these elements are paragraphs  
   parels := [ "List", "Enum", "Table", "Item", "Heading", "Attr", "Fam", 
               "Filt", "Func", "InfoClass", "Meth", "Oper", "Prop", "Var",
-              "Display", "Example", "Listing", "Log", "Address", 
+              "Display", "Example", "Listing", "Log", "Verb", "Address", 
               "TitleComment"];
   # reset counter
   cssp := [0, 0, 0, 1];

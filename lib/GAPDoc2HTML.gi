@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.21 2003-02-19 02:16:39 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.22 2003-06-04 11:20:00 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1146,8 +1146,9 @@ GAPDoc2HTMLProcs.Listing := function(r, par)
 end;
 
 GAPDoc2HTMLProcs.Verb := function(r, par)
-  local cont, s, a;
-  cont := "<pre class=\"normal\">";
+  local   str,  cont,  a,  s;
+  str := "\n<pre class=\"normal\">\n";
+  cont := "";
   for a in r.content do 
     # here we try to avoid reformatting
     if IsString(a.content) then
@@ -1158,12 +1159,11 @@ GAPDoc2HTMLProcs.Verb := function(r, par)
       Append(cont, s);
     fi;
   od;
-  Append(cont, "</pre>\n");
-  if IsString(par) then
-    Append(par, cont);
-  else
-    Append(par, [r.count, cont]);
-  fi;
+  Append(str, cont);
+  Append(str, "\n</pre>\n\n");
+Print("GUCK: ",str, NamesOfComponents(r), par, "\n");  
+  Add(par, r.count);
+  Add(par, str);
 end;
 
 ##  explicit labels
