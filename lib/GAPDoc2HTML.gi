@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.20 2003-02-07 03:39:31 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.21 2003-02-19 02:16:39 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1333,9 +1333,9 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
     ref := GAPDoc2HTMLProcs.ResolveExternalRef(r.attributes.BookName, lab, 1);
     if ref <> fail and ref[6] <> fail then
       if IsBound(GAPDoc2HTMLProcs.RelPath) and 
-         PositionSublist(ref[6], GAP_ROOT_PATHS[1]) = 1 then
+         PositionSublist(ref[6], GAPInfo.RootPaths[1]) = 1 then
          ref[6] := Concatenation(GAPDoc2HTMLProcs.RelPath, "/", 
-                   ref[6]{[Length(GAP_ROOT_PATHS[1])+1..Length(ref[6])]});
+                   ref[6]{[Length(GAPInfo.RootPaths[1])+1..Length(ref[6])]});
       fi;
       if IsBound(r.attributes.Style) and r.attributes.Style = "Number" then
         ref := Concatenation("<a href=\"", ref[6], "\"><b>",

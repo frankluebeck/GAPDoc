@@ -7,7 +7,7 @@ SetPackageInfo( rec(
 PkgName := "GAPDoc",
 Version := "0.99",
 Date := "02/04/2002",
-PkgInfoCVSRevision := "$Id: PkgInfo.g,v 1.1 2002-06-19 14:52:29 gap Exp $",
+PkgInfoCVSRevision := "$Id: PkgInfo.g,v 1.2 2003-02-19 02:16:39 gap Exp $",
 ArchiveURL := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-0r99",
 ArchiveFormats := ".tar.bz2",
 Persons := [
@@ -66,7 +66,19 @@ Dependencies := rec(
               "http://www.latex-project.org"]]
 ),
 AvailabilityTest := ReturnTrue,
-Autoload := false,
+AutoLoad := true,
+
+# the banner
+BannerString := Concatenation(
+"    ######################################################################\n",
+"    ##                                                                  ##\n",
+"    ##          GAPDoc 0.99 (a GAP documentation meta-package)          ##\n",
+"    ##                                                                  ##\n",
+"    ##   Questions and remarks to: Frank.Luebeck@Math.RWTH-Aachen.De    ##\n",
+"    ##                             Max.Neunhoeffer@Math.RWTH-Aachen.De  ##\n",
+"    ##                                                                  ##\n",
+"    ######################################################################\n\n"
+),
 Keywords := ["GAP documentation", "help system", "XML"]
 ));
 

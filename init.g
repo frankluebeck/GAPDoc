@@ -2,7 +2,7 @@
 ##
 #A  init.g                  GAPDoc              Frank Lübeck / Max Neunhöffer
 ##
-#H  @(#)$Id: init.g,v 1.6 2002-04-21 22:42:30 gap Exp $
+#H  @(#)$Id: init.g,v 1.7 2003-02-19 02:16:39 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck and Max Neunhöffer,  
 #Y  Lehrstuhl D für Mathematik,  RWTH Aachen
@@ -15,7 +15,7 @@ DeclarePackageAutoDocumentation("GAPDoc", "example", "GAPDoc Example",
 "Extensive Example for GAPDoc");
 
 
-ReadPkg("GAPDoc", "banner.g");
+#ReadPkg("GAPDoc", "banner.g");
 
 ReadPkg("GAPDoc", "lib/PrintUtil.gd");
 ReadPkg("GAPDoc", "lib/Text.gd");
