@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.27 2004-05-03 14:45:31 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.28 2004-05-03 14:52:36 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -115,7 +115,7 @@ GAPDoc2HTMLProcs.Head1Trans := "\
 <?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n\
 \n\
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\
-                      \"DTD/xhtml1-transitional.dtd\">\n\
+         \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\
 \n\
 <html xmlns=\"http://www.w3.org/1999/xhtml\">\n\
 <head>\n\
