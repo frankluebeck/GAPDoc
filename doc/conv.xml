@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.10 2002-12-23 10:03:20 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.11 2004-09-06 13:54:27 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters</Heading>
@@ -133,10 +133,11 @@ on.  They  can  be  read  with   any  Web-browser.  The  commands  are  <Ref
 Func="GAPDoc2HTML"/>  and <Ref  Func="GAPDoc2HTMLPrintHTMLFiles"/>. We  also
 add a link from <F>manual.html</F> to  <F>chap0.html</F>. You may also add a
 file <F>manual.css</F>, see <Ref Func="GAPDoc2HTMLPrintHTMLFiles"/> for more
-details.
+details. The argument <C>path</C> of <Ref Func="GAPDoc2HTML"/> specifies
+the directory containing the &BibTeX; database files.
 
 <Log>
-gap> h := GAPDoc2HTML(r);;
+gap> h := GAPDoc2HTML(r, path);;
 gap> GAPDoc2HTMLPrintHTMLFiles(h, path);
 </Log>
 

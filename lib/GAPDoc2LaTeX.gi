@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.14 2004-07-16 21:20:53 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.15 2004-09-06 13:54:28 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -121,6 +121,9 @@ GAPDoc2LaTeXProcs.EscapeUsBs := function(str)
   str := SubstitutionSublist(str, "\\", "\\texttt{\\symbol{92}}");
   str := SubstitutionSublist(str, "_", "{\\_}");
   str := SubstitutionSublist(str, "^", "{\\^{}}");
+  str := SubstitutionSublist(str, "<", "{\\texttt{<}}");
+  str := SubstitutionSublist(str, ">", "{\\texttt{>}}");
+  str := SubstitutionSublist(str, "&", "{\\texttt{\\&}}");
   return str;
 end;
 
