@@ -2,7 +2,7 @@
 ##
 #W  HelpBookHandler.g                GAPDoc                      Frank Lübeck
 ##
-#H  @(#)$Id: HelpBookHandler.g,v 1.7 2002-04-30 15:02:10 gap Exp $
+#H  @(#)$Id: HelpBookHandler.g,v 1.8 2002-05-27 09:02:43 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -30,7 +30,7 @@ if not IsBound(ANSI_COLORS) then
   ANSI_COLORS := false;
 fi;
 HELP_BOOK_HANDLER.GapDocGAP.ReadSix := function(stream)
-  local   res,  a,  fname;
+  local fname, res, bname, nam, a;
   # our .six file is directly GAP-readable
   fname := ShallowCopy(stream![2]);
   Read(stream);
@@ -56,19 +56,31 @@ HELP_BOOK_HANDLER.GapDocGAP.ReadSix := function(stream)
   res.directory := Directory(fname{[1..Length(fname)-10]});
   res.types := ["text"];
   # check if  .dvi and .pdf files and HTML-version available
-  fname{[Length(fname)-2..Length(fname)]} := "dvi";
-  if IsExistingFile(fname) then
-    res.dvifile := ShallowCopy(fname);
+  bname := fname{[1..Length(fname)-4]};
+  nam := Concatenation(bname, ".dvi");
+  if IsExistingFile(nam) then
+    res.dvifile := nam;
     Add(res.types, "dvi");
   fi;
-  fname{[Length(fname)-2..Length(fname)]} := "pdf";
-  if IsExistingFile(fname) then
-    res.pdffile := ShallowCopy(fname);
+  nam := Concatenation(bname, ".pdf");
+  if IsExistingFile(nam) then
+    res.pdffile := nam;
     Add(res.types, "pdf");
   fi;
-  fname{[Length(fname)-2..Length(fname)+1]} := "html";
-  if IsExistingFile(fname) then
+  nam := Concatenation(bname{[1..Length(bname)-6]}, "chap0.html");
+  if IsExistingFile(nam) then
     Add(res.types, "url");
+    Add(res.types, "url-text");
+  fi;
+  nam := Concatenation(bname{[1..Length(bname)-6]}, "chap0_sym.html");
+  if IsExistingFile(nam) then
+    Add(res.types, "url");
+    Add(res.types, "url-sym");
+  fi;
+  nam := Concatenation(bname{[1..Length(bname)-6]}, "chap0_mml.xml");
+  if IsExistingFile(nam) then
+    Add(res.types, "url");
+    Add(res.types, "url-mml");
   fi;
   
   return res;
@@ -115,8 +127,11 @@ HELP_BOOK_HANDLER.GapDocGAP.SearchMatches := function (book, topic, frombegin)
 end;
 
 ##  The data are all easy to get.
+if not IsBound(BROWSER_CAP) then
+  BROWSER_CAP := [];
+fi;
 HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
-  local   info,  a,  str,  fname,  label;
+  local info, a, fname, str, formatted, ext, label;
   
   info := HELP_BOOK_INFO(book);
   # we handle the special type "ref" for cross references first
@@ -152,13 +167,23 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
     return rec(lines := str, formatted := true, start := a[4]);
   fi;
   
-  if type = "url" then
-    if a[3][1]=0 then
-      fname := Filename(info.directory, "manual.html");
-    else
-      fname := Filename(info.directory, Concatenation("chap",
-                       String(a[3][1]), ".html"));
+  if type = "url" and "url" in info.types then
+    # check preferred HTML version/extension
+    if not IsBound(BROWSER_CAP) then
+      BROWSER_CAP := [];
     fi;
+    if "MathML" in BROWSER_CAP and "url-mml" in info.types then
+      ext := "_mml.xml";
+    elif ("MathML" in BROWSER_CAP or "Symbol" in BROWSER_CAP) and
+          "url-sym" in info.types then
+      ext := "_sym.html";
+    elif "url-text" in info.types then
+      ext := ".html";
+    else
+      return fail;
+    fi;
+    fname := Filename(info.directory, Concatenation("chap",
+                       String(a[3][1]), ext));
     label := Concatenation("#s", String(a[3][2]),
                      "ss", String(a[3][3]));
     # ??? return Concatenation("file:", fname, label);

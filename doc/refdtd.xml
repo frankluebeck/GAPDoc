@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.8 2002-05-24 15:57:21 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.9 2002-05-27 09:02:43 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -257,15 +257,17 @@ document. No automatic formatting is done.
 <![CDATA[<!ELEMENT Address (#PCDATA|Alt|Br)*>]]>
 </Listing>
 
-This element can be used to specify a postal address of the author or
-authors. If there are several authors with different addresses then put
-the <C>Address</C> elements inside the <C>Author</C> elements. <P/>
+This optional  element can be  used to specify  a postal address  of the
+author  or the  authors. If  there  are several  authors with  different
+addresses then put the  <C>Address</C> elements inside the <C>Author</C>
+elements. <P/>
 
 Use the <C>Br</C> element (see&nbsp;<Ref Subsect="Br"/>) to mark the line 
 breaks in the usual formatting of the address on a letter.<P/>
 
-Usually this element must not appear at all since a postal address is
-easy to find via a link to a personal web page.
+Note that often it is not necessary to use this element because a postal
+address is easy to find via a link to a personal web page.
+
 </Subsection>
 
 

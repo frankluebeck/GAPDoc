@@ -1,14 +1,16 @@
 /* gapdoc.css        Frank Lübeck */
-/* $Id: manual.css,v 1.5 2001-11-28 14:20:49 gap Exp $  */
+/* $Id: manual.css,v 1.6 2002-05-27 09:02:43 gap Exp $  */
 
 body { 
   background: #fffbd7; 
-  background-image: url(gapdoc.jpg);
   color: #000000; 
-  margin-top: 15px; 
+  background-image: url(gapdoc.jpg);
+/*  margin-top: 15px; 
   margin-bottom: 15px;
   margin-left: 10px;
-  margin-right: 10px;
+  margin-right: 10px; */
+  margin: 0pt;
+  padding: 15pt;
   font-family: Helvetica,Verdana,Arial,sans-serif;
   text-align: justify;
 }
@@ -32,7 +34,7 @@ h5 { font-size: 100%; }
 }
 
 div.func {
-  background-color: transparent; 
+  background-color: #eeeac6; 
   margin: 0pt 0pt; 
 }
 

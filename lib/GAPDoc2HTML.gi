@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.15 2002-05-24 15:57:21 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.16 2002-05-27 09:02:43 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -14,9 +14,9 @@
 
 ##  REMARKS:
 ##  
-##  We add a link to the document root to all recursively called functions
-##  by adding .root entries.    The toc-, index- and  bib-information   is
-##  collected in the root.
+##  We add to all  nodes of the parse tree an entry  .root which points to
+##  the document root.  The toc-, index- and  bib-information is collected
+##  in the root.
 ##  
 ##  The set  of elements  is partitioned  into two  subsets -  those which
 ##  contain whole paragraphs and those which don't.
@@ -28,7 +28,7 @@
 ##  the second is the formatted text of this paragraph.
 ##  
 ##  Some   handlers  of paragraph   containing  elements do the formatting
-##  themselves (e.g., .List), the others are handles in the main recursion
+##  themselves (e.g., .List), the others are handled in the main recursion
 ##  function `GAPDoc2HTMLContent'.
 ##  
 ##  We produce  a full version of  the document in HTML  format, including
@@ -139,6 +139,7 @@ GAPDoc2HTMLProcs.Head2 := "\
 <meta http-equiv=\"content-type\" content=\"text/html; charset=iso-8859-1\" />\n\
 <meta name=\"generator\" content=\"GAPDoc2HTML\" />\n\
 <link rel=\"stylesheet\" type=\"text/css\" href=\"manual.css\" />\n\
+<link rel=\"stylesheet\" type=\"text/css\" href=\"mathml.css\" />\n\
 </head>\n<body>\n";
 
 GAPDoc2HTMLProcs.Tail := "\n\
@@ -154,7 +155,8 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
   chnrs := Set(List([2,4..Length(l)], i-> l[i-1][1]));
   chlink := "\n<div class=\"pcenter\"><table class=\"chlink\"><tr><td class=\"chlink1\">Goto Chapter: </td>";
   for n in chnrs do
-    Append(chlink, Concatenation("<td><a href=\"chap", String(n), ".html\">"));
+    Append(chlink, Concatenation("<td><a href=\"chap", String(n), 
+           GAPDoc2HTMLProcs.ext, "\">"));
     if n = 0 then
       Append(chlink, "Top");
     else
@@ -206,17 +208,18 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     Append(n.text, l[i]);
   od;
   
-  toplink := "<td><a href=\"chap0.html\">Top of Book</a></td>";
+  toplink := Concatenation( "<td><a href=\"chap0", GAPDoc2HTMLProcs.ext, 
+             "\">Top of Book</a></td>" );
   for i in [1..Length(chnrs)] do
     if i > 1 then
       prev := Concatenation("<td><a href=\"chap", String(chnrs[i-1]),
-            ".html\">Previous Chapter</a></td>");
+            GAPDoc2HTMLProcs.ext, "\">Previous Chapter</a></td>");
     else
       prev := "";
     fi;
     if i < Length(chnrs) then
       next := Concatenation("<td><a href=\"chap", String(chnrs[i+1]),
-            ".html\">Next Chapter</a></td>");
+            GAPDoc2HTMLProcs.ext, "\">Next Chapter</a></td>");
     else
       next := "";
     fi;
@@ -227,33 +230,36 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     Append(files.(n).text, "\n</div>\n");
     Append(files.(n).text, GAPDoc2HTMLProcs.Tail);
   od;
+  # finally tell result the file extensions
+  files.ext := GAPDoc2HTMLProcs.ext;
   return files;
 end;
 
 ##  
 ##  <#GAPDoc Label="GAPDoc2HTML">
 ##  <ManSection >
-##  <Func Arg="tree[, bibpath[, gaproot]]" Name="GAPDoc2HTML" />
+##  <Func Arg="tree[, bibpath[, gaproot]][, mtrans]" Name="GAPDoc2HTML" />
 ##  <Returns>record  containing  HTML  files  as  strings  and  other
 ##  information</Returns>
 ##  <Description>
 ##  The   argument  <A>tree</A>   for   this  function   is  a   tree
 ##  describing  a   &GAPDoc;  XML   document  as  returned   by  <Ref
 ##  Func="ParseTreeXMLString"  /> (probably  also  checked with  <Ref
-##  Func="CheckAndCleanGapDocTree"  />).  This function  produces  an
-##  HTML  version  of  the  document  which  can  be  read  with  any
-##  Web-browser  and also  used with  &GAP;'s online  help (see  <Ref
-##  BookName="Ref" Func="SetHelpViewer" />).  It includes title page,
-##  bibliography, and  index. The bibliography is  made from &BibTeX;
-##  databases.  Their  location  must  be  given  with  the  argument
-##  <A>bibpath</A> (as string  or directory object, if  not given the
-##  current directory is used).  If the third argument <A>gaproot</A>
-##  is  given and  is a  string then  this string  is interpreted  as
-##  relative  path  to  &GAP;'s  root  directory.  Reference-URLs  to
-##  external HTML-books which begin with the &GAP; root path are then
-##  rewritten to start  with the given relative path.  This makes the
-##  HTML-documentation portable  provided a  package is  installed in
-##  some standard location below the &GAP; root.<P/>
+##  Func="CheckAndCleanGapDocTree"  />).   Without  an  <A>mtrans</A>
+##  argument this function  produces an HTML version  of the document
+##  which can  be read  with any  Web-browser and  also be  used with
+##  &GAP;'s online help (see <Ref BookName="Ref" Func="SetHelpViewer"
+##  />).  It  includes  title  page,  bibliography,  and  index.  The
+##  bibliography is made from &BibTeX; databases. Their location must
+##  be given with the argument <A>bibpath</A> (as string or directory
+##  object, if not given the current directory is used). If the third
+##  argument <A>gaproot</A> is given and is a string then this string
+##  is  interpreted  as  relative  path to  &GAP;'s  root  directory.
+##  Reference-URLs to external HTML-books  which begin with the &GAP;
+##  root path  are then  rewritten to start  with the  given relative
+##  path.  This  makes  the HTML-documentation  portable  provided  a
+##  package is  installed in some  standard location below  the &GAP;
+##  root.<P/>
 ##  
 ##  The  output is  a  record  with one  component  for each  chapter
 ##  (with  names   <C>"0"</C>,  <C>"1"</C>,  ...,   <C>"Bib"</C>, and
@@ -270,13 +276,26 @@ end;
 ##  </Item>
 ##  </List>
 ##  
+##  <Emph>Standard output format without</Emph> <A>mtrans</A> 
+##  <Emph>argument</Emph><P/>
+##  
 ##  The   HTML   code   produced   with   this   converter   conforms
 ##  to   the  W3C   specification   <Q>XHTML   1.0  strict</Q>,   see
 ##  <URL>http://www.w3.org/TR/xhtml1</URL>.  First, this  means  that
 ##  the   HTML   files   are   valid   XML   files.   Secondly,   the
 ##  extension  <Q>strict</Q>   says  in  particular  that   the  code
-##  doesn't  contain  any explicit  font  or  color information.  The
-##  layout  information   for  a  browser  should   be  specified  in
+##  doesn't  contain  any explicit  font  or  color information.<P/>
+##  
+##  Mathematical  formulae  are  handled  as in  the  text  converter
+##  <Ref  Func="GAPDoc2Text"/>.  We don't  want  to  assume that  the
+##  browser can  use symbol  fonts. Some &GAP;  users like  to browse
+##  the  online  help  with   <C>lynx</C>,  see  <Ref  BookName="Ref"
+##  Func="SetHelpViewer"  />, which  runs  inside  the same  terminal
+##  windows as &GAP;.<P/>
+##  
+##  <Emph>Using a stylesheet file</Emph><P/>
+##  
+##  The  layout information  for  a browser  should  be specified  in
 ##  a  cascading  style  sheet   (CSS)  file.  The  &GAPDoc;  package
 ##  contains  an  example  of  such  a  style  sheet,  see  the  file
 ##  <File>gapdoc.css</File>  in the  root directory  of the  package.
@@ -287,17 +306,47 @@ end;
 ##  free to adjust it for your  package, e.g., change colors or other
 ##  layout  details, add  a background  image, ...  Each of  the HTML
 ##  files produced  by the converters  contains a link to  this local
-##  style sheet file called <File>manual.css</File>.
+##  style sheet file called <File>manual.css</File>.<P/>
 ##  
-##  The  result can  be  written  into files  with  the command  <Ref
-##  Func="GAPDoc2HTMLPrintHTMLFiles" />.<P/>
+##  <Label Name="mtransarg"/>
+##  <Emph>Output format with</Emph> <A>mtrans</A> argument <P/>
 ##  
-##  Mathematical  formulae  are  handled  as in  the  text  converter
-##  <Ref  Func="GAPDoc2Text"/>.  We don't  want  to  assume that  the
-##  browser can  use symbol  fonts. Some &GAP;  users like  to browse
-##  the  online  help  with   <C>lynx</C>,  see  <Ref  BookName="Ref"
-##  Func="SetHelpViewer"  />, which  runs  inside  the same  terminal
-##  windows as &GAP;.
+##  Currently, there are two  experimental variants of this converter
+##  available  which  handle mathematical formulae  differently. They
+##  are accessed via the optional last <A>mtrans</A> argument.<P/>
+##  
+##  If  this argument  is  set  to <C>"Tth"</C>  it  is assumed  that
+##  you  have  installed  the  &LaTeX; to  HTML  translation  program
+##  <C>tth</C>.  This  is  used  to translate  the  contents  of  the
+##  <C>M</C>,  <C>Math</C>  and  <C>Display</C>  elements  into  HTML
+##  code.  Note that  the resulting  code is  not compliant  with any
+##  standard.  Formally  it  is  <Q>XHTML  1.0  Transitional</Q>,  it
+##  contains  explicit  font  specifications and  the  characters  of
+##  mathematical  symbols  are  included  via  their  position  in  a
+##  <Q>Symbol</Q> font. Some graphical  browsers can be configured to
+##  display  this  in  a  useful manner,  check  <URL  Text="the  Tth
+##  homepage">http://hutchinson.belmont.ma.us/tth/</URL>   for   more
+##  details.<P/>
+##  
+##  If  the   <A>mtrans</A>  argument   is  set   to  <C>"MathML"</C>
+##  it   is  assumed   that  you   have  installed   the  translation
+##  program    <C>ttm</C>,    see    also    <URL    Text="the    Tth
+##  homepage">http://hutchinson.belmont.ma.us/tth/</URL>).   This  is
+##  used    to   translate    the   contents    of   the    <C>M</C>,
+##  <C>Math</C>   and   <C>Display</C>   elements   to   MathML   2.0
+##  markup.  The  resulting  files   should  conform  to  the  "XHTML
+##  1.1   plus    MathML   2.0"   standard,   see    <URL   Text="the
+##  W3C  information">http://www.w3.org/TR/MathML2/</URL>   for  more
+##  details. It  is expected  that the  next generation  of graphical
+##  browsers  will be  able to  render  such files  (try for  example
+##  <C>Mozilla</C>, at  least 0.9.9).  You must copy  the <C>.xsl</C>
+##  and <C>.css</C>  files from &GAPDoc;s <F>mathml</F>  directory to
+##  the directory  containing the output files.  The translation with
+##  <C>ttm</C> is  still experimental.  The output of  this converter
+##  variant is garbage for browsers which don't support MathML.<P/>
+##  
+##  The result  of this converter  can be  written to files  with the
+##  command <Ref Func="GAPDoc2HTMLPrintHTMLFiles" />.<P/>
 ##  
 ##  </Description>
 ##  </ManSection>
@@ -317,12 +366,22 @@ InstallGlobalFunction(GAPDoc2HTML, function(arg)
   else
     r.mathmode := "Text";
   fi;
+  
   if Length(arg) > 1 then
     str := arg[2];
   else 
     str := [];
   fi;
   if r.name = "WHOLEDOCUMENT" then
+    # choose different file name conventions such that these
+    # conversions can coexist
+    if r.mathmode = "MathML" then
+      GAPDoc2HTMLProcs.ext := "_mml.xml";
+    elif r.mathmode = "Tth" then
+      GAPDoc2HTMLProcs.ext := "_sym.html";
+    else
+      GAPDoc2HTMLProcs.ext := ".html";
+    fi;
     if IsDirectory(str) then
       r.bibpath := str;
     else
@@ -348,7 +407,7 @@ InstallGlobalFunction(GAPDoc2HTML, function(arg)
   fi;
   
   if r.name ="WHOLEDOCUMENT" then
-    # put final record together and return i
+    # put final record together and return it
     return GAPDoc2HTMLProcs.PutFilesTogether(str, r);
   fi;
 
@@ -490,7 +549,7 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
     FileString("tempCONV.tex", r.ConvInput);
     if r.mathmode = "MathML" then
       Print("ttm.\n");
-      Exec("rm -f tempCONV.html; ttm -r tempCONV.tex > tempCONV.html");
+      Exec("rm -f tempCONV.html; ttm -L -r tempCONV.tex > tempCONV.html");
     elif r.mathmode = "Tth" then
       Print("tth.\n");
       Exec("rm -f tempCONV.html; tth -w2 -r tempCONV.tex > tempCONV.html");
@@ -566,6 +625,10 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   Print("#I  second run through document . . .\n");
   GAPDoc2HTMLProcs.Book(r.content[i], par, pi);
   
+  for a in ["MathList", "MathCount", "index", "toc", "bibkeys", 
+            "biblabels"] do
+    Unbind(r.(a));
+  od;
   ##  remove the links to the root  ???
 ##    RemoveRootParseTree(r);
 end;
@@ -753,9 +816,9 @@ end;
 GAPDoc2HTMLProcs.SectionLabel := function(count, sect)
   local   res;
   if IsString(count[1]) or count[1]>0 then
-    res := Concatenation("chap", String(count[1]), ".html");
+    res := Concatenation("chap", String(count[1]), GAPDoc2HTMLProcs.ext);
   else
-    res := "chap0.html";
+    res := Concatenation("chap0", GAPDoc2HTMLProcs.ext);
   fi;
   res := [res, ""];
   if sect="Chapter" then
@@ -1117,8 +1180,8 @@ GAPDoc2HTMLProcs.Cite := function(r, str)
     Append(str, Concatenation("[?", key, "?]"));
   else
     # here we include a link to the corresponding entry in bibliography 
-    Append(str, Concatenation("<a href=\"chapBib.html#biB", key, "\">[", 
-                                                  r.root.biblabels[pos]));
+    Append(str, Concatenation("<a href=\"chapBib", GAPDoc2HTMLProcs.ext,
+                              "#biB", key, "\">[", r.root.biblabels[pos]));
     if IsBound(r.attributes.Where) then
       Append(str, ", ");
       Append(str, r.attributes.Where);
@@ -1447,7 +1510,7 @@ end;
 
 GAPDoc2HTMLProcs.AltYes := function(r)
   local mark;
-  # recursively mark text as HTML code (no excaping of HTML markup)
+  # recursively mark text as HTML code (no escaping of HTML markup)
   mark := function(r)
     local a;
     if IsString(r.content) then
@@ -1586,15 +1649,18 @@ end;
 ##  <F>chap0.html</F>,  <F>chap1.html</F>,  ...,  <F>chapBib.html</F>,
 ##  and <F>chapInd.html</F>.<P/>
 ##  
-##  You   can   make   these   files   accessible   via   the   &GAP;
-##  online  help  by   putting  them  into  a   directory  and  using
-##  this   as   an   argument   for  one   of   the   commands   <Ref
-##  BookName="Ref"  Func="DeclarePackageDocumentation"   />  or  <Ref
-##  BookName="Ref"   Func="DeclarePackageAutoDocumentation"  />.   To
-##  tell  &GAP;  that   the  HTML  version  is  accessible  you  have
-##  to  add  a  file  <F>manual.html</F>   which  is  a  link  to  or
-##  a  copy   of  <F>chap0.html</F>.  You   may  also  want   to  put
-##  a   file  <F>manual.css</F>   into  that   directory,  see   <Ref
+##  The  experimental versions  which  are  produced with  <C>tth</C>
+##  or  <C>ttm</C>   use  different  names  for   the  files,  namely
+##  <F>chap0&uscore;sym.html</F>,  and so  on  for  files which  need
+##  symbol  fonts  and  <F>chap0&uscore;mml.xml</F>  for  files  with
+##  MathML translations.<P/>
+##  
+##  You  can  make  these  files  accessible  via  the  &GAP;  online
+##  help  by  putting  them  into  a  directory  and  using  this  as
+##  an  argument   for  one  of  the   commands  <Ref  BookName="Ref"
+##  Func="DeclarePackageDocumentation"  />   or  <Ref  BookName="Ref"
+##  Func="DeclarePackageAutoDocumentation" />.  You may also  want to
+##  put  a  file  <F>manual.css</F>  into that  directory,  see  <Ref
 ##  Func="GAPDoc2HTML" />.
 ##  </Description>
 ##  </ManSection>
@@ -1607,7 +1673,9 @@ InstallGlobalFunction(GAPDoc2HTMLPrintHTMLFiles, function(t, path)
     path := Directory(path);
   fi;
   for a in NamesOfComponents(t) do
-    FileString(Filename(path, Concatenation("chap",a,".html")), t.(a).text);
+    if IsRecord(t.(a)) and IsBound(t.(a).text) then
+      FileString(Filename(path, Concatenation("chap", a, t.ext)), t.(a).text);
+    fi;
   od;
 end);
 

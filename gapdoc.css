@@ -1,13 +1,15 @@
 /* gapdoc.css        Frank Lübeck */
-/* $Id: gapdoc.css,v 1.7 2001-11-28 14:20:49 gap Exp $  */
+/* $Id: gapdoc.css,v 1.8 2002-05-27 09:02:43 gap Exp $  */
 
 body { 
   background: #fffbd7; 
   color: #000000; 
-  margin-top: 15px; 
+/*  margin-top: 15px; 
   margin-bottom: 15px;
   margin-left: 10px;
-  margin-right: 10px;
+  margin-right: 10px; */
+  margin: 0pt;
+  padding: 15pt;
   font-family: Helvetica,Verdana,Arial,sans-serif;
   text-align: justify;
 }

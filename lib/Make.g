@@ -2,7 +2,7 @@
 ##
 #W  Make.g                       GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Make.g,v 1.3 2001-09-04 23:09:25 gap Exp $
+#H  @(#)$Id: Make.g,v 1.4 2002-05-27 09:02:44 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -12,9 +12,15 @@
 ##  GAPDoc package.
 ##  
 
-##  args: path, main, files, bookname[, gaproot]
+##  args: path, main, files, bookname[, gaproot][, "MathML"][, "Tth"]
 BindGlobal("MakeGAPDocDoc", function(arg)
-  local path, main, files, bookname, gaproot, str, r, l, latex, null, t, h;
+  local htmlspecial, path, main, files, bookname, gaproot, 
+        str, r, l, latex, null, t, h;
+  
+  htmlspecial := Filtered(arg, a-> a in ["MathML", "Tth"]);
+  if Length(htmlspecial) > 0 then
+    arg := Filtered(arg, a-> not a in ["MathML", "Tth"]);
+  fi;
   path := arg[1];
   main := arg[2];
   files := arg[3];
@@ -79,9 +85,20 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   Print("And finally the HTML version . . .\n");
   h := GAPDoc2HTML(r, path, gaproot);
   GAPDoc2HTMLPrintHTMLFiles(h, path);
-  if not IsExistingFile(Filename(path, "manual.html")) then
-    Exec("sh -c \"cd ", Filename(path,""), "; ln -s chap0.html manual.html\"");
+  if "Tth" in htmlspecial then
+    Print("  - also HTML version with 'tth' translated formulae . . .\n");
+    h := GAPDoc2HTML(r, path, gaproot, "Tth");
+    GAPDoc2HTMLPrintHTMLFiles(h, path);
   fi;
+  if "MathML" in htmlspecial then
+    Print("  - also HTML + MathML version with 'ttm' . . .\n");
+    h := GAPDoc2HTML(r, path, gaproot, "MathML");
+    GAPDoc2HTMLPrintHTMLFiles(h, path);
+  fi;
+
+##    if not IsExistingFile(Filename(path, "manual.html")) then
+##      Exec("sh -c \"cd ", Filename(path,""), "; ln -s chap0.html manual.html\"");
+##    fi;
   return r;
 end);
 

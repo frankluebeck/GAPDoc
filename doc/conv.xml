@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.7 2001-09-04 23:09:25 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.8 2002-05-27 09:02:43 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters</Heading>
@@ -157,7 +157,13 @@ Chap="Distributing"/>. And <A>bookname</A>  is the name of the  book used by
 &GAP;'s online help.  The optional argument <A>gaproot</A> must  be a string
 which gives the relative path from  <A>path</A> to the &GAP; root directory.
 If  this is  given,  the HTML  files  are produced  with  relative paths  to
-external books.
+external books.<P/>
+
+Experimental:  <Ref Func="MakeGAPDocDoc"/>  can  be  called with  additional
+arguments   <C>"Tth"</C>  and/or   <C>"MathML"</C>.  If   these  are   given
+additional  variants   of  the   HTML  conversion   are  called,   see  <Ref
+Func="GAPDoc2HTML"/> for details.
+
 </Description>
 </ManSection>
 </Section>
