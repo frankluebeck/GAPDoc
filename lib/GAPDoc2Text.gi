@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.2 2001-01-17 15:31:20 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.3 2001-01-18 08:48:30 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -833,7 +833,7 @@ end;
 GAPDoc2TextProcs.M := function(r, str)
   local s;
   s := "";
-  GAPDoc2HTMLContent(r, s);
+  GAPDoc2TextContent(r, s);
   s := TextM(s);
   Append(str, s);
 end;
