@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE Book SYSTEM "gapdoc.dtd">
+
+<!-- $Id: gapdoc.xml,v 1.1.1.1 2001-01-05 13:37:49 gap Exp $ -->
+
+<!-- The documentation to the GAPDoc system. 
+     Copyright 2000 by Frank Lübeck and Max Neunhöffer
+     Lehrstuhl D für Mathematik, RWTH Aachen, Germany -->
+     
+<Book Name="GAPDoc"> 
+
+<TitlePage>
+  <Title>&GAPDoc;</Title>
+  <Version>
+<#Include SYSTEM "../version">
+  </Version>
+  <Author> Frank Lübeck 
+    <Email>Frank.Luebeck@Math.RWTH-Aachen.De</Email>
+    <Homepage>http://www.math.rwth-aachen.de/~Frank.Luebeck</Homepage>
+  </Author>
+  <Author> Max Neunhöffer 
+    <Email>Max.Neunhoeffer@Math.RWTH-Aachen.De</Email>
+    <Homepage>http://www.math.rwth-aachen.de/~Max.Neunhoeffer</Homepage>
+  </Author>
+  <Copyright> &copyright; 2000 by Frank Lübeck and Max Neunhöffer <P/>
+              We adopt the copyright regulations of &GAP; as detailed in the 
+              copyright notice in the &GAP; manual. </Copyright>
+</TitlePage>
+
+<TableOfContents/>
+
+<Body>
+
+<#Include SYSTEM "intro.xml">
+
+<#Include SYSTEM "enter.xml">
+
+<#Include SYSTEM "refdtd.xml">
+
+<#Include SYSTEM "distr.xml">
+
+<#Include SYSTEM "conv.xml">
+
+</Body>
+
+<#Include SYSTEM "app3k1.xml">
+
+<Bibliography Databases="gapdoc" />
+
+<TheIndex/>
+
+</Book>
+
+<!-- ==================================================================== -->
+
+<!-- Some questions:
+     What about &lt; in LaTeX Text? 
+     Change all &lt; in <C></C> to &tlt; -->
+

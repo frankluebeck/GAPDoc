@@ -1,0 +1,265 @@
+<!-- $Id: conv.xml,v 1.1.1.1 2001-01-05 13:37:49 gap Exp $ -->
+
+<Chapter Label="ch:conv">
+<Heading>The Converters</Heading>
+
+The &GAPDoc;  package contains a  set of programs  which allow to  convert a
+&GAPDoc; book  into several output  versions and  to make them  available to
+&GAP;'s online help.<P/>
+
+Currently  the following  output  formats are  provided:  text for  browsing
+inside a  terminal running  &GAP;, &LaTeX; with  <C>hyperref</C>-package for
+cross references via hyperlinks and HTML for reading with a Web-browser.<P/>
+
+
+
+<Section Label="MakeDoc">
+<Heading>Producing Documentation from Source Files</Heading>
+
+Here    we    explain    how    to   use    the    functions    which    are
+described    in    more   detail    in    the    following   sections.    We
+assume   that   we    have   the   main   file    <F>MyBook.xml</F>   of   a
+book   <C>"MyBook"</C>   in   the   directory   <F>/my/book/path</F>.   This
+contains  <C>&tlt;&hash;Include  ...&tgt;</C>-statements   as  explained  in
+Chapter&nbsp;<Ref Sect="Distributing"/>. These refer  to some other files as
+well as pieces of text which are  found in the comments of some &GAP; source
+files  <F>../lib/a.gd</F>  and  <F>../lib/b.gi</F>  (relative  to  the  path
+above). A &BibTeX;  database <F>MyBook.bib</F> for the citations  is also in
+the  directory  given  above.  We  want to  produce  a  text-,  <C>dvi</C>-,
+<C>pdf-</C>, postscript- and HTML-version of the document.<P/>
+
+All the commands shown in this  Section are collected in the single function
+<Ref Func="MakeGAPDocDoc"/>.<P/>
+
+First   we  construct   the   complete  XML-document   as   a  string   with
+<Ref   Func="ComposedXMLString"/>.    This   interprets    recursively   the
+<C>&tlt;&hash;Include ...&tgt;</C>-statements.
+
+<Log>
+gap> path := Directory("/my/book/path");;
+gap> main := "MyBook.xml";;
+gap> files := ["../lib/a.gd", "../lib/b.gi"];;
+gap> bookname := "MyBook";;
+gap> str := ComposedXMLString(path, main, files);;
+</Log>
+
+Then  we parse  the document  and store  its structure  in a  tree-like data
+structure. The  commands for  this are <Ref  Func="ParseTreeXMLString"/> and
+<Ref Func="CheckAndCleanGapDocTree"/>. 
+
+<Log>
+gap> r := ParseTreeXMLString(str);;
+gap> CheckAndCleanGapDocTree(r);
+true
+</Log>
+
+We   first   produce    a   &LaTeX;   version   of    the   document.   <Ref
+Func="GAPDoc2LaTeX"/> returns  a string  containing the &LaTeX;  source. The
+utility function <Ref Func="FileString"/> writes  the content of a string to
+a file, we choose <F>MyBook.tex</F>.
+
+<Log>
+gap> l := GAPDoc2LaTeX(r);;
+gap> FileString(Filename(path, Concatenation(main, ".tex")), l);
+</Log>
+
+Assuming that you  have a sufficiently good installation  of &TeX; available
+(see <Ref  Func="GAPDoc2LaTeX"/> for details)  this can be processed  with a
+series of commands like in the following example.
+
+<Log>
+cd /my/book/path
+latex MyBook
+bibtex MyBook
+makeindex MyBook
+latex MyBook
+latex MyBook
+mv MyBook.dvi manual.dvi
+dvips -o manual.ps manual.dvi
+rm MyBook.aux
+pdflatex MyBook
+pdflatex MyBook
+mv MyBook.pdf manual.pdf
+</Log>
+
+After  this  we  have  a <C>dvi</C>-,  <C>pdf</C>-  and  postscript  version
+of  the  document  in  the files  <F>manual.dvi</F>,  <F>manual.pdf</F>  and
+<F>manual.ps</F>. The first two versions contain hyperlink information which
+can be used with appropriate browsers for convenient reading of the document
+on screen  (e.g., current versions of  <C>xdvi</C>, respectively <C>xpdf</C>
+or <C>acroread</C>.<P/>
+
+Furthermore   we   have  produced   a   file   <F>MyBook.pnr</F>  which   is
+&GAP;-readable   and  contains   the  page   number  information   for  each
+(sub-)section of the document. We will use this later.<P/>
+
+Next we produce a text version which can be read in a terminal (window). The
+command is <Ref Func="GAPDoc2Text"/>. This produces a record with the actual
+text and  some additional information.  The text can be  written chapterwise
+into  files  with  <Ref  Func="GAPDoc2TextPrintTextFiles"/>.  The  names  of
+these  files are  <F>chap0.txt</F>,  <F>chap1.txt</F> and  so  on. The  text
+contains some  color markup using  ANSI escape  sequences. One can  use this
+with  a  terminal  which  interprets  these  sequences  appropriately  after
+setting the &GAP; variable <C>ANSI&uscore;COLORS</C> to <K>true</K>. For the
+bibliography we have  to tell <Ref Func="GAPDoc2Text"/> the  location of the
+&BibTeX; database.
+
+<Log>
+t := GAPDoc2Text(r, path);;
+GAPDoc2TextPrintTextFiles(t, path);
+</Log>
+
+This   command   constructs   all    parts   of   the   document   including
+table   of   contents,   bibliography   and  index.   The   functions   <Ref
+Func="FormatParagraph"/>   for   formatting   text   paragraphs   and   <Ref
+Func="ParseBibFiles"/>  for reading  &BibTeX;  files with  &GAP;  may be  of
+independent interest.<P/>
+
+With the  text version we have  also produced the information  which is used
+for  searching  with  &GAP;'s  online  help. We  can  add  the  page  number
+information  from the  &LaTeX;  version of  the document  and  then print  a
+<F>manual.six</F>  file  which  is  read  by  &GAP;  when  the  document  is
+loaded.  This  is  done  with  <Ref  Func="AddPageNumbersToSix"/>  and  <Ref
+Func="PrintSixFile"/>.
+
+<Log>
+gap> AddPageNumbersToSix(r, Filename(path, "MyBook.pnr"));
+gap> PrintSixFile(Filename(path, "manual.six"), r, bookname);
+</Log>
+
+Finally  we  produce   an  HTML  version  of  the  document   and  write  it
+(chapterwise)  into   files  <F>chap0.html</F>,  <F>chap1.html</F>   and  so
+on.  They  can  be  read  with   any  Web-browser.  The  commands  are  <Ref
+Func="GAPDoc2HTML"/> and <Ref Func="GAPDoc2HTMLPrintHTMLFiles"/>.
+
+<Log>
+gap> h := GAPDoc2HTML(r);;
+gap> GAPDoc2HTMLPrintHTMLFiles(h, path);
+</Log>
+
+<ManSection >
+<Func Arg="path, main, files, bookname" Name="MakeGAPDocDoc" />
+
+<Description>
+This  function  collects  all  the commands  for  producing  a  <C>dvi</C>-,
+<C>pdf</C>-, postscript-, text-  and HTML-version of a  &GAPDoc; document as
+described in Section&nbsp;<Ref Sect="MakeDoc"/>.<P/>
+
+Here  <A>path</A> must  be the  directory  (as string  or directory  object)
+containing  the  main  file  <A>main</A>  of the  document  (given  with  or
+without the  <C>.xml</C> extension. The  argument <A>files</A> is a  list of
+(probably source code) files relative to <A>path</A> which contain pieces of
+documentation which must be included  in the document, see Chapter&nbsp;<Ref
+Chap="Distributing"/>. And <A>bookname</A>  is the name of the  book used by
+&GAP;'s online help.
+</Description>
+</ManSection>
+</Section>
+
+<Section Label="ParseXML">
+<Heading>Parsing XML Documents</Heading>
+Arbitrary well-formed XML documents can be parsed and browsed by the
+following functions.
+
+<#Include Label="ParseTreeXMLString">
+
+<#Include Label="DisplayXMLStructure">
+
+<#Include Label="ApplyToNodesParseTree">
+
+And here are  utilities for processing &GAPDoc; XML documents.
+
+<#Include Label="CheckAndCleanGapDocTree">
+
+<#Include Label="AddParagraphNumbersGapDocTree">
+
+</Section>
+
+<Section Label="Converters">
+<Heading>The Converters</Heading>
+Here  are  more details  about  the  conversion  programs for  &GAPDoc;  XML
+documents.
+
+<#Include Label="GAPDoc2LaTeX">
+
+<#Include Label="GAPDoc2Text">
+
+<#Include Label="GAPDoc2TextPrintTextFiles">
+
+<#Include Label="AddPageNumbersToSix">
+
+<#Include Label="PrintSixFile">
+
+<#Include Label="GAPDoc2HTML">
+
+<#Include Label="GAPDoc2HTMLPrintHTMLFiles">
+
+</Section>
+
+<Section Label="ParseBib">
+<Heading>Parsing &BibTeX; Files</Heading>
+
+Here are functions for parsing,  normalizing and printing reference lists in
+&BibTeX; format.
+
+<#Include Label="ParseBibFiles">
+
+<#Include Label="NormalizeNameAndKey">
+
+<#Include Label="WriteBibFile">
+
+</Section>
+
+<Section Label="TextUtil">
+<Heading>Text Utilities</Heading>
+
+This  section describes  some utility  functions for  handling texts  within
+&GAP;. They are used  by other functions in the &GAPDoc;  package but may be
+useful for other  purposes as well. We start with  some variables containing
+useful strings and  go on with functions for parsing  and reformatting text.
+<P/>
+
+<#Include Label="CharsColls">
+
+<#Include Label="TextAttr">
+
+<#Include Label="FormatParagraph">
+
+<#Include Label="SubstitutionSublist">
+
+<#Include Label="NormalizedWhitespace">
+
+<#Include Label="StripBeginEnd">
+
+<#Include Label="StripEscapeSequences">
+
+<#Include Label="RepeatedString">
+
+<#Include Label="NumberDigits">
+
+<#Include Label="PositionMatchingDelimiter">
+
+<#Include Label="WordsString">
+
+</Section>
+
+<Section Label="PrintUtil">
+<Heading>Print Utilities</Heading>
+
+The following  printing utilities  turned out to  be useful  for interactive
+work with texts in &GAP;. But they  are more general and so we document them
+here.
+
+<#Include Label="PrintTo1">
+
+<#Include Label="StringPrint">
+
+<#Include Label="PrintFormattedString">
+
+<#Include Label="Page">
+
+<#Include Label="StringFile">
+
+</Section>
+</Chapter>
+

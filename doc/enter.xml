@@ -1,0 +1,388 @@
+<!-- $Id: enter.xml,v 1.1.1.1 2001-01-05 13:37:49 gap Exp $ -->
+<Chapter Label="HowEnter">
+<Heading>How To Type a &GAPDoc; Document</Heading>
+
+In this chapter we give a more  formal description of what you need to start
+to  type documentation  in &GAPDoc;  XML format.  Many details  were already
+explained  by  example  in Section&nbsp;<Ref  Sect="sec:3k+1expl"/>  of  the
+introduction.<P/>
+
+We  do <E>not</E>  answer the  question  <Q>How to  <E>write</E> a  &GAPDoc;
+document?</Q>  in  this chapter.  You  can  (hopefully)  find an  answer  to
+this question  by studying  the example  in the  introduction, see&nbsp;<Ref
+Sect="sec:3k+1expl"/>,  and learning  about  more details  in the  reference
+Chapter&nbsp;<Ref Chap="DTD" />.<P/>
+
+The definite source for all details of the official XML standard with useful
+annotations is:<P/>
+
+<URL>http://www.xml.com/axml/axml.html</URL><P/>
+
+Although  this document  must be  quite technical,  it is  surprisingly well
+readable.<P/>
+
+<Section Label="EnterXML">
+<Heading>General XML Syntax</Heading>
+
+We will  now discuss the  pieces of  text which can  occur in a  general XML
+document. We start  with those pieces which do not  contribute to the actual
+content of the document.
+
+<Subsection Label="XMLhead">
+<Heading>Head of XML Document</Heading>
+
+Each XML document should have a head which states that it is an XML document
+in  some encoding  and which  XML-defined  language is  used. In  case of  a
+&GAPDoc; document this should always look as in the following example.
+
+<Log>
+<![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE Book SYSTEM "gapdoc.dtd">]]>
+</Log>
+
+See&nbsp;<Ref  Subsect="XMLenc"/>  for  a   remark  on  the  <Q>encoding</Q>
+statement.<P/>
+
+(There may be local entity  definitions inside the <C>DOCTYPE</C> statement,
+see Subsection&nbsp;<Ref Subsect="GDent" /> below.)
+</Subsection>
+
+<Subsection Label="XMLcomment">
+<Heading>Comments</Heading>
+
+A   <Q>comment</Q>    in   XML   starts   with    the   character   sequence
+<Q><C>&tlt;!--</C></Q> and ends with the sequence <Q><C>--></C></Q>. Between
+these sequences there must not be two adjacent dashs <Q><C>--</C></Q>.
+
+</Subsection>
+
+<Subsection Label="XMLprocinstr">
+<Heading>Processing Instructions</Heading>
+
+A <Q>processing  instruction</Q> in XML  starts with the  character sequence
+<Q><C>&tlt;?</C></Q> followed  by a name (<Q><C>xml</C></Q>  is only allowed
+at the very beginning  of the document to declare it  being an XML document,
+see <Ref Subsect="XMLhead"/>). After that  any characters may follow, except
+that  the ending  sequence <Q><C>?&tgt;</C></Q>  must not  occur within  the
+processing instruction.
+
+</Subsection>
+
+And now  we turn  to those  parts of  the document  which contribute  to its
+actual content.
+
+<Subsection Label="XMLnames">
+<Heading>Names in XML and Whitespace</Heading>
+
+A <Q>name</Q> in XML (used for element and attribute identifiers, see below)
+must  start with  a letter  (in  the encoding  of  the document)  or with  a
+colon  <Q><C>:</C></Q> or  underscore <Q><C>&uscore;</C></Q>  character. The
+following  characters may  also  be digits,  dots  <Q><C>.</C></Q> or  dashs
+<Q><C>-</C></Q>.<P/>
+
+This is  a simplified description  of the rules  in the standard,  which are
+concerned  with lots  of  unicode  ranges to  specify  what a  <Q>letter</Q>
+is.<P/>
+
+Sequences  only consisting  of the  following characters  are considered  as
+<E>whitespace</E>:  blanks, tabs,  carriage return  characters and  new line
+characters.
+
+</Subsection>
+
+<Subsection Label="XMLel">
+<Heading>Elements</Heading>
+
+The  actual  content  of  an   XML  document  consists  of  <Q>elements</Q>.
+An  element  has  some  <Q>content</Q>   with  a  leading  <Q>start  tag</Q>
+(<Ref  Subsect="XMLstarttag"/>)   and  a   trailing  <Q>end   tag</Q>  (<Ref
+Subsect="XMLendtag"/>). The  content can  contain further elements  but they
+must be  properly nested. One  can define  elements whose content  is always
+empty, those elements  can also be entered with a  single combined tag (<Ref
+Subsect="XMLcombtag"/>). 
+</Subsection>
+
+<Subsection Label="XMLstarttag">
+<Heading>Start Tags</Heading>
+
+A  <Q>start-tag</Q> consists  of  a less-than-character  <Q><C>&tlt;</C></Q>
+directly  followed (without  whitespace) by  an element  name (see&nbsp;<Ref
+Subsect="XMLnames"/>),  optional  attributes,  optional  whitespace,  and  a
+greater-than-character <Q><C>&tgt;</C></Q>.<P/>
+
+An <Q>attribute</Q> consists  of some whitespace and then  its name directly
+followed by an equal sign <Q><C>=</C></Q>, and the attribute value, which is
+enclosed  either  in  single  or  double quotes.  The  attribute  value  may
+not  contain  the type  of  quote  used as  a  delimiter  or the  characters
+<Q><C>&tlt;</C></Q> and <Q><C>&tamp;</C></Q>.<P/>
+
+Note  especially  that  no  whitespace   is  allowed  between  the  starting
+<C>&tlt;</C> character and the element name or around the <Q><C>=</C></Q> of
+an attribute. The  quotes around an attribute value cannot  be ommitted. The
+names of elements and attributes are <E>case sensitive</E>. 
+</Subsection>
+
+<Subsection Label="XMLendtag">
+<Heading>End Tags</Heading>
+
+An  <Q>end  tag</Q>  consists  of the  two  characters  <Q><C>&tlt;/</C></Q>
+directly  followed   by  the  element   name,  optional  whitespace   and  a
+greater-than-character <Q><C>&tgt;</C></Q>.
+</Subsection>
+
+<Subsection Label="XMLcombtag">
+<Heading>Combined Tags for Empty Elements</Heading>
+
+Elements  which always  have  empty content  can be  written  with a  single
+tag.  This looks  like a  start tag  (see&nbsp;<Ref Subsect="XMLstarttag"/>)
+<E>except</E> that  the trailing  greater-than-character <Q><C>&tgt;</C></Q>
+is substituted by the two character sequence <Q><C>/&tgt;</C></Q>.
+
+</Subsection>
+
+<Subsection Label="XMLent">
+<Heading>Entities</Heading>
+
+An <Q>entity</Q> in XML is a macro for some substitution text. There are two
+types of entities. <P/>
+
+A <Q>character entity</Q> can be used  to specify characters in the encoding
+of the document  (can be useful for entering non-ascii  characters which you
+cannot  manage to  type  in  directly). They  are  entered  with a  sequence
+<Q><C>&tamp;&hash;</C></Q>, directly followed by  either some decimal digits
+or an  <Q><C>x</C></Q> and some  hexadecimal digits, directly followed  by a
+semicolon <Q><C>;</C></Q>. Using such a  character entity is just equivalent
+to typing the corresponding character directly.<P/>
+
+Then there are references to <Q>named entities</Q>. They are entered with an
+ampersand character  <Q><C>&tamp;</C></Q> directly followed by  a name which
+is directly followed  by a semicolon <Q><C>;</C></Q>. Such  entities must be
+declared somewhere by  giving a substitution text. This text  is included in
+the document  and the document is  parsed again afterwards. The  exact rules
+are a  bit subtle but you  probably want to  use this only in  simple cases.
+Important entities for &GAPDoc; are described in <Ref Subsect="XMLspchar"/>,
+<Ref Subsect="GDspchar"/> and <Ref Subsect="GDent"/>.<P/>
+
+</Subsection>
+
+<Subsection Label="XMLspchar">
+<Heading>Special Characters in XML</Heading>
+
+We   have  seen   that  the   less-than-character  <Q><C>&tlt;</C></Q>   and
+the  ampersand   character  <Q><C>&tamp;</C></Q>  start  a   tag  or  entity
+reference  in  XML.   To  get  these  characters  into   the  document  text
+one   has  to   use   entity   references,  namely   <Q><C>&tamp;lt;</C></Q>
+to   get    <Q><C>&tlt;</C></Q>   and   <Q><C>&tamp;amp;</C></Q>    to   get
+<Q><C>&tamp;</C></Q>.  Furthermore <Q><C>&tamp;gt;</C></Q>  should sometimes
+be used to get <Q><C>&tgt;</C></Q>.<P/>
+
+Another   possibility  is   to  use   a  <C>CDATA</C>   statement  explained
+in&nbsp;<Ref Subsect="XMLcdata"/>.
+
+</Subsection>
+
+<Subsection Label="XMLcdata">
+<Heading><C>CDATA</C></Heading>
+
+Pieces   of   text   which   contain    many   characters   which   can   be
+misinterpreted  as  markup  can  be  enclosed  by  the  character  sequences
+<Q><C><![CDATA[<![CDATA[]]></C></Q>  and  <Q><C>]]&tgt;</C></Q>.  Everything
+between these sequences is considered as  content of the document and is not
+further interpreted  as XML  text. All  the rules explained  so far  in this
+section  do <E>not  apply</E>  to such  a  part of  the  document. The  only
+document  content which  cannot be  entered directly  inside a  <C>CDATA</C>
+statement  is the  sequence <Q><C>]]&tgt;</C></Q>.  This can  be entered  as
+<Q><C>]]&tamp;gt;</C></Q>.
+
+<Listing Type="Example">
+A nesting of tags like <![CDATA[<a> <b> </a> </b>]]> is not allowed.
+</Listing>
+
+</Subsection> 
+
+<Subsection Label="XMLenc">
+<Heading>Encoding of an XML document</Heading>
+
+We suggest to use the ISO-8859-1 or ISO-latin1 encoding for writing &GAPDoc;
+XML  documents. This  character set  contains the  ASCII characters  and all
+special characters  from Western European  languages like German  umlauts or
+French accented characters. Text in this  character set can be used directly
+with &LaTeX; and many current  default terminal fonts support this character
+set.
+
+</Subsection>
+
+<Subsection Label="XMLvalid">
+<Heading>Well Formed and Valid XML Documents</Heading>
+
+We want to mention  two further important words which are  often used in the
+context of XML  documents. A piece of text becomes  a <Q>well formed</Q> XML
+document if  all the formal rules  described in this section  are fulfilled.
+<P/>
+
+But  this  says  nothing  about  the   content  of  the  document.  To  give
+this  content  a  meaning  one  needs  a  declaration  of  the  element  and
+corresponding  attribute  names as  well  as  of  named entities  which  are
+allowed.  Furthermore there  may be  restrictions how  such elements  can be
+nested. This <E>definition of an XML  based markup language</E> is done in a
+<Q>document  type  definition</Q>.  An  XML  document  which  contains  only
+elements and entities declared in such  a document type definition and obeys
+the rules given there is called <Q>valid (with respect to this document type
+definition)</Q>.<P/>
+
+The main  file of the  &GAPDoc; package is <F>gapdoc.dtd</F>.  This contains
+such a  definition of  a markup language.  We are not  going to  explain the
+formal syntax  rules for document type  definitions in this section.  But in
+Chapter&nbsp;<Ref Chap="DTD"/> we will explain enough about it to understand
+the file <F>gapdoc.dtd</F> and so the markup language defined there.
+
+</Subsection>
+</Section>
+
+<Section Label="EnterGD">
+<Heading>Entering &GAPDoc; Documents</Heading>
+
+Here are some additional rules for writing &GAPDoc; XML documents.
+
+<Subsection Label="GDspchar">
+<Heading>More Special Characters</Heading>
+
+Since one purpose of &GAPDoc; documents is to produce a high quality &LaTeX;
+output version we have to pay attention to characters with a special meaning
+in &LaTeX; or in XML. These are the following characters:<P/>
+
+<Q><C>&tamp;</C></Q>,
+<Q><C>&tlt;</C></Q>,
+<Q><C>&tgt;</C></Q>,
+<Q><C>&hash;</C></Q>,
+<Q><C>&dollar;</C></Q>,
+<Q><C>&percent;</C></Q>,
+<Q><C>&tilde;</C></Q>,
+<Q><C>&bslash;</C></Q>,
+<Q><C>&obrace;</C></Q>,
+<Q><C>&cbrace;</C></Q>,
+<Q><C>&uscore;</C></Q>,
+<Q><C>&circum;</C></Q> and
+<Q><C>&nbsp;</C></Q> (the last one is a non-breakable space, similar to
+&LaTeX;'s <Q><C>&tilde;</C></Q> character).
+<P/>
+
+The  right  way  to  access  these  symbols  is  by  using  <Q>entities</Q>,
+see&nbsp;<Ref Subsect="XMLent"/>. The following table  shows what to type to
+get these characters in the output text of the document.<P/>
+
+<Table Align="|l|l|" Label="charsInCDATA"> 
+ <Caption>What to type for special characters in character data</Caption>
+ <HorLine/> <Row> 
+  <Item><C>&tamp;</C></Item><Item><C>&tamp;tamp;</C></Item>
+ </Row> <HorLine/> <Row>
+  <Item><C>&tlt;</C></Item>  <Item><C>&tamp;tlt;</C></Item>
+ </Row> <HorLine/> <Row>
+  <Item><C>&tgt;</C></Item>  <Item><C>&tamp;tgt;</C></Item>
+ </Row> <HorLine/> <Row>
+  <Item><C>&hash;</C></Item>    <Item><C>&tamp;hash;</C></Item>
+ </Row> <HorLine/> <Row>
+  <Item><C>&dollar;</C></Item>    <Item><C>&tamp;dollar;</C></Item>
+ </Row> <HorLine/> <Row>
+  <Item><C>&percent;</C></Item>    <Item><C>&tamp;percent;</C></Item>
+ </Row> <HorLine/> <Row>
+  <Item><C>&tilde;</C></Item> <Item><C>&tamp;tilde;</C></Item>
+ </Row> <HorLine/> <Row>
+  <Item><C>&bslash;</C></Item>   <Item><C>&tamp;bslash;</C></Item>
+ </Row> <HorLine/> <Row>
+  <Item><C>&obrace;</C></Item>    <Item><C>&tamp;obrace;</C></Item>
+ </Row> <HorLine/> <Row>
+  <Item><C>&cbrace;</C></Item>    <Item><C>&tamp;cbrace;</C></Item>
+ </Row> <HorLine/> <Row>
+  <Item><C>&uscore;</C></Item>    <Item><C>&tamp;uscore;</C></Item>
+ </Row> <HorLine/> <Row>
+  <Item><C>&circum;</C></Item>    <Item><C>&tamp;circum;</C></Item>
+ </Row> <HorLine/> <Row>
+  <Item><C>&nbsp;</C></Item>      <Item><C>&tamp;nbsp;</C></Item>
+ </Row> <HorLine/>
+</Table><P/>
+
+Note  that  the  first  three  have  an  extra  <Q>t</Q>  at  the  beginning
+in  comparison with  the  standard entities  of  XML described  in&nbsp;<Ref
+Subsect="XMLspchar"/>.  The  difference  is necessary  because  for  example
+<Q><C>&tamp;tamp;</C></Q> produces  <Q><C>&bslash;&tamp;</C></Q> for &LaTeX;
+to  actually  get  an  ampersand  character  in  the  printed  version.  Use
+<Q><C>&tamp;amp;</C></Q> if you want to  pass an ampersand character without
+a backslash in front directly to &LaTeX;.<P/>
+
+Inside attribute  values you should  <E>not</E> use these  entities. Instead
+use  the corresponding  characters directly.  The reason  is that  attribute
+values are often used as labels in  &LaTeX; and it is easier to process this
+properly with the direct input of the characters.<P/>
+
+Also, these entities  are <E>not</E> used inside  mathematical formulae, see
+&nbsp;<Ref Subsect="GDformulae"/> below.
+
+</Subsection>
+
+<Subsection Label="GDformulae">
+<Heading>Mathematical formulae</Heading>
+
+Mathematical  formulae  in &GAPDoc;  are  typed  as  in &LaTeX;.  They  must
+be  the  content of  one  of  three  types  of &GAPDoc;  elements  concerned
+with mathematical  formulae: <Q><C>Math</C></Q>,  <Q><C>Display</C></Q>, and
+<Q><C>M</C></Q>   (see  Sections&nbsp;<Ref   Subsect="Math"/>  and&nbsp;<Ref
+Subsect="M"/> for more details). The  first two correspond to &LaTeX;'s math
+mode  and  display  math mode.  The  last  one  is  a special  form  of  the
+<Q><C>Math</C></Q> element  type, that  imposes certain restrictions  on the
+content. On  the other  hand the  content of  an <Q><C>M</C></Q>  element is
+processed in a well defined way for text terminal or HTML output.<P/>
+
+The remarks  about special  characters in&nbsp;<Ref  Subsect="GDspchar"/> do
+not  apply to  the content  of these  elements. But  the special  characters
+<Q><C>&tlt;</C></Q>  and <Q><C>&tamp;</C></Q>  for XML  must be  entered via
+the  entities described  in&nbsp;<Ref  Subsect="XMLspchar"/> or  by using  a
+<C>CDATA</C> statement, see&nbsp;<Ref Subsect="XMLcdata"/>.<P/>
+
+</Subsection>
+
+<Subsection Label="GDent">
+<Heading>More Entities</Heading>
+
+In &GAPDoc; there are some more predefined  entities:
+
+<Table Align="|l|l|">
+<Caption>Predefined Entities in the &GAPDoc; system</Caption>
+<HorLine/>
+<Row> <Item><C>&tamp;GAP;</C></Item>       <Item>&GAP;</Item> </Row>
+<HorLine/>
+<Row> <Item><C>&tamp;GAPDoc;</C></Item>    <Item>&GAPDoc;</Item> </Row>
+<HorLine/>
+<Row> <Item><C>&tamp;TeX;</C></Item>       <Item>&TeX;</Item> </Row>
+<HorLine/>
+<Row> <Item><C>&tamp;LaTeX;</C></Item>     <Item>&LaTeX;</Item> </Row>
+<HorLine/>
+<Row> <Item><C>&tamp;BibTeX;</C></Item>    <Item>&BibTeX;</Item> </Row>
+<HorLine/>
+<Row> <Item><C>&tamp;MeatAxe;</C></Item>   <Item>&MeatAxe;</Item> </Row>
+<HorLine/>
+<Row> <Item><C>&tamp;XGAP;</C></Item>      <Item>&XGAP;</Item> </Row>
+<HorLine/>
+<Row> <Item><C>&tamp;copyright;</C></Item> <Item>&copyright;</Item> </Row>
+<HorLine/>
+</Table>
+
+One can define  further local entities right inside  the head (see&nbsp;<Ref
+Subsect="XMLhead"/>) of a &GAPDoc; XML document as in the following example.
+
+<Listing Type="Example">
+<![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE Book SYSTEM "gapdoc.dtd"
+  [ <!ENTITY MyEntity "some longish <E>text</E> possibly with markup">
+  ]>]]>
+</Listing>
+
+These additional definitions go into  the <C>&tlt;!DOCTYPE</C> tag in square
+brackets. Such new entities are used like this: <C>&tamp;MyEntity;</C> <P/>
+
+</Subsection>
+
+</Section>
+</Chapter>
+
