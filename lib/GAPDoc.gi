@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.7 2002-12-04 23:54:47 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.8 2003-02-07 03:39:31 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -381,4 +381,68 @@ InstallGlobalFunction(TextM, function(str)
   return res;
 end);
 
+# non-documented utility
+##  normalizes the Args attribute in function like elements
+BindGlobal("NormalizedArgList", function(argl)
+  local res, c, i, j;
+  # normalize whitespace including commas
+  argl := SubstitutionSublist(argl, ",", " ");
+  argl := NormalizedWhitespace(argl);
+  # delete spaces around ['s and ]'s
+  res := "";
+  for i in [1..Length(argl)] do
+    c := argl[i];
+    if c <> ' ' or ((not argl[i-1] in "[]") and (not argl[i+1] in "[]")) then
+      Add(res, c);
+    fi;
+  od;
+  # now include appropriate commas
+  argl := res;
+  res := "";
+  i := 1;
+  while i <= Length(argl) do
+    c := argl[i];
+    if c = '[' then
+      j := Length(res);
+      while j > 0 and res[j] in "[ " do
+        j := j-1;
+      od;
+      if j = 0 or res[j] = ',' then
+        Add(res, c);
+      else
+        Append(res, "[, ");
+      fi;
+    elif c = ']' then
+      # what is next?
+      j := i+1;
+      while j <= Length(argl) and argl[j] = ']' do
+        j := j+1;
+      od;
+      if not (j > Length(argl) or argl[j] = '[') then
+        Add(res, ',');
+      fi;
+      for i in [1..j-i] do
+        Add(res, ']');
+      od;
+      if j <= Length(argl) and argl[j] = '[' then
+        Append(res, "[,]");
+        while argl[j] = '[' do
+          Add(res, '[');
+          j := j+1;
+        od;
+        Add(res, argl[j]);
+        j := j+1;
+      elif j <= Length(argl) then
+        Add(res, ' ');
+      fi;
+      i := j-1;
+    elif c = ' ' then
+      Append(res, ", ");
+    else
+      Add(res, c);
+    fi;
+    i := i+1;
+  od;
+  return res;
+end);
 

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.11 2002-12-23 10:03:20 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.12 2003-02-07 03:39:31 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1093,24 +1093,7 @@ GAPDoc2TextProcs.Index := function(r, str)
   Add(entry, r.count{[1..3]});
   Add(r.root.index, entry);
 end;
-
-##  for argument list of functions (e.g., "a, b[[c, ], d]")
-GAPDoc2TextProcs.NormalizedArgList := function(argl)
-  local   sp,  res,  i;
-  if Length(argl)=0  then
-    return "";
-  fi;
-  sp := SplitString(argl, "", ", \n\r\t");
-  res := sp[1];
-  for i in [2..Length(sp)] do
-    if not sp[i][1] in "[]" then
-      Append(res, ", ");
-    fi;
-    Append(res, sp[i]);
-  od;
-  return res;
-end;
-
+      
 ##  this produces an implicit index entry and a label entry
 GAPDoc2TextProcs.LikeFunc := function(r, par, typ)
   local   str,  s,  name,  lab,  i;
@@ -1119,7 +1102,7 @@ GAPDoc2TextProcs.LikeFunc := function(r, par, typ)
     Append(s, "( "); 
     Append(s, GAPDoc2TextProcs.TextAttr.reset);
     Append(s, GAPDoc2TextProcs.TextAttr.Arg);
-    Append(s, GAPDoc2TextProcs.NormalizedArgList(r.attributes.Arg));
+    Append(s, NormalizedArgList(r.attributes.Arg));
     Append(s, GAPDoc2TextProcs.TextAttr.reset);
     Append(s, GAPDoc2TextProcs.TextAttr.Func);
     Append(s, " ) ");

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.19 2002-12-23 10:03:20 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.20 2003-02-07 03:39:31 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1220,23 +1220,6 @@ GAPDoc2HTMLProcs.Index := function(r, str)
   Add(r.root.index, entry);
 end;
 
-##  for argument list of functions (e.g., "a, b[[c, ], d]")
-GAPDoc2HTMLProcs.NormalizedArgList := function(argl)
-  local   sp,  res,  i;
-  if Length(argl)=0  then
-    return "";
-  fi;
-  sp := SplitString(argl, "", ", \n\r\t");
-  res := sp[1];
-  for i in [2..Length(sp)] do
-    if not sp[i][1] in "[]" then
-      Append(res, ", ");
-    fi;
-    Append(res, sp[i]);
-  od;
-  return res;
-end;
-
 ##  this produces an implicit index entry and a label entry
 GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
   local   attr,  s,  name,  lab, url;
@@ -1245,7 +1228,7 @@ GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
   if IsBound(r.attributes.Arg) then
     attr := GAPDoc2HTMLProcs.TextAttr.Arg;
     Append(s, Concatenation("( ", attr[1],
-            GAPDoc2HTMLProcs.NormalizedArgList(r.attributes.Arg), 
+            NormalizedArgList(r.attributes.Arg), 
             attr[2], " )"));
   fi;
   # index entry

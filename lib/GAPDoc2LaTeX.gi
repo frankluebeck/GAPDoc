@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.8 2002-12-23 12:12:50 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.9 2003-02-07 03:39:31 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -785,23 +785,6 @@ GAPDoc2LaTeXProcs.Index := function(r, str)
   Append(str, "}");
 end;
 
-##  for argument list of functions (e.g., "a, b[[c, ], d]")
-GAPDoc2LaTeXProcs.NormalizedArgList := function(argl)
-  local   sp,  res,  i;
-  if Length(argl)=0  then
-    return "";
-  fi;
-  sp := SplitString(argl, "", ", \n\r\t");
-  res := sp[1];
-  for i in [2..Length(sp)] do
-    if not sp[i][1] in "[]" then
-      Append(res, ", ");
-    fi;
-    Append(res, sp[i]);
-  od;
-  return res;
-end;
-
 ##  this produces an implicit index entry and a label entry
 GAPDoc2LaTeXProcs.LikeFunc := function(r, str, typ)
   local   nam,  namclean, lab;
@@ -813,7 +796,7 @@ GAPDoc2LaTeXProcs.LikeFunc := function(r, str, typ)
   Append(str, nam);
   if IsBound(r.attributes.Arg) then
     Append(str, "( ");
-    Append(str, GAPDoc2LaTeXProcs.NormalizedArgList(r.attributes.Arg));
+    Append(str, NormalizedArgList(r.attributes.Arg));
     Append(str, " )");
   fi;
   # possible label
