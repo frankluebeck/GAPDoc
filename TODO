@@ -1,7 +1,7 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.5 2005-02-03 23:01:37 gap Exp $
+         $Id: TODO,v 1.6 2005-06-02 20:34:59 gap Exp $
 
 - maybe add links to "the" example in the reference section of doc?
   (not so sure, if this is necessary).
@@ -20,4 +20,7 @@
 
 - improve explanations of encodings, maybe add example how to handle a
   latin-2 special character. How about handling UTF-8?
+
+- allow the distribution of different output documents (html, text, pdf,...)
+  into different directories (needs to change the handler for GAPDoc books).
 
