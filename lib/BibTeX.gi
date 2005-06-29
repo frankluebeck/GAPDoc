@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.13 2003-08-29 12:20:28 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.14 2005-06-29 19:21:00 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -572,7 +572,7 @@ InstallGlobalFunction(PrintBibAsHTML, function(arg)
 ##      Print("<p>\n[<a href=\"http://www.ams.org/mathscinet-getitem?mr=",
 ##        r.mrnumber, "\"><font color=\"#8e00ff\">", r.Label, "</font></a>]   ");
     Print("<p>\n[<a href=\"http://www.ams.org/mathscinet-getitem?mr=",
-      r.mrnumber, "\">", r.Label, "</a>]   ");
+      r.mrnumber{[1..9]}, "\">", r.Label, "</a>]   ");
   else
     Print("<p>\n[<span style=\"color: #8e0000;\">", r.Label, "</span>]   ");
   fi;
