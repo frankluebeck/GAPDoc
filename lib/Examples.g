@@ -1,7 +1,7 @@
 
 ##  GAPDoc                                             Frank Lübeck
 ##  
-##  $Id: Examples.g,v 1.3 2005-03-01 14:13:45 gap Exp $
+##  $Id: Examples.g,v 1.4 2006-01-25 10:09:22 gap Exp $
 ##  
 ##  Some utilities to extract contents of some elements. (First
 ##  experimental.)
@@ -55,7 +55,7 @@ end;
 ##  ReadPackage("GAPDoc","lib/Examples.g");
 ##  
 ##  TstExamples2 := function ( path, main, files )
-##      local  str, r, examples, temp_dir, file;
+##      local  str, r, examples, temp_dir, file, otf;
 ##  
 ##      str := ComposedXMLString( path, Concatenation( main, ".xml" ), files );
 ##      r := ParseTreeXMLString( str );
@@ -69,7 +69,10 @@ end;
 ##  
 ##      temp_dir := DirectoryTemporary( "gapdoc" );
 ##      file := Filename( temp_dir, "testfile" );
-##      PrintTo( file, examples );
+##      otf := OutputTextFile( file, true );
+##      SetPrintFormattingStatus( otf, false );
+##      AppendTo( otf, examples );
+##      CloseStream( otf );
 ##  
 ##      ReadTest( file );
 ##  
