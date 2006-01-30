@@ -1,0 +1,25 @@
+                       CHANGES
+
+0.9999 -> 0.99999
+
+- Now MathSciNet often gives two numbers as MRNUMBER in BibTeX references.
+  For links in HTML text we use now only the first 9 characters (MRxxxxxxx).
+  (Thanks to Alan Cain.)
+
+- HTML conversion: 
+  - changed XHTML DOCTYPE to official URI of definition.
+  - added 'lang="en"' and 'xml:lang="en"' attributes to the <html ... > tag.
+  - fixed a problem with forward references. (Thanks to Marco Costantini.)
+
+- PDF conversion:
+  - using author and title in document for PDF meta-information.
+  - attribute values with underscores were not correctly escaped, this is
+    fixed and an example is added to the documentation, see
+    ?GAPDoc Example: MyOperation (for bla)
+  - now handling XML meta-characters '<>&' in attribute values.
+  
+- The XML Parser now prints the position of the start tag when it finds 
+  a non-fitting end tag.
+
+- Some minor documentation improvements.
+

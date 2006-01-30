@@ -7,14 +7,14 @@
 
 SetPackageInfo( rec(
 
-CVSVERSION := "$Id: PackageInfo.g,v 1.5 2004-05-24 15:08:47 gap Exp $",
+CVSVERSION := "$Id: PackageInfo.g,v 1.6 2006-01-30 10:02:46 gap Exp $",
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
-Version := "0.9999",
-Date := "29/03/2004",
+Version := "0.99999",
+Date := "30/01/2006",
 ArchiveURL := 
-          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-0.9999",
+          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-0.99999",
 ArchiveFormats := ".tar.bz2",
 Persons := [
   rec(
@@ -85,7 +85,7 @@ Autoload := true,
 BannerString := Concatenation( 
 "    ######################################################################\n",
 "    ##                                                                  ##\n",
-"    ##        GAPDoc ", ~.Version, " (a GAP documentation meta-package)          ##\n",
+"    ##        GAPDoc ", ~.Version, " (a GAP documentation meta-package)         ##\n",
 "    ##                                                                  ##\n",
 "    ##   Questions and remarks to: Frank.Luebeck@Math.RWTH-Aachen.De    ##\n",
 "    ##                             Max.Neunhoeffer@Math.RWTH-Aachen.De  ##\n",
