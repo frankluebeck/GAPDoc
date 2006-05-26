@@ -1,7 +1,7 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.6 2005-06-02 20:34:59 gap Exp $
+         $Id: TODO,v 1.7 2006-05-26 14:35:59 gap Exp $
 
 - maybe add links to "the" example in the reference section of doc?
   (not so sure, if this is necessary).
@@ -23,4 +23,9 @@
 
 - allow the distribution of different output documents (html, text, pdf,...)
   into different directories (needs to change the handler for GAPDoc books).
+
+- think about combining index entries, when they point to the same section
+  (e.g., a function with several types of arguments, where the entries are
+  only distinguished by the 'Label' attribute and are explained in the same
+  man section).
 
