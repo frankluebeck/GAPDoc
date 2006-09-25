@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.16 2005-03-09 22:29:01 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.17 2006-09-25 12:36:38 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -116,15 +116,46 @@ BindGlobal("GAPDoc2LaTeXContent", function(r, str)
   od;
 end);
 
-# two utilities for labels and text with _ or \ 
-GAPDoc2LaTeXProcs.EscapeUsBs := function(str)
-  str := SubstitutionSublist(str, "\\", "\\texttt{\\symbol{92}}");
-  str := SubstitutionSublist(str, "_", "{\\_}");
-  str := SubstitutionSublist(str, "^", "{\\^{}}");
-  str := SubstitutionSublist(str, "<", "{\\texttt{<}}");
-  str := SubstitutionSublist(str, ">", "{\\texttt{>}}");
-  str := SubstitutionSublist(str, "&", "{\\texttt{\\&}}");
-  return str;
+# two utilities for attribute values like labels or text with special
+# XML or LaTeX characters which gets printed (always as \texttt text)
+GAPDoc2LaTeXProcs.EscapeAttrVal := function(str)
+  local res, c;
+  res := "";
+  for c in str do
+    if c = '\\' then
+##        Append(res, "{\\gdttbs}");
+      Append(res, "\\texttt{\\symbol{92}}");
+    elif c = '_' then
+      Append(res, "\\_");
+    elif c = '{' then
+##        Append(res, "{\\gdttob}");
+      Append(res, "\\texttt{\\symbol{123}}");
+    elif c = '}' then
+##        Append(res, "{\\gdttcb}");
+      Append(res, "\\texttt{\\symbol{125}}");
+    elif c = '^' then
+##        Append(res, "{\\gdttht}");
+      Append(res, "\\texttt{\\symbol{94}}");
+    elif c = '~' then
+##        Append(res, "{\\gdttti}");
+      Append(res, "\\texttt{\\symbol{126}}");
+    elif c = '<' then
+      Append(res, "{\\textless}");
+    elif c = '>' then
+      Append(res, "{\\textgreater}");
+    elif c = '&' then
+      Append(res, "\\&");
+    elif c = '%' then
+      Append(res, "\\%");
+    elif c = '$' then
+      Append(res, "\\$");
+    elif c = '#' then
+      Append(res, "\\#");
+    else
+      Add(res, c);
+    fi;
+  od;
+  return res;
 end;
 
 GAPDoc2LaTeXProcs.DeleteUsBs := function(str)
@@ -200,9 +231,26 @@ GAPDoc2LaTeXProcs.Head3 := Concatenation([
 "\n",
 "\\newcommand{\\GAP}{\\textsf{GAP}}\n",
 "\n",
-"\\newsavebox{\\backslashbox}\n",
-"\\sbox{\\backslashbox}{\\texttt{\\symbol{92}}}\n",
-"\\newcommand{\\bs}{\\usebox{\\backslashbox}}\n",
+"% don't use this because they don't recognize size or color changes\n",
+"\\newsavebox{\\xgdttbs}\n",
+"\\sbox{\\xgdttbs}{\\texttt{\\symbol{92}}}\n",
+"\\newcommand{\\gdttbs}{\\usebox{\\xgdttbs}}\n",
+"\n",                                   
+"\\newsavebox{\\xgdttob}\n",
+"\\sbox{\\xgdttob}{\\texttt{\\symbol{123}}}\n",
+"\\newcommand{\\gdttob}{\\usebox{\\xgdttob}}\n",
+"\n",                                   
+"\\newsavebox{\\xgdttcb}\n",
+"\\sbox{\\xgdttcb}{\\texttt{\\symbol{125}}}\n",
+"\\newcommand{\\gdttcb}{\\usebox{\\xgdttcb}}\n",
+"\n",                                   
+"\\newsavebox{\\xgdttti}\n",
+"\\sbox{\\xgdttti}{\\texttt{\\symbol{126}}}\n",
+"\\newcommand{\\gdttti}{\\usebox{\\xgdttti}}\n",
+"\n",                                   
+"\\newsavebox{\\xgdttht}\n",
+"\\sbox{\\xgdttht}{\\texttt{\\symbol{94}}}\n",
+"\\newcommand{\\gdttht}{\\usebox{\\xgdttht}}\n",
 "\n",                                   
 "\\begin{document}\n",
 "\n"]);
@@ -474,7 +522,7 @@ end;
 ##  ~ and # characters are correctly escaped
 ##  arg:  r, str[, pre]
 GAPDoc2LaTeXProcs.URL := function(arg)
-  local   r,  str,  pre,  s,  p;
+  local   r,  str,  pre,  s,  p, stilde;
   r := arg[1];
   str := arg[2];
   if Length(arg)>2 then
@@ -484,20 +532,11 @@ GAPDoc2LaTeXProcs.URL := function(arg)
   fi;
   s := "";
   GAPDoc2LaTeXContent(r, s);
-  s := SubstitutionSublist(s, "{\\textasciitilde}", "~");
+  stilde := SubstitutionSublist(s, "\\texttt{\\symbol{126}}", "~");
+  stilde := SubstitutionSublist(stilde, "\\\#", "\#");
   Append(str, "\\href{");
   Append(str, pre);
-  Append(str, s);
-  p := Position(s, '~');
-  while p<>fail do
-    s := Concatenation(s{[1..p-1]}, "\\~{}", s{[p+1..Length(s)]});
-    p := Position(s, '~', p+3);
-  od;
-  p := Position(s, '\#');
-  while p<>fail do
-    s := Concatenation(s{[1..p-1]}, "\\\#", s{[p+1..Length(s)]});
-    p := Position(s, '\#', p+1);
-  od;
+  Append(str, stilde);
   Append(str, "}{\\texttt{");
   Append(str, s);
   Append(str, "}}");
@@ -818,12 +857,12 @@ GAPDoc2LaTeXProcs.LikeFunc := function(r, str, typ)
   Append(str, "\\noindent\\textcolor{FuncColor}{$\\Diamond$\\ \\texttt{");
   nam := r.attributes.Name;
   namclean := GAPDoc2LaTeXProcs.DeleteUsBs(nam);
-  # we allow _ and \ here
-  nam := GAPDoc2LaTeXProcs.EscapeUsBs(nam);
+  # we allow _,  \ and so on here
+  nam := GAPDoc2LaTeXProcs.EscapeAttrVal(nam);
   Append(str, nam);
   if IsBound(r.attributes.Arg) then
     Append(str, "( ");
-    Append(str, GAPDoc2LaTeXProcs.EscapeUsBs(
+    Append(str, GAPDoc2LaTeXProcs.EscapeAttrVal(
                 NormalizedArgList(r.attributes.Arg)));
     Append(str, " )");
   fi;
@@ -931,7 +970,7 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
                  lab in GAPDoc2LaTeXProcs._currentSubsection then
       ref := "";
     fi;
-    Append(str, Concatenation("\\texttt{", GAPDoc2LaTeXProcs.EscapeUsBs(txt), 
+    Append(str, Concatenation("\\texttt{", GAPDoc2LaTeXProcs.EscapeAttrVal(txt), 
             "}", ref));
     return;
   fi;
@@ -1029,7 +1068,7 @@ GAPDoc2LaTeXProcs.ManSection := function(r, str)
     lab := "";
   fi;
   Append(str, Concatenation("\n\n\\subsection{\\textcolor{Chapter }{", 
-          GAPDoc2LaTeXProcs.EscapeUsBs(f.attributes.Name), lab, "}}\n"));
+          GAPDoc2LaTeXProcs.EscapeAttrVal(f.attributes.Name), lab, "}}\n"));
   # page number info for online help
   Append(str, Concatenation("\\logpage{", 
           GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}\\nobreak\n"));

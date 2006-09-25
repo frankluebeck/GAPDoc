@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- $Id: example.xml,v 1.9 2004-07-16 21:20:52 gap Exp $ -->
+<!-- $Id: example.xml,v 1.10 2006-09-25 12:36:38 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
  [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&tgt;</Alt>'>]>
@@ -85,7 +85,8 @@
   </ManSection>
 
   <ManSection>
-   <Meth Name="\^" Arg="c" Label="for nothing" Comm="tricky name"/>
+   <Meth Name="\^\{\}\[\]\&lt;\&amp;" Arg="c" 
+         Label="for nothing" Comm="tricky name"/>
    <Description>
     This method is for an operation with a tricky name.
    </Description>
@@ -321,7 +322,8 @@ Here is a reference to chapter <Ref Chap="First"/>, to appendix
 
 We distinguish among others references 
  to functions (see <Ref Func="f"/>), 
- to methods with tricky name (see <Ref Meth="\^" Label="for nothing"/>),
+ to methods with tricky name (see 
+                 <Ref Meth="\^\{\}\[\]\&lt;\&amp;" Label="for nothing"/>),
  to operations (see <Ref Oper="MyOperation"/>), 
  to methods (see <Ref Meth="MyOperation" Label="First"/> or 
                  <Ref Meth="MyOperation" Label="for bla"/>), 
@@ -350,7 +352,7 @@ citation: <Cite Key="CR1" Where="(5.22)"/> is an interesting lemma.
 
 There are also URLs:<P/>
 
-<URL>http://www.math.rwth-aachen.de/LDfM/</URL><P/>
+<URL>http://www.math.rwth-aachen.de/</URL><P/>
 
 Email addresses have a special element:
 <Email>Frank.Luebeck@Math.RWTH-Aachen.De</Email>
@@ -358,6 +360,8 @@ Email addresses have a special element:
 
 and Homepages another one:
 <Homepage>http://www.math.rwth-aachen.de/&tilde;Max.Neunhoeffer/</Homepage>
+<P/>
+<URL>http://www.math.rwth-aachen.de/&tilde;Frank.Luebeck/gap/EDIM/index.html&hash;ARCHS</URL>
 <P/>
 
 One can generate index entries as follows (look up the words 
@@ -570,7 +574,8 @@ This is an appendix.
   </ManSection>
 
   <ManSection>
-   <Meth Name="\^" Arg="c" Label="for nothing" Comm="tricky name"/>
+   <Meth Name="\^\{\}\[\]\&lt;\&amp;" Arg="c" 
+         Label="for nothing" Comm="tricky name"/>
    <Description>
     This method is for an operation with a tricky name.
    </Description>
@@ -827,7 +832,8 @@ Here is a reference to chapter <Ref Chap="First"/>, to appendix
 
 We distinguish among others references 
  to functions (see <Ref Func="f"/>), 
- to methods with tricky name (see <Ref Meth="\^" Label="for nothing"/>),
+ to methods with tricky name (see 
+                 <Ref Meth="\^\{\}\[\]\&lt;\&amp;" Label="for nothing"/>),
  to operations (see <Ref Oper="MyOperation"/>), 
  to methods (see <Ref Meth="MyOperation" Label="First"/> or 
                  <Ref Meth="MyOperation" Label="for bla"/>), 

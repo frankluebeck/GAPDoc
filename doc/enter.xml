@@ -1,4 +1,4 @@
-<!-- $Id: enter.xml,v 1.5 2001-01-26 10:12:22 gap Exp $ -->
+<!-- $Id: enter.xml,v 1.6 2006-09-25 12:36:38 gap Exp $ -->
 <Chapter Label="HowEnter">
 <Heading>How To Type a &GAPDoc; Document</Heading>
 
@@ -115,8 +115,11 @@ An  <Q>attribute</Q>  consists   of  some  whitespace  and   then  its  name
 followed by  an equal sign  <Q><C>=</C></Q> which is optionally  enclosed by
 whitespace,  and the  attribute value,  which is  enclosed either  in single
 or  double  quotes.  The  attribute  value  may  not  contain  the  type  of
-quote  used  as  a  delimiter  or  the  characters  <Q><C>&tlt;</C></Q>  and
-<Q><C>&tamp;</C></Q>.<P/>
+quote  used  as  a  delimiter  or  the  character  <Q><C>&tlt;</C></Q>, the 
+character <Q><C>&tamp;</C></Q> may only appear to start an entity, 
+see&nbsp;<Ref Subsect="XMLent"/>. We describe 
+in&nbsp;<Ref Subsect="AttrValRules"/> and&nbsp;<Ref Subsect="GDspchar"/> how 
+to enter special characters in attribute values.<P/>
 
 Note  especially  that  no  whitespace   is  allowed  between  the  starting
 <Q><C>&tlt;</C></Q> character  and the  element name.  The quotes  around an
@@ -183,6 +186,15 @@ in&nbsp;<Ref Subsect="XMLcdata"/>.
 
 </Subsection>
 
+<Subsection Label="AttrValRules">
+<Heading>Rules for Attribute Values</Heading>
+
+Attribute values can contain entities which are substituted recursively.
+But except for the entities &tamp;lt;  or a character entity it is not
+allowed that a &tlt; character is introduced by the substitution (there is 
+no XML parsing for evaluating the attribute value, just entity substitutions).
+</Subsection>
+
 <Subsection Label="XMLcdata">
 <Heading><C>CDATA</C></Heading>
 
@@ -203,7 +215,7 @@ A nesting of tags like <![CDATA[<a> <b> </a> </b>]]> is not allowed.
 </Subsection> 
 
 <Subsection Label="XMLenc">
-<Heading>Encoding of an XML document</Heading>
+<Heading>Encoding of an XML Document</Heading>
 
 We suggest to use the ISO-8859-1 or ISO-latin1 encoding for writing &GAPDoc;
 XML  documents. This  character set  contains the  ASCII characters  and all
@@ -269,7 +281,8 @@ in &LaTeX; or in XML. These are the following characters:<P/>
 &LaTeX;'s <Q><C>&tilde;</C></Q> character).
 <P/>
 
-The  right  way  to  access  these  symbols  is  by  using  <Q>entities</Q>,
+The  right  way  to  specify these  symbols in element content is  by  
+using  <Q>entities</Q>,
 see&nbsp;<Ref Subsect="XMLent"/>. The following table  shows what to type to
 get these characters in the output text of the document.<P/>
 
@@ -313,9 +326,11 @@ to  actually  get  an  ampersand  character  in  the  printed  version.  Use
 a backslash in front directly to &LaTeX;.<P/>
 
 Inside attribute  values you should  <E>not</E> use these  entities. Instead
-use  the corresponding  characters directly.  The reason  is that  attribute
-values are often used as labels in  &LaTeX; and it is easier to process this
-properly with the direct input of the characters.<P/>
+use <Q><C>&tamp;lt;</C></Q> for <Q>&tlt;</Q>, <Q><C>&tamp;amp;</C></Q> for
+<Q>&tamp;</Q>, and the other   characters directly.  
+A program which uses attribute values as printable text has to make sure
+that special characters are appropriately escaped.
+<P/>
 
 Also, these entities  are <E>not</E> used inside  mathematical formulae, see
 &nbsp;<Ref Subsect="GDformulae"/> below.

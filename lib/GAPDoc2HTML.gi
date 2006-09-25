@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.30 2005-03-09 22:29:01 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.31 2006-09-25 12:36:38 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -648,6 +648,15 @@ GAPDoc2HTMLProcs.XMLCOMMENT := function(r, str)
   return;
 end;
 
+# two utilities for attribute values like labels or text with special
+# XML (or LaTeX) characters which gets printed
+GAPDoc2HTMLProcs.EscapeAttrVal := function(str)
+  str := SubstitutionSublist(str, "&", "&amp;");
+  str := SubstitutionSublist(str, "<", "&lt;");
+  str := SubstitutionSublist(str, ">", "&gt;");
+  return str;
+end;
+
 # just process content 
 GAPDoc2HTMLProcs.Book := function(r, par, pi)
   # copy the name of the book to the root
@@ -1230,11 +1239,12 @@ end;
 GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
   local   attr,  s,  name,  lab, url;
   attr := GAPDoc2HTMLProcs.TextAttr.Func;
-  s := Concatenation(attr[1], "&gt; ", r.attributes.Name, attr[2]);
+  s := Concatenation(attr[1], "&gt; ", 
+         GAPDoc2HTMLProcs.EscapeAttrVal(r.attributes.Name), attr[2]);
   if IsBound(r.attributes.Arg) then
     attr := GAPDoc2HTMLProcs.TextAttr.Arg;
     Append(s, Concatenation("( ", attr[1],
-            NormalizedArgList(r.attributes.Arg), 
+            GAPDoc2HTMLProcs.EscapeAttrVal(NormalizedArgList(r.attributes.Arg)),
             attr[2], " )"));
   fi;
   # index entry
@@ -1374,7 +1384,8 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
   if Length(int)>0 and int[1] in [ "Func", "Oper", "Meth", "Filt", "Prop", 
                                    "Attr", "Var", "Fam", "InfoClass" ] then
     attr := GAPDoc2HTMLProcs.TextAttr.Func;
-    txt := Concatenation(attr[1], r.attributes.(int[1]), attr[2]);
+    txt := Concatenation(attr[1], 
+             GAPDoc2HTMLProcs.EscapeAttrVal(r.attributes.(int[1])), attr[2]);
     # avoid reference to current subsection
     if not IsBound(r.root.labels.(lab)) or GAPDoc2HTMLProcs.SectionNumber(
                         r.count, "Subsection") <> r.root.labels.(lab)[1] then
@@ -1423,7 +1434,8 @@ GAPDoc2HTMLProcs.ManSection := function(r, par)
   od;
   
   num := GAPDoc2HTMLProcs.SectionNumber(r.count, "Subsection");
-  s := Concatenation(num, " ", r.content[i].attributes.Name);
+  s := Concatenation(num, " ", 
+         GAPDoc2HTMLProcs.EscapeAttrVal(r.content[i].attributes.Name));
   Add(par, r.count);
   Add(par, Concatenation("\n<h5>", s, "</h5>\n\n"));
   

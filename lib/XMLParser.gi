@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.11 2004-07-16 21:20:53 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.12 2006-09-25 12:36:38 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -111,6 +111,9 @@ BindGlobal("ParseError", function(str, pos, comment)
 end);
 
 ##  the predefined entities of the GAPDoc package
+##  in LaTeX we use some saved boxes defined in our preamble for
+##  \, ~, ^, {, } because we think that the \texttt versions of these
+##  characters look better (than mathmode chars or accents without letter)
 BindGlobal("ENTITYDICT", rec(
  lt := "&#38;#60;",
  gt := "&#62;",
@@ -123,12 +126,17 @@ BindGlobal("ENTITYDICT", rec(
  hash := "<Alt Only='LaTeX'>\\#</Alt><Alt Not='LaTeX'>#</Alt>",
  dollar := "<Alt Only='LaTeX'>\\$</Alt><Alt Not='LaTeX'>$</Alt>",
  percent := "<Alt Only='LaTeX'>\\&#37;</Alt><Alt Not='LaTeX'>&#37;</Alt>",
- tilde := "<Alt Only='LaTeX'>{\\textasciitilde}</Alt><Alt Not='LaTeX'>~</Alt>",
- bslash := "<Alt Only='LaTeX'>{\\textbackslash}</Alt><Alt Not='LaTeX'>\\</Alt>",
- obrace := "<Alt Only='LaTeX'>\\{</Alt><Alt Not='LaTeX'>{</Alt>",
- cbrace := "<Alt Only='LaTeX'>\\}</Alt><Alt Not='LaTeX'>}</Alt>",
+##   tilde := "<Alt Only='LaTeX'>{\\textasciitilde}</Alt><Alt Not='LaTeX'>~</Alt>",
+ tilde := "<Alt Only='LaTeX'>\\texttt{\\symbol{126}}</Alt><Alt Not='LaTeX'>~</Alt>",
+##   bslash := "<Alt Only='LaTeX'>{\\textbackslash}</Alt><Alt Not='LaTeX'>\\</Alt>",
+ bslash := "<Alt Only='LaTeX'>\\texttt{\\symbol{92}}</Alt><Alt Not='LaTeX'>\\</Alt>",
+##   obrace := "<Alt Only='LaTeX'>\\{</Alt><Alt Not='LaTeX'>{</Alt>",
+ obrace := "<Alt Only='LaTeX'>\\texttt{\\symbol{123}}</Alt><Alt Not='LaTeX'>{</Alt>",
+##   cbrace := "<Alt Only='LaTeX'>\\}</Alt><Alt Not='LaTeX'>}</Alt>",
+ cbrace := "<Alt Only='LaTeX'>\\texttt{\\symbol{125}}</Alt><Alt Not='LaTeX'>}</Alt>",
  uscore := "<Alt Only='LaTeX'>{\\textunderscore}</Alt><Alt Not='LaTeX'>_</Alt>",
- circum := "<Alt Only='LaTeX'>{\\textasciicircum}</Alt><Alt Not='LaTeX'>^</Alt>",
+##   circum := "<Alt Only='LaTeX'>{\\textasciicircum}</Alt><Alt Not='LaTeX'>^</Alt>",
+ circum := "<Alt Only='LaTeX'>\\texttt{\\symbol{94}}</Alt><Alt Not='LaTeX'>^</Alt>",
  nbsp := "<Alt Only='LaTeX'>~</Alt><Alt Not='LaTeX'>&#160;</Alt>",
  GAP := "<Package>GAP</Package>",
  GAPDoc := "<Package>GAPDoc</Package>",
@@ -212,7 +220,7 @@ end);
 # element of this name.
 # assuming str[pos-1] = '<' and str[pos]<>'/'
 InstallGlobalFunction(GetSTag, function(str, pos)
-  local   res,  pos2,  attr, atval, delim, ent;
+  local   res,  pos2,  attr, atval, delim, a, ent;
   res := rec(attributes := rec());
   # a small hack that allows to call GetElement with a whole document
   # after appending "</WHOLEDOCUMENT>"
@@ -279,8 +287,25 @@ InstallGlobalFunction(GetSTag, function(str, pos)
         if str[pos2[2]+1] = '&' then
           ent := GetEnt(str, pos2[2]+2);
           Append(atval, str{[pos2[1]..pos2[2]]});
-          Append(atval, ent.content);
           pos2 := ent.next;
+          if ent.name = "CharEntityValue" then
+            Append(atval, ent.content);
+          else
+            # now ent.content may still contain some character entities, but 
+            # no '<' and so no markup 
+            if '<' in ent.content then
+              ParseError(str, pos2[2]+1, 
+                "entity replacement in attribute value cannot contain '<'");
+            fi;
+            ent := GetElement(Concatenation(ent.content,"</WHOLEDOCUMENT>"),1);
+            if IsString(ent.content) then
+              Append(atval, ent.content);
+            else
+              for a in ent.content do
+                Append(atval, a.content);
+              od;
+            fi;
+          fi;
         elif str[pos2[2]+1] in "\"'" then
           Append(atval, str{[pos2[1]..pos2[2]+1]});
           pos2 := pos2[2]+2;

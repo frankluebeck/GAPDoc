@@ -7,11 +7,11 @@
 
 SetPackageInfo( rec(
 
-CVSVERSION := "$Id: PackageInfo.g,v 1.6 2006-01-30 10:02:46 gap Exp $",
+CVSVERSION := "$Id: PackageInfo.g,v 1.7 2006-09-25 12:36:38 gap Exp $",
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
-Version := "0.99999",
+Version := "dev.dev",
 Date := "30/01/2006",
 ArchiveURL := 
           "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-0.99999",
@@ -94,5 +94,4 @@ BannerString := Concatenation(
 ),
 Keywords := ["GAP documentation", "help system", "XML", "pdf", "hyperlink"]
 ));
-
 

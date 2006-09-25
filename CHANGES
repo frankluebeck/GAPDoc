@@ -1,5 +1,16 @@
                        CHANGES
 
+0.99999 -> 0.999999
+
+- Improved the documentation which markup is allowed in attribute values
+  (recursively substituted entities). Improved the code to handle all
+  special XML or LaTeX characters in attribute values, they must be escaped
+  by the converter programs for HTML and LaTeX output.
+  
+- Changed further details for handling special characters; e.g. in LaTeX we
+  now try to use always the nicer characters for \{}~^ from the \texttt
+  font.
+
 0.9999 -> 0.99999
 
 - Now MathSciNet often gives two numbers as MRNUMBER in BibTeX references.
