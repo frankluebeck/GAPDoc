@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.13 2003-02-07 21:38:00 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.14 2007-01-31 13:45:09 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -1391,57 +1391,61 @@ guaranteed to be translated accordingly by text (and HTML) converters:
 <Table Align="|l|l|">
  <Caption>&LaTeX; macros with special text translation</Caption>
  <HorLine/>
-  <Row><Item>&bslash;ldots</Item>          <Item><C>...</C></Item></Row>
+  <Row><Item>&bslash;ast</Item>           <Item><C>*</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;mid</Item>            <Item><C>|</C></Item></Row>
+  <Row><Item>&bslash;cdot</Item>           <Item><C>*</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;colon</Item>           <Item><C>:</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;equiv</Item>          <Item><C>=</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;geq</Item>            <Item><C>&tgt;=</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;hookrightarrow</Item>     <Item><C>-&tgt;</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;iff</Item> <Item><C>&tlt;=&tgt;</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;langle</Item>         <Item><C>&tlt;</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;ldots</Item>          <Item><C>...</C></Item></Row>
  <HorLine/>
   <Row><Item>&bslash;left</Item>           <Item><C>&nbsp;</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;right</Item>          <Item><C>&nbsp;</C></Item></Row>
+  <Row><Item>&bslash;leq</Item>            <Item><C>&tlt;=</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;leftarrow</Item>      <Item><C>&tlt;-</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;Leftarrow</Item> <Item><C>&tlt;=</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;limits</Item>         <Item><C>&nbsp;</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;longrightarrow</Item> <Item><C>--&tgt;</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;Longrightarrow</Item> <Item><C>==&tgt;</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;mapsto</Item>         <Item><C>-&tgt;</C></Item></Row>
  <HorLine/>
   <Row><Item>&bslash;mathbb</Item>         <Item><C>&nbsp;</C></Item></Row>
  <HorLine/>
   <Row><Item>&bslash;mathop</Item>         <Item><C>&nbsp;</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;limits</Item>         <Item><C>&nbsp;</C></Item></Row>
- <HorLine/>
-  <Row><Item>&bslash;cdot</Item>           <Item><C>*</C></Item></Row>
- <HorLine/>
-  <Row><Item>&bslash;ast</Item>           <Item><C>*</C></Item></Row>
- <HorLine/>
-  <Row><Item>&bslash;geq</Item>            <Item><C>&tgt;=</C></Item></Row>
- <HorLine/>
-  <Row><Item>&bslash;leq</Item>            <Item><C>&tlt;=</C></Item></Row>
+  <Row><Item>&bslash;mid</Item>            <Item><C>|</C></Item></Row>
  <HorLine/>
   <Row><Item>&bslash;pmod</Item>           <Item><C>mod</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;equiv</Item>          <Item><C>=</C></Item></Row>
+  <Row><Item>&bslash;rangle</Item>         <Item><C>&tgt;</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;right</Item>          <Item><C>&nbsp;</C></Item></Row>
  <HorLine/>
   <Row><Item>&bslash;rightarrow</Item>     <Item><C>-&tgt;</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;hookrightarrow</Item>     <Item><C>-&tgt;</C></Item></Row>
- <HorLine/>
-  <Row><Item>&bslash;to</Item>             <Item><C>-&tgt;</C></Item></Row>
- <HorLine/>
-  <Row><Item>&bslash;longrightarrow</Item> <Item><C>--&tgt;</C></Item></Row>
- <HorLine/>
   <Row><Item>&bslash;Rightarrow</Item> <Item><C>=&tgt;</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;Longrightarrow</Item> <Item><C>==&tgt;</C></Item></Row>
- <HorLine/>
-  <Row><Item>&bslash;Leftarrow</Item> <Item><C>&tlt;=</C></Item></Row>
- <HorLine/>
-  <Row><Item>&bslash;iff</Item> <Item><C>&tlt;=&tgt;</C></Item></Row>
- <HorLine/>
-  <Row><Item>&bslash;mapsto</Item>         <Item><C>-&tgt;</C></Item></Row>
- <HorLine/>
-  <Row><Item>&bslash;leftarrow</Item>      <Item><C>&tlt;-</C></Item></Row>
- <HorLine/>
-  <Row><Item>&bslash;langle</Item>         <Item><C>&tlt;</C></Item></Row>
- <HorLine/>
-  <Row><Item>&bslash;rangle</Item>         <Item><C>&tgt;</C></Item></Row>
- <HorLine/>
   <Row><Item>&bslash;setminus</Item>     <Item><C>&bslash;</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;times</Item>     <Item><C>x</C></Item></Row>
+ <HorLine/>
+  <Row><Item>&bslash;to</Item>             <Item><C>-&tgt;</C></Item></Row>
  <HorLine/>
 </Table>
 
@@ -1542,6 +1546,26 @@ often lead to ugly output versions of your document.
 
 </Subsection> 
 
+<Subsection Label="Ignore"><Heading><C>&tlt;Ignore&tgt;</C></Heading>
+<Index Key="Ignore"><C>Ignore</C></Index>
+
+<Listing Type="From gapdoc.dtd"> 
+<![CDATA[<!ELEMENT Ignore (%Text;| Chapter | Section | Subsection | ManSection |
+                  Heading)*>
+<!ATTLIST Ignore Remark CDATA #IMPLIED>]]>
+</Listing>
+
+This element can appear anywhere. Its content is ignored by the standard
+converters. It can be used, for example, to include data which are not
+part of the actual &GAPDoc; document, like source code, or to make
+not finished parts of the document invisible.
+<P/>
+
+Of course, one can use special converter programs which extract the
+contents of <C>Ignore</C> elements. Information on the type of the
+content can be stored in the optional attribute <C>Remark</C>.
+
+</Subsection> 
 
 </Section>
 </Chapter>

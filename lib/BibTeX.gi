@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.14 2005-06-29 19:21:00 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.15 2007-01-31 13:45:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -58,12 +58,14 @@ BindGlobal("NormalizedNameAndKey", function(str)
   
   # normalize a single name
   norm := function(str)
-    local   n,  i,  lnam,  j,  fnam;
+    local   n,  i,  lnam,  j,  fnam, fnamfull;
     # special case "et. al."
     if str="others" then
-      return ["others", ""];
+      return ["others", "", ""];
     fi;
     
+    str := SubstitutionSublist(str, ".", ". ");
+    StripBeginEnd(str, WHITESPACE);
     n := SplitString(str, "", WHITESPACE);
     # check if in "lastname, firstname" notation
     # find last ","
@@ -76,9 +78,7 @@ BindGlobal("NormalizedNameAndKey", function(str)
       lnam := "";
       for j in [1..i] do
         Append(lnam, n[j]);
-        if j<>i-1 or Length(n[i])>1 then
-          Add(lnam, ' ');
-        fi;
+        lnam := Filtered(lnam, x-> x<>',');
       od;
       # first name initials
       fnam := "";
@@ -86,6 +86,7 @@ BindGlobal("NormalizedNameAndKey", function(str)
         Add(fnam, First(n[j], x-> x in LETTERS));
         Append(fnam, ". ");
       od;
+      fnamfull := JoinStringsWithSeparator(n{[i+1..Length(n)]}, " ");
     else
       # last name is last including words not starting with
       # capital letters
@@ -101,15 +102,18 @@ BindGlobal("NormalizedNameAndKey", function(str)
           Add(lnam, ' ');
         fi;
       od;
-      Append(lnam, ", ");
       # first name capitals
       fnam := "";
       for j in [1..i-1] do
         Add(fnam, First(n[j], x-> x in LETTERS));
         Append(fnam, ". ");
       od;
+      fnamfull := JoinStringsWithSeparator(n{[1..i-1]}, " ");
     fi;
-    return [lnam, fnam];
+    while fnam[Length(fnam)] in WHITESPACE do
+      fnam := fnam{[1..Length(fnam)-1]};
+    od;
+    return [lnam, fnam, fnamfull];
   end;
   
   keyshort := "";
@@ -118,9 +122,10 @@ BindGlobal("NormalizedNameAndKey", function(str)
   res := "";
   for a in names do
     if Length(res)>0 then
-      Append(res, "and ");
+      Append(res, " and ");
     fi;
     Append(res, a[1]);
+    Append(res, ", ");
     Append(res, a[2]);
     if a[1] = "others" then
       Add(keyshort, '+');
@@ -138,7 +143,7 @@ BindGlobal("NormalizedNameAndKey", function(str)
     keyshort := keyshort{[1,2]};
     Add(keyshort, '+');
   fi;
-  return [res, keyshort, keylong];
+  return [res, keyshort, keylong, names];
 end);
 
 ##  <#GAPDoc Label="ParseBibFiles">
@@ -358,8 +363,8 @@ end);
 # type and field names are in lowercase, also some formatting is done
 # arg: entry[, abbrevs, texts]    where abbrevs and texts are lists
 #      of same length abbrevs[i] is string macro for texts[i]
-InstallGlobalFunction(PrintBibAsBib, function(arg)
-  local   r,  abbrevs,  texts,  ind,  fieldlist,  comp,  pos,  lines,  i;
+InstallGlobalFunction(StringBibAsBib, function(arg)
+  local r, abbrevs, texts, res, ind, fieldlist, pos, lines, comp;
   
   # scan arguments
   r := arg[1];
@@ -370,10 +375,12 @@ InstallGlobalFunction(PrintBibAsBib, function(arg)
     abbrevs := [];
     texts := [];
   fi;
+
+  res := "";
   
   if not IsBound(r.Label) then
     Print("%%%%%    no label     %%%%%%%%\n");
-    return;
+    return fail;
   fi;
   ind := RepeatedString(' ', 22);
   fieldlist := [
@@ -399,26 +406,32 @@ InstallGlobalFunction(PrintBibAsBib, function(arg)
                 "notes",
                 "key",
                 "keywords" ];
-  Print("@", r.Type, "{ ", r.Label);
+  Append(res, Concatenation("@", r.Type, "{ ", r.Label));
   for comp in Concatenation(fieldlist,
           Difference(NamesOfComponents(r), Concatenation(fieldlist,
                   ["Type", "Label"]) )) do
     if IsBound(r.(comp)) then
-      Print(",\n  ", comp, " = ", List([1..16-Length(comp)], i-> ' '));
+      Append(res, Concatenation(",\n  ", comp, " = ", 
+                                  List([1..16-Length(comp)], i-> ' ')));
       pos := Position(texts, r.(comp));
       if pos <> fail then
-        Print(abbrevs[pos]);
+        Append(res, abbrevs[pos]);
       else
-        Print("{");
+        Append(res, "{");
         lines := FormatParagraph(r.(comp), 54, "both", [ind, ""]);
-        PrintFormattedString(lines{[Length(ind)+1..Length(lines)-1]});
-        Print("}");
+        Append(res, lines{[Length(ind)+1..Length(lines)-1]});
+        Append(res, "}");
       fi;
     fi;
   od;
-  Print("\n}\n\n");
+  Append(res, "\n}\n");
+  return res;
+end);
+InstallGlobalFunction(PrintBibAsBib, function(arg)
+  PrintFormattedString(CallFuncList(StringBibAsBib, arg));
 end);
 
+##  
 ##  <#GAPDoc Label="WriteBibFile">
 ##  <ManSection >
 ##  <Func Arg="bibfile, bib" Name="WriteBibFile" />
@@ -541,123 +554,136 @@ BindGlobal("LaTeXToHTMLString", function(str)
   return str;
 end);
                 
-##  arg: r[, i]  (for link to BibTeX)
-InstallGlobalFunction(PrintBibAsHTML, function(arg)
-  local   r,  i, str;
+##  arg: r[, escape]  (with escape = false it is assumed that entries are
+##                     already HTML)
+InstallGlobalFunction(StringBibAsHTML, function(arg)
+  local   r,  i, str, res, esc;
   r := arg[1];
   if Length(arg)=2 then
-    i := arg[2];
+    esc := arg[2];
   else
-    i := -1;
+    esc := true;
   fi;
   
   if not IsBound(r.Label) then
     Print("Error: entry has no label . . .\n");
-    return;
+    return fail;
   fi;
+
+  res := "";
 
   # remove SGML markup characters in entries and translate
   # LaTeX macros for accented characters to HTML, remove {}'s
-  r := ShallowCopy(r);
-  for i in NamesOfComponents(r) do
-    str := "";
-    GAPDoc2HTMLProcs.PCDATAFILTER(rec(content := r.(i)), str);
-    if str <> r.(i) then
-      r.(i) := str;
-    fi;
-    r.(i) := LaTeXToHTMLString(r.(i));
-  od;
+  if esc = true then
+    r := ShallowCopy(r);
+    for i in NamesOfComponents(r) do
+      str := "";
+      GAPDoc2HTMLProcs.PCDATAFILTER(rec(content := r.(i)), str);
+      if str <> r.(i) then
+        r.(i) := str;
+      fi;
+      r.(i) := LaTeXToHTMLString(r.(i));
+      if i in ["title", "subtitle", "booktitle"] then
+        r.(i) := Filtered(r.(i), x -> not x in "{}");
+      fi;
+    od;
+  fi;
   
   if IsBound(r.mrnumber) then
-##      Print("<p>\n[<a href=\"http://www.ams.org/mathscinet-getitem?mr=",
-##        r.mrnumber, "\"><font color=\"#8e00ff\">", r.Label, "</font></a>]   ");
-    Print("<p>\n[<a href=\"http://www.ams.org/mathscinet-getitem?mr=",
-      r.mrnumber{[1..9]}, "\">", r.Label, "</a>]   ");
+    Append(res, Concatenation(
+      "<p>\n[<a href=\"http://www.ams.org/mathscinet-getitem?mr=",
+      r.mrnumber{[1..9]}, "\">", r.Label, "</a>]   "));
   else
-    Print("<p>\n[<span style=\"color: #8e0000;\">", r.Label, "</span>]   ");
+    Append(res, Concatenation("<p>\n[<span style=\"color: #8e0000;\">", 
+                    r.Label, "</span>]   "));
   fi;
   # we assume with the "," delimiters that at least one of .author,
   # .editor or .title exist
   if IsBound(r.author) then
-    Print("<b>",r.author,"</b> ");
+    Append(res, Concatenation("<b>",r.author,"</b> "));
   fi;
   if IsBound(r.editor) then
-    Print("(", r.editor, ",Ed.)");
+    Append(res, Concatenation("(", r.editor, ",Ed.)"));
   fi;
   if IsBound(r.title) then
-    if IsBound(r.author) or IsBound(r.editor) then
-      Append(str, ",\n ");
-    fi;
-    # throw out {}'s
-    Print("<i>", Filtered(r.title, x -> not x in "{}"), "</i>");
+#      if IsBound(r.author) or IsBound(r.editor) then
+#        Append(str, ",\n ");
+#      fi;
+    Append(res, Concatenation("<i>", r.title, "</i>"));
   fi;
   if IsBound(r.booktitle) then
     if r.Type in ["inproceedings", "incollection"] then
-      Print(" in ");
+      Append(res, " in ");
     fi;
-    Print(",\n <i>", Filtered(r.booktitle, x -> not x in "{}"), "</i>");
+    Append(res, Concatenation(",\n <i>", r.booktitle, "</i>"));
   fi;
   if IsBound(r.subtitle) then
-    Print(",\n <i> -- ",Filtered(r.subtitle, x -> not x in "{}"), "</i>");
+    Append(res, Concatenation(",\n <i> -- ", r.subtitle, "</i>"));
   fi;
   if IsBound(r.journal) then
-    Print(",\n ", r.journal);
+    Append(res, Concatenation(",\n ", r.journal));
   fi;
   if IsBound(r.organization) then
-    Print(",\n ", r.organization);
+    Append(res, Concatenation(",\n ", r.organization));
   fi;
   if IsBound(r.publisher) then
-    Print(",\n ", r.publisher);
+    Append(res, Concatenation(",\n ", r.publisher));
   fi;
   if IsBound(r.school) then
-    Print(",\n ", r.school);
+    Append(res, Concatenation(",\n ", r.school));
   fi;
   if IsBound(r.edition) then
-    Print(",\n ", r.edition, "edition");
+    Append(res, Concatenation(",\n ", r.edition, "edition"));
   fi;
   if IsBound(r.series) then
-    Print(",\n ", r.series);
+    Append(res, Concatenation(",\n ", r.series));
   fi;
   if IsBound(r.volume) then
-    Print(",\n <em>", r.volume, "</em>");
+    Append(res, Concatenation(",\n <em>", r.volume, "</em>"));
   fi;
   if IsBound(r.number) then
-    Print(" (", r.number, ")");
+    Append(res, Concatenation(" (", r.number, ")"));
   fi;
   if IsBound(r.address) then
-    Print(",\n ", r.address);
+    Append(res, Concatenation(",\n ", r.address));
   fi;
   if IsBound(r.year) then
-    Print(",\n (", r.year, ")");
+    Append(res, Concatenation(",\n (", r.year, ")"));
   fi;
   if IsBound(r.pages) then
-    Print(",\n p. ", r.pages);
+    Append(res, Concatenation(",\n p. ", r.pages));
   fi;
   if IsBound(r.chapter) then
-    Print(",\n Chapter ", r.chapter);
+    Append(res, Concatenation(",\n Chapter ", r.chapter));
   fi;
   if IsBound(r.note) then
-    Print("<br />\n(", r.note, ")<br />\n");
+    Append(res, Concatenation("<br />\n(", r.note, ")<br />\n"));
   fi;
   if IsBound(r.notes) then
-    Print("<br />\n(", r.notes, ")<br />\n");
+    Append(res, Concatenation("<br />\n(", r.notes, ")<br />\n"));
   fi;
  
   if IsBound(r.BUCHSTABE) then
-    Print("<br />\nEinsortiert unter ", r.BUCHSTABE, ".<br />\n");
+    Append(res, Concatenation("<br />\nEinsortiert unter ", 
+                                r.BUCHSTABE, ".<br />\n"));
   fi;
   if IsBound(r.LDFM) then
-    Print("Signatur ", r.LDFM, ".<br />\n");
+    Append(res, Concatenation("Signatur ", r.LDFM, ".<br />\n"));
   fi;
   if IsBound(r.BUCHSTABE) and i>=0 then
-    Print("<a href=\"HTMLldfm", r.BUCHSTABE, ".html#", i, 
-          "\"><span style=\"color: red;\">BibTeX Eintrag</span></a>\n<br />");
+    Append(res, Concatenation("<a href=\"HTMLldfm", r.BUCHSTABE, ".html#", i, 
+          "\"><span style=\"color: red;\">BibTeX Eintrag</span></a>\n<br />"));
   fi;
-  Print("</p>\n\n");
+  Append(res, "</p>\n\n");
+  return res;
+end);
+
+InstallGlobalFunction(PrintBibAsHTML, function(arg)
+  PrintFormattedString(CallFuncList(StringBibAsHTML, arg));
 end);
 
 ##  arg: r[, ansi]  (for link to BibTeX)
-InstallGlobalFunction(PrintBibAsText, function(arg)
+InstallGlobalFunction(StringBibAsText, function(arg)
   local   r,  bold,  emph,  us,  lab,  str;
   r := arg[1];
   if Length(arg) = 2  and arg[2] = true then
@@ -757,6 +783,11 @@ InstallGlobalFunction(PrintBibAsText, function(arg)
   fi;
   str := FormatParagraph(Filtered(str, x-> not x in "{}"), 72);
   Add(str, '\n');
-  PrintFormattedString(str);
+  return str;
 end);
+
+InstallGlobalFunction(PrintBibAsText, function(arg)
+  PrintFormattedString(CallFuncList(StringBibAsText, arg));
+end);
+
 

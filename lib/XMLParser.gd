@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gd                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gd,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $
+#H  @(#)$Id: XMLParser.gd,v 1.2 2007-01-31 13:45:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -17,6 +17,7 @@ DeclareGlobalFunction("GetETag");
 DeclareGlobalFunction("GetElement");
 
 DeclareGlobalFunction("ParseTreeXMLString");
+DeclareGlobalFunction("ParseTreeXMLFile");
 DeclareGlobalFunction("DisplayXMLStructure");
 DeclareGlobalFunction("ApplyToNodesParseTree");
 DeclareGlobalFunction("AddRootParseTree");

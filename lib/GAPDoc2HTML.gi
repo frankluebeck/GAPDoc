@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.31 2006-09-25 12:36:38 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.32 2007-01-31 13:45:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -102,7 +102,7 @@ SetGapDocHTMLOptions := function(arg)
 end;
 
 GAPDoc2HTMLProcs.Head1 := "\
-<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n\
+<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 \n\
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n\
          \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n\
@@ -112,7 +112,7 @@ GAPDoc2HTMLProcs.Head1 := "\
 <title>GAP (";
 
 GAPDoc2HTMLProcs.Head1Trans := "\
-<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n\
+<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 \n\
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\
          \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\
@@ -122,7 +122,7 @@ GAPDoc2HTMLProcs.Head1Trans := "\
 <title>GAP (";
 
 GAPDoc2HTMLProcs.Head1MML := "\
-<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n\
+<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 <?xml-stylesheet type=\"text/xsl\" href=\"mathml.xsl\"?>\n\
 \n\
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN\"\n\
@@ -137,7 +137,7 @@ GAPDoc2HTMLProcs.Head1MML := "\
 
 GAPDoc2HTMLProcs.Head2 := "\
 </title>\n\
-<meta http-equiv=\"content-type\" content=\"text/html; charset=iso-8859-1\" />\n\
+<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\" />\n\
 <meta name=\"generator\" content=\"GAPDoc2HTML\" />\n\
 <link rel=\"stylesheet\" type=\"text/css\" href=\"manual.css\" />\n\
 </head>\n<body>\n";
@@ -473,8 +473,8 @@ end);
   
 ##  write head and foot of HTML file.
 GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
-  local i, pi, t, el, math, pos, pos1, str, bib, keys, need, 
-        labels, diff, text, stream, a, attin, remdiv;
+  local i, pi, t, el, remdiv, math, pos, pos1, str, dat, datbt, bib, b, 
+        keys, need, labels, diff, text, stream, a, attin;
   
   ##  add paragraph numbers to all nodes of the document
   AddParagraphNumbersGapDocTree(r);
@@ -590,10 +590,17 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   od;
   r.indextext := str;
   
-  if Length(r.bibkeys)>0 then
+  if Length(r.bibkeys) > 0 then
     Print("#I  reading bibliography data files . . . \n");
-    bib := CallFuncList(ParseBibFiles, List(SplitString(
-                    r.bibdata, "", ", \t\t\n"), f-> Filename(r.bibpath, f)));
+    dat := SplitString(r.bibdata, "", ", \t\b\n");
+    datbt := Filtered(dat, a-> Length(a) < 4 or 
+                               a{[Length(a)-3..Length(a)]} <> ".xml");
+    # first BibTeX files, then BibXMLext files
+    bib := CallFuncList(ParseBibFiles, List(datbt, f-> Filename(r.bibpath, f)));
+    for a in Difference(dat, datbt) do
+      t := ParseTreeXMLFile(Filename(r.bibpath, a));
+      b := BibRecBibXML(t, "HTML", bib);
+    od;
     keys := Immutable(Set(r.bibkeys));
     need := [];
     for a in bib[1] do
@@ -613,17 +620,23 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
     r.biblabels := labels;
     Print("#I  writing bibliography . . .\n");
     text := "";
-    stream := OutputTextString(text, false);
-    SetPrintFormattingStatus(stream, false);
-    PrintTo1(stream, function()
+##      stream := OutputTextString(text, false);
+##      SetPrintFormattingStatus(stream, false);
+##      PrintTo1(stream, function()
+##      for a in need do
+##        # an anchor for links from the citations
+##        Print("\n<p><a id=\"biB", a.Label, "\" name=\"biB", a.Label, 
+##              "\"></a></p>\n"); 
+##        PrintBibAsHTML(a, true); 
+##      od;
+##      end);
+##      CloseStream(stream);
     for a in need do
       # an anchor for links from the citations
-      Print("\n<p><a id=\"biB", a.Label, "\" name=\"biB", a.Label, 
-            "\"></a></p>\n"); 
-      PrintBibAsHTML(a, true); 
+      Append(text, Concatenation("\n<p><a id=\"biB", a.Label, 
+                        "\" name=\"biB", a.Label, "\"></a></p>\n")); 
+      Append(text, StringBibAsHTML(a, false)); 
     od;
-    end);
-    CloseStream(stream);
     r.bibtext := text;
   fi;
   
@@ -655,6 +668,10 @@ GAPDoc2HTMLProcs.EscapeAttrVal := function(str)
   str := SubstitutionSublist(str, "<", "&lt;");
   str := SubstitutionSublist(str, ">", "&gt;");
   return str;
+end;
+
+# do nothing with Ignore
+GAPDoc2HTMLProcs.Ignore := function(arg)
 end;
 
 # just process content 
@@ -1096,13 +1113,14 @@ GAPDoc2HTMLProcs.Display := function(r, par)
              str, "</td></tr></table>\n"));
     return;
   fi;
-  s := "\\[";
+##    s := "\\[";
+  s := "";
 ##    GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATANOFILTER;
   for a in r.content do
     GAPDoc2HTML(a, s);
   od;
 ##    GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATAFILTER;
-  Append(s, " \\]");
+##    Append(s, " \\]");
   s := Concatenation("<p class=\"pcenter\">", s, "</p>\n\n");
   Add(par, r.count);
   Add(par, s);
@@ -1132,7 +1150,7 @@ end;
 
 GAPDoc2HTMLProcs.ExampleLike := function(r, par, label)
   local   str,  cont,  a,  s;
-  str := "\n<table class=\"example\">\n<tr><td><pre>\n";
+  str := "\n<table class=\"example\">\n<tr><td><pre>";
   cont := "";
   for a in r.content do 
     # here we try to avoid reformatting
@@ -1145,7 +1163,7 @@ GAPDoc2HTMLProcs.ExampleLike := function(r, par, label)
     fi;
   od;
   Append(str, cont);
-  Append(str, "\n</pre></td></tr></table>\n\n");
+  Append(str, "</pre></td></tr></table>\n\n");
   Add(par, r.count);
   Add(par, str);
 end;

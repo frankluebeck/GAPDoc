@@ -2,15 +2,16 @@
 ##
 #A  makedocrel.g                          GAPDoc                 Frank Lübeck
 ##  
-#H  @(#)$Id: makedocrel.g,v 1.4 2003-11-20 22:02:15 gap Exp $
+#H  @(#)$Id: makedocrel.g,v 1.5 2007-01-31 13:45:09 gap Exp $
 ##  
 ##  Rebuild the  whole documentation, provided sufficiently  good (pdf)LaTeX
 ##  is  available.   This  version  produces  relative   paths  to  external
 ##  documents, which is ok for the package in standard location.
 ##  
+SetGapDocLaTeXOptions("pdf","color", "UTF-8");
 # main
 Print("\n========== converting main documentation for GAPDoc ==============\n");
-MakeGAPDocDoc("doc", "gapdoc", ["../lib/BibTeX.gi", 
+maintree := MakeGAPDocDoc("doc", "gapdoc", ["../lib/BibTeX.gi", 
 "../lib/ComposeXML.gi", "../lib/GAPDoc2HTML.gi",
 "../lib/GAPDoc.gi", "../lib/GAPDoc2LaTeX.gi", "../lib/GAPDoc2Text.gi", 
 "../lib/PrintUtil.gi", "../lib/Text.gi", "../lib/XMLParser.gi",
@@ -22,11 +23,12 @@ HELP_ADD_BOOK("GAPDoc", "Package for Preparing GAP Documentation",
                 DirectoriesPackageLibrary("gapdoc","doc")[1]);
 
 # example
-MakeGAPDocDoc("example", "example", [], "GAPDocExample", "../../..");
+exampletree := 
+      MakeGAPDocDoc("example", "example", [], "GAPDocExample", "../../..");
 
 # from first chapter
 Print("\n========== converting small example from introduction ============\n");
-MakeGAPDocDoc("3k+1", "3k+1", [], "ThreeKPlusOne", "../../..");
+3kp1tree := MakeGAPDocDoc("3k+1", "3k+1", [], "ThreeKPlusOne", "../../..");
 
 # .lab files for references from main manual
 GAPDocManualLab("GAPDoc");

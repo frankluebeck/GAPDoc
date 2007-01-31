@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.9 2003-06-04 11:20:00 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.10 2007-01-31 13:45:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -185,7 +185,8 @@ InstallGlobalFunction(AddParagraphNumbersGapDocTree, function(r)
   # the counter setting recursive function
   setcount := function(rr)
     local   a;
-    if  IsList(rr.content) and not IsString(rr.content) then
+    if  rr.name <> "Ignore" and IsList(rr.content) and 
+                                                not IsString(rr.content) then
       for a in rr.content do
         # new chapter, text before first section is counted as section 0
         if a.name = "Chapter" then
@@ -204,6 +205,7 @@ InstallGlobalFunction(AddParagraphNumbersGapDocTree, function(r)
             cssp := ["A", 0, 0, 1];
           else
             cssp := [[CHAR_INT(INT_CHAR(cssp[1][1])+1)], 0, 0, 1];
+            ConvertToStringRep(cssp[1]);
           fi;
         # bib and index are counted as new chapters  
         elif  a.name = "Bibliography" then
@@ -335,7 +337,9 @@ BindGlobal("TEXTMTRANSLATIONS",
      langle := "<",
      rangle := ">",
      vee := "v",
-     setminus := "\\"
+     setminus := "\\",
+     times := "x",
+     colon := ":"
      )
 );
 

@@ -4,7 +4,7 @@
      By Frank Lübeck and Max Neunhöffer
      ================================================================== -->
 
-<!-- $Id: gapdoc.dtd,v 1.8 2002-12-23 10:03:20 gap Exp $ -->
+<!-- $Id: gapdoc.dtd,v 1.9 2007-01-31 13:45:09 gap Exp $ -->
 
 <!-- Note that this definition goes "bottom-up" because entities can only
      be used after their definition in the file. -->
@@ -85,7 +85,8 @@
                       M | Math | Display | 
                       Example | Listing | Log | Verb |
                       URL | Email | Homepage | Address | Cite | Label | 
-                      Ref | Index" >
+                      Ref | Index |
+                      Ignore" >
 
 
 <!ELEMENT Alt (%InnerText;)*>     <!-- This is only to allow "Only" and
@@ -288,7 +289,19 @@
                        Style CDATA #IMPLIED>
 <!ELEMENT TheIndex EMPTY>
 
+<!-- ==================================================================
+     The Ignore element can be used everywhere to include further
+     information in a GAPDoc document which is not intended for the 
+     standard converters (e.g., source code, not yet finished stuff,
+     and so on. This information can be extracted by special converter 
+     routines, more precise information about the content of an Ignore
+     element can be given by the "Remark" attribute.
+     ================================================================== -->
 
+<!ELEMENT Ignore (%Text;| Chapter | Section | Subsection | ManSection |
+                  Heading)*>
+<!ATTLIST Ignore Remark CDATA #IMPLIED>
+     
 <!-- ==================================================================
      Now we go on with the overall structure by defining the sectioning 
      structure, which includes the Synopsis element: 

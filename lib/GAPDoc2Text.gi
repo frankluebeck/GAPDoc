@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.12 2003-02-07 03:39:31 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.13 2007-01-31 13:45:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -339,8 +339,8 @@ end);
   
 ##  write head and foot of Txt file.
 GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
-  local   i,  pi,  t,  el,  a,  str,  bib,  keys,  need,  labels,  
-          diff,  text,  stream;
+  local i, pi, t, el, str, dat, datbt, bib, b, keys, need, labels, 
+        diff, text, stream, a;
   
   ##  add paragraph numbers to all nodes of the document
   AddParagraphNumbersGapDocTree(r);
@@ -381,7 +381,7 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   ##  in between.
   Print("#I  first run, collecting cross references, index, toc, bib ",
         "and so on . . .\n");
-  GAPDoc2TextProcs.Book(r.content[i], [], pi);
+  GAPDoc2TextProcs.Book(r.content[i], "", pi);
   
   # now the toc is ready
   Print("#I  table of contents complete.\n");
@@ -403,10 +403,17 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   od;
   r.indextext := str;
   
-  if Length(r.bibkeys)>0 then
+  if Length(r.bibkeys) > 0 then
     Print("#I  reading bibliography data files . . . \n");
-    bib := CallFuncList(ParseBibFiles, List(SplitString(
-                    r.bibdata, "", ", \t\t\n"), f-> Filename(r.bibpath, f)));
+    dat := SplitString(r.bibdata, "", ", \t\b\n");
+    datbt := Filtered(dat, a-> Length(a) < 4 or 
+                               a{[Length(a)-3..Length(a)]} <> ".xml");
+    # first BibTeX files, then BibXMLext files
+    bib := CallFuncList(ParseBibFiles, List(datbt, f-> Filename(r.bibpath, f)));
+    for a in Difference(dat, datbt) do
+      t := ParseTreeXMLFile(Filename(r.bibpath, a));
+      b := BibRecBibXML(t, "Text", bib);
+    od;
     keys := Immutable(Set(r.bibkeys));
     need := [];
     for a in bib[1] do
@@ -458,6 +465,10 @@ GAPDoc2TextProcs.XMLPI := function(r, str)
 end;
 GAPDoc2TextProcs.XMLCOMMENT := function(r, str)
   return;
+end;
+
+# do nothing with Ignore
+GAPDoc2TextProcs.Ignore := function(arg)
 end;
 
 # just process content ??? putting together here
@@ -737,7 +748,7 @@ end;
 ##  this really produces the content of the heading
 GAPDoc2TextProcs.Heading1 := function(r, str)
   local a;
-  a := [];
+  a := "";
   GAPDoc2TextContent(r, a);
   Append(str, a[2]);
 end;
@@ -938,7 +949,8 @@ GAPDoc2TextProcs.Display := function(r, par)
 #  s := Concatenation("\\[\n", s, "\n\\]\n\n");
   s := FormatParagraph(s, r.root.linelength - 10 - Length(r.root.indent), 
                     "left", [Concatenation(r.root.indent, "     "), ""]);
-  s := Concatenation("\\[\n", s, "\\]\n\n");
+##    s := Concatenation("\\[\n", s, "\\]\n\n");
+  s := Concatenation("\n", s, "\n\n");
   Add(par, r.count);
   Add(par, s);
 end;
@@ -1287,7 +1299,7 @@ end;
 
 GAPDoc2TextProcs.Description := function(r, par)
   local l, tmp;
-  l := [];
+  l := "";
   GAPDoc2TextContent(r, l);
   # Add an empty line in front if not yet there
   if Length(par) > 0 and Length(par[Length(par)]) > 1 then
@@ -1303,7 +1315,7 @@ end;
 
 GAPDoc2TextProcs.Returns := function(r, par)
   local ind, l;
-  l := [];
+  l := "";
   ind := r.root.indent;
   r.root.indent := Concatenation(ind, "          ");
   GAPDoc2TextContent(r, l);
@@ -1373,7 +1385,7 @@ GAPDoc2TextProcs.List := function(r, par)
     od;
   else
     for a in Filtered(r.content, a-> a.name = "Item") do
-      ss := [];
+      ss := "";
       GAPDoc2TextProcs.Item(a, ss);
       ss[2]{[1,2]} := "--";
       Append(par, ss);
@@ -1385,7 +1397,7 @@ GAPDoc2TextProcs.Enum := function(r, par)
   local   s,  i,  a,  ss,  num;
   i := 1;
   for a in Filtered(r.content, a-> a.name = "Item") do
-    ss := [];
+    ss := "";
     GAPDoc2TextProcs.Item(a, ss);
     num := Concatenation("(", String(i), ")");
     ss[2]{[1..Length(num)]} := num;
@@ -1483,7 +1495,7 @@ GAPDoc2TextProcs.Table := function(r, str)
         if i mod 2 = 1 then
           Add(z, Concatenation(" ", align{[i]}, " "));
         elif IsBound(b[i/2]) then
-          l := [];
+          l := "";
           GAPDoc2TextProcs.Item(b[i/2], l);
           s := Concatenation(l{[2,4..Length(l)]});
           NormalizeWhitespace(s);

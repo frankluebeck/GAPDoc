@@ -2,7 +2,7 @@
 ##
 #W  Make.g                       GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Make.g,v 1.7 2003-12-10 20:33:29 gap Exp $
+#H  @(#)$Id: Make.g,v 1.8 2007-01-31 13:45:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -40,15 +40,16 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   fi;
   # compose the XML document
   Print("Composing XML document . . .\n");
-  str := ComposedXMLString(path, Concatenation(main, ".xml"), files);
+  str := ComposedXMLString(path, Concatenation(main, ".xml"), files, true);
   # parse the XML document
   Print("Parsing XML document . . .\n");
-  r := ParseTreeXMLString(str);
+  r := ParseTreeXMLString(str[1], str[2]);
   # clean the result
   Print("Checking XML structure . . .\n");
   CheckAndCleanGapDocTree(r);
   # produce LaTeX version
   Print("LaTeX version and calling latex and pdflatex:\n    ");
+  r.bibpath := path;
   l := GAPDoc2LaTeX(r);
   Print("writing LaTeX file, \c");
   FileString(Filename(path, Concatenation(main, ".tex")), l);
@@ -56,24 +57,29 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   latex := "latex -interaction=nonstopmode ";
   # sh-syntax for redirecting stderr and stdout to /dev/null
   null := " > /dev/null 2>&1 ";
-  Print("3 x latex, bibtex and makeindex, \c"); 
-  Exec(Concatenation("sh -c \" cd ", Filename(path,""), 
-  "; ", latex, main, ".tex", null,
-  "; bibtex ", main, null,
-  "; ", latex, main, null,
-  "; makeindex ", main, null,
-  "; ", latex, main, null,
-  "; rm -f ", main, ".aux\""));
+##    Print("3 x latex, bibtex and makeindex, \c"); 
+##    Exec(Concatenation("sh -c \" cd ", Filename(path,""), 
+##    "; ", latex, main, ".tex", null,
+##    "; bibtex ", main, null,
+##    "; ", latex, main, null,
+##    "; makeindex ", main, null,
+##    "; ", latex, main, null,
+##    "; rm -f ", main, ".aux\""));
   Print("3 x pdflatex, \c");
   Exec(Concatenation("sh -c \" cd ", Filename(path,""),
+  "; rm -f ", main, ".aux ",
   "; pdf", latex, main, null,
+  "; bibtex ", main, null,
   "; pdf", latex, main, null,
+  "; makeindex ", main, null,
   "; pdf", latex, main, null,"\""));
-  Print("dvips\n");
+##    Print("dvips\n");
   Exec(Concatenation("sh -c \" cd ", Filename(path,""),
-  "; dvips -o ", main, ".ps ", main, null,  
-  "; mv ", main, ".dvi manual.dvi; mv ", main, 
-  ".pdf manual.pdf; mv ", main, ".ps manual.ps; ", "\""));
+##    "; dvips -o ", main, ".ps ", main, null,  
+##    "; mv ", main, ".dvi manual.dvi ", 
+  "; mv ", main, ".pdf manual.pdf; ", 
+##    "mv ", main, ".ps manual.ps; ", 
+  "\""));
   # produce text version
   Print("Text version . . .\n");
   t := GAPDoc2Text(r, path);

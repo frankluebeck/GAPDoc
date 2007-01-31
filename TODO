@@ -1,7 +1,17 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.7 2006-05-26 14:35:59 gap Exp $
+         $Id: TODO,v 1.8 2007-01-31 13:45:09 gap Exp $
+
+- use InfoClass(es) instead of Print's
+
+- MakeDocDoc: only pdf-version from LaTeX
+
+- document SetGapDocLaTeXOptions
+
+- document StringBibAs..., change doc for <Bibliography>
+
+- remove mention of DeclarePackageAutoDocumentation and so on.
 
 - maybe add links to "the" example in the reference section of doc?
   (not so sure, if this is necessary).
@@ -10,7 +20,8 @@
   are handled correctly.
 
 - should the bibliography and the index appear in the table of contents?
-  (if yes, in all output versions)
+  (if yes, in all output versions) 
+  [use: \addcontentsline{toc}{section}{References}   ?]
 
 - consider http://psyx.org/hermes/doc.html for translations from LaTeX to
   MathML.

@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.6 2002-05-15 23:07:20 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.7 2007-01-31 13:45:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -241,7 +241,7 @@ end);
 ##  </ManSection>
 ##  <#/GAPDoc>
 InstallGlobalFunction(SubstitutionSublist, function(arg)
-  local   str,  substr,  lss,  subs,  all,  p,  s;
+  local   str,  substr,  lss,  subs,  all,  p,  s, off;
   str := arg[1];
   substr := arg[2];
   lss := Length(substr);
@@ -258,17 +258,19 @@ InstallGlobalFunction(SubstitutionSublist, function(arg)
     return str; 
   fi;
   s := str{[]};
+  off := 1-lss;
   while p<>fail do
-    Append(s, str{[1..p-1]});
+    Append(s, str{[off+lss..p-1]});
     Append(s, subs);
-    str := str{[p+lss..Length(str)]};
+##      str := str{[p+lss..Length(str)]};
+    off := p;
     if all then
-      p := PositionSublist(str, substr);
+      p := PositionSublist(str, substr, p+lss-1);
     else
       p := fail;
     fi;
     if p=fail then
-      Append(s, str);
+      Append(s, str{[off+lss..Length(str)]});
     fi;
   od;
   return s;
@@ -462,7 +464,6 @@ InstallGlobalFunction(FormatParagraph, function(arg)
   for i in [Length(SPACESTRINGS)+1..len] do
     SPACESTRINGS[i] := Concatenation(SPACESTRINGS[i-1], " ");
   od;
-  
   # we scan the string
   words := [];
   i := 1;
@@ -497,7 +498,11 @@ InstallGlobalFunction(FormatParagraph, function(arg)
       while j<=l and not (str[j] in WHITESPACE or str[j]=esc) do
         j := j+1;
       od;
-      Add(words, [j-i, [i..j-1]]);
+      if ForAll([i..j-1], k-> IsChar(str[k])) then
+        Add(words, [NrCharsUTF8String(str{[i..j-1]}), [i..j-1]]);
+      else
+        Add(words, [j-i, [i..j-1]]);
+      fi;
       i := j;
     fi;
   od;

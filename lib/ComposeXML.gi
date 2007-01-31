@@ -2,7 +2,7 @@
 ##
 #W  ComposeXML.gi                GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: ComposeXML.gi,v 1.3 2001-07-11 11:21:37 gap Exp $
+#H  @(#)$Id: ComposeXML.gi,v 1.4 2007-01-31 13:45:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -13,11 +13,12 @@
 
 ##  <#GAPDoc Label="ComposedXMLString">
 ##  <ManSection >
-##  <Func Arg="path, main, source" Name="ComposedXMLString" />
+##  <Func Arg="path, main, source[, info]" Name="ComposedXMLString" />
 ##  <Returns>XML document as string</Returns>
 ##  <Description>
-##  This function returns a string containing a &GAPDoc; XML document
-##  constructed from several source files.<P/>
+##  This function returns a string  containing a &GAPDoc; XML document
+##  constructed from  several source files  or a list  containing this
+##  string and information about the source positions.<P/>
 ##  
 ##  Here  <A>path</A>   must  be  a   path  to  some   directory  (as
 ##  string  or directory  object),  <A>main</A> the  name  of a  file
@@ -33,9 +34,20 @@
 ##  ></C>-tags are  substituted recursively by other  files or chunks
 ##  of documentation found in the first step, respectively.
 ##  
+##  If  the  optional  argument  <A>info</A>   is  given  and  set  to
+##  <K>true</K>  this function  returns a  list <C>[str,  origin]</C>,
+##  where <C>str</C> is a string  containing the composed document and
+##  <C>origin</C> is  a sorted  list of entries  of the  form <C>[pos,
+##  filename, line]</C>.  Here <C>pos</C>  runs through  all character
+##  positions of starting lines or text pieces from different files in
+##  <C>str</C>.  The  <C>filename</C>  and  <C>line</C>  describe  the
+##  origin of this part of the collected document.
+##  
+##  Without the fourth argument only the string <C>str</C> is returned.
+##  
 ##  <Log>
 ##  gap> doc := ComposedXMLString("/my/dir", "manual.xml", 
-##  > ["../lib/func.gd", "../lib/func.gi"]);;
+##  > ["../lib/func.gd", "../lib/func.gi"], true);;
 ##  </Log>
 ##  </Description>
 ##  </ManSection>
@@ -43,16 +55,29 @@
 ##  
 # reset this if not found files or chunks should not run into an error
 XMLCOMPOSEERROR := true;
-InstallGlobalFunction(ComposedXMLString, function(path, main, source)
-  local pieces, f, str, i, j, pre, pos, name, piece, a, b, len, res;  
-  
+InstallGlobalFunction(ComposedXMLString, function(arg)
+  local path, main, source, info,
+        pieces, origin, fname, str, posnl, i, j, pre, pos, name, piece, 
+        b, len, Collect, res, src, f, a;
+  # get arguments, 4th arg is optional for compatibility with older versions
+  path := arg[1];
+  main := arg[2];
+  source := arg[3];
+  if Length(arg) > 3 and arg[4] = true then
+    info := true;
+  else
+    info := false;
+  fi;
   if IsString(path) then
     path := Directory(path);
   fi;
   # first we fetch GAPDoc chunks from the source files
   pieces := rec();
+  origin := rec();
   for f in source do
-    str := StringFile(Filename(path, f));
+    fname := Filename(path, f);
+    str := StringFile(fname);
+    posnl := Positions(str, '\n');
     # here and below we escape # as \# such that this function doesn't
     # interpret the error messages as a GAPDoc chunk
     i := PositionSublist(str, "<\#GAPDoc Label=\"");
@@ -93,47 +118,105 @@ InstallGlobalFunction(ComposedXMLString, function(path, main, source)
         Add(a, '\n'); 
       od;
       pieces.(name) := Concatenation(piece);
+      # for each found piece store the filename and number of the first
+      # line of the piece in that file
+      origin.(name) := [fname, PositionSorted(posnl, i+1)];
       i := PositionSublist(str, "<\#GAPDoc Label=\"", pos);
     od;
   od;
 
-  # recursive subtitution of files and chunks from above
-  res := StringFile(Filename(path, main));
-  if res=fail then
-    Error("Cannot open file ", Filename(path, main));
-  fi;
-  i := PositionSublist(res, "<\#Include ");
-  while i <> fail do
-    pos := Position(res, '>', i);
-    piece := SplitString(res{[i+9..pos-1]}, "", "\"= ");
-    if piece[1]="SYSTEM" then
-      str := StringFile(Filename(path, piece[2]));
-      if str=fail and XMLCOMPOSEERROR=true then
-        Error("Cannot include file ", Filename(path, piece[2]));
-      elif str=fail then
-        res := Concatenation(res{[1..i-1]}, 
-               "\n\nMISSING FILE ", Filename(path, piece[2]), "\n\n", 
-               res{[pos+1..Length(res)]});
-      else 
-        res := Concatenation(res{[1..i-1]}, str, res{[pos+1..Length(res)]});
-      fi;
-    elif piece[1]="Label" then 
-      if not IsBound(pieces.(piece[2])) and XMLCOMPOSEERROR=true then
-        Error("Did not find chunk ", piece[2]);
-      elif not IsBound(pieces.(piece[2])) then
-        res := Concatenation(res{[1..i-1]}, "\n\nMISSING CHUNK ",
-                             piece[2], "\n\n",
-                             res{[pos+1..Length(res)]});
+  # recursive substitution of files and chunks from above
+  # In this helper [cont, from] is a pair [piece, orig] from above
+  # or a pair [filename, 0].
+  Collect := function(res, src, cont, from)
+    local posnl, pos, i, len, new, p, j, piece, fname;
+    # if piece is a whole file we simulate info as in 'pieces'
+    if from = 0 then
+      fname := cont;
+      cont := StringFile(fname);
+      if cont = fail and XMLCOMPOSEERROR = true then
+        Error("Cannot include file ", cont, ".\n");
+      elif cont = fail then
+        cont := Concatenation("MISSING FILE ", cont, "\n");
+        from := [cont, 1];
       else
-        res := Concatenation(res{[1..i-1]}, pieces.(piece[2]), 
-                                               res{[pos+1..Length(res)]});
+        from := [fname, 1];
       fi;
     fi;
-    i := i-1;
-    i := PositionSublist(res, "<\#Include ", i);
-  od; 
-  
-  return res;
-end); 
+    posnl := Positions(cont, '\n');
+    pos := 0;
+    while pos <> fail do
+      i := PositionSublist(cont, "<\#Include ", pos);
+      if i = fail then
+        # in this case add the rest to res
+        i := Length(cont) + 1;
+      fi;
+      len := Length(res);
+      new := cont{[pos+1..i-1]};
+      Append(res, new);
+      p := PositionSorted(posnl, pos+1) + from[2] - 1;
+      # add entry to 'src' for first character from current piece
+      Add(src, [len+1, from[1], p]);
+      j := Position(new, '\n');
+      while j <> fail and j < Length(new) do
+        # further entries to 'src' for each new line in current piece
+        Add(src, [len+j+1, from[1], p+1]);
+        j := Position(new, '\n', j);
+        p := p+1;
+      od;
+      # now include by recursive call of this function
+      if i <= Length(cont) then
+        pos := Position(cont, '>', i);
+        if pos = fail then
+          Error("Input ends within <\#Include ... tag.");
+        fi;
+        piece := SplitString(cont{[i+9..pos-1]}, "", "\"= ");
+        if piece[1]="SYSTEM" then
+          Collect(res, src, Filename(path, piece[2]), 0);
+        elif piece[1]="Label" then 
+          if not IsBound(pieces.(piece[2])) and XMLCOMPOSEERROR=true then
+            Error("Did not find chunk ", piece[2]);
+          elif not IsBound(pieces.(piece[2])) then
+            pieces.(piece[2]) := Concatenation("MISSING CHUNK ", piece[2]);
+            origin.(piece[2]) := [Concatenation("MISSINGCHUNK ",piece[2]),1]; 
+          fi;
+          Collect(res, src, pieces.(piece[2]), origin.(piece[2]));
+        fi;
+      else
+        pos := fail;
+      fi;
+    od;
+  end;
+  res := "";
+  src := [];
+  # now start the recursion as #Include of the main file in empty string
+  Collect(res, src, Filename(path, main), 0);
+  if info then
+    return [res, src];
+  else
+    # we allow this for compatibility with former versions
+    return res;
+  fi;
+end);
 
-
+##  <#GAPDoc Label="OriginalPositionComposedXML">
+##  <ManSection >
+##  <Func Arg="srcinfo, pos" Name="OriginalPositionComposedXML" />
+##  <Returns>A pair <C>[filename, linenumber]</C>.</Returns>
+##  <Description>
+##  Here <A>srcinfo</A>  must   be  a   data  structure  as   returned  as
+##  second   entry   by <Ref  Func="ComposedXMLString"  />   called   with
+##  <A>info</A>=<K>true</K>. It returns for a given position <A>pos</A> in
+##  the composed XML document the file name and line number from which that
+##  text was collected.
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+InstallGlobalFunction(OriginalPositionComposedXML, function(srcinfo, pos)
+  local r;
+  r := PositionSorted(srcinfo, [pos]);
+  if not IsBound(srcinfo[r]) or srcinfo[r][1] > pos then
+    r := r-1;
+  fi;
+  return [srcinfo[r][2], srcinfo[r][3]];
+end);

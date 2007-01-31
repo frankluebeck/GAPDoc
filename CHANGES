@@ -1,6 +1,30 @@
                        CHANGES
 
-0.99999 -> 0.999999
+0.99999 -> 1.0
+
+- Changed the status of the package from "deposited" to "accepted".
+
+- Removed some pre-GAP 4.4 syntax.
+
+- The default LaTeX markup for <A>, <Arg> is now by slanted typewriter
+  font.
+
+- The internal encoding for the parsed data is now UTF-8, this is also 
+  recommended for input (all GAPDoc files are now in UTF-8 encoding).
+
+- Introduced unicode characters and strings as GAP objects and de- and
+  encoding of these from and to GAP strings in UTF-8 or ISO-8859 encodings.
+
+- New element <Ignore Remark="...">. Can be used everywhere (e.g., for
+  additional data like source code, or to comment non finished parts of
+  the document).
+
+- ParseTreeXMLString can use the improved information from ComposedXMLString
+  to give better error messages in case of parsing errors. This uses the new
+  function OriginalPositionComposedXML.
+
+- ComposedXMLString can now return information about the original file and 
+  line number of any text in the composed XML document.
 
 - Improved the documentation which markup is allowed in attribute values
   (recursively substituted entities). Improved the code to handle all

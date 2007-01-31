@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.12 2006-09-25 12:36:38 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.13 2007-01-31 13:45:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -92,21 +92,38 @@ end);
 
 # printing of error message for non-well formed XML document,
 # also shows some text around position of error.
+XMLPARSEORIGINS := false;
 BindGlobal("ParseError", function(str, pos, comment)
-  local Show, nl;
+  local Show, nl, ShowOrigin, r;
   # for examination of error
   Show := function()
     Pager(rec(lines := str, start := nl[1]));
   end;
+  ShowOrigin := function()
+    if XMLPARSEORIGINS <> false then
+      Pager(rec(lines := StringFile(r[1]), start := r[2]));
+    else
+      Show();
+    fi;
+  end;
   nl := LineNumberStringPosition(str, pos);
+  if XMLPARSEORIGINS <> false then
+    r := OriginalPositionComposedXML(XMLPARSEORIGINS, pos);
+  fi;
   Print("XML Parse Error: Line ", nl[1]);
-  Print(" Character ", pos-nl[2][1]+1, "\n-----------\n", 
-        str{nl[2]}, "\n");
+  Print(" Character ", pos-nl[2][1]+1, "\n");
+  if XMLPARSEORIGINS <> false then
+    Print("Original file: ", r[1], ", line number ", r[2],".\n");
+  fi;
+  Print("-----------\n", str{nl[2]}, "\n");
   if pos-nl[2][1] >= 1 then
     Print(List([1..pos-nl[2][1]], i-> ' '));
   fi;
-  Print("^", "\n-----------\n", comment, "\n!!! Type `Show();' to watch the",
+  Print("^", "\n-----------\n", comment, "\n!!! Type 'Show();' to watch the",
   " input string in pager - starting with\n    line containing error !!!\n");
+  if XMLPARSEORIGINS <> false then
+    Print("Or 'ShowOrigin();' to look it up in its source file.\n");
+  fi;
   Error();
 end);
 
@@ -167,14 +184,16 @@ InstallGlobalFunction(GetEnt, function(str, pos)
         Add(d, str[i]);
         i := i+1;
       od;
-      ch := [CHAR_INT(NumberDigits(d, 16))];
+      ch := "";
+      Add(ch, CHAR_INT(NumberDigits(d, 16)));
     else
       i := pos+1;
       while str[i] <> ';' do
         Add(d, str[i]);
         i := i+1;
       od;
-      ch := [CHAR_INT(NumberDigits(d, 10))];
+      ch := "";
+      Add(ch, CHAR_INT(NumberDigits(d, 10)));
     fi;
     return rec(name := "CharEntityValue", content := ch, next := i+1);
   fi;
@@ -511,13 +530,23 @@ end);
 
 ##  <#GAPDoc Label="ParseTreeXMLString">
 ##  <ManSection >
-##  <Func Arg="str" Name="ParseTreeXMLString" />
+##  <Func Arg="str[, srcinfo]" Name="ParseTreeXMLString" />
+##  <Func Arg="fname" Name="ParseTreeXMLFile" />
 ##  <Returns>a record which is root of a tree structure</Returns>
 ##  <Description>
-##  This function parses an  XML-document stored in string <A>str</A>
+##  The first function parses an  XML-document stored in string <A>str</A>
 ##  and returns the document in form of a tree.<P/>
+## 
+##  The  optional argument  <A>srcinfo</A> must  have the  same format
+##  as  in <Ref  Func="OriginalPositionComposedXML"  />,  if given  error
+##  messages  refer  to the  original  source  of  the text  with  the
+##  problem.
 ##  
-##  A node  in this tree  corresponds to an  XML element, or  to some
+##  The second function is just a short cut for 
+##  <Ref Func="ParseTreeXMLString" /><C>(</C><Ref Func="StringFile"
+##  />(<A>fname</A>)<C>)</C>.<P/>
+##  
+##  A node  in the result tree  corresponds to an  XML element, or  to some
 ##  parsed character data. In the first case it looks as follows:
 ##  
 ##  <Listing Type="Example Node">
@@ -567,9 +596,50 @@ end);
 ##  </ManSection>
 ##  <#/GAPDoc>
 ##  
-InstallGlobalFunction(ParseTreeXMLString, function(str)  
-  str := Concatenation(str, "</WHOLEDOCUMENT>");
-  return GetElement(str, 1);
+InstallGlobalFunction(ParseTreeXMLString, function(arg)
+  local str, res, tmp, enc;
+  str := Concatenation(arg[1], "</WHOLEDOCUMENT>");
+  if Length(arg) > 1 then
+    XMLPARSEORIGINS := arg[2];
+  else
+    XMLPARSEORIGINS := false;
+  fi;
+  res := GetElement(str, 1);
+  # find encoding
+  if not IsString(res.content) then
+    tmp := Filtered(res.content, a-> IsRecord(a) and a.name = "XMLPI");
+    if Length(tmp) > 0 then
+      tmp := Concatenation(tmp[1].content, "/>");
+      tmp := GetElement(tmp, 3);
+      if IsBound(tmp.attributes.encoding) then
+        res.encoding := tmp.attributes.encoding;
+      fi;
+    fi;
+  fi;
+  # default is UTF-8
+  if not IsBound(res.encoding) then
+    res.encoding := "UTF-8";
+  fi;
+  # if encoding is not UTF-8 then recode all element contents and
+  # attribute values:
+  enc := res.encoding;
+  if enc <> "UTF-8" then
+    Print("# recoding parsed data from ", enc, " to UTF-8 . . .\n");
+    ApplyToNodesParseTree(res, function(r)
+      local f;
+      if r.name in ["PCDATA", "XMLPI", "XMLDOCTYPE", "XMLCOMMENT"] then
+        r.content := Encode(U(r.content, enc));
+      else
+        for f in RecFields(r.attributes) do
+          r.attributes.(f) := Encode(U(r.attributes.(f), enc));
+        od;
+      fi;
+    end);
+  fi;
+  return res;
+end);
+InstallGlobalFunction(ParseTreeXMLFile, function(fname)
+  return ParseTreeXMLString(StringFile(fname));
 end);
 
 ##  Print document tree structure (without the PCDATA entries)
@@ -677,3 +747,49 @@ InstallGlobalFunction(RemoveRootParseTree, function(r)
   ApplyToNodesParseTree(r, function(a) Unbind(a.root); end);  
 end);
 
+StringElementAsXML := function(r)
+  local res, att, a;
+  if IsRecord(r) then
+    if r.name = "PCDATA" then
+      r := r.content;
+    elif r.name = "XMLPI" then
+      return Concatenation("<?", r.content, "?>");
+    elif r.name = "XMLDOCTYPE" then
+      return Concatenation("<!DOCTYPE ", r.content, ">");
+    elif r.name = "XMLCOMMENT" then
+      return Concatenation("<!--", r.content, "-->");
+    fi;
+  fi;
+  if IsString(r) then 
+    r := SubstitutionSublist(r, "&", "&amp;");
+    r := SubstitutionSublist(r, "<", "&lt;");
+    return r;
+  fi;
+  res := "<";
+  Append(res, r.name);
+  for att in RecFields(r.attributes) do
+    Add(res, ' ');
+    Append(res, att);
+    Append(res, "=\"");
+    Append(res, SubstitutionSublist(r.attributes.(att), "\"", "&#34;"));
+    Append(res, "\"");
+  od;
+  if r.content = 0 then
+    Append(res, "/>");
+    return res;
+  fi;
+  Add(res, '>');
+  if IsString(r.content) then
+    Append(res, StringElementAsXML(r.content));
+  else
+    for a in r.content do 
+      Append(res, StringElementAsXML(a));
+    od;
+  fi;
+  Append(res, "</");
+  Append(res, r.name);
+  Add(res, '>');
+  return res;
+end;
+
+  

@@ -1,7 +1,7 @@
-<!-- $Id: conv.xml,v 1.11 2004-09-06 13:54:27 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.12 2007-01-31 13:45:09 gap Exp $ -->
 
 <Chapter Label="ch:conv">
-<Heading>The Converters</Heading>
+<Heading>The Converters and Utilities</Heading>
 
 The &GAPDoc; package contains a set of programs which allow us to  convert a
 &GAPDoc; book  into several output  versions and  to make them  available to
