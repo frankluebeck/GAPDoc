@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.15 2007-01-31 13:45:10 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.16 2007-02-01 16:23:07 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -63,7 +63,10 @@ BindGlobal("NormalizedNameAndKey", function(str)
     if str="others" then
       return ["others", "", ""];
     fi;
-    
+   
+    # first some normalization on the string
+    RemoveCharacters(str,"[]");
+    str := SubstitutionSublist(str, "~", " ");
     str := SubstitutionSublist(str, ".", ". ");
     StripBeginEnd(str, WHITESPACE);
     n := SplitString(str, "", WHITESPACE);
@@ -202,7 +205,8 @@ InstallGlobalFunction(ParseBibFiles, function(arg)
       str := StringFile(Concatenation(file, ".bib"));
     fi;
     if str=fail then 
-      Print("#W  Can't find bib-file ", file, "[.bib]\n");
+      Info(InfoBibTools, 1, "#W WARNING: Cannot find bib-file ", 
+                                                      file, "[.bib]\n");
       return fail;
     fi;
 
@@ -379,7 +383,10 @@ InstallGlobalFunction(StringBibAsBib, function(arg)
   res := "";
   
   if not IsBound(r.Label) then
-    Print("%%%%%    no label     %%%%%%%%\n");
+    Info(InfoBibTools, 1, "#W WARNING: no .Label in Bib-record");
+    Info(InfoBibTools, 2, ":\n", r);
+    Info(InfoBibTools, 1, "\n");
+    
     return fail;
   fi;
   ind := RepeatedString(' ', 22);
@@ -566,7 +573,9 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
   fi;
   
   if not IsBound(r.Label) then
-    Print("Error: entry has no label . . .\n");
+    Info(InfoBibTools, 1, "#W WARNING: no .Label in Bib-record");
+    Info(InfoBibTools, 2, ":\n", r);
+    Info(InfoBibTools, 1, "\n");
     return fail;
   fi;
 
@@ -696,7 +705,9 @@ InstallGlobalFunction(StringBibAsText, function(arg)
   fi;
   
   if not IsBound(r.Label) then
-    Print("Error: entry has no label . . .\n");
+    Info(InfoBibTools, 1, "#W WARNING: no .Label in Bib-record");
+    Info(InfoBibTools, 2, ":\n", r);
+    Info(InfoBibTools, 1, "\n");
     return;
   fi;
   

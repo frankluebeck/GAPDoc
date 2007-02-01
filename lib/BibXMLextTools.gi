@@ -113,7 +113,9 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
     return ParseTreeXMLString(res).content;
   end;
   if not (r.Type in RecFields(BibXMLextStructure)) then
-    Print("invalid type: ", r.Type, "\n");
+    Info(InfoBibTools, 1, "#W WARNING: invalid .Type in Bib-record: ", 
+                                                          r.Type, "\n");
+    Info(InfoBibTools, 2, r, "\n");
     return fail;
   fi;
   struct := BibXMLextStructure.(r.Type);
@@ -121,28 +123,38 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
 
   # checking conditions on certain related elements in an entry
   if "isbn" in f and "issn" in f then
-    Print("cannot have both, ISBN and ISSN\n");
+    Info(InfoBibTools, 1, "#W WARNING: Cannot have both, ISBN and ISSN ",
+                            "in Bib-record\n");
+    Info(InfoBibTools, 2, r, "\n");
     return fail;
   fi;
   if r.Type in ["book", "inbook", "incollection", "proceedings",
                 "inproceedings", "conference"] and
      "volume" in f and "number" in f then
-    Print("cannot have both in ", r.Type, "-entry, 'volume' and 'number'\n");
+    Info(InfoBibTools, 1, "#W WARNING: Cannot have both in ", 
+                            r.Type, "-entry, 'volume' and 'number'\n");
+    Info(InfoBibTools, 2, r, "\n");
     return fail;
   fi;
   if r.Type in ["book", "inbook"] then
     if "author" in f and "editor" in f then
-      Print("cannot have both in ", r.Type, "-entry, 'author' and 'editor'\n");
+      Info(InfoBibTools, 1, "#W WARNING: Cannot have both in ", 
+                            r.Type, "-entry, 'author' and 'editor'\n");
+      Info(InfoBibTools, 2, r, "\n");
       return fail;
     elif not "author" in f and not "editor" in f then
-      Print("must have 'author' or 'editor' in ", r.Type, "-entry\n");
+      Info(InfoBibTools, 1, "#W WARNING: Must have 'author' or 'editor' in ", 
+                                        r.Type, "-entry\n");
+      Info(InfoBibTools, 2, r, "\n");
       return fail;
     fi;
   fi;
   if r.Type = "inbook" then
     if not "pages" in f then
       if not "chapter" in f then
-        Print("must have 'chapter' and/or 'pages' in inbook-entry\n");
+        Info(InfoBibTools, "#W WARNING: Must have 'chapter' and/or 'pages' ",
+                            "in inbook-entry\n");
+        Info(InfoBibTools, 2, r, "\n");
         return fail;
       fi;
     fi;
@@ -157,7 +169,9 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
   cont := res.content[1].content;       
   for a in struct do
     if a[2] = true and not a[1] in f then
-      Print("must have '", a[1], "' in ", r.Type, "-entry\n");
+      Info(InfoBibTools, 1, "#W WARNING: Must have '", a[1], "' in ", 
+                                    r.Type, "-entry\n");
+      Info(InfoBibTools, 2, r, "\n");
       return fail;
     fi;
     if a[1] in f then
@@ -319,7 +333,9 @@ BIBXMLHANDLER.default.value := function(t, r, bib, type)
   local pos;
   pos := Position(bib[2], r.attributes.key);
   if pos = fail then
-    Print("# WARNING: cannot resolve abbreviation: ", r.attributes.key, "\n"); 
+    Info(InfoBibTools, 1, "#W WARNING: Cannot resolve abbreviation: ", 
+                                     r.attributes.key, "\n"); 
+    Info(InfoBibTools, 2, r, "\n");
     Append(t.tmptext, r.attributes.key);
     Append(t.tmptext, "???");
   else

@@ -2,20 +2,22 @@
 ##
 #A  makedocrel.g                          GAPDoc                 Frank Lübeck
 ##  
-#H  @(#)$Id: makedocrel.g,v 1.5 2007-01-31 13:45:09 gap Exp $
+#H  @(#)$Id: makedocrel.g,v 1.6 2007-02-01 16:23:07 gap Exp $
 ##  
 ##  Rebuild the  whole documentation, provided sufficiently  good (pdf)LaTeX
 ##  is  available.   This  version  produces  relative   paths  to  external
 ##  documents, which is ok for the package in standard location.
 ##  
-SetGapDocLaTeXOptions("pdf","color", "UTF-8");
+#SetGapDocLaTeXOptions("pdf","color", "UTF-8");
+SetGapDocLaTeXOptions("pdf","color", "latin1");
 # main
 Print("\n========== converting main documentation for GAPDoc ==============\n");
 maintree := MakeGAPDocDoc("doc", "gapdoc", ["../lib/BibTeX.gi", 
-"../lib/ComposeXML.gi", "../lib/GAPDoc2HTML.gi",
+"../lib/BibTeX.gd", 
+"../lib/ComposeXML.gi", "../lib/GAPDoc2HTML.gi", "../lib/GAPDoc.gd",
 "../lib/GAPDoc.gi", "../lib/GAPDoc2LaTeX.gi", "../lib/GAPDoc2Text.gi", 
 "../lib/PrintUtil.gi", "../lib/Text.gi", "../lib/XMLParser.gi",
-"../lib/Make.g" ], "GAPDoc", "../../..");
+"../lib/XMLParser.gd", "../lib/Make.g" ], "GAPDoc", "../../..");
 
 # now load it (for cross reference in example)
 Print("\n========== converting example document for GAPDoc ================\n");

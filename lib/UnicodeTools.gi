@@ -371,10 +371,12 @@ end);
 
 
 InstallMethod(U, [IsString, IsString], function(str, enc)
-if Length(str) > 0 and not IsStringRep(str) then
-  Print("no stringrep: ",str,"\n");
-  ConvertToStringRep(str);
-fi;
+  if Length(str) > 0 and not IsStringRep(str) then
+    Info(InfoWarning, 1, "#W Changing argument to IsStringRep");
+    Info(InfoWarning, 2, ":\n ", str);
+    Info(InfoWarning, 1, "\n");
+    ConvertToStringRep(str);
+  fi;
   if not IsBound(UNICODE_RECODE.NormalizedEncodings.(enc)) then
     Error("Sorry, only the following encodings are supported for U:\n",
               RecFields(UNICODE_RECODE.Decoder), "\n");

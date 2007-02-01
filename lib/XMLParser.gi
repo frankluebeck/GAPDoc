@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.13 2007-01-31 13:45:10 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.14 2007-02-01 16:23:07 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -106,23 +106,25 @@ BindGlobal("ParseError", function(str, pos, comment)
       Show();
     fi;
   end;
-  nl := LineNumberStringPosition(str, pos);
-  if XMLPARSEORIGINS <> false then
-    r := OriginalPositionComposedXML(XMLPARSEORIGINS, pos);
-  fi;
-  Print("XML Parse Error: Line ", nl[1]);
-  Print(" Character ", pos-nl[2][1]+1, "\n");
-  if XMLPARSEORIGINS <> false then
-    Print("Original file: ", r[1], ", line number ", r[2],".\n");
-  fi;
-  Print("-----------\n", str{nl[2]}, "\n");
-  if pos-nl[2][1] >= 1 then
-    Print(List([1..pos-nl[2][1]], i-> ' '));
-  fi;
-  Print("^", "\n-----------\n", comment, "\n!!! Type 'Show();' to watch the",
-  " input string in pager - starting with\n    line containing error !!!\n");
-  if XMLPARSEORIGINS <> false then
-    Print("Or 'ShowOrigin();' to look it up in its source file.\n");
+  if InfoLevel(InfoXMLParser) > 0 then
+    nl := LineNumberStringPosition(str, pos);
+    if XMLPARSEORIGINS <> false then
+      r := OriginalPositionDocument(XMLPARSEORIGINS, pos);
+    fi;
+    Print("XML Parse Error: Line ", nl[1]);
+    Print(" Character ", pos-nl[2][1]+1, "\n");
+    if XMLPARSEORIGINS <> false then
+      Print("Original file: ", r[1], ", line number ", r[2],".\n");
+    fi;
+    Print("-----------\n", str{nl[2]}, "\n");
+    if pos-nl[2][1] >= 1 then
+      Print(List([1..pos-nl[2][1]], i-> ' '));
+    fi;
+    Print("^", "\n-----------\n", comment, "\n!!! Type 'Show();' to watch the",
+    " input string in pager - starting with\n    line containing error !!!\n");
+    if XMLPARSEORIGINS <> false then
+      Print("Or 'ShowOrigin();' to look it up in its source file.\n");
+    fi;
   fi;
   Error();
 end);
@@ -208,8 +210,8 @@ InstallGlobalFunction(GetEnt, function(str, pos)
   if not IsBound(ENTITYDICT.(nam)) then
     # XXX error or better going on here?
 ##      ParseError(str, pos, "don't know entity name");
-    Print("WARNING: Entity with name `", nam, "' not known!\n",
-          "         (Specify in <!DOCTYPE ...> tag!)\n");
+    Info(InfoXMLParser, 1, "#W WARNING: Entity with name `", nam, 
+             "' not known!\n#W", "        (Specify in <!DOCTYPE ...> tag!)\n");
     doc := Concatenation("UNKNOWNEntity(", nam, ")");
   else
     doc := ENTITYDICT.(nam);
@@ -538,7 +540,7 @@ end);
 ##  and returns the document in form of a tree.<P/>
 ## 
 ##  The  optional argument  <A>srcinfo</A> must  have the  same format
-##  as  in <Ref  Func="OriginalPositionComposedXML"  />,  if given  error
+##  as  in <Ref  Func="OriginalPositionDocument"  />,  if given  error
 ##  messages  refer  to the  original  source  of  the text  with  the
 ##  problem.
 ##  
@@ -624,7 +626,8 @@ InstallGlobalFunction(ParseTreeXMLString, function(arg)
   # attribute values:
   enc := res.encoding;
   if enc <> "UTF-8" then
-    Print("# recoding parsed data from ", enc, " to UTF-8 . . .\n");
+    Info(InfoXMLParser, 1, 
+                "#I Recoding parsed data from ", enc, " to UTF-8 . . .\n");
     ApplyToNodesParseTree(res, function(r)
       local f;
       if r.name in ["PCDATA", "XMLPI", "XMLDOCTYPE", "XMLCOMMENT"] then

@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gd                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gd,v 1.2 2007-01-31 13:45:10 gap Exp $
+#H  @(#)$Id: XMLParser.gd,v 1.3 2007-02-01 16:23:07 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -23,3 +23,24 @@ DeclareGlobalFunction("ApplyToNodesParseTree");
 DeclareGlobalFunction("AddRootParseTree");
 DeclareGlobalFunction("RemoveRootParseTree");
 
+##  <#GAPDoc Label="InfoXMLParser">
+##  <ManSection >
+##  <InfoClass Name="InfoXMLParser" />
+##  <Description>
+##  The default level of this info class is 1. Functions like <Ref
+##  Func="ParseTreeXMLString"/> are then printing some information, in
+##  particular in case of errors. You can suppress it by setting the 
+##  level of <Ref InfoClass="InfoXMLParser"/> to 0. With level 2 there
+##  may be some more information for debugging purposes.
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+##  
+# Info class with default level 1
+BindGlobal("InfoXMLParser", NewInfoClass("InfoXMLParser"));
+SetInfoLevel(InfoXMLParser, 1);
+if CompareVersionNumbers(GAPInfo.Version, "4.dev") then
+  SetInfoHandler(InfoXMLParser, function(cl, lev, l)
+    CallFuncList(Print, l);
+  end);
+fi;

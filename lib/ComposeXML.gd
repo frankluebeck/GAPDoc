@@ -2,7 +2,7 @@
 ##
 #W  ComposeXML.gi                GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: ComposeXML.gd,v 1.2 2007-01-31 13:45:10 gap Exp $
+#H  @(#)$Id: ComposeXML.gd,v 1.3 2007-02-01 16:23:07 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -11,6 +11,8 @@
 ## a GAPDoc-XML document from several source files.
 ##  
 
+DeclareGlobalFunction("ComposedDocument");
+# for compatibility
 DeclareGlobalFunction("ComposedXMLString");
-DeclareGlobalFunction("OriginalPositionComposedXML");
+DeclareGlobalFunction("OriginalPositionDocument");
 

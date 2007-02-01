@@ -2,7 +2,7 @@
 ##
 #W  Make.g                       GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Make.g,v 1.8 2007-01-31 13:45:10 gap Exp $
+#H  @(#)$Id: Make.g,v 1.9 2007-02-01 16:23:07 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -39,19 +39,21 @@ BindGlobal("MakeGAPDocDoc", function(arg)
     main := main{[1..Length(main)-4]};
   fi;
   # compose the XML document
-  Print("Composing XML document . . .\n");
-  str := ComposedXMLString(path, Concatenation(main, ".xml"), files, true);
+  Info(InfoGAPDoc, 1, "#I Composing XML document . . .\n");
+  str := ComposedDocument("GAPDoc", path, 
+                             Concatenation(main, ".xml"), files, true);
   # parse the XML document
-  Print("Parsing XML document . . .\n");
+  Info(InfoGAPDoc, 1, "#I Parsing XML document . . .\n");
   r := ParseTreeXMLString(str[1], str[2]);
   # clean the result
-  Print("Checking XML structure . . .\n");
+  Info(InfoGAPDoc, 1, "#I Checking XML structure . . .\n");
   CheckAndCleanGapDocTree(r);
   # produce LaTeX version
-  Print("LaTeX version and calling latex and pdflatex:\n    ");
+  Info(InfoGAPDoc, 1, "#I Constructing LaTeX version and calling pdflatex:\n"); 
   r.bibpath := path;
   l := GAPDoc2LaTeX(r);
-  Print("writing LaTeX file, \c");
+  Info(InfoGAPDoc, 1, "#I Writing LaTeX file, \c");
+  Info(InfoGAPDoc, 2, Concatenation(main, ".tex"), "\n#I     ");
   FileString(Filename(path, Concatenation(main, ".tex")), l);
   # call latex and pdflatex (with bibtex, makeindex and dvips)
   latex := "latex -interaction=nonstopmode ";
@@ -65,7 +67,7 @@ BindGlobal("MakeGAPDocDoc", function(arg)
 ##    "; makeindex ", main, null,
 ##    "; ", latex, main, null,
 ##    "; rm -f ", main, ".aux\""));
-  Print("3 x pdflatex, \c");
+  Info(InfoGAPDoc, 1, "3 x pdflatex with bibtex and makeindex, \c");
   Exec(Concatenation("sh -c \" cd ", Filename(path,""),
   "; rm -f ", main, ".aux ",
   "; pdf", latex, main, null,
@@ -80,26 +82,30 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   "; mv ", main, ".pdf manual.pdf; ", 
 ##    "mv ", main, ".ps manual.ps; ", 
   "\""));
+  Info(InfoGAPDoc, 1, "\n");
   # produce text version
-  Print("Text version . . .\n");
+  Info(InfoGAPDoc, 1, "#I Text version:\n");
   t := GAPDoc2Text(r, path);
   GAPDoc2TextPrintTextFiles(t, path);
   # read page number information for .six file
-  Print("Writing manual.six file . . .\n");
+  Info(InfoGAPDoc, 1, "#I Writing manual.six file ... \c");
+  Info(InfoGAPDoc, 2, Filename(path, "manual.six"), "\n");
+  Info(InfoGAPDoc, 1, "\n");
   AddPageNumbersToSix(r, Filename(path, Concatenation(main, ".pnr")));
   # print manual.six file
   PrintSixFile(Filename(path, "manual.six"), r, bookname);
   # produce html version
-  Print("And finally the HTML version . . .\n");
+  Info(InfoGAPDoc, 1, "#I Finally the HTML version . . .\n");
   h := GAPDoc2HTML(r, path, gaproot);
   GAPDoc2HTMLPrintHTMLFiles(h, path);
   if "Tth" in htmlspecial then
-    Print("  - also HTML version with 'tth' translated formulae . . .\n");
+    Info(InfoGAPDoc, 1, 
+            "#I - also HTML version with 'tth' translated formulae . . .\n");
     h := GAPDoc2HTML(r, path, gaproot, "Tth");
     GAPDoc2HTMLPrintHTMLFiles(h, path);
   fi;
   if "MathML" in htmlspecial then
-    Print("  - also HTML + MathML version with 'ttm' . . .\n");
+    Info(InfoGAPDoc, 1, "#I - also HTML + MathML version with 'ttm' . . .\n");
     h := GAPDoc2HTML(r, path, gaproot, "MathML");
     GAPDoc2HTMLPrintHTMLFiles(h, path);
   fi;

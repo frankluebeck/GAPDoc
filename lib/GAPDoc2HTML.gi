@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.32 2007-01-31 13:45:10 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.33 2007-02-01 16:23:07 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -400,7 +400,7 @@ InstallGlobalFunction(GAPDoc2HTML, function(arg)
 
   name := r.name;
   if not IsBound(GAPDoc2HTMLProcs.(name)) then
-    Print("WARNING: Don't know how to process element ", name, 
+    Info(InfoGAPDoc, 1, "#W WARNING: Don't know how to process element ", name, 
           " ---- ignored\n");
   else
     GAPDoc2HTMLProcs.(r.name)(r, str);
@@ -517,12 +517,12 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   ##  so far to the Book handler.
   ##  We call the Book handler twice and produce index, bibliography, toc
   ##  in between.
-  Print("#I  first run, collecting cross references, index, toc, bib ",
-        "and so on . . .\n");
+  Info(InfoGAPDoc, 1, "#I First run, collecting cross references, ",
+        "index, toc, bib and so on . . .\n");
   GAPDoc2HTMLProcs.Book(r.content[i], [], pi);
   
   # now the toc is ready
-  Print("#I  table of contents complete.\n");
+  Info(InfoGAPDoc, 1, "#I Table of contents complete.\n");
   r.toctext := r.toc;
   
   # utility to remove <div> tags
@@ -545,13 +545,13 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
 
   # MathML or Tth translation
   if r.mathmode in ["MathML", "Tth"] then
-    Print("#I  translating formulae with \c");
+    Info(InfoGAPDoc, 1, "#I   translating formulae with \c");
     FileString("tempCONV.tex", r.ConvInput);
     if r.mathmode = "MathML" then
-      Print("ttm.\n");
+      Info(InfoGAPDoc, 1, "ttm.\n");
       Exec("rm -f tempCONV.html; ttm -L -r tempCONV.tex > tempCONV.html");
     elif r.mathmode = "Tth" then
-      Print("tth.\n");
+      Info(InfoGAPDoc, 1, "tth.\n");
       Exec("rm -f tempCONV.html; tth -w2 -r -u tempCONV.tex > tempCONV.html");
     fi; 
     math := StringFile("tempCONV.html");
@@ -576,7 +576,7 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   fi;
   
   # .index has entries of form [sorttext, subtext, numbertext, entrytext]
-  Print("#I  producing the index . . .\n");
+  Info(InfoGAPDoc, 1, "#I Producing the index . . .\n");
   Sort(r.index);
   str := "";
   for a in r.index do
@@ -591,7 +591,7 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   r.indextext := str;
   
   if Length(r.bibkeys) > 0 then
-    Print("#I  reading bibliography data files . . . \n");
+    Info(InfoGAPDoc, 1, "#I Reading bibliography data files . . . \n");
     dat := SplitString(r.bibdata, "", ", \t\b\n");
     datbt := Filtered(dat, a-> Length(a) < 4 or 
                                a{[Length(a)-3..Length(a)]} <> ".xml");
@@ -614,11 +614,12 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
     labels := List(need, a-> a.key);
     diff := Difference(r.bibkeys, keys);
     if Length(diff) > 0 then
-      Print("#W  could not find references: ", diff, "\n");
+      Info(InfoGAPDoc, 1, "#W WARNING: could not find these references: \n", 
+                                                           diff, "\n");
     fi;
     r.bibkeys := keys;
     r.biblabels := labels;
-    Print("#I  writing bibliography . . .\n");
+    Info(InfoGAPDoc, 1, "#I Writing bibliography . . .\n");
     text := "";
 ##      stream := OutputTextString(text, false);
 ##      SetPrintFormattingStatus(stream, false);
@@ -642,7 +643,7 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   
   # second run
   r.index := [];
-  Print("#I  second run through document . . .\n");
+  Info(InfoGAPDoc, 1, "#I Second run through document . . .\n");
   GAPDoc2HTMLProcs.Book(r.content[i], par, pi);
   
   for a in ["MathList", "MathCount", "index", "toc", "bibkeys", 

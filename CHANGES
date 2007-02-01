@@ -4,6 +4,10 @@
 
 - Changed the status of the package from "deposited" to "accepted".
 
+- Print statements in some functions are now substituted by Info statements,
+  such that they can be switched of, or can be set to debug level
+  (new Info classes: InfoGAPDoc, InfoXMLParser, InfoBibTools).
+
 - Removed some pre-GAP 4.4 syntax.
 
 - The default LaTeX markup for <A>, <Arg> is now by slanted typewriter

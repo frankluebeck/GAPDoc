@@ -1,7 +1,7 @@
 
 ##  GAPDoc                                             Frank Lübeck
 ##  
-##  $Id: Examples.g,v 1.4 2006-01-25 10:09:22 gap Exp $
+##  $Id: Examples.g,v 1.5 2007-02-01 16:23:07 gap Exp $
 ##  
 ##  Some utilities to extract contents of some elements. (First
 ##  experimental.)
@@ -57,7 +57,8 @@ end;
 ##  TstExamples2 := function ( path, main, files )
 ##      local  str, r, examples, temp_dir, file, otf;
 ##  
-##      str := ComposedXMLString( path, Concatenation( main, ".xml" ), files );
+##      str := ComposedDocument( "GAPDoc", path, 
+##                                    Concatenation( main, ".xml" ), files );
 ##      r := ParseTreeXMLString( str );
 ##  
 ##  #Print(TstExamples( r ));

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.13 2007-01-31 13:45:10 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.14 2007-02-01 16:23:07 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -261,7 +261,7 @@ InstallGlobalFunction(GAPDoc2Text, function(arg)
   
   name := r.name;
   if not IsBound(GAPDoc2TextProcs.(name)) then
-    Print("WARNING: Don't know how to process element ", name, 
+    Info(InfoGAPDoc, 1, "#W WARNING: Don't know how to process element ", name, 
           " ---- ignored\n");
   else
     GAPDoc2TextProcs.(r.name)(r, str);
@@ -379,16 +379,16 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   ##  so far to the Book handler.
   ##  We call the Book handler twice and produce index, bibliography, toc
   ##  in between.
-  Print("#I  first run, collecting cross references, index, toc, bib ",
-        "and so on . . .\n");
+  Info(InfoGAPDoc, 1, "#I First run, collecting cross references, ",
+        "index, toc, bib and so on . . .\n");
   GAPDoc2TextProcs.Book(r.content[i], "", pi);
   
   # now the toc is ready
-  Print("#I  table of contents complete.\n");
+  Info(InfoGAPDoc, 1, "#I Table of contents complete.\n");
   r.toctext := r.toc;
   
   # .index has entries of form [sorttext, subtext, numbertext, entrytext]
-  Print("#I  producing the index . . .\n");
+  Info(InfoGAPDoc, 1, "#I Producing the index . . .\n");
   Sort(r.index);
   str := "";
   for a in r.index do
@@ -404,7 +404,7 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   r.indextext := str;
   
   if Length(r.bibkeys) > 0 then
-    Print("#I  reading bibliography data files . . . \n");
+    Info(InfoGAPDoc, 1, "#I Reading bibliography data files . . . \n");
     dat := SplitString(r.bibdata, "", ", \t\b\n");
     datbt := Filtered(dat, a-> Length(a) < 4 or 
                                a{[Length(a)-3..Length(a)]} <> ".xml");
@@ -427,11 +427,12 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
     labels := List(need, a-> a.key);
     diff := Difference(r.bibkeys, keys);
     if Length(diff) > 0 then
-      Print("#W  could not find references: ", diff, "\n");
+      Info(InfoGAPDoc, 1, "#W WARNING: could not find these references:\n   ", 
+                           diff, "\n");
     fi;
     r.bibkeys := keys;
     r.biblabels := labels;
-    Print("#I  writing bibliography . . .\n");
+    Info(InfoGAPDoc, 1, "#I Writing bibliography . . .\n");
     text := "";
     stream := OutputTextString(text, false);
     PrintTo1(stream, function()
@@ -444,7 +445,7 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   # second run
   r.six := [];
   r.index := [];
-  Print("#I  second run through document . . .\n");
+  Info(InfoGAPDoc, 1, "#I Second run through document . . .\n");
   GAPDoc2TextProcs.Book(r.content[i], par, pi);
   # adding .six entries from index
   for a in r.index do

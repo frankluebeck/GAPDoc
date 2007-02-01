@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.18 2007-01-31 13:45:10 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.19 2007-02-01 16:23:07 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -99,7 +99,7 @@ InstallGlobalFunction(GAPDoc2LaTeX, function(arg)
   fi;
   name := r.name;
   if not IsBound(GAPDoc2LaTeXProcs.(name)) then
-    Print("WARNING: Don't know how to process element ", name, 
+    Info(InfoGAPDoc, 1, "#W WARNING: Don't know how to process element ", name, 
           " ---- ignored\n");
   else
     GAPDoc2LaTeXProcs.(r.name)(r, str);
@@ -107,7 +107,7 @@ InstallGlobalFunction(GAPDoc2LaTeX, function(arg)
   if Length(arg)=1 then
     # if not using the ucs-package we translate the UTF-8 string to latin1
     if Length(GAPDoc2LaTeXProcs.USEUCS) = 0 then
-      Print("# recoding LaTeX input to latin1\n");
+      Info(InfoGAPDoc, 1, "#I Recoding LaTeX input to latin1 ...\n");
       str := Encode(U(str, "UTF-8"), "latin1");
     fi;
     return str;
@@ -686,7 +686,8 @@ GAPDoc2LaTeXProcs.Bibliography := function(r, str)
       fname := Filename(r.root.bibpath, a);
       t := ParseTreeXMLFile(fname);
       b := BibRecBibXML(t, "BibTeXhref");
-      Print("#I Creating BibTeX file ", fname, ".bib from BibXMLext file.\n");
+      Info(InfoGAPDoc, 1, "#I Creating BibTeX file ", 
+                                   fname, ".bib from BibXMLext file.\n");
       WriteBibFile(Concatenation(fname, ".bib"), b);
     fi;
   od;
