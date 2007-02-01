@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.19 2007-02-01 16:23:07 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.20 2007-02-01 23:22:28 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1011,6 +1011,9 @@ end;
 GAPDoc2LaTeXProcs.ResolveExternalRef := function(bookname,  label, nr)
   local info, match;
   info := HELP_BOOK_INFO(bookname);
+  if info = fail then
+    return fail;
+  fi;
   match := Concatenation(HELP_GET_MATCHES(info, STRING_LOWER(label), true));
   if Length(match) < nr then
     return fail;
@@ -1036,6 +1039,8 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
       ref := GAPDoc2LaTeXProcs.ResolveExternalRef(
                                           r.attributes.BookName, lab, 1);
       if ref = fail then
+        Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
         ref := Concatenation(" (", lab, "???)");
       else
         # the search text for online help including book name
@@ -1068,6 +1073,8 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
       ref := GAPDoc2LaTeXProcs.ResolveExternalRef(
                                           r.attributes.BookName, lab, 1);
       if ref = fail then
+        Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
         ref := Concatenation(" (", lab, "???)");
       else
         # the search text for online help including book name
@@ -1078,6 +1085,8 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
         ref := Concatenation("`", StripBeginEnd(
                 GAPDoc2LaTeXProcs._labeledSections.(lab), WHITESPACE), "'"); 
       else
+        Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
         ref := "`???'";
       fi;
     else
@@ -1099,6 +1108,8 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
     ref := GAPDoc2LaTeXProcs.ResolveExternalRef(
                                         r.attributes.BookName, lab, 1);
     if ref = fail then
+      Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
       ref := Concatenation(" ", lab, "??? ");
     else
       # the search text for online help including book name

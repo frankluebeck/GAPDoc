@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.14 2007-02-01 16:23:07 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.15 2007-02-01 23:22:28 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -381,7 +381,10 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   ##  in between.
   Info(InfoGAPDoc, 1, "#I First run, collecting cross references, ",
         "index, toc, bib and so on . . .\n");
+  # with this flag we avoid unresolved references warnings in first run
+  GAPDoc2TextProcs.FirstRun := true;
   GAPDoc2TextProcs.Book(r.content[i], "", pi);
+  GAPDoc2TextProcs.FirstRun := false;
   
   # now the toc is ready
   Info(InfoGAPDoc, 1, "#I Table of contents complete.\n");
@@ -1190,6 +1193,9 @@ end;
 GAPDoc2TextProcs.ResolveExternalRef := function(bookname,  label, nr)
   local info, match;
   info := HELP_BOOK_INFO(bookname);
+  if info = fail then
+    return fail;
+  fi;
   match := Concatenation(HELP_GET_MATCHES(info, STRING_LOWER(label), true));
   if Length(match) < nr then
     return fail;
@@ -1214,6 +1220,10 @@ GAPDoc2TextProcs.Ref := function(r, str)
     if IsBound(r.attributes.BookName) then
       ref := GAPDoc2TextProcs.ResolveExternalRef(r.attributes.BookName, lab, 1);
       if ref = fail then
+        if GAPDoc2TextProcs.FirstRun <> true then
+          Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
+        fi;
         ref := Concatenation(lab, "???");
       else
         # the search text for online help including book name
@@ -1223,6 +1233,10 @@ GAPDoc2TextProcs.Ref := function(r, str)
       if IsBound(r.root.labels.(lab)) then
         ref := r.root.labels.(lab);
       else
+        if GAPDoc2TextProcs.FirstRun <> true then
+          Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
+        fi;
         ref := Concatenation("???", lab, "???");
       fi;
     fi;
@@ -1251,6 +1265,10 @@ GAPDoc2TextProcs.Ref := function(r, str)
     if IsBound(r.attributes.BookName) then
       ref := GAPDoc2TextProcs.ResolveExternalRef(r.attributes.BookName, lab, 1);
       if ref = fail then
+        if GAPDoc2TextProcs.FirstRun <> true then
+          Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
+        fi;
         ref := Concatenation(lab, "???");
       else
         # the search text for online help including book name
@@ -1268,6 +1286,10 @@ GAPDoc2TextProcs.Ref := function(r, str)
       elif IsBound(r.root.labels.(lab)) then
         ref := r.root.labels.(lab);
       else
+        if GAPDoc2TextProcs.FirstRun <> true then
+          Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
+        fi;
         ref := Concatenation("???", lab, "???");
       fi;
     fi;
