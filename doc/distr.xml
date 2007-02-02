@@ -1,4 +1,4 @@
-<!-- $Id: distr.xml,v 1.5 2007-02-01 16:23:07 gap Exp $ -->
+<!-- $Id: distr.xml,v 1.6 2007-02-02 15:12:36 gap Exp $ -->
 <Chapter Label="Distributing">
 <Heading>Distributing a Document into Several Files</Heading>
 
@@ -43,7 +43,8 @@ Here are the exact rules, how pieces are gathered:
 <List>
 <Item>
 All lines up to a line containing the character sequence 
-<Q><C>&tlt;&hash;GAPDoc Label="</C></Q> are ignored. The characters
+<Q><C>&tlt;&hash;GAPDoc&nbsp;Label="</C></Q> (exactly one space
+character) are ignored. The characters
 on the same line before this sequence are stored as <Q>prefix</Q>. 
 The characters after the sequence up to the next double quotes character
 are stored as <Q>label</Q>. All other characters in the line are ignored. 

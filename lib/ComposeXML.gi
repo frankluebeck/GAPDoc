@@ -2,7 +2,7 @@
 ##
 #W  ComposeXML.gi                GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: ComposeXML.gi,v 1.5 2007-02-01 16:23:07 gap Exp $
+#H  @(#)$Id: ComposeXML.gi,v 1.6 2007-02-02 15:12:36 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -65,7 +65,7 @@ DOCCOMPOSEERROR := true;
 InstallGlobalFunction(ComposedDocument, function(arg)
   local path, main, source, info, tagname, btag, etag,
         pieces, origin, fname, str, posnl, i, j, pre, pos, name, piece, 
-        b, len, Collect, res, src, f, a;
+        b, len, Collect, res, src, f, a, usedpieces;
   # get arguments, 5th arg is optional for compatibility with older versions
   tagname := arg[1];
   btag := Concatenation("<#", tagname, " Label=\"");
@@ -135,6 +135,9 @@ InstallGlobalFunction(ComposedDocument, function(arg)
     od;
   od;
 
+  # we do some bookkeeping which pieces are actually used
+  usedpieces := [];
+  
   # recursive substitution of files and chunks from above
   # In this helper [cont, from] is a pair [piece, orig] from above
   # or a pair [filename, 0].
@@ -190,6 +193,7 @@ InstallGlobalFunction(ComposedDocument, function(arg)
             pieces.(piece[2]) := Concatenation("MISSING CHUNK ", piece[2]);
             origin.(piece[2]) := [Concatenation("MISSINGCHUNK ",piece[2]),1]; 
           fi;
+          Add(usedpieces, piece[2]);
           Collect(res, src, pieces.(piece[2]), origin.(piece[2]));
         fi;
       else
@@ -201,6 +205,8 @@ InstallGlobalFunction(ComposedDocument, function(arg)
   src := [];
   # now start the recursion as #Include of the main file in empty string
   Collect(res, src, Filename(path, main), 0);
+  Info(InfoGAPDoc, 2, "Labels of chunks which were not used: ",
+                                  Difference(RecFields(pieces), usedpieces));
   if info then
     return [res, src];
   else
