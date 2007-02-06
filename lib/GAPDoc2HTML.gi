@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.34 2007-02-01 23:22:28 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.35 2007-02-06 13:12:34 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -66,14 +66,14 @@ InstallValue(GAPDoc2HTMLProcs, rec());
 
 ##  Some text attributes ([begin, end] pairs)
 GAPDoc2HTMLProcs.TextAttr := rec();
-GAPDoc2HTMLProcs.TextAttr.Heading := ["", ""];
+GAPDoc2HTMLProcs.TextAttr.Heading := ["<span class=\"Heading\">", "</span>"];
 
 GAPDoc2HTMLProcs.TextAttr.Func := ["<code class=\"func\">", "</code>"];
-GAPDoc2HTMLProcs.TextAttr.Arg := ["<var>", "</var>"];
-GAPDoc2HTMLProcs.TextAttr.Example := ["", ""];
+GAPDoc2HTMLProcs.TextAttr.Arg := ["<var class=\"Arg\">", "</var>"];
+GAPDoc2HTMLProcs.TextAttr.Example := ["<div class=\"Example\">", "</div>"];
 GAPDoc2HTMLProcs.TextAttr.Package := ["<strong class=\"pkg\">", "</strong>"];
-GAPDoc2HTMLProcs.TextAttr.URL := ["", ""];
-GAPDoc2HTMLProcs.TextAttr.Mark := ["<strong>", "</strong>"];
+GAPDoc2HTMLProcs.TextAttr.URL := ["<span class=\"URL\">", "</span>"];
+GAPDoc2HTMLProcs.TextAttr.Mark := ["<strong class=\"Mark\">", "</strong>"];
 
 GAPDoc2HTMLProcs.TextAttr.K := ["<code class=\"keyw\">", "</code>"];
 GAPDoc2HTMLProcs.TextAttr.C := ["<code class=\"code\">", "</code>"];
@@ -82,7 +82,7 @@ GAPDoc2HTMLProcs.TextAttr.I := ["<code class=\"i\">", "</code>"];
 GAPDoc2HTMLProcs.TextAttr.B := ["<strong class=\"button\">", "</strong>"];
 GAPDoc2HTMLProcs.TextAttr.Emph := ["<em>", "</em>"];
 
-GAPDoc2HTMLProcs.TextAttr.Ref := ["<b>", "</b>"];
+GAPDoc2HTMLProcs.TextAttr.Ref := ["<b class=\"Ref\">", "</b>"];
 
 # like in Text converter, but a heading and an address are not a paragraph here
 GAPDoc2HTMLProcs.ParEls := 
@@ -224,7 +224,7 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
       next := "";
     fi;
     n := chnrs[i];
-    Append(files.(n).text, Concatenation("\n<div class=\"pcenter\">\n<table class=\"chlink\"><tr>",
+    Append(files.(n).text, Concatenation("\n<div class=\"pcenter\">\n<table class=\"chlinkprevnext\"><tr>",
            toplink, prev, next, "</tr></table>\n<br />\n\n"));
     Append(files.(n).text,  chlink);
     Append(files.(n).text, "\n</div>\n");
@@ -810,7 +810,9 @@ GAPDoc2HTMLProcs.URL := function(arg)
   
   s := "";
   GAPDoc2HTMLContent(r, s);
-  Append(str, Concatenation("<a href=\"", pre, s, "\">"));
+  Append(str, Concatenation(GAPDoc2HTMLProcs.TextAttr.URL[1], 
+                            "<a href=\"", pre, s, "\">",
+                            GAPDoc2HTMLProcs.TextAttr.URL[2]));
   if IsBound(r.attributes.Text) then
     Append(str,  r.attributes.Text);
   else
@@ -922,7 +924,7 @@ end;
 
 ##  this really produces the content of the heading
 GAPDoc2HTMLProcs.Heading1 := function(r, str)
-  GAPDoc2HTMLContent(r, str);
+  GAPDoc2HTMLProcs.WrapAttr(r, str, "Heading");
 end;
 ##  and this ignores the heading (for simpler recursion)
 GAPDoc2HTMLProcs.Heading := function(r, str)

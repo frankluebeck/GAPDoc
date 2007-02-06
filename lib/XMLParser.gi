@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.15 2007-02-06 12:55:47 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.16 2007-02-06 13:12:34 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -94,7 +94,7 @@ end);
 # also shows some text around position of error.
 XMLPARSEORIGINS := false;
 BindGlobal("ParseError", function(str, pos, comment)
-  local Show, nl, ShowOrigin, r;
+  local Show, nl, ShowOrigin, r, badline, i;
   # for examination of error
   Show := function()
     Pager(rec(lines := str, start := nl[1]));
@@ -116,10 +116,15 @@ BindGlobal("ParseError", function(str, pos, comment)
     if XMLPARSEORIGINS <> false then
       Print("Original file: ", r[1], ", line number ", r[2],".\n");
     fi;
-    Print("-----------\n", str{nl[2]}, "\n");
-    if pos-nl[2][1] >= 1 then
-      Print(List([1..pos-nl[2][1]], i-> ' '));
-    fi;
+    badline := str{nl[2]}; 
+    Print("-----------\n", badline, "\n");
+    # this uses the same non-' ' whitespace to get the '^' at the right position
+    for i in [1..pos-nl[2][1]] do
+      if not badline[i] in WHITESPACE then
+        badline[i] := ' ';
+      fi;
+    od;
+    Print(badline{[1..pos-nl[2][1]]});
     Print("^", "\n-----------\n", comment, "\n!!! Type 'Show();' to watch the",
     " input string in pager - starting with\n    line containing error !!!\n");
     if XMLPARSEORIGINS <> false then
