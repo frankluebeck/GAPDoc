@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.14 2007-02-01 16:23:07 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.15 2007-02-06 12:55:47 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -241,7 +241,7 @@ end);
 # element of this name.
 # assuming str[pos-1] = '<' and str[pos]<>'/'
 InstallGlobalFunction(GetSTag, function(str, pos)
-  local   res,  pos2,  attr, atval, delim, a, ent;
+  local   res,  pos2,  start, attr, atval, delim, a, ent;
   res := rec(attributes := rec());
   # a small hack that allows to call GetElement with a whole document
   # after appending "</WHOLEDOCUMENT>"
@@ -308,6 +308,7 @@ InstallGlobalFunction(GetSTag, function(str, pos)
         if str[pos2[2]+1] = '&' then
           ent := GetEnt(str, pos2[2]+2);
           Append(atval, str{[pos2[1]..pos2[2]]});
+          start := pos2[2]+2;
           pos2 := ent.next;
           if ent.name = "CharEntityValue" then
             Append(atval, ent.content);
@@ -315,7 +316,7 @@ InstallGlobalFunction(GetSTag, function(str, pos)
             # now ent.content may still contain some character entities, but 
             # no '<' and so no markup 
             if '<' in ent.content then
-              ParseError(str, pos2[2]+1, 
+              ParseError(str, start,
                 "entity replacement in attribute value cannot contain '<'");
             fi;
             ent := GetElement(Concatenation(ent.content,"</WHOLEDOCUMENT>"),1);
