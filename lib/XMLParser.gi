@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  XMLParser.gi                 GAPDoc                          Frank Lübeck
+#W  XMLParser.gi                 GAPDoc                          Frank LÃ¼beck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.16 2007-02-06 13:12:34 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.17 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##
 ##  The files  XMLParser.g{d,i} contain a non-validating XML  parser and some
@@ -12,6 +12,7 @@
 ##
 
 BindGlobal("EMPTYCONTENT", 0);
+BindGlobal("XMLPARSERFLAGS", rec());
 BindGlobal("NAMECHARS",   
               ## here ':' is missing since it will probably  become reserved 
               ## for name space syntax in future XML
@@ -94,7 +95,8 @@ end);
 # also shows some text around position of error.
 XMLPARSEORIGINS := false;
 BindGlobal("ParseError", function(str, pos, comment)
-  local Show, nl, ShowOrigin, r, badline, i;
+  local Show, nl, ShowOrigin, r, badline, i, off;
+  
   # for examination of error
   Show := function()
     Pager(rec(lines := str, start := nl[1]));
@@ -107,7 +109,15 @@ BindGlobal("ParseError", function(str, pos, comment)
     fi;
   end;
   if InfoLevel(InfoXMLParser) > 0 then
-    nl := LineNumberStringPosition(str, pos);
+    if XMLPARSERFLAGS.Encoding <> "UTF-8" then
+      # we have an 8 bit encoding and must compute offset for original
+      # position
+      off := Number([1..pos], function(i) local c; c := INT_CHAR(str[i]);
+        return c > 127 and c < 192; end);
+    else
+      off := 0;
+    fi;
+    nl := LineNumberStringPosition(str, pos-off);
     if XMLPARSEORIGINS <> false then
       r := OriginalPositionDocument(XMLPARSEORIGINS, pos);
     fi;
@@ -191,18 +201,19 @@ InstallGlobalFunction(GetEnt, function(str, pos)
         Add(d, str[i]);
         i := i+1;
       od;
-      ch := "";
-      Add(ch, CHAR_INT(NumberDigits(d, 16)));
+      d := NumberDigits(d, 16);
     else
       i := pos+1;
       while str[i] <> ';' do
         Add(d, str[i]);
         i := i+1;
       od;
-      ch := "";
-      Add(ch, CHAR_INT(NumberDigits(d, 10)));
+      d := NumberDigits(d, 10);
     fi;
-    return rec(name := "CharEntityValue", content := ch, next := i+1);
+    # must consider this as unicode, translate it to UTF-8
+    res := rec(name := "CharEntityValue", next := i+1,
+               content := Encode(Unicode([d]), "UTF-8"));
+    return res;
   fi;
   # else replace and reparse for recursive entity replacements
   pos1 := Position(str, ';', pos-1);
@@ -254,7 +265,7 @@ InstallGlobalFunction(GetSTag, function(str, pos)
     res.name := "WHOLEDOCUMENT";
     res.next := 1;
     res.content := [];
-    res.input := str;
+    res.input := ShallowCopy(str);
     return res;
   fi;
   # name of element
@@ -398,7 +409,7 @@ end);
 # filled
 # assuming str[pos-1] = '<' and str[pos] in NAMECHARS
 InstallGlobalFunction(GetElement, function(str, pos)
-  local   res,  r,  s,  pos2,  lev,  dt,  p,  nam,  val,  el;
+  local   res,  r,  s,  pos2,  lev,  dt,  p,  nam,  val,  el, tmp;
   res := GetSTag(str,pos);
   res.start := pos - 1;
   # case of empty element
@@ -429,8 +440,28 @@ InstallGlobalFunction(GetElement, function(str, pos)
         if pos2=fail then
           ParseError(str, pos+2, "document ends within processing instruction");
         fi;
-        Add(res.content, rec(name := "XMLPI", 
-                content := str{[pos+2..pos2-1]}));
+        tmp := str{[pos+2..pos2-1]};
+        Add(res.content, rec(name := "XMLPI", content := tmp));
+        # check for encoding information
+        if Length(tmp) > 3 and tmp{[1..4]} = "xml " then
+          tmp := Concatenation(tmp, "/>");
+          tmp := GetElement(tmp, 3);
+          if IsBound(tmp.attributes.encoding) then
+            tmp := tmp.attributes.encoding;
+            if not IsBound(UNICODE_RECODE.NormalizedEncodings.(tmp)) then
+              Error("Cannot parse document in encoding ", tmp, "\n");
+            fi;
+            XMLPARSERFLAGS.Encoding := UNICODE_RECODE.NormalizedEncodings.(tmp);
+            # if not in UTF-8 encoding we recode rest of the document now
+            if XMLPARSERFLAGS.Encoding <> "UTF-8" then
+              Info(InfoGAPDoc, 1, "#I recoding input from ",
+                                XMLPARSERFLAGS.Encoding, " to UTF-8 . . .\n");
+              tmp := Encode(Unicode(str{[pos..Length(str)]},
+                                           XMLPARSERFLAGS.Encoding), "UTF-8");
+              str{[pos..pos-1+Length(tmp)]} := tmp;
+            fi;
+          fi;
+        fi;
         pos := pos2+2;
       elif str[pos+1] = '!' then
         if str[pos+2] = '-' and str[pos+3] = '-' then
@@ -550,9 +581,9 @@ end);
 ##  messages  refer  to the  original  source  of  the text  with  the
 ##  problem.
 ##  
-##  The second function is just a short cut for 
-##  <Ref Func="ParseTreeXMLString" /><C>(</C><Ref Func="StringFile"
-##  />(<A>fname</A>)<C>)</C>.<P/>
+##  The second function is just a shortcut for <C>ParseTreeXMLString( 
+##  StringFile(</C><A>fname</A><C>) )</C>, see <Ref Func="StringFile"/>.
+##  <P/>
 ##  
 ##  A node  in the result tree  corresponds to an  XML element, or  to some
 ##  parsed character data. In the first case it looks as follows:
@@ -606,45 +637,18 @@ end);
 ##  
 InstallGlobalFunction(ParseTreeXMLString, function(arg)
   local str, res, tmp, enc;
+  # artificial end tag to wrap document in one element
   str := Concatenation(arg[1], "</WHOLEDOCUMENT>");
+  # default encoding is UTF-8, may be changed if we find a <?xml ... 
+  # processing instruction
+  XMLPARSERFLAGS.Encoding := "UTF-8";
   if Length(arg) > 1 then
     XMLPARSEORIGINS := arg[2];
   else
     XMLPARSEORIGINS := false;
   fi;
   res := GetElement(str, 1);
-  # find encoding
-  if not IsString(res.content) then
-    tmp := Filtered(res.content, a-> IsRecord(a) and a.name = "XMLPI");
-    if Length(tmp) > 0 then
-      tmp := Concatenation(tmp[1].content, "/>");
-      tmp := GetElement(tmp, 3);
-      if IsBound(tmp.attributes.encoding) then
-        res.encoding := tmp.attributes.encoding;
-      fi;
-    fi;
-  fi;
-  # default is UTF-8
-  if not IsBound(res.encoding) then
-    res.encoding := "UTF-8";
-  fi;
-  # if encoding is not UTF-8 then recode all element contents and
-  # attribute values:
-  enc := res.encoding;
-  if enc <> "UTF-8" then
-    Info(InfoXMLParser, 1, 
-                "#I Recoding parsed data from ", enc, " to UTF-8 . . .\n");
-    ApplyToNodesParseTree(res, function(r)
-      local f;
-      if r.name in ["PCDATA", "XMLPI", "XMLDOCTYPE", "XMLCOMMENT"] then
-        r.content := Encode(U(r.content, enc));
-      else
-        for f in RecFields(r.attributes) do
-          r.attributes.(f) := Encode(U(r.attributes.(f), enc));
-        od;
-      fi;
-    end);
-  fi;
+  res.input := ShallowCopy(arg[1]);
   return res;
 end);
 InstallGlobalFunction(ParseTreeXMLFile, function(fname)

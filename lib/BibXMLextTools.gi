@@ -92,6 +92,9 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
     if Position(str, '{') = fail and Position(str, '$') = fail then
       return str;
     fi;
+    # escape & and <
+    str := SubstitutionSublist(str, "<", "&lt;");
+    str := SubstitutionSublist(str, "&", "&amp;");
     res := "";
     math := false;
     for c in str do
@@ -318,15 +321,99 @@ BIBXMLHANDLER.default.M := function(t, r, bib, type)
   Add(t.tmptext, '$');
 end;
 BIBXMLHANDLER.default.Math := BIBXMLHANDLER.default.M;
+# find initials from UTF-8 string, keep '-'s
+BIBXMLHANDLER.Initials := function(fnam)
+  local pre, res, i;
+  fnam := NormalizedWhitespace(fnam);
+  fnam := Unicode(fnam, "UTF-8");
+  pre := Unicode(" -");
+  res := Unicode("");
+  for i in [1..Length(fnam)] do
+    if i=1 or fnam[i-1] in pre then
+      Add(res, fnam[i]);
+      Add(res, UChar('.'));
+    elif fnam[i] in pre then
+      Add(res, fnam[i]);
+    fi;
+  od;
+  return Encode(res, "UTF-8");
+end;
+BIBXMLHANDLER.AddKey := function(r)
+  local nams, letters, res, a;
+  if IsBound(r.key) then
+    return;
+  fi;
+  if IsBound(r.authorAsList) then
+    nams := r.authorAsList;
+  elif IsBound(r.editorAsList) then
+    nams := r.editorAsList;
+  elif IsBound(r.author) then
+    nams := r.author;
+  elif IsBound(r.editor) then
+    nams := r.editor;
+  else
+    r.key := "NOAUTHOROREDITOR_SPECIFYKEY";
+    return;
+  fi;
+  letters := function(str, one)
+    local pos;
+    str := Unicode(str, "UTF-8");
+    if UChar(' ') in str then
+      pos := Concatenation([1], 1+Positions(str, UChar(' ')));
+      if one then
+        return Encode(str{[pos[Length(pos)]]}, "UTF-8");
+      else
+        return Encode(str{pos}, "UTF-8");
+      fi;
+    else
+      if one then
+        pos := Minimum(1, Length(str));
+      else
+        pos := Minimum(3, Length(str));
+      fi;
+      return Encode(str{[1..pos]}, "UTF-8");
+    fi;
+  end;
+  res := "";
+  if Length(nams) = 1 then
+    Append(res, letters(nams[1][1], false));
+  else
+    for a in nams do
+      Append(res, letters(a[1], true));
+    od;
+  fi;
+  if IsBound(r.year) and Length(r.year) >= 2 then
+    Append(res, r.year{[Length(r.year)-1, Length(r.year)]});
+  fi;
+  r.key := res;
+end;
 BIBXMLHANDLER.default.first := function(t, r, bib, type)
-  # collect and append ' '
+  local old;
+  old := t.tmptext;
+  t.tmptext := "";
   BIBXMLHANDLER.content(t, r, bib, type);
-  Add(t.tmptext, ' ');
+  t.tmpfirst := t.tmptext;
+  t.tmptext := old;
 end;
 BIBXMLHANDLER.default.last := function(t, r, bib, type)
-  # collect and append ", "
+  local old;
+  old := t.tmptext;
+  t.tmptext := "";
   BIBXMLHANDLER.content(t, r, bib, type);
-  Append(t.tmptext, ", ");
+  t.tmplast := t.tmptext;
+  t.tmptext := old;
+end;
+BIBXMLHANDLER.default.name := function(t, r, bib, type)
+  t.tmplast := "";
+  t.tmpfirst := "";
+  BIBXMLHANDLER.content(t, r, bib, type);
+##    Append(t.tmptext, t.tmplast);
+##    if Length(t.tmpfirst) > 0 then
+##      Append(t.tmptext, ", ");
+##      Append(t.tmptext, t.tmpfirst);
+##    fi;
+##    Append(t.tmptext, " and ");
+  Add(t.tmpnames, [t.tmplast, BIBXMLHANDLER.Initials(t.tmpfirst), t.tmpfirst]);
 end;
 
 BIBXMLHANDLER.default.value := function(t, r, bib, type)
@@ -370,6 +457,7 @@ BIBXMLHANDLER.default.entry := function(t, r, bib, type)
   # empty record and collect content
   t.tmprec := rec(Label := r.attributes.id);
   BIBXMLHANDLER.content(t, r, bib, type);
+  BIBXMLHANDLER.AddKey(t.tmprec);
   # add record to bib structure
   Add(bib[1], t.tmprec);
 end;
@@ -390,10 +478,10 @@ BIBXMLHANDLER.types();
 BIBXMLHANDLER.fields := function()
   local f;
   for f in [ "title", "booktitle", "publisher", "school", "journal", 
-      "year", "volume", "number",  "month", "organization", 
-      "note", "key", "annotate", "crossref", "abstract", "affiliation", 
-      "contents", "copyright", "isbn", "issn", "address", "edition", 
-      "keywords", "language", "lccn", "location", 
+      "institution", "year", "volume", "number",  "month", "organization", 
+      "howpublished", "note", "key", "annotate", "crossref", "abstract", 
+      "affiliation", "contents", "copyright", "isbn", "issn", "address", 
+      "edition", "keywords", "language", "lccn", "location", 
       "mrnumber", "mrclass", "mrreviewer", "price", "size", "url", "category"
       ] do
     BIBXMLHANDLER.default.(f) := function(t, r, bib, type)
@@ -405,34 +493,51 @@ BIBXMLHANDLER.fields := function()
   od;
 end;
 BIBXMLHANDLER.fields();
+BIBXMLHANDLER.default.authed := function(t, r, bib, type, cmp)
+  t.tmptext := "";
+  t.tmpnames := [];
+  BIBXMLHANDLER.content(t, r, bib, type);
+  t.tmprec.(cmp) := t.tmpnames;
+end;
 BIBXMLHANDLER.default.author := function(t, r, bib, type)
-  # remove trailing ", "
+  BIBXMLHANDLER.default.authed(t, r, bib, type, "author");
+end;
+BIBXMLHANDLER.default.editor := function(t, r, bib, type)
+  BIBXMLHANDLER.default.authed(t, r, bib, type, "editor");
+end;
+BIBXMLHANDLER.default.authorold := function(t, r, bib, type)
+  local len;
+  # remove trailing " and "
   t.tmptext := "";
   BIBXMLHANDLER.content(t, r, bib, type);
   NormalizeWhitespace(t.tmptext);
-  if Length(t.tmptext) > 0 and t.tmptext[Length(t.tmptext)] = ',' then
-    t.tmptext := t.tmptext{[1..Length(t.tmptext)-1]};
+  len := Length(t.tmptext);
+  if len > 3 and t.tmptext{[len-3..len]} = " and" then
+    t.tmptext := t.tmptext{[1..len-4]};
   fi;
   t.tmprec.author := ShallowCopy(t.tmptext);
 end;
-BIBXMLHANDLER.default.editor := function(t, r, bib, type)
-  # remove trailing ", "
+BIBXMLHANDLER.default.editorold := function(t, r, bib, type)
+  local len;
+  # remove trailing " and "
   t.tmptext := "";
   BIBXMLHANDLER.content(t, r, bib, type);
   NormalizeWhitespace(t.tmptext);
-  if Length(t.tmptext) > 0 and t.tmptext[Length(t.tmptext)] = ',' then
-    t.tmptext := t.tmptext{[1..Length(t.tmptext)-1]};
+  len := Length(t.tmptext);
+  if len > 3 and t.tmptext{[len-3..len]} = " and" then
+    t.tmptext := t.tmptext{[1..len-4]};
   fi;
   t.tmprec.editor := ShallowCopy(t.tmptext);
 end;
 BIBXMLHANDLER.default.pages := function(t, r, bib, type)
-  # default with one dash
+# special heuristic unnecessary now with &ndash; ?
+##    # default with one dash
   t.tmptext := "";
   BIBXMLHANDLER.content(t, r, bib, type);
-  NormalizeWhitespace(t.tmptext);
-  if ForAll(t.tmptext, c-> c in "0123456789-") then
-    t.tmptext := SubstitutionSublist(t.tmptext, "--", "-");
-  fi;
+##    NormalizeWhitespace(t.tmptext);
+##    if ForAll(t.tmptext, c-> c in "0123456789-") then
+##      t.tmptext := SubstitutionSublist(t.tmptext, "--", "-");
+##    fi;
   t.tmprec.pages := ShallowCopy(t.tmptext);
 end;
 BIBXMLHANDLER.default.other := function(t, r, bib, type)
@@ -460,14 +565,6 @@ end);
 # now special handler for special formats
 # BibTeX. adjust author/editor, <C>, pages with --, URL in \texttt
 BIBXMLHANDLER.BibTeX := rec();
-BIBXMLHANDLER.BibTeX.author := function(t, r, bib, type)
-  BIBXMLHANDLER.default.author(t, r, bib, type);
-  t.tmprec.author := SubstitutionSublist(t.tmprec.author, ", ", " and ");
-end;
-BIBXMLHANDLER.BibTeX.editor := function(t, r, bib, type)
-  BIBXMLHANDLER.default.editor(t, r, bib, type);
-  t.tmprec.editor := SubstitutionSublist(t.tmprec.editor, ", ", " and ");
-end;
 BIBXMLHANDLER.BibTeX.pages := function(t, r, bib, type)
   BIBXMLHANDLER.default.pages(t, r, bib, type);
   if PositionSublist(t.tmprec.pages, "--") = fail then
@@ -484,9 +581,35 @@ BIBXMLHANDLER.BibTeX.URL := function(t, r, bib, type)
   save := t.tmptext;
   t.tmptext := "";
   BIBXMLHANDLER.content(t, r, bib, type);
-  t.tmptext := SubstitutionSublist(t.tmptext, "~", "\\symbol{126}");
+  t.tmptext := SubstitutionSublist(t.tmptext, "~", "\\symbol {126}");
   t.tmptext := SubstitutionSublist(t.tmptext, "#", "\\#");
   t.tmptext := Concatenation(save, "\\texttt{", t.tmptext, "}");
+end;
+BIBXMLHANDLER.BibTeX.authed := function(t, r, bib, type, cmp)
+  local f, nams;
+  BIBXMLHANDLER.default.(cmp)(t, r, bib, type);
+  # save as list
+  t.tmprec.(Concatenation(cmp, "AsList")) := t.tmprec.(cmp);
+  f := function(nl, i)
+    if Length(nl[i]) > 0 then
+      return Concatenation(nl[1], ", ", nl[i]);
+    else
+      return nl[1];
+    fi;
+  end;
+  if ForAny(t.tmprec.(cmp), nl-> nl[2] <> nl[3]) then
+    nams := List(t.tmprec.(cmp), nl-> f(nl, 3));
+    t.tmprec.(Concatenation(cmp, "orig")) := 
+                                 JoinStringsWithSeparator(nams, " and ");
+  fi;
+  nams := List(t.tmprec.(cmp), nl-> f(nl, 2));
+  t.tmprec.(cmp) := JoinStringsWithSeparator(nams, " and ");
+end;
+BIBXMLHANDLER.BibTeX.author := function(t, r, bib, type)
+  BIBXMLHANDLER.BibTeX.authed(t, r, bib, type, "author");
+end;
+BIBXMLHANDLER.BibTeX.editor := function(t, r, bib, type)
+  BIBXMLHANDLER.BibTeX.authed(t, r, bib, type, "editor");
 end;
 
 # BibTeXhref    with \href in URLs
@@ -498,12 +621,12 @@ BIBXMLHANDLER.BibTeXhref.URL := function(t, r, bib, type)
   BIBXMLHANDLER.content(t, r, bib, type);
   Append(save, "\\href{");
   Append(save, t.tmptext);
-  Add(save, '}');
+  Append(save, "} ");
   if IsBound(r.attributes.Text) then
     t.tmptext := r.attributes.Text;
   else
-    t.tmptext := SubstitutionSublist(t.tmptext, "~", "\\symbol{126}");
-    t.tmptext := SubstitutionSublist(t.tmptext, "#", "\\#");
+    t.tmptext := SubstitutionSublist(t.tmptext, "~", "\\symbol {126}");
+##      t.tmptext := SubstitutionSublist(t.tmptext, "#", "\\#");
     t.tmptext := Concatenation("\\texttt{", t.tmptext, "}");
   fi;
   t.tmptext := Concatenation(save, "{", t.tmptext, "}");
@@ -528,6 +651,7 @@ BIBXMLHANDLER.HTML.entry := function(t, r, bib, type)
   BIBXMLHANDLER.content(t, r, bib, type);
   # add record to bib structure
   t.tmprec.HTML := "yes";
+  BIBXMLHANDLER.AddKey(t.tmprec);
   Add(bib[1], t.tmprec);
 end;
 BIBXMLHANDLER.HTML.M := BIBXMLHANDLER.Text.M;

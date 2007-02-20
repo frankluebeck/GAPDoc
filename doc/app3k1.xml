@@ -1,14 +1,14 @@
-<!-- $Id: app3k1.xml,v 1.2 2002-05-29 07:58:58 gap Exp $ -->
+<!-- $Id: app3k1.xml,v 1.3 2007-02-20 16:56:27 gap Exp $ -->
 <Appendix Label="app:3k+1"><Heading>The File <F>3k+1.xml</F></Heading>
 
 Here is the complete source of the example &GAPDoc; document <F>3k+1.xml</F>
 discussed in Section&nbsp;<Ref Sect="sec:3k+1expl" />.
 
 <Listing Type="3k+1.xml">
-<![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
+<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 
 <!--   A complete "fake package" documentation   
-   $Id: app3k1.xml,v 1.2 2002-05-29 07:58:58 gap Exp $
+   $Id: app3k1.xml,v 1.3 2007-02-20 16:56:27 gap Exp $
 -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd">
@@ -18,7 +18,7 @@ discussed in Section&nbsp;<Ref Sect="sec:3k+1expl" />.
 <TitlePage>
   <Title>The <Package>ThreeKPlusOne</Package> Package</Title>
   <Version>Version 42</Version>
-  <Author>Dummy Authör
+  <Author>Dummy AuthÃ¶r
     <Email>3kplusone@dev.null</Email>
   </Author>
 

@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- ==================================================================
      gapdoc.dtd - XML Document type definition for GAP documentation
-     By Frank Lübeck and Max Neunhöffer
+     By Frank LÃ¼beck and Max NeunhÃ¶ffer
      ================================================================== -->
 
-<!-- $Id: gapdoc.dtd,v 1.9 2007-01-31 13:45:09 gap Exp $ -->
+<!-- $Id: gapdoc.dtd,v 1.10 2007-02-20 16:56:27 gap Exp $ -->
 
 <!-- Note that this definition goes "bottom-up" because entities can only
      be used after their definition in the file. -->

@@ -1,3 +1,18 @@
+#############################################################################
+##
+#W  UnicodeTools.gi                GAPDoc                     Frank Lübeck
+##
+#H  @(#)$Id: UnicodeTools.gi,v 1.3 2007-02-20 16:56:27 gap Exp $
+##
+#Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  RWTH Aachen
+##  
+##  The files UnicodeTools.g{d,i} contain utilities for converting text
+##  between different encodings. They introduce unicode strings and
+##  characters as GAP objects.
+##  
+
+
 # UNICODE_RECODE is a is a record. For some string enc, describing a
 # character encoding, UNICODE_RECODE.(enc) is a function which translates
 # a GAP string in encoding enc to a list of integers describing the unicode
@@ -20,26 +35,35 @@ UNICODE_RECODE.NormalizedEncodings := rec(
   latin9 := "ISO-8859-15",
   latin0 := "ISO-8859-15",
   utf8 := "UTF-8",
-  UTF8 := "UTF-8"
+  UTF8 := "UTF-8",
+  ASCII := "ANSI_X3.4-1968",
+  US\-ASCII := "ANSI_X3.4-1968",
 );
-_tmpfunction := function()
+UNICODE_RECODE.f := function()
   local nam, i;
   for i in Concatenation([1..11],[13..15]) do
     nam := Concatenation("ISO-8859-",String(i));
     UNICODE_RECODE.NormalizedEncodings.(nam) := nam;
     UNICODE_RECODE.Decoder.(nam) := function(str)
-      return UNICODE_RECODE.TABLES.(nam){List(str, INT_CHAR)};
+      return UNICODE_RECODE.TABLES.(nam){List(str, INT_CHAR)+1};
     end;
   od;
+  nam := "ANSI_X3.4-1968";
+  UNICODE_RECODE.NormalizedEncodings.(nam) := nam;
+  UNICODE_RECODE.Decoder.(nam) := function(str)
+    return UNICODE_RECODE.TABLES.(nam){List(str, INT_CHAR)+1};
+  end;
+
   UNICODE_RECODE.NormalizedEncodings.("UTF-8") := "UTF-8";
 end;
-_tmpfunction();
-Unbind(_tmpfunction);
+UNICODE_RECODE.f();
+Unbind(UNICODE_RECODE.f);
 # slightly more efficient for latin1:
 UNICODE_RECODE.Decoder.("ISO-8859-1") := function(str)
   return List(str, INT_CHAR);
 end;
-# helper function;  arg:  str[, start]
+# helper function;  arg:  str[, start], translate single UTF-8 character
+# to its unicode number
 UNICODE_RECODE.UnicodeUTF8Char := function(arg)
   local str, i, a;
   str := arg[1];
@@ -77,6 +101,7 @@ end;
 ################################################
 UNICODE_RECODE.TABLES := 
 rec(
+  ANSI_X3\.4\-1968 := [0..127],
   ISO\-8859\-1 := [ 0 .. 255 ],
   ISO\-8859\-2 := [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 
       17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 
@@ -356,9 +381,55 @@ InstallMethod(\=, [IsUnicodeCharacter, IsUnicodeCharacter],
 function(c, d)
   return c!.codepoint = d!.codepoint;
 end);
+InstallOtherMethod(Int, [IsUnicodeCharacter], function(uc)
+  return uc!.codepoint;
+end);
+
+##  <#GAPDoc Label="Unicode">
+##  <ManSection>
+##  <Oper Name="Unicode" Arg="list[, encoding]"/>
+##  <Oper Name="UChar" Arg="num"/>
+##  <Filt Name="IsUnicodeString" />
+##  <Filt Name="IsUnicodeCharacter" />
+##  <Func Name="IntListUnicodeString" Arg="ustr" />
+##  <Oper Name="Encode" Arg="ustr[, encoding]" />
+##  
+##  <Description>
+##  Unicode characters are described by their <Emph>codepoint</Emph>, an
+##  integer in the range from <M>0</M> to <M>2^{21}-1</M>. 
+##  For details about unicode, see <URL>http://www.unicode.org</URL>.<P/>
+##  
+##  The function <Ref Oper="UChar"/> wraps an integer <A>num</A> into
+##  a &GAP; object lying in the filter <Ref Filt="IsUnicodeCharacter"/>.
+##  Use <C>Int</C> to get the codepoint back. The argument <A>num</A> can
+##  also be a &GAP; character which is then translated to an integer via 
+##  <Ref BookName="Reference" Func="INT_CHAR"/>. <P/>
+##  
+##  <Ref Oper="Unicode" /> produces a &GAP; object in the filter
+##  <Ref Filt="IsUnicodeString"/>. This is a wrapped list of integers 
+##  for the unicode characters in the string. The function <Ref
+##  Func="IntListUnicodeString"/> gives access to this list of integers. 
+##  Basic list functionality is available for <Ref Filt="IsUnicodeString"/>
+##  elements. The entries are in <Ref Filt="IsUnicodeCharacter"/>.
+##  The argument <A>list</A> for <Ref Oper="Unicode"/> is either a list of
+##  integers or a &GAP; string. In the latter case an <A>encoding</A> can be
+##  specified as string, its default is <C>"UTF-8"</C>. <P/>
+##  
+##  Currently, supported encodings can be found in
+##  <C>UNICODE&uscore;RECODE.NormalizedEncodings</C> (ASCII, 
+##  ISO-8859-X, UTF-8 and aliases).<P/>
+##  
+##  The operation <Ref Oper="Encode"/> translates a unicode string <A>ustr</A>
+##  into a &GAP; string in some specified <A>encoding</A>. The default
+##  encoding is <C>"UTF-8"</C>. <P/>
+##  </Description>
+##  </ManSection>
+##  
+##  <#/GAPDoc>
+##  
 
 # NC method, assume that l is (plain?) list of integers in correct range
-InstallMethod(U, [IsList], function(l)
+InstallMethod(Unicode, [IsList], function(l)
   local res;
   res := [l];
   Objectify(UnicodeStringType, res);
@@ -370,7 +441,7 @@ InstallGlobalFunction("IntListUnicodeString", function(ustr)
 end);
 
 
-InstallMethod(U, [IsString, IsString], function(str, enc)
+InstallMethod(Unicode, [IsString, IsString], function(str, enc)
   if Length(str) > 0 and not IsStringRep(str) then
     Info(InfoWarning, 1, "#W Changing argument to IsStringRep");
     Info(InfoWarning, 2, ":\n ", str);
@@ -378,15 +449,15 @@ InstallMethod(U, [IsString, IsString], function(str, enc)
     ConvertToStringRep(str);
   fi;
   if not IsBound(UNICODE_RECODE.NormalizedEncodings.(enc)) then
-    Error("Sorry, only the following encodings are supported for U:\n",
+    Error("Sorry, only the following encodings are supported for 'Unicode':\n",
               RecFields(UNICODE_RECODE.Decoder), "\n");
   fi;
   enc := UNICODE_RECODE.NormalizedEncodings.(enc);
-  return U(UNICODE_RECODE.Decoder.(enc)(str));
+  return Unicode(UNICODE_RECODE.Decoder.(enc)(str));
 end);
 # just a string as argument is assumed to be in UTF-8 encoding
-InstallMethod(U, [IsStringRep], function(str)
-  return U(UNICODE_RECODE.Decoder.("UTF-8")(str));
+InstallMethod(Unicode, [IsStringRep], function(str)
+  return Unicode(UNICODE_RECODE.Decoder.("UTF-8")(str));
 end);
 
 # view and print 
@@ -397,12 +468,12 @@ InstallMethod(ViewObj, [IsUnicodeString], function(ustr)
     l := l{[1..37]};
     Append(l, [46,46,46]);
   fi;
-  Print("U(");
+  Print("Unicode(");
   ViewObj(Concatenation(List(l, UNICODE_RECODE.UTF8UnicodeChar)));
   Print(")");
 end);
 InstallMethod(PrintObj, [IsUnicodeString], function(ustr)
-  Print("U(");
+  Print("Unicode(");
   PrintObj(Concatenation(List(IntListUnicodeString(ustr), 
            UNICODE_RECODE.UTF8UnicodeChar)));
   Print(")");
@@ -442,11 +513,11 @@ end);
 
 # let ShallowCopy produce a unicode string
 InstallMethod(ShallowCopy, [IsUnicodeString], function(ustr)
-  return U(ShallowCopy(IntListUnicodeString(ustr)));
+  return Unicode(ShallowCopy(IntListUnicodeString(ustr)));
 end);
 # let sublists be unicode strings
 InstallMethod(\{\}, [IsUnicodeString, IsList], function(ustr, poss)
-  return U(IntListUnicodeString(ustr){poss});
+  return Unicode(IntListUnicodeString(ustr){poss});
 end);
 
 # a better Append for efficiency
@@ -528,7 +599,7 @@ UNICODE_RECODE.Encoder.("UTF-8") := function(ustr)
   return res;
 end;
 # ISO-8859 cases, substitute '?' for unknown characters
-_tmpfunction := function()
+UNICODE_RECODE.f := function()
   local nam, i;
   for i in Concatenation([1..11],[13..15]) do
     nam := Concatenation("ISO-8859-", String(i));
@@ -558,8 +629,14 @@ _tmpfunction := function()
     end;
   od;
 end;
-_tmpfunction();
-Unbind(_tmpfunction);
+UNICODE_RECODE.f();
+Unbind(UNICODE_RECODE.f);
+UNICODE_RECODE.Encoder.("ANSI_X3.4-1968") := function(ustr)
+  local res;
+  res := List(IntListUnicodeString(ustr), function(i) 
+    if i < 128 then return i; else return 63; fi; end);
+  return STRING_SINTLIST(res);
+end;
   
 InstallMethod(Encode, [IsUnicodeString, IsString], function(ustr, enc)
   if not IsBound(UNICODE_RECODE.NormalizedEncodings.(enc)) then

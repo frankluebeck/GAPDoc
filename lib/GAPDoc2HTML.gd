@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  GAPDoc2HTML.gd                 GAPDoc                        Frank Lübeck
+#W  GAPDoc2HTML.gd                 GAPDoc                        Frank LÃ¼beck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gd,v 1.2 2001-01-17 15:31:20 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gd,v 1.3 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##
 ##  The  files GAPDoc2HTML.g{d,i}  contain  a  conversion program  which

@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  Make.g                       GAPDoc                          Frank Lübeck
+#W  Make.g                       GAPDoc                          Frank LÃ¼beck
 ##
-#H  @(#)$Id: Make.g,v 1.9 2007-02-01 16:23:07 gap Exp $
+#H  @(#)$Id: Make.g,v 1.10 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##
 ##  This file  contains a function  which may  be used for  building all
@@ -14,9 +14,8 @@
 
 ##  args: path, main, files, bookname[, gaproot][, "MathML"][, "Tth"]
 BindGlobal("MakeGAPDocDoc", function(arg)
-  local htmlspecial, path, main, files, bookname, gaproot, 
-        str, r, l, latex, null, t, h;
-  
+  local htmlspecial, path, main, files, bookname, gaproot, str, 
+        r, t, l, latex, null, log, pos, h, i, j;
   htmlspecial := Filtered(arg, a-> a in ["MathML", "Tth"]);
   if Length(htmlspecial) > 0 then
     arg := Filtered(arg, a-> not a in ["MathML", "Tth"]);
@@ -34,7 +33,7 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   if IsString(path) then
     path := Directory(path);
   fi; 
-  # ensure that .xml is striped from name of main file
+  # ensure that .xml is stripped from name of main file
   if Length(main)>3 and main{[Length(main)-3..Length(main)]} = ".xml" then
     main := main{[1..Length(main)-4]};
   fi;
@@ -48,6 +47,11 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   # clean the result
   Info(InfoGAPDoc, 1, "#I Checking XML structure . . .\n");
   CheckAndCleanGapDocTree(r);
+  # produce text version
+  Info(InfoGAPDoc, 1, 
+                   "#I Text version (also produces labels for hyperlinks):\n");
+  t := GAPDoc2Text(r, path);
+  GAPDoc2TextPrintTextFiles(t, path);
   # produce LaTeX version
   Info(InfoGAPDoc, 1, "#I Constructing LaTeX version and calling pdflatex:\n"); 
   r.bibpath := path;
@@ -59,14 +63,6 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   latex := "latex -interaction=nonstopmode ";
   # sh-syntax for redirecting stderr and stdout to /dev/null
   null := " > /dev/null 2>&1 ";
-##    Print("3 x latex, bibtex and makeindex, \c"); 
-##    Exec(Concatenation("sh -c \" cd ", Filename(path,""), 
-##    "; ", latex, main, ".tex", null,
-##    "; bibtex ", main, null,
-##    "; ", latex, main, null,
-##    "; makeindex ", main, null,
-##    "; ", latex, main, null,
-##    "; rm -f ", main, ".aux\""));
   Info(InfoGAPDoc, 1, "3 x pdflatex with bibtex and makeindex, \c");
   Exec(Concatenation("sh -c \" cd ", Filename(path,""),
   "; rm -f ", main, ".aux ",
@@ -75,18 +71,49 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   "; pdf", latex, main, null,
   "; makeindex ", main, null,
   "; pdf", latex, main, null,"\""));
-##    Print("dvips\n");
+  # check log file for errors, warning, overfull boxes
+  log := Filename(path, Concatenation(main, ".log"));
+  log := StringFile(log);
+  if log = fail then
+    Info(InfoGAPDoc, 1, "\n#W WARNING: Something wrong, don't find log file ",
+                          Filename(path, Concatenation(main, ".log")), "\n");
+  else
+    log := SplitString(log, "\n", "");
+    pos := Filtered([1..Length(log)], i-> Length(log[i]) > 0 
+                                                 and log[i][1] = '!');
+    if Length(pos) > 0 then
+      Info(InfoGAPDoc, 1, "\n#W There were LaTeX errors:\n");
+      for i in pos do
+        for j in [i..Minimum(i+2, Length(log))] do
+          Info(InfoGAPDoc, 1, log[j], "\n");
+        od;
+        Info(InfoGAPDoc, 1, "____________________\n");
+      od;
+    fi;
+    pos := Filtered([1..Length(log)], i-> Length(log[i]) > 13 
+                                     and log[i]{[1..14]} = "LaTeX Warning:");
+    if Length(pos) > 0 then
+      Info(InfoGAPDoc, 1, "\n#W There were LaTeX Warnings:\n");
+      for i in pos do
+        for j in [i..Minimum(i+2, Length(log))] do
+          Info(InfoGAPDoc, 1, log[j], "\n");
+        od;
+        Info(InfoGAPDoc, 1, "____________________\n");
+      od;
+    fi;
+    pos := Filtered([1..Length(log)], i-> Length(log[i]) > 7 
+                                     and log[i]{[1..8]} = "Overfull");
+    if Length(pos) > 0 then
+      Info(InfoGAPDoc, 1, "\n#W There are overfull boxes:\n");
+      for i in pos do
+        Info(InfoGAPDoc, 1, log[i], "\n");
+      od;
+    fi;
+  fi;
   Exec(Concatenation("sh -c \" cd ", Filename(path,""),
-##    "; dvips -o ", main, ".ps ", main, null,  
-##    "; mv ", main, ".dvi manual.dvi ", 
   "; mv ", main, ".pdf manual.pdf; ", 
-##    "mv ", main, ".ps manual.ps; ", 
   "\""));
   Info(InfoGAPDoc, 1, "\n");
-  # produce text version
-  Info(InfoGAPDoc, 1, "#I Text version:\n");
-  t := GAPDoc2Text(r, path);
-  GAPDoc2TextPrintTextFiles(t, path);
   # read page number information for .six file
   Info(InfoGAPDoc, 1, "#I Writing manual.six file ... \c");
   Info(InfoGAPDoc, 2, Filename(path, "manual.six"), "\n");
@@ -110,9 +137,6 @@ BindGlobal("MakeGAPDocDoc", function(arg)
     GAPDoc2HTMLPrintHTMLFiles(h, path);
   fi;
 
-##    if not IsExistingFile(Filename(path, "manual.html")) then
-##      Exec("sh -c \"cd ", Filename(path,""), "; ln -s chap0.html manual.html\"");
-##    fi;
   return r;
 end);
 

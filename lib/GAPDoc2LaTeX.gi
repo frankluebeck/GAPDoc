@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
+#W  GAPDoc2LaTeX.gi                GAPDoc                        Frank LÃ¼beck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.20 2007-02-01 23:22:28 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.21 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##
 ##  The  files GAPDoc2LaTeX.g{d,i}  contain a  conversion program  which
@@ -73,17 +73,35 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  for  a  file <F>texmf.cnf</F>  which  allows  to enlarge  certain
 ##  memory sizes.<P/>
 ##  
-##  This function  works by running recursively  through the document
-##  tree  and  calling  a  handler function  for  each  &GAPDoc;  XML
-##  element. These handler functions are all quite easy to understand
-##  (the greatest complications are  some commands for index entries,
-##  labels or the output of page number information). So it should be
-##  easy  to  adjust layout  details  to  your  own taste  by  slight
-##  modifications of the program.
+##  This  function works  by  running recursively  through the  document
+##  tree   and   calling   a   handler  function   for   each   &GAPDoc;
+##  XML   element.  Many   of  these   handler  functions   (usually  in
+##  <C>GAPDoc2LaTeXProcs.&lt;ElementName&gt;</C>)  are not  difficult to
+##  understand (the  greatest complications are some  commands for index
+##  entries, labels  or the  output of page  number information).  So it
+##  should be easy to adjust layout  details to your own taste by slight
+##  modifications of the program. <P/>
+##  
+##  A    few     settings   can     be    adjusted    by     a    function
+##  <C>SetGapDocLaTeXOptions</C>.  It  takes  one or  several  strings  as
+##  arguments. If the  arguments contain one of  the strings <C>"pdf"</C>,
+##  <C>"dvi"</C>  or  <C>"ps"</C>  then &LaTeX;s  <C>hyperref</C>  package
+##  is  configured  for optimized  output  of  the given  format  (default
+##  is  <C>"pdf"</C>). If  <C>"color"</C>  or <C>"nocolor"</C>  is in  the
+##  argument  list then  colors are  used or  not used,  respectively. The
+##  default is  to use  colors but  <C>"nocolor"</C> can  be useful  for a
+##  printable version of a manual (but  who wants to print such manuals?).
+##  Finally, the  string <C>"UTF-8"</C> is  recognized as an  argument. If
+##  given, &LaTeX;  will use the  <C>ucs</C> package and set  the encoding
+##  for the <C>inputenc</C> package to  <C>"utf8x"</C>. This allows to use
+##  many unicode characters (in UTF-8 encoding) in your document directly.
+##  <P/>
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
 ##  
+
+
 # the basic call, used recursivly with a result r from GetElement 
 # and a string str to which the output should be appended
 # arg: r       (then a string is returned)
@@ -108,7 +126,7 @@ InstallGlobalFunction(GAPDoc2LaTeX, function(arg)
     # if not using the ucs-package we translate the UTF-8 string to latin1
     if Length(GAPDoc2LaTeXProcs.USEUCS) = 0 then
       Info(InfoGAPDoc, 1, "#I Recoding LaTeX input to latin1 ...\n");
-      str := Encode(U(str, "UTF-8"), "latin1");
+      str := Encode(Unicode(str, "UTF-8"), "latin1");
     fi;
     return str;
   fi;
@@ -359,6 +377,13 @@ GAPDoc2LaTeXProcs.WHOLEDOCUMENT := function(r, str)
     fi;
   end);
 
+  ##  warn if no labels via .six available
+  if not IsBound(r.six) then
+    Info(InfoGAPDoc, 1, "#W WARNING: No labels for section number independent ",
+      "anchors available.\n", 
+      "#W Consider running the converter for the text version first!\n");
+  fi;
+
   ##  now the actual work starts, we give the found processing instructions
   ##  to the Book handler
   GAPDoc2LaTeXProcs.Book(r.content[i], str, pi);
@@ -387,7 +412,7 @@ GAPDoc2LaTeXProcs.Book := function(r, str, pi)
     NormalizeWhitespace(pi.Options);
     Append(str, pi.Options);
   else
-    Append(str, "11pt");
+    Append(str, "a4paper,11pt");
   fi;
   a := SubstitutionSublist(GAPDoc2LaTeXProcs.Head1x, "USEUCS", 
                            GAPDoc2LaTeXProcs.USEUCS);
@@ -426,7 +451,7 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
   s := "";
   GAPDoc2LaTeXContent(l[1], s);
   Append(str, s);
-  Append(str, "}}\\\\[1cm]\n");
+  Append(str, "\\mbox{}}}\\\\[1cm]\n");
   # set title in info part of PDF document
   Append(str, "\\hypersetup{pdftitle=");
   Append(str, s);
@@ -442,7 +467,7 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
   if Length(l)>0 then
     Append(str, "{\\Large \\textbf{");
     GAPDoc2LaTeXContent(l[1], str);
-    Append(str, "}}\\\\[1cm]\n");
+    Append(str, "\\mbox{}}}\\\\[1cm]\n");
   fi;
   
   # version
@@ -450,7 +475,7 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
   if Length(l)>0 then
     Append(str, "{");
     GAPDoc2LaTeXContent(l[1], str);
-    Append(str, "}\\\\[1cm]\n");
+    Append(str, "\\mbox{}}\\\\[1cm]\n");
   fi;
 
   # date
@@ -458,7 +483,7 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
   if Length(l)>0 then
     Append(str, "{");
     GAPDoc2LaTeXContent(l[1], str);
-    Append(str, "}\\\\[1cm]\n");
+    Append(str, "\\mbox{}}\\\\[1cm]\n");
   fi;
   Append(str, "\\mbox{}\\\\[2cm]\n");
 
@@ -473,7 +498,7 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
                    not b.name in ["Email", "Homepage", "Address"])), s);
     Append(str, s);
     Add(ll, s);
-    Append(str, "}}\\\\\n");
+    Append(str, "\\mbox{}}}\\\\\n");
   od;
   Append(str, "\\hypersetup{pdfauthor=");
   Append(str, JoinStringsWithSeparator(ll, "; "));
@@ -538,7 +563,7 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
     Append(str, Concatenation("\\logpage{", 
             GAPDoc2LaTeXProcs.StringNrs(l[1].count{[1..3]}), "}\n"));
     GAPDoc2LaTeXContent(l[1], str);
-    Append(str, "}\\\\[1cm]\n");
+    Append(str, "\\mbox{}}\\\\[1cm]\n");
   fi;
   
   # copyright page
@@ -549,7 +574,7 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
     Append(str, Concatenation("\\logpage{", 
             GAPDoc2LaTeXProcs.StringNrs(l[1].count{[1..3]}), "}\n"));
     GAPDoc2LaTeXContent(l[1], str);
-    Append(str, "}\\\\[1cm]\n");
+    Append(str, "\\mbox{}}\\\\[1cm]\n");
   fi;
 
   # acknowledgement page
@@ -560,7 +585,7 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
     Append(str, Concatenation("\\logpage{", 
             GAPDoc2LaTeXProcs.StringNrs(l[1].count{[1..3]}), "}\n"));
     GAPDoc2LaTeXContent(l[1], str);
-    Append(str, "}\\\\[1cm]\n");
+    Append(str, "\\mbox{}}\\\\[1cm]\n");
   fi;
 
   # colophon page
@@ -571,7 +596,7 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
     Append(str, Concatenation("\\logpage{", 
             GAPDoc2LaTeXProcs.StringNrs(l[1].count{[1..3]}), "}\n"));
     GAPDoc2LaTeXContent(l[1], str);
-    Append(str, "}\\\\[1cm]\n");
+    Append(str, "\\mbox{}}\\\\[1cm]\n");
   fi;  
   Append(str,"\\newpage\n\n");
 end;
@@ -628,10 +653,18 @@ GAPDoc2LaTeXProcs.ChapSect := function(r, str, sect)
     # save heading for "Text" style references to section
     GAPDoc2LaTeXProcs._labeledSections.(r.attributes.Label) := s;
   fi;
-  # page number info for online help (no r.count below Ignore)
+  # page number info for online help (no r.count below Ignore),
+  # we also add a section number and page number independent label,
+  # if available
   if IsBound(r.count) then
     Append(str, Concatenation("\\logpage{", 
             GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}\n"));
+    if IsBound(r.root.six) then
+      a := First(r.root.six, x-> x[3] = r.count{[1..3]});
+      if a <> fail and IsBound(a[7]) then
+        Append(str, Concatenation("\\hyperdef{L}{", a[7], "}{}\n"));
+      fi;
+    fi;
     # the actual content
     Append(str, "{\n");
     GAPDoc2LaTeXContent(r, str);
@@ -689,6 +722,12 @@ GAPDoc2LaTeXProcs.Bibliography := function(r, str)
       Info(InfoGAPDoc, 1, "#I Creating BibTeX file ", 
                                    fname, ".bib from BibXMLext file.\n");
       WriteBibFile(Concatenation(fname, ".bib"), b);
+      if GAPDoc2LaTeXProcs.INPUTENCENC = "latin1" then
+        Info(InfoGAPDoc, 1, "#I Recoding BibTeX file to latin1 . . .\n");
+        t := StringFile(Concatenation(fname, ".bib"));
+        t := Encode(Unicode(t, "UTF-8"), "ISO-8859-1");
+        FileString(Concatenation(fname, ".bib"), t);
+      fi;
     fi;
   od;
   if IsBound(r.attributes.Style) then
@@ -932,7 +971,7 @@ end;
 
 ##  this produces an implicit index entry and a label entry
 GAPDoc2LaTeXProcs.LikeFunc := function(r, str, typ)
-  local   nam,  namclean, lab;
+  local nam, namclean, lab, inam, i;
   Append(str, "\\noindent\\textcolor{FuncColor}{$\\Diamond$\\ \\texttt{");
   nam := r.attributes.Name;
   namclean := GAPDoc2LaTeXProcs.DeleteUsBs(nam);
@@ -952,8 +991,22 @@ GAPDoc2LaTeXProcs.LikeFunc := function(r, str, typ)
     lab := "";
   fi;
   # index entry
+  # handle extremely long names
+  if Length(nam) > 40 then
+    inam := nam{[1..3]};
+    for i in [4..Length(nam)-3] do
+      if nam[i] in CAPITALLETTERS then
+        Append(inam, "}\\-\\texttt{");
+      fi;
+      Add(inam, nam[i]);
+    od;
+    Add(inam, nam[Length(nam)-2]); Add(inam, nam[Length(nam)-1]);
+    Add(inam, nam[Length(nam)]);
+  else
+    inam := nam;
+  fi;
   Append(str, Concatenation("\\index{", namclean, "@\\texttt{",
-          nam, "}", lab, "}\n"));
+          inam, "}", lab, "}\n"));
   # label (if not given, the default is the Name)
   if IsBound(r.attributes.Label) then
     namclean := Concatenation(namclean, ":", r.attributes.Label);
@@ -1014,7 +1067,7 @@ GAPDoc2LaTeXProcs.ResolveExternalRef := function(bookname,  label, nr)
   if info = fail then
     return fail;
   fi;
-  match := Concatenation(HELP_GET_MATCHES(info, STRING_LOWER(label), true));
+  match := Concatenation(HELP_GET_MATCHES(info, SIMPLE_STRING(label), true));
   if Length(match) < nr then
     return fail;
   fi;
@@ -1022,7 +1075,7 @@ GAPDoc2LaTeXProcs.ResolveExternalRef := function(bookname,  label, nr)
 end;
 
 GAPDoc2LaTeXProcs.Ref := function(r, str)
-  local   funclike,  int,  txt,  ref,  lab,  sectlike;
+  local   funclike,  int,  txt,  ref,  lab,  sectlike, slab;
   
   # function like cases
   funclike := [ "Func", "Oper", "Meth", "Filt", "Prop", "Attr", "Var", 
@@ -1036,15 +1089,20 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
       lab := txt;
     fi;
     if IsBound(r.attributes.BookName) then
+      slab := txt;
+      if IsBound(r.attributes.Label) then
+        slab := Concatenation(slab, " (", r.attributes.Label, ")");
+      fi;
       ref := GAPDoc2LaTeXProcs.ResolveExternalRef(
-                                          r.attributes.BookName, lab, 1);
+                                             r.attributes.BookName, slab, 1);
       if ref = fail then
         Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
         ref := Concatenation(" (", lab, "???)");
       else
         # the search text for online help including book name
-        ref := Concatenation(" (\\textbf{", ref[1], "})");
+        ref := Concatenation(" (\\textbf{", 
+                              GAPDoc2LaTeXProcs.EscapeAttrVal(ref[1]), "})");
       fi;
     else
       ref := Concatenation(" (\\ref{", GAPDoc2LaTeXProcs.DeleteUsBs(lab), "})");
@@ -1078,7 +1136,7 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
         ref := Concatenation(" (", lab, "???)");
       else
         # the search text for online help including book name
-        ref := Concatenation(" (\\textbf{", ref[1], "})");
+        ref := Concatenation(" (\\textbf{", GAPDoc2LaTeXProcs.EscapeAttrVal(ref[1]), "})");
       fi;
     elif IsBound(r.attributes.Style) and r.attributes.Style = "Text" then
       if IsBound(GAPDoc2LaTeXProcs._labeledSections.(lab)) then
@@ -1092,7 +1150,7 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
     else
       # with sectioning references Label must be given
       lab := r.attributes.(int[1]);
-      ref := Concatenation("\\ref{", lab, "}");
+      ref := Concatenation("\\ref{", GAPDoc2LaTeXProcs.EscapeAttrVal(lab), "}");
     fi;
     Append(str, ref);
     return;
@@ -1110,14 +1168,14 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
     if ref = fail then
       Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
-      ref := Concatenation(" ", lab, "??? ");
+      ref := Concatenation(" ", GAPDoc2LaTeXProcs.EscapeAttrVal(lab), "??? ");
     else
       # the search text for online help including book name
-      ref := Concatenation(" \\textbf{", ref[1], "}");
+      ref := Concatenation(" \\textbf{", GAPDoc2LaTeXProcs.EscapeAttrVal(ref[1]), "}");
     fi;
   else
     lab := r.attributes.Label;
-    ref := Concatenation("\\ref{", lab, "}");
+    ref := Concatenation("\\ref{", GAPDoc2LaTeXProcs.EscapeAttrVal(lab), "}");
   fi;
   Append(str, ref);
   return;
@@ -1140,7 +1198,7 @@ GAPDoc2LaTeXProcs.Returns := function(r, str)
 end;
 
 GAPDoc2LaTeXProcs.ManSection := function(r, str)
-  local   funclike,  f,  lab,  i;
+  local   funclike,  f,  lab,  i, a;
   
   # function like elements
   funclike := [ "Func", "Oper", "Meth", "Filt", "Prop", "Attr", "Var", 
@@ -1162,6 +1220,12 @@ GAPDoc2LaTeXProcs.ManSection := function(r, str)
   # page number info for online help
   Append(str, Concatenation("\\logpage{", 
           GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}\\nobreak\n"));
+  if IsBound(r.root.six) then
+    a := First(r.root.six, x-> x[3] = r.count{[1..3]});
+    if a <> fail and IsBound(a[7]) then
+      Append(str, Concatenation("\\hyperdef{L}{", a[7], "}{}\n"));
+    fi;
+  fi;
   # to avoid references to local subsection in description:
   GAPDoc2LaTeXProcs._currentSubsection := r.count{[1..3]};
   Append(str, "{");

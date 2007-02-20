@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
+#W  GAPDoc.gi                    GAPDoc                          Frank LÃ¼beck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.10 2007-01-31 13:45:10 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.11 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##  
 ##  The files GAPDoc.g{d,i} contain some utilities for trees returned by
@@ -281,6 +281,7 @@ InstallGlobalFunction(PrintSixFile, function(file, r, bookname)
     return res;
   end;
   PrintTo(file, "#SIXFORMAT  GapDocGAP\nHELPBOOKINFOSIXTMP := rec(\n",
+          "encoding := \"UTF-8\",\n",
           "bookname := \"", bookname, "\",\n",
           "entries :=\n", List(r.six, f), "\n);\n");
 end);

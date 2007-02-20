@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  getdtd.g                     GAPDoc                          Frank Lübeck
+#W  getdtd.g                     GAPDoc                          Frank LÃ¼beck
 ##
-#H  @(#)$Id: getdtd.g,v 1.3 2002-05-20 22:08:57 gap Exp $
+#H  @(#)$Id: getdtd.g,v 1.4 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##
 ##  This  is  a  utility  file  for  the  GAPDoc  package,  which  reads
@@ -15,7 +15,7 @@
 ##  changed.
 ##  
 #Revision.getdtd.g :=
-#    "@(#)$Id: getdtd.g,v 1.3 2002-05-20 22:08:57 gap Exp $";
+#    "@(#)$Id: getdtd.g,v 1.4 2007-02-20 16:56:27 gap Exp $";
 
 
 

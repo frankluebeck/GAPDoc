@@ -1,7 +1,7 @@
 
-##  GAPDoc                                             Frank Lübeck
+##  GAPDoc                                             Frank LÃ¼beck
 ##  
-##  $Id: Examples.g,v 1.5 2007-02-01 16:23:07 gap Exp $
+##  $Id: Examples.g,v 1.6 2007-02-20 16:56:27 gap Exp $
 ##  
 ##  Some utilities to extract contents of some elements. (First
 ##  experimental.)

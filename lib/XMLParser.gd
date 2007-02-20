@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  XMLParser.gd                 GAPDoc                          Frank Lübeck
+#W  XMLParser.gd                 GAPDoc                          Frank LÃ¼beck
 ##
-#H  @(#)$Id: XMLParser.gd,v 1.3 2007-02-01 16:23:07 gap Exp $
+#H  @(#)$Id: XMLParser.gd,v 1.4 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##
 ##  The files  XMLParser.g{d,i} contain a non-validating XML  parser and some

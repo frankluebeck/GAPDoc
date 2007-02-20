@@ -1,3 +1,16 @@
+#############################################################################
+##
+#W  UnicodeTools.gd                GAPDoc                     Frank Lübeck
+##
+#H  @(#)$Id: UnicodeTools.gd,v 1.2 2007-02-20 16:56:27 gap Exp $
+##
+#Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  RWTH Aachen
+##  
+##  The files UnicodeTools.g{d,i} contain utilities for converting text
+##  between different encodings. They introduce unicode strings and
+##  characters as GAP objects.
+##  
 
 # for some recode information and functions for the ISO-8859 character sets
 BindGlobal("UNICODE_RECODE", rec());
@@ -7,9 +20,11 @@ DeclareFilter("IsUnicodeString", IsString and IsHomogeneousList and
                                  IsConstantTimeAccessList);
 DeclareFilter("IsUnicodeCharacter", IsInt and IsChar);
 BindGlobal("UnicodeStringType", 
-              NewType(NewFamily("dummy"), IsUnicodeString and IsMutable));
+              NewType(NewFamily("dummy"), IsPositionalObjectRep and
+                                          IsUnicodeString and IsMutable));
 BindGlobal("UnicodeCharacterType", 
-              NewType(NewFamily("dummy"), IsUnicodeCharacter));
+              NewType(NewFamily("dummy"), IsComponentObjectRep and
+                                          IsUnicodeCharacter));
 BindGlobal("UNICODECHARCACHE", []);
 
 DeclareOperation("UChar", [IsObject]);
@@ -17,8 +32,8 @@ DeclareOperation("UChar", [IsObject, IsObject]);
 
 # create unicode strings, from lists of integers or GAP strings,
 # optionally with encoding (default UTF-8)
-DeclareOperation("U", [IsObject]);
-DeclareOperation("U", [IsObject, IsObject]);
+DeclareOperation("Unicode", [IsObject]);
+DeclareOperation("Unicode", [IsObject, IsObject]);
 DeclareGlobalFunction("IntListUnicodeString");
 UNICODE_RECODE.Decoder := rec();
 

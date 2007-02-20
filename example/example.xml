@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id: example.xml,v 1.10 2006-09-25 12:36:38 gap Exp $ -->
+<!-- $Id: example.xml,v 1.11 2007-02-20 16:56:27 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
  [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&tgt;</Alt>'>]>
@@ -15,15 +15,15 @@
   If the subtitle ist not sufficient, this &tlt;TitleComment&tgt; 
   element can be used for a slightly longer text on the front page.
   </TitleComment>
-  <Author>Frank Lübeck 
+  <Author>Frank LÃ¼beck 
           <Email>Frank.Luebeck@Math.RWTH-Aachen.De</Email> 
   </Author>
-  <Author>Max Neunhöffer
+  <Author>Max NeunhÃ¶ffer
           <Email>Max.Neunhoeffer@Math.RWTH-Aachen.De</Email>
   </Author>
   <Date>December 2000</Date>
   <Address>
-  Lehrstuhl D für Mathematik<Br/> Templergraben 
+  Lehrstuhl D fÃ¼r Mathematik<Br/> Templergraben 
   64<Br/> 52062 Aachen<Br/> (Germany)
   </Address>
   <Abstract>This document tries to use all elements that exist in &GAPDoc;.
@@ -33,9 +33,9 @@
             source text. This should enable new users to learn &GAPDoc;
             quickly.
   </Abstract>
-  <Copyright>&copyright; 2000 by Frank Lübeck and Max Neunhöffer
+  <Copyright>&copyright; 2000 by Frank LÃ¼beck and Max NeunhÃ¶ffer
   </Copyright>
-  <Acknowledgements>We thank Lehrstuhl D für Mathematik.
+  <Acknowledgements>We thank Lehrstuhl D fÃ¼r Mathematik.
   </Acknowledgements>
   <Colophon>This is the Colophon page.
   </Colophon>
@@ -494,9 +494,9 @@ This is an appendix.
   <Title>A Complete Example</Title>
   <Subtitle>Every element shows up</Subtitle>
   <Version>Version 1.0</Version>
-  <Author>Frank Lübeck 
+  <Author>Frank LÃ¼beck 
           <Email>Frank.Luebeck@Math.RWTH-Aachen.De</Email></Author>
-  <Author>Max Neunhöffer
+  <Author>Max NeunhÃ¶ffer
           <Email>Max.Neunhoeffer@Math.RWTH-Aachen.De</Email></Author>
   <Date>December 2000</Date>
   <Abstract>This document tries to use all elements that exist in &GAPDoc;.
@@ -505,8 +505,8 @@ This is an appendix.
             are also links from the usual content to the corresponding
             source text. This should enable new users to learn &GAPDoc;
             quickly.</Abstract>
-  <Copyright>&copyright; 2000 by Frank Lübeck and Max Neunhöffer</Copyright>
-  <Acknowledgements>We thank Lehrstuhl D für Mathematik.</Acknowledgements>
+  <Copyright>&copyright; 2000 by Frank LÃ¼beck and Max NeunhÃ¶ffer</Copyright>
+  <Acknowledgements>We thank Lehrstuhl D fÃ¼r Mathematik.</Acknowledgements>
   <Colophon>This is the Colophon page.</Colophon>
 </TitlePage>]]>
 </Listing>

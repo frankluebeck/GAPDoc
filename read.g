@@ -1,11 +1,11 @@
 #############################################################################
 ##
-#A  read.g                  GAPDoc              Frank Lübeck / Max Neunhöffer
+#A  read.g                  GAPDoc              Frank LÃ¼beck / Max NeunhÃ¶ffer
 ##
-#H  @(#)$Id: read.g,v 1.4 2007-01-31 13:45:09 gap Exp $
+#H  @(#)$Id: read.g,v 1.5 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck and Max Neunhöffer,  
-#Y  Lehrstuhl D für Mathematik,  RWTH Aachen
+#Y  Copyright (C)  2000,  Frank LÃ¼beck and Max NeunhÃ¶ffer,  
+#Y  Lehrstuhl D fÃ¼r Mathematik,  RWTH Aachen
 ##
 
 ReadPackage("GAPDoc", "lib/UnicodeTools.gi");

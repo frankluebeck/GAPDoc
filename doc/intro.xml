@@ -1,5 +1,8 @@
-<!-- $Id: intro.xml,v 1.6 2002-12-23 10:03:20 gap Exp $ -->
+<!-- $Id: intro.xml,v 1.7 2007-02-20 16:56:27 gap Exp $ -->
 <Chapter Label="ch:intro"><Heading>Introduction and Example</Heading>
+
+A <Ref BookName="Reference" Meth="Identifier" Label="for character tables"/>
+B. <P/>
 
 The main  purpose of  the &GAPDoc; package  is to define  a file  format for
 documentation of &GAP;-programs and -packages (see <Cite Key="GAP4" />). The
@@ -58,19 +61,16 @@ In  this  section  we  recall  the   lines  from  the  example  document  in
 Appendix&nbsp;<Ref Appendix="app:3k+1" /> and give some explanations.
 
 <Listing Type="from 3k+1.xml">
-<![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?> ]]>
+<![CDATA[<?xml version="1.0" encoding="UTF-8"?> ]]>
 </Listing>
 
-This line just tells a human reader and computer programs that the file is a
-document with  XML markup and  that the text  is encoded in  the ISO-8859-1,
-also  called  ISO-latin1 character  set.  This  is  a nowadays  widely  used
-extension of the  ASCII character set which contains  all special characters
-of  Western European  languages (e.g.,  German umlauts  and French  accented
-characters).
+This line just tells a human  reader and computer programs that the file
+is a document with XML markup and  that the text is encoded in the UTF-8
+character set (other common encodings are ASCII or ISO-8895-X encodings).  
 
 <Listing Type="from 3k+1.xml">
 <![CDATA[<!--   A complete "fake package" documentation   
-   $Id: intro.xml,v 1.6 2002-12-23 10:03:20 gap Exp $
+   $Id: intro.xml,v 1.7 2007-02-20 16:56:27 gap Exp $
 -->
 ]]></Listing>
 
@@ -127,7 +127,7 @@ The content of the book starts with a title page.
 <![CDATA[<TitlePage>
   <Title>The <Package>ThreeKPlusOne</Package> Package</Title>
   <Version>Version 42</Version>
-  <Author>Dummy Authör
+  <Author>Dummy AuthÃ¶r
     <Email>3kplusone@dev.null</Email>
   </Author>
 
@@ -348,11 +348,10 @@ entries in the index.
 
  <Mark>Why XML and not a newly defined markup language?</Mark>
  <Item>
-  XML is a standard that is more and more widely used. Lots of people
-  have thought about it. Years of experience with SGML went into the
-  design. It is easy to parse and lots of tools are already available and
-  there will be more in the future. (Our experience was however, 
-  that only a few of them are usable currently.)
+  XML is a well defined standard that is more and more widely used. Lots 
+  of people have thought about it. Years of experience with SGML went into the
+  design. It is easy to explain, easy to parse and lots of tools are available, 
+  there will be more in the future. 
  </Item>
 </List>
 

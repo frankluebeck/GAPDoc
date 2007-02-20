@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
+#W  GAPDoc2HTML.gi                 GAPDoc                        Frank LÃ¼beck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.35 2007-02-06 13:12:34 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.36 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##
 ##  The  files GAPDoc2HTML.g{d,i}  contain  a  conversion program  which
@@ -153,22 +153,42 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
   local   files,  n,  tt,  i, chnrs, chlink, prev, next, toplink;
   
   chnrs := Set(List([2,4..Length(l)], i-> l[i-1][1]));
-  chlink := "\n<div class=\"pcenter\"><table class=\"chlink\"><tr><td class=\"chlink1\">Goto Chapter: </td>";
+  chlink := 
+    "\n<div class=\"chlinktop\"><span class=\"chlink1\">Goto Chapter: </span>";
   for n in chnrs do
-    Append(chlink, Concatenation("<td><a href=\"chap", String(n), 
+    Append(chlink, Concatenation("<a href=\"chap", String(n), 
            GAPDoc2HTMLProcs.ext, "\">"));
     if n = 0 then
       Append(chlink, "Top");
     else
       Append(chlink, String(n));
     fi;
-    Append(chlink,"</a></td>");
+    Append(chlink,"</a>  ");
   od;
-  Append(chlink, "</tr></table><br /></div>\n");
+  Append(chlink, "</div>\n");
   
+  toplink := Concatenation( "&nbsp;<a href=\"chap0", GAPDoc2HTMLProcs.ext, 
+             "\">Top of Book</a>&nbsp;  " );
+  prev := [];
+  next := [];
+  for i in [1..Length(chnrs)] do
+    if i > 1 then
+      Add(prev, Concatenation("&nbsp;<a href=\"chap", String(chnrs[i-1]),
+                  GAPDoc2HTMLProcs.ext, "\">Previous Chapter</a>&nbsp;  "));
+    else
+      Add(prev, "");
+    fi;
+    if i < Length(chnrs) then
+      Add(next, Concatenation("&nbsp;<a href=\"chap", String(chnrs[i+1]),
+                        GAPDoc2HTMLProcs.ext, "\">Next Chapter</a>&nbsp;  "));
+    else
+      Add(next, "");
+    fi;
+  od;
   # putting the paragraphs together (one string (file) for each chapter)
   files := rec();
-  for n in chnrs do
+  for i in [1..Length(chnrs)] do
+    n := chnrs[i];
     if r.root.mathmode = "MathML" then
       files.(n) := rec(text := 
                    ShallowCopy(GAPDoc2HTMLProcs.Head1MML), ssnr := []);
@@ -195,12 +215,15 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     Append(files.(n).text, tt);
     Append(files.(n).text, GAPDoc2HTMLProcs.Head2);
     Append(files.(n).text, Concatenation("\n", chlink));
+    Append(files.(n).text, Concatenation(
+           "\n<div class=\"chlinkprevnexttop\">",
+           toplink, prev[i], next[i], "</div>\n\n"));
   od;
   for i in [2,4..Length(l)] do
     n := files.(l[i-1][1]);
     if Length(n.ssnr)=0 or l[i-1]{[1..3]} <> n.ssnr[Length(n.ssnr)] then
       Add(n.ssnr, l[i-1]{[1..3]});
-      tt := GAPDoc2HTMLProcs.SectionLabel(l[i-1], "Subsection")[2];
+      tt := GAPDoc2HTMLProcs.SectionLabel(r, l[i-1], "Subsection")[2];
       Append(n.text, Concatenation("<p><a id=\"", tt, "\" name=\"", tt, 
                                    "\"></a></p>\n"));
     fi;
@@ -208,26 +231,13 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     Append(n.text, l[i]);
   od;
   
-  toplink := Concatenation( "<td><a href=\"chap0", GAPDoc2HTMLProcs.ext, 
-             "\">Top of Book</a></td>" );
   for i in [1..Length(chnrs)] do
-    if i > 1 then
-      prev := Concatenation("<td><a href=\"chap", String(chnrs[i-1]),
-            GAPDoc2HTMLProcs.ext, "\">Previous Chapter</a></td>");
-    else
-      prev := "";
-    fi;
-    if i < Length(chnrs) then
-      next := Concatenation("<td><a href=\"chap", String(chnrs[i+1]),
-            GAPDoc2HTMLProcs.ext, "\">Next Chapter</a></td>");
-    else
-      next := "";
-    fi;
     n := chnrs[i];
-    Append(files.(n).text, Concatenation("\n<div class=\"pcenter\">\n<table class=\"chlinkprevnext\"><tr>",
-           toplink, prev, next, "</tr></table>\n<br />\n\n"));
-    Append(files.(n).text,  chlink);
-    Append(files.(n).text, "\n</div>\n");
+    Append(files.(n).text, Concatenation(
+           "\n<div class=\"chlinkprevnextbot\">",
+           toplink, prev[i], next[i], "</div>\n\n"));
+    Append(files.(n).text,  SubstitutionSublist(chlink, "chlinktop",
+                                                      "chlinkbot", false));
     Append(files.(n).text, GAPDoc2HTMLProcs.Tail);
   od;
   # finally tell result the file extensions
@@ -344,6 +354,15 @@ end;
 ##  the directory  containing the output files.  The translation with
 ##  <C>ttm</C> is  still experimental.  The output of  this converter
 ##  variant is garbage for browsers which don't support MathML.<P/>
+## 
+##  This  function works  by  running recursively  through the  document
+##  tree   and   calling   a   handler  function   for   each   &GAPDoc;
+##  XML   element.  Many   of  these   handler  functions   (usually  in
+##  <C>GAPDoc2TextProcs.&lt;ElementName&gt;</C>)  are  not  difficult to
+##  understand (the  greatest complications are some  commands for index
+##  entries, labels  or the  output of page  number information).  So it
+##  should be easy to adjust certain details to your own taste by slight
+##  modifications of the program. <P/>
 ##  
 ##  The result  of this converter  can be  written to files  with the
 ##  command <Ref Func="GAPDoc2HTMLPrintHTMLFiles" />.<P/>
@@ -474,10 +493,15 @@ end);
 ##  write head and foot of HTML file.
 GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   local i, pi, t, el, remdiv, math, pos, pos1, str, dat, datbt, bib, b, 
-        keys, need, labels, diff, text, stream, a, attin;
+        keys, need, labels, tmp, j, diff, text, a;
   
   ##  add paragraph numbers to all nodes of the document
   AddParagraphNumbersGapDocTree(r);
+  
+  if not IsBound(r.six) then
+    Info(InfoGAPDoc, 1, "#W WARNING: Using labels from section numbers, \n",
+      "#W consider running the converter for the text version first!\n");
+  fi;
   
   ##  add a link .root to the root of the document to all nodes
   ##  (then we can collect information about indexing and so on 
@@ -489,6 +513,7 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   r.labeltexts := rec();
   r.bibkeys := [];
   r.chaptitle := rec();
+  r.chapsectlinks := rec();
   
   ##  checking for processing instructions before the book starts
   ##  example:  <?HTML option1="value1" ?>
@@ -527,6 +552,7 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   # now the toc is ready
   Info(InfoGAPDoc, 1, "#I Table of contents complete.\n");
   r.toctext := r.toc;
+  r.chapsectlinkstext := r.chapsectlinks;
   
   # utility to remove <div> tags
   remdiv := function(s)
@@ -615,6 +641,14 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
     SortParallel(List(need, a-> a.keylong), need);
     keys := List(need, a-> a.Label);
     labels := List(need, a-> a.key);
+    # make labels unique
+    tmp := Filtered(Collected(labels), a-> a[2] > 1);
+    for a in tmp do
+      pos := Positions(labels, a[1]);
+      for j in [1..Length(pos)] do
+        Add(labels[pos[j]], SMALLLETTERS[j]);
+      od;
+    od;
     diff := Difference(r.bibkeys, keys);
     if Length(diff) > 0 then
       Info(InfoGAPDoc, 1, "#W WARNING: could not find these references: \n", 
@@ -811,14 +845,14 @@ GAPDoc2HTMLProcs.URL := function(arg)
   s := "";
   GAPDoc2HTMLContent(r, s);
   Append(str, Concatenation(GAPDoc2HTMLProcs.TextAttr.URL[1], 
-                            "<a href=\"", pre, s, "\">",
-                            GAPDoc2HTMLProcs.TextAttr.URL[2]));
+                                            "<a href=\"", pre, s, "\">"));
   if IsBound(r.attributes.Text) then
     Append(str,  r.attributes.Text);
   else
     Append(str, s);
   fi;
   Append(str,"</a>");
+  Append(str, GAPDoc2HTMLProcs.TextAttr.URL[2]);
 end;
 
 GAPDoc2HTMLProcs.Homepage := GAPDoc2HTMLProcs.URL;
@@ -852,35 +886,57 @@ GAPDoc2HTMLProcs.SectionNumber := function(count, sect)
 end;
 
 ##  utility: generate a chapter or (sub)section-number string 
-GAPDoc2HTMLProcs.SectionLabel := function(count, sect)
-  local   res;
+GAPDoc2HTMLProcs.SectionLabel := function(r, count, sect)
+  local   res, a;
   if IsString(count[1]) or count[1]>0 then
     res := Concatenation("chap", String(count[1]), GAPDoc2HTMLProcs.ext);
   else
     res := Concatenation("chap0", GAPDoc2HTMLProcs.ext);
   fi;
   res := [res, ""];
-  if sect="Chapter" then
+  if not IsBound(r.root.six) then
+    if sect="Chapter" then
+      return res;
+    fi;
+    Append(res[2], Concatenation("s", String(count[2])));
+    Append(res[2], Concatenation("ss", String(count[3])));
     return res;
+  else
+    a := First(r.root.six, a-> a[3] = count{[1..3]});
+    if a = fail or not IsBound(a[7]) then
+      return GAPDoc2HTMLProcs.SectionLabel(rec(root:=rec()), count, sect);
+    else
+      Append(res[2], a[7]);
+      return res;
+    fi;
   fi;
-  Append(res[2], Concatenation("s", String(count[2])));
-  Append(res[2], Concatenation("ss", String(count[3])));
-  return res;
 end;
 
 ##  the sectioning commands are just translated and labels are
-##  generated, if given as attribute  XXX
+##  generated, if given as attribute  
 GAPDoc2HTMLProcs.ChapSect := function(r, par, sect)
-  local   num,  posh,  s,  ind, strn,  lab, types, nrs, hord;
+  local   num, posh, s, ind, strn, lab, types, nrs, hord, a, pos;
   
   types := ["Chapter", "Appendix", "Section", "Subsection"];
   nrs := ["3", "3", "4", "5"];
   hord := nrs[Position(types, sect)];
-        
+    
+  Add(par, r.count);
+  # if available, start with links to sections in chapter/appendix
+  if sect in ["Chapter", "Appendix"] then
+    if IsBound(r.root.chapsectlinkstext) and 
+       IsBound(r.root.chapsectlinkstext.(r.count[1])) then
+      Add(par, r.root.chapsectlinkstext.(r.count[1]));
+    fi;
+  fi;
+  if par[Length(par)] = r.count then
+    Add(par, "");
+  fi;
+
   # section number as string
   num := GAPDoc2HTMLProcs.SectionNumber(r.count, sect);
   # and as anchor
-  lab := GAPDoc2HTMLProcs.SectionLabel(r.count, "Subsection");
+  lab := GAPDoc2HTMLProcs.SectionLabel(r, r.count, "Subsection");
   lab := Concatenation(lab[1], "#", lab[2]);
   
   # the heading
@@ -900,25 +956,55 @@ GAPDoc2HTMLProcs.ChapSect := function(r, par, sect)
     fi;
   
     # the heading text
-    Add(par, r.count);
-    Add(par, Concatenation("\n<h", hord, ">", num, " ", s, "</h",
-                                                               hord, ">\n\n"));
+    Append(par[Length(par)], 
+       Concatenation("\n<h", hord, ">", num, " ", s, "</h", hord, ">\n\n"));
     
     # table of contents entry
     s := Concatenation( num, " ", s);
-    if sect="Section" then 
-      ind := "&nbsp;&nbsp;&nbsp;";
+    if sect in ["Chapter", "Appendix"] then
+      if r.count[1] >= 1 then
+        ind := "<div class=\"ContChap\">";
+      fi;
+    elif sect="Section" then 
+      ind := "";
+      if r.count[2] >= 1 then
+        Append(ind, "<div class=\"ContSect\">");
+      fi;
+      Append(ind, "&nbsp;&nbsp;");
     elif sect="Subsection" then
-      ind := "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+      if r.count[3] = 1 then
+        ind := "<br />";
+      else
+        ind := "";
+      fi;
+      Append(ind, 
+                "<span class=\"ContSS\">&nbsp;&nbsp;&nbsp;");
     else
       ind := "";
     fi;
-    Append(r.root.toc, Concatenation(ind, 
-                                 "<a href=\"", lab, "\">", s, "</a><br />\n"));
+    Append(r.root.toc, Concatenation(ind, "<a href=\"", 
+                                        lab, "\">", s, "</a>\n"));
   fi;
   
   # the actual content
   GAPDoc2HTMLContent(r, par);
+
+  # possibly close <div> or <span> in content
+  if posh <> fail then      
+    if sect in ["Chapter", "Appendix", "Section" ] then
+      Append(r.root.toc, "</div>\n");
+    elif sect="Subsection" then
+      Append(r.root.toc, "<br /></span>\n");
+    fi;
+  fi;
+  # if in chapter, also use the section links in top of page
+  if sect in ["Chapter", "Appendix"] then
+    a := Reversed(r.root.toc);
+    pos := PositionSublist(a, Reversed("<div class=\"ContChap\">"));
+    a := Reversed(a{[1..pos-1]});
+    r.root.chapsectlinks.(r.count[1]) := Concatenation(
+                                             "<div class=\"ChapSects\">", a);
+  fi;
 end;
 
 
@@ -1209,7 +1295,7 @@ end;
 GAPDoc2HTMLProcs.Label := function(r, str)
   local num,  lab;
   num := GAPDoc2HTMLProcs.SectionNumber(r.count, "Subsection");
-  lab := GAPDoc2HTMLProcs.SectionLabel(r.count, "Subsection"); 
+  lab := GAPDoc2HTMLProcs.SectionLabel(r, r.count, "Subsection"); 
   r.root.labels.(r.attributes.Name) := [num, Concatenation(lab[1],"#",lab[2])];
 end;
 
@@ -1254,7 +1340,7 @@ GAPDoc2HTMLProcs.Index := function(r, str)
   fi;
   Add(entry, GAPDoc2HTMLProcs.SectionNumber(r.count, "Subsection"));
   Add(entry, s);
-  url := GAPDoc2HTMLProcs.SectionLabel(r.count, "Subsection");
+  url := GAPDoc2HTMLProcs.SectionLabel(r, r.count, "Subsection");
   Add(entry, Concatenation(url[1],"#",url[2]));
   Add(r.root.index, entry);
 end;
@@ -1274,7 +1360,7 @@ GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
   # index entry
   name := r.attributes.Name;
   attr := GAPDoc2HTMLProcs.TextAttr.Func;
-  url := GAPDoc2HTMLProcs.SectionLabel(r.count, "Subsection");
+  url := GAPDoc2HTMLProcs.SectionLabel(r, r.count, "Subsection");
   url := Concatenation(url[1],"#",url[2]);
   if IsBound(r.attributes.Label) then
     lab := r.attributes.Label;
@@ -1287,7 +1373,11 @@ GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
           url]);
   # label (if not given, the default is the Name)
   if IsBound(r.attributes.Label) then
-    lab := Concatenation(r.attributes.Name, r.attributes.Label);
+    if IsBound(r.attributes.Name) then
+      lab := Concatenation(r.attributes.Name, " (", r.attributes.Label, ")");
+    else
+      lab := r.attributes.Label;
+    fi;
   else
     lab := r.attributes.Name;  
   fi;
@@ -1318,7 +1408,7 @@ end;
 GAPDoc2HTMLProcs.Filt := function(r, str)
   # r.attributes.Type could be "representation", "category", ...
   if IsBound(r.attributes.Type) then
-    GAPDoc2HTMLProcs.LikeFunc(r, str, r.attributes.Type);
+    GAPDoc2HTMLProcs.LikeFunc(r, str, LowercaseString(r.attributes.Type));
   else
     GAPDoc2HTMLProcs.LikeFunc(r, str, "filter");
   fi;
@@ -1351,7 +1441,7 @@ GAPDoc2HTMLProcs.ResolveExternalRef := function(bookname,  label, nr)
   if info = fail then
     return fail;
   fi;
-  match := Concatenation(HELP_GET_MATCHES(info, STRING_LOWER(label), true));
+  match := Concatenation(HELP_GET_MATCHES(info, SIMPLE_STRING(label), true));
   if Length(match) < nr then
     return fail;
   fi;
@@ -1370,7 +1460,11 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
     lab := "";
   fi;
   if IsBound(r.attributes.Label) then
-    lab := Concatenation(lab, r.attributes.Label);
+    if Length(lab) > 0 then
+      lab := Concatenation(lab, " (", r.attributes.Label, ")");
+    else
+      lab := r.attributes.Label;
+    fi;
   fi;
   if IsBound(r.attributes.BookName) then
     ref := GAPDoc2HTMLProcs.ResolveExternalRef(r.attributes.BookName, lab, 1);
@@ -1479,11 +1573,16 @@ GAPDoc2HTMLProcs.ManSection := function(r, par)
   Add(par, Concatenation("\n<h5>", s, "</h5>\n\n"));
   
   # append to TOC as subsection
-  lab := GAPDoc2HTMLProcs.SectionLabel(r.count, "Subsection");
+  lab := GAPDoc2HTMLProcs.SectionLabel(r, r.count, "Subsection");
   lab := Concatenation(lab[1], "#", lab[2]);
-  ind := "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+  if r.count[3] = 1 then
+    ind := "<br />\n";
+  else
+    ind := "";
+  fi;
+  ind := "<span class=\"ContSS\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
   Append(r.root.toc, Concatenation(ind, "<a href=\"", lab, "\">", s, 
-          "</a><br />\n"));
+          "</a><br /></span>\n"));
   GAPDoc2HTMLContent(r, par);
 end;
 

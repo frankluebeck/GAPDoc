@@ -1,13 +1,13 @@
 #############################################################################
 ##  
-##  PackageInfo.g for the package `GAPDoc'                       Frank Lübeck
+##  PackageInfo.g for the package `GAPDoc'                       Frank LÃ¼beck
 
 ##  With a new release of the package at least the entries .Version, .Date and
 ##  .ArchiveURL must be updated.
 
 SetPackageInfo( rec(
 
-CVSVERSION := "$Id: PackageInfo.g,v 1.7 2006-09-25 12:36:38 gap Exp $",
+CVSVERSION := "$Id: PackageInfo.g,v 1.8 2007-02-20 16:56:27 gap Exp $",
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
@@ -18,26 +18,26 @@ ArchiveURL :=
 ArchiveFormats := ".tar.bz2",
 Persons := [
   rec(
-  LastName := "Lübeck",
+  LastName := "LÃ¼beck",
   FirstNames := "Frank",
   IsAuthor := true,
   IsMaintainer := true,
   Email := "Frank.Luebeck@Math.RWTH-Aachen.De",
   WWWHome := "http://www.math.rwth-aachen.de:8001/~Frank.Luebeck",
   Place := "Aachen",
-  Institution := "Lehrstuhl D für Mathematik, RWTH Aachen",
-  PostalAddress := "Dr. Frank Lübeck\nLehrstuhl D für Mathematik\nRWTH Aachen\nTemplergraben 64\n52062 Aachen\nGERMANY\n"
+  Institution := "Lehrstuhl D fÃ¼r Mathematik, RWTH Aachen",
+  PostalAddress := "Dr. Frank LÃ¼beck\nLehrstuhl D fÃ¼r Mathematik\nRWTH Aachen\nTemplergraben 64\n52062 Aachen\nGERMANY\n"
   ),
   rec(
-  LastName := "Neunhöffer",
+  LastName := "NeunhÃ¶ffer",
   FirstNames := "Max",
   IsAuthor := true,
   IsMaintainer := true,
   Email := "Max.Neunhoeffer@Math.RWTH-Aachen.De",
   WWWHome := "http://www.math.rwth-aachen.de/~Max.Neunhoeffer",
   Place := "Aachen",
-  Institution := "Lehrstuhl D für Mathematik, RWTH Aachen",
-  PostalAddress := "Dr. Max Neunhöffer\nLehrstuhl D für Mathematik\nRWTH Aachen\nTemplergraben 64\n52062 Aachen\nGERMANY\n"
+  Institution := "Lehrstuhl D fÃ¼r Mathematik, RWTH Aachen",
+  PostalAddress := "Dr. Max NeunhÃ¶ffer\nLehrstuhl D fÃ¼r Mathematik\nRWTH Aachen\nTemplergraben 64\n52062 Aachen\nGERMANY\n"
   )
 ],
 Status := "deposited",

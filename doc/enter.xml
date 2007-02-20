@@ -1,4 +1,4 @@
-<!-- $Id: enter.xml,v 1.6 2006-09-25 12:36:38 gap Exp $ -->
+<!-- $Id: enter.xml,v 1.7 2007-02-20 16:56:27 gap Exp $ -->
 <Chapter Label="HowEnter">
 <Heading>How To Type a &GAPDoc; Document</Heading>
 
@@ -36,7 +36,7 @@ in  some encoding  and which  XML-defined  language is  used. In  case of  a
 &GAPDoc; document this should always look as in the following example.
 
 <Log>
-<![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
+<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Book SYSTEM "gapdoc.dtd">]]>
 </Log>
 
@@ -217,12 +217,11 @@ A nesting of tags like <![CDATA[<a> <b> </a> </b>]]> is not allowed.
 <Subsection Label="XMLenc">
 <Heading>Encoding of an XML Document</Heading>
 
-We suggest to use the ISO-8859-1 or ISO-latin1 encoding for writing &GAPDoc;
-XML  documents. This  character set  contains the  ASCII characters  and all
-special characters  from Western European  languages like German  umlauts or
-French accented characters. Text in this  character set can be used directly
-with &LaTeX; and many current  default terminal fonts support this character
-set.
+We suggest to use the UTF-8 encoding for writing &GAPDoc; XML documents.
+But  the tools  described in  Chapter <Ref  Chap="ch:conv" />  also work
+with  ASCII or  the  various ISO-8859-X  encodings  (ISO-8859-1 is  also
+called latin1  and covers most  special characters for  western European
+languages).
 
 </Subsection>
 
@@ -388,7 +387,7 @@ One can define  further local entities right inside  the head (see&nbsp;<Ref
 Subsect="XMLhead"/>) of a &GAPDoc; XML document as in the following example.
 
 <Listing Type="Example">
-<![CDATA[<?xml version="1.0" encoding="ISO-8859-1"?>
+<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
   [ <!ENTITY MyEntity "some longish <E>text</E> possibly with markup">

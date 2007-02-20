@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  Text.gd                      GAPDoc                          Frank Lübeck
+#W  Text.gd                      GAPDoc                          Frank LÃ¼beck
 ##
-#H  @(#)$Id: Text.gd,v 1.2 2001-06-06 14:39:17 gap Exp $
+#H  @(#)$Id: Text.gd,v 1.3 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##
 ##  The files Text.g{d,i}  contain some utilities for  dealing with text
@@ -31,4 +31,6 @@ DeclareGlobalFunction("DigitsNumber");
 DeclareGlobalFunction("StripBeginEnd");
 DeclareGlobalFunction("FormatParagraph");
 DeclareGlobalFunction("StripEscapeSequences");
+DeclareGlobalFunction("SubstituteEscapeSequences");
 DeclareGlobalFunction("WordsString");
+DeclareGlobalFunction("CrcText");

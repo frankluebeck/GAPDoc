@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   - (C) Frank Lübeck (http://www.math.rwth-aachen.de/~Frank.Luebeck)
   - 
@@ -307,16 +308,16 @@
 <!-- we want to allow more markup in some elements: mathematical formulae
      for better handling in HTML, Text, ..., URLs for including many links
 -->
-<!ELEMENT   M               (#PCDATA) > <!-- math with simple text
+<!ELEMENT   M               (#PCDATA | Alt)* > <!-- math with simple text
                                              representation, in LaTeX -->
-<!ELEMENT   Math            (#PCDATA) > <!-- other math in LaTeX -->
-<!ELEMENT   URL             (#PCDATA) > <!-- an URL -->
+<!ELEMENT   Math            (#PCDATA | Alt)* > <!-- other math in LaTeX -->
+<!ELEMENT   URL             (#PCDATA | Alt)* > <!-- an URL -->
 <!ATTLIST   URL Text CDATA #IMPLIED>    <!-- text to be printed 
                                              (default is content) -->
 <!ELEMENT   value             EMPTY   > <!-- placeholder for value given .. -->
 <!ATTLIST   value key CDATA #REQUIRED > <!-- .. by key, defined in a string
                                              element -->
-<!ELEMENT   C    (#PCDATA | value | 
+<!ELEMENT   C    (#PCDATA | value | Alt |
                      M | Math | URL)* >  <!-- protect from case changes -->
 <!ELEMENT   Alt  (#PCDATA | value | C |    
                      M | Math | URL)* > <!-- specify alternatives for 
@@ -340,6 +341,7 @@
 <!ELEMENT   booktitle       %withMURL; >
 <!ELEMENT   chapter         %withMURL; >
 <!ELEMENT   edition         %withMURL; >
+<!-- same as for author field -->
 <!ELEMENT   editor          (name)* >
 <!ELEMENT   howpublished    %withMURL; >
 <!ELEMENT   institution     %withMURL; >
@@ -405,13 +407,13 @@
 <!ELEMENT   isbn            (#PCDATA) >
 <!ELEMENT   issn            (#PCDATA) >
 <!ELEMENT   keywords        %withMURL; >
-<!ELEMENT   language        (#PCDATA) >
+<!ELEMENT   language        %withMURL; >
 <!ELEMENT   lccn            (#PCDATA) >
 <!ELEMENT   location        %withMURL; >
-<!ELEMENT   mrnumber        (#PCDATA) >
-<!ELEMENT   mrclass         (#PCDATA) >
+<!ELEMENT   mrnumber        %withMURL; >
+<!ELEMENT   mrclass         %withMURL; >
 <!ELEMENT   mrreviewer      %withMURL; >
-<!ELEMENT   price           (#PCDATA) >
+<!ELEMENT   price           %withMURL; >
 <!ELEMENT   size            %withMURL; >
 <!ELEMENT   url             %withMURL; >
 

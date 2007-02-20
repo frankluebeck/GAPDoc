@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  GAPDoc2Text.gd                 GAPDoc                        Frank Lübeck
+#W  GAPDoc2Text.gd                 GAPDoc                        Frank LÃ¼beck
 ##
-#H  @(#)$Id: GAPDoc2Text.gd,v 1.1.1.1 2001-01-05 13:37:48 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gd,v 1.2 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##
 ##  The  files GAPDoc2Text.g{d,i}  contain  a  conversion program  which
@@ -17,5 +17,8 @@ DeclareGlobalVariable("GAPDoc2TextProcs");
 DeclareGlobalFunction("GAPDoc2Text");
 
 DeclareGlobalFunction("GAPDoc2TextPrintTextFiles");
+
+# Just use this variable, will be really assigned in the .gi file.
+GAPDocTextTheme := 0;
 
 

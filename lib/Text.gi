@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  Text.gi                      GAPDoc                          Frank Lübeck
+#W  Text.gi                      GAPDoc                          Frank LÃ¼beck
 ##
-#H  @(#)$Id: Text.gi,v 1.7 2007-01-31 13:45:10 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.8 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##
 ##  The files Text.g{d,i}  contain some utilities for  dealing with text
@@ -653,6 +653,50 @@ InstallGlobalFunction(StripEscapeSequences, function(str)
   od;
   return res;
 end);
+InstallGlobalFunction(SubstituteEscapeSequences, function(str, subs)
+  local esc, res, i, ls, seq, pos, p;
+  esc := CHAR_INT(27);
+  res := "";
+  i := 1;
+  ls := Length(str);
+  while i <= ls do
+    if str[i] = esc and IsBound(str[i+1]) and str[i+1] = '[' then
+      seq := "";
+      i := i+1;
+      while not str[i] in LETTERS do
+        i := i+1;
+        Add(seq, str[i]);
+      od;
+      # first letter is last character of escape sequence
+      i := i+1; 
+      pos := PositionSet(subs[1], seq);
+      if pos <> fail then
+        seq := subs[2][pos];
+      else
+        Add(res, esc);
+        Add(res, '[');
+      fi;
+      Append(res, seq);
+    else
+      p := Position(str, esc, i);
+      if p=fail then
+        if i=1 then
+          # don't copy if no escape there
+          return str;
+        else
+          Append(res, str{[i..ls]});
+          return res;
+        fi;
+      else
+        Append(res, str{[i..p-1]});
+        i := p;
+      fi;
+    fi;
+  od;
+  return res;
+end);
+
+
 
 ##  <#GAPDoc Label="WordsString">
 ##  <ManSection >
@@ -672,9 +716,86 @@ end);
 ##  
 InstallGlobalFunction(WordsString, function(str)
   local   nonletters, wds;
-  nonletters := Set("0123456789 \n\r\t\b+*~^\\\"#'`'/?-_.:,;<>|=()[]{}&%$§!");
+  nonletters := Set("0123456789 \n\r\t\b+*~^\\\"#'`'/?-_.:,;<>|=()[]{}&%$Â§!");
   wds := SplitString(str, "", nonletters);
   return wds;
 end);
+
+# The GAP library will contain a new function CrcString. To make GAPDoc
+# running with current/older versions of GAP we use the following helper,
+# if necessary with a simple fallback.
+if IsBoundGlobal("CrcString") then
+  InstallGlobalFunction(CrcText, CrcString); 
+else
+  InstallGlobalFunction(CrcText, function(s)
+    local n, res;
+    n := "guckCRCXQWYNVOH";
+    FileString(n, s);
+    res := CrcFile(n);
+    RemoveFile(n);
+    return res;
+  end);
+fi;
+
+Base64LETTERS :=
+         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+Base64REVERSE := 
+[,,,,,,,,,-1,,,-1,,,,,,,,,,,,,,,,,,,-1,,,,,,,,,,,62,,62,,63,52,53,54,55,56,57,58,59,60,61,,,,-2,,,,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,,,,,63,,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51];
+Base64String := function(str)
+  local istr, pad, i, res, a, d, c, b;
+  istr := INTLIST_STRING(str, 1);
+  pad := (-Length(istr)) mod 3;
+  for i in [1..pad] do
+    Add(istr,0);
+  od;
+  i := 1;
+  res := [];
+  while i < Length(istr) do
+    if i > 1 and i mod 57 = 1 then
+      Add(res, '\n');
+    fi;
+    a := (istr[i]*256+istr[i+1])*256+istr[i+2];
+    d := RemInt(a, 64);
+    a := (a-d)/64;
+    c := RemInt(a, 64);
+    a := (a-c)/64;
+    b := RemInt(a, 64);
+    a := (a-b)/64;
+    Append(res, Base64LETTERS{[a,b,c,d]+1});
+    i := i+3;
+  od;
+  for i in [1..pad] do
+    Add(res, '=');
+  od;
+  return res;
+end;
+ 
+StringBase64 := function(bstr)
+  local istr, res, j, n, d, c, a;
+  istr := Base64REVERSE{INTLIST_STRING(bstr, 1)};
+  res := [];
+  j := 0;
+  n := 0;
+  for a in istr do
+    if a <> -1 then
+      if a = -2 then
+        Unbind(res[Length(res)]);
+      else
+        n := n*64+a;
+        j := j+1;
+        if j = 4 then
+          d := RemInt(n, 256);
+          n := (n-d)/256;
+          c := RemInt(n, 256);
+          n := (n-c)/256;
+          Append(res, [n,c,d]);
+          j := 0;
+          n := 0;
+        fi;
+      fi;
+    fi;
+  od;
+  return STRING_SINTLIST(res);
+end;
 
 

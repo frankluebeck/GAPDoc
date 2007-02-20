@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  PrintUtil.gi                 GAPDoc                          Frank Lübeck
+#W  PrintUtil.gi                 GAPDoc                          Frank LÃ¼beck
 ##
-#H  @(#)$Id: PrintUtil.gi,v 1.2 2001-07-05 09:50:30 gap Exp $
+#H  @(#)$Id: PrintUtil.gi,v 1.3 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##  
 ##  The  files PrintUtil.gd and  PrintUtil.gi contain utilities  for printing

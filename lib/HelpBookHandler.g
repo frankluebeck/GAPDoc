@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  HelpBookHandler.g                GAPDoc                      Frank Lübeck
+#W  HelpBookHandler.g                GAPDoc                      Frank LÃ¼beck
 ##
-#H  @(#)$Id: HelpBookHandler.g,v 1.8 2002-05-27 09:02:43 gap Exp $
+#H  @(#)$Id: HelpBookHandler.g,v 1.9 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##  
 ##  This file contains the HELP_BOOK_HANDLER functions for the GapDocGAP
@@ -21,7 +21,9 @@ HELP_BOOK_HANDLER.GapDocGAP := rec();
 ##        sectionstring,  (allows searching of section numbers, like: "1.3-4")
 ##        [chapnr, secnr, subsecnr], 
 ##        linenr  (for "text" format), 
-##        pagenr (for .dvi, .pdf-formats)
+##        pagenr (for .dvi, .pdf-formats),
+##        idstring (for a link L.<idstring> in PDF file,
+##        searchstring (simplified lowercased version of <showstring>)
 ##      ]
 ##  
 
@@ -29,25 +31,44 @@ HELPBOOKINFOSIXTMP := 0;
 if not IsBound(ANSI_COLORS) then
   ANSI_COLORS := false;
 fi;
+
+# helper function for showing matches in current text theme
+HELP_BOOK_HANDLER.GapDocGAP.apptheme := function(res, theme)
+  local a;
+  if ANSI_COLORS <> true 
+                  and (not IsBound(res.theme) or res.theme <> false) then
+    for a in res.entries do
+      a[1] := StripEscapeSequences(a[8]);
+    od;
+    res.theme := false;
+  elif not IsBound(res.theme) or res.theme <> theme then
+    for a in res.entries do
+      a[1] := SubstituteEscapeSequences(a[8], theme);
+    od;
+    res.theme := theme;
+  fi;
+end;
+
 HELP_BOOK_HANDLER.GapDocGAP.ReadSix := function(stream)
-  local fname, res, bname, nam, a;
+  local fname, res, bname, nam, a, apptheme;
   # our .six file is directly GAP-readable
   fname := ShallowCopy(stream![2]);
   Read(stream);
   res := HELPBOOKINFOSIXTMP;
   Unbind(HELPBOOKINFOSIXTMP);
   
-  # if no ANSI_COLORS we strip the escape sequences:
-  if not IsBound(ANSI_COLORS) or ANSI_COLORS <> true then
-    for a in res.entries do
-      a[1] := StripEscapeSequences(a[1]);
-    od;
-  fi;
+  # adjust search strings to current text theme, save original in position 8
+  for a in res.entries do
+    a[8] := a[1];
+  od;
+  HELP_BOOK_HANDLER.GapDocGAP.apptheme(res, GAPDocTextTheme);
   
   # in position 6 of each entry we put the corresponding search string
   for a in res.entries do
-    a[6] := SIMPLE_STRING(StripEscapeSequences(a[1]));
-    NormalizeWhitespace(a[6]);
+    if not IsBound(a[6]) then
+      a[6] := SIMPLE_STRING(StripEscapeSequences(a[1]));
+      NormalizeWhitespace(a[6]);
+    fi;
   od;
   
   # We  check the current availability of the different
@@ -122,7 +143,8 @@ HELP_BOOK_HANDLER.GapDocGAP.SearchMatches := function (book, topic, frombegin)
       fi;
     fi;
   od;
-  
+  HELP_BOOK_HANDLER.GapDocGAP.apptheme(info, GAPDocTextTheme);
+
   return [exact, match];
 end;
 
@@ -131,7 +153,7 @@ if not IsBound(BROWSER_CAP) then
   BROWSER_CAP := [];
 fi;
 HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
-  local info, a, fname, str, formatted, ext, label;
+  local info, a, fname, str, formatted, ext, label, enc, outenc, res;
   
   info := HELP_BOOK_INFO(book);
   # we handle the special type "ref" for cross references first
@@ -163,6 +185,25 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
     if not IsBound(ANSI_COLORS) or ANSI_COLORS <> true then
       # strip escape sequences
       str := StripEscapeSequences(str);
+    else
+      # substitute pseudo escape sequences via GAPDocTextTheme
+      str := SubstituteEscapeSequences(str, GAPDocTextTheme);
+    fi;
+    # maybe change encoding
+    if IsBound(info.encoding) then
+      enc := info.encoding;
+    else
+      # from older versions, so latin1
+      enc := "latin1";
+    fi;
+    if IsBound(GAPInfo.TermEncoding) then
+      outenc := GAPInfo.TermEncoding;
+    else
+      outenc := "latin1";
+    fi;
+    if UNICODE_RECODE.NormalizedEncodings.(enc) <>
+                          UNICODE_RECODE.NormalizedEncodings.(outenc) then
+      str := Encode(Unicode(str, enc), outenc);
     fi;
     return rec(lines := str, formatted := true, start := a[4]);
   fi;
@@ -184,10 +225,15 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
     fi;
     fname := Filename(info.directory, Concatenation("chap",
                        String(a[3][1]), ext));
-    label := Concatenation("#s", String(a[3][2]),
+    if IsBound(a[7]) then
+      label := a[7];
+    else
+      # from older version of GAPDoc
+      label := Concatenation("s", String(a[3][2]),
                      "ss", String(a[3][3]));
+    fi;
     # ??? return Concatenation("file:", fname, label);
-    return Concatenation("", fname, label);
+    return Concatenation("", fname, "#", label);
   fi;
   
   if type = "dvi" then
@@ -195,7 +241,11 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
   fi;
   
   if type = "pdf" then
-    return rec(file := info.pdffile, page := a[5]);
+    res := rec(file := info.pdffile, page := a[5]);
+    if IsBound(a[7]) then
+      res.label := Concatenation("L.", a[7]);
+    fi;
+    return res;
   fi;
 
   return fail;

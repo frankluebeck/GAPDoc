@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  BibTeX.gi                    GAPDoc                          Frank Lübeck
+#W  BibTeX.gi                    GAPDoc                          Frank LÃ¼beck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.16 2007-02-01 16:23:07 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.17 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##  
 ##  The files BibTeX.g{d,i} contain a parser for BibTeX files and some
@@ -17,111 +17,119 @@
 BindGlobal("NormalizedNameAndKey", function(str)
   local   nbsp,  new,  pp,  p,  a,  i,  names,  norm,  keyshort,  
           keylong,  res;
-  # first normalize white space inside braces { ... } and change
-  # spaces to non-breakable spaces
-  nbsp := CHAR_INT(160);
-  new := "";
-  pp := 0;
-  p := Position(str, '{');
-  while p <> fail do
-    Append(new, str{[pp+1..p-1]});
-    pp := PositionMatchingDelimiter(str, "{}", p);
-    a := NormalizedWhitespace(str{[p..pp]});
-    for i in [1..Length(a)] do
-      if a[i] = ' ' then
-        a[i] := nbsp;
-      fi;
-    od;
-    Append(new, a);
-    p := Position(str, '{', pp);
-  od;
-  if Length(new)>0 then
-    str := Concatenation(new, str{[pp+1..Length(str)]});
-  fi;
-  
-  # split into names:
-  names := [];
-  pp := 0;
-  p := PositionSublist(str, "and");
-  while p <> fail do
-    # "and" is only delimiter if surrounded by white space
-    if not (str[p-1] in WHITESPACE and Length(str)>p+2 and str[p+3] in
-               WHITESPACE) then
-      p := PositionSublist(str, "and", p);
-    else
-      Add(names, str{[pp+1..p-2]});
-      pp := p+3;
-      p := PositionSublist(str, "and", pp);
-    fi;
-  od;
-  Add(names, str{[pp+1..Length(str)]});
-  
-  # normalize a single name
-  norm := function(str)
-    local   n,  i,  lnam,  j,  fnam, fnamfull;
-    # special case "et. al."
-    if str="others" then
-      return ["others", "", ""];
-    fi;
-   
-    # first some normalization on the string
-    RemoveCharacters(str,"[]");
-    str := SubstitutionSublist(str, "~", " ");
-    str := SubstitutionSublist(str, ".", ". ");
-    StripBeginEnd(str, WHITESPACE);
-    n := SplitString(str, "", WHITESPACE);
-    # check if in "lastname, firstname" notation
-    # find last ","
-    i := Length(n);
-    while i>0 and n[i]<>"," and n[i][Length(n[i])] <> ',' do
-      i := i-1;
-    od;
-    if i>0 then
-      # last name
-      lnam := "";
-      for j in [1..i] do
-        Append(lnam, n[j]);
-        lnam := Filtered(lnam, x-> x<>',');
-      od;
-      # first name initials
-      fnam := "";
-      for j in [i+1..Length(n)] do
-        Add(fnam, First(n[j], x-> x in LETTERS));
-        Append(fnam, ". ");
-      od;
-      fnamfull := JoinStringsWithSeparator(n{[i+1..Length(n)]}, " ");
-    else
-      # last name is last including words not starting with
-      # capital letters
-      i := Length(n);
-      while i>1 and First(n[i-1], a-> a in LETTERS) in SMALLLETTERS do
-        i := i-1;
-      od;
-      # last name 
-      lnam := "";
-      for j in [i..Length(n)] do
-        Append(lnam, n[j]);
-        if j < Length(n) then
-          Add(lnam, ' ');
+  # do almost nothing if already list of strings (e.g., from BibXMLext tools
+  if IsString(str) then
+    # first normalize white space inside braces { ... } and change
+    # spaces to non-breakable spaces
+    nbsp := CHAR_INT(160);
+    new := "";
+    pp := 0;
+    p := Position(str, '{');
+    while p <> fail do
+      Append(new, str{[pp+1..p-1]});
+      pp := PositionMatchingDelimiter(str, "{}", p);
+      a := NormalizedWhitespace(str{[p..pp]});
+      for i in [1..Length(a)] do
+        if a[i] = ' ' then
+          a[i] := nbsp;
         fi;
       od;
-      # first name capitals
-      fnam := "";
-      for j in [1..i-1] do
-        Add(fnam, First(n[j], x-> x in LETTERS));
-        Append(fnam, ". ");
-      od;
-      fnamfull := JoinStringsWithSeparator(n{[1..i-1]}, " ");
-    fi;
-    while fnam[Length(fnam)] in WHITESPACE do
-      fnam := fnam{[1..Length(fnam)-1]};
+      Append(new, a);
+      p := Position(str, '{', pp);
     od;
-    return [lnam, fnam, fnamfull];
-  end;
-  
+    if Length(new)>0 then
+      str := Concatenation(new, str{[pp+1..Length(str)]});
+    fi;
+    
+    # split into names:
+    names := [];
+    pp := 0;
+    p := PositionSublist(str, "and");
+    while p <> fail do
+      # "and" is only delimiter if surrounded by white space
+      if not (str[p-1] in WHITESPACE and Length(str)>p+2 and str[p+3] in
+                 WHITESPACE) then
+        p := PositionSublist(str, "and", p);
+      else
+        Add(names, str{[pp+1..p-2]});
+        pp := p+3;
+        p := PositionSublist(str, "and", pp);
+      fi;
+    od;
+    Add(names, str{[pp+1..Length(str)]});
+    
+    # normalize a single name
+    norm := function(str)
+      local   n,  i,  lnam,  j,  fnam, fnamfull;
+      # special case "et. al."
+      if str="others" then
+        return ["others", "", ""];
+      fi;
+     
+      # first some normalization on the string
+      RemoveCharacters(str,"[]");
+      str := SubstitutionSublist(str, "~", " ");
+      str := SubstitutionSublist(str, ".", ". ");
+      StripBeginEnd(str, WHITESPACE);
+      n := SplitString(str, "", WHITESPACE);
+      # check if in "lastname, firstname" notation
+      # find last ","
+      i := Length(n);
+      while i>0 and n[i]<>"," and n[i][Length(n[i])] <> ',' do
+        i := i-1;
+      od;
+      if i>0 then
+        # last name
+        lnam := "";
+        for j in [1..i] do
+          Append(lnam, n[j]);
+          if j < i then
+            Add(lnam, ' ');
+          fi;
+          lnam := Filtered(lnam, x-> x<>',');
+        od;
+        # first name initials   -  wrong for UTF-8!
+        fnam := "";
+        for j in [i+1..Length(n)] do
+          Add(fnam, First(n[j], x-> not x in WHITESPACE and not x in "-."));
+          Append(fnam, ". ");
+        od;
+        fnamfull := JoinStringsWithSeparator(n{[i+1..Length(n)]}, " ");
+      else
+        # last name is last including words not starting with
+        # capital letters
+        i := Length(n);
+        while i>1 and First(n[i-1], a-> a in LETTERS) in SMALLLETTERS do
+          i := i-1;
+        od;
+        # last name 
+        lnam := "";
+        for j in [i..Length(n)] do
+          Append(lnam, n[j]);
+          if j < Length(n) then
+            Add(lnam, ' ');
+          fi;
+        od;
+        # first name capitals
+        fnam := "";
+        for j in [1..i-1] do
+          Add(fnam, First(n[j], x-> x in LETTERS));
+          Append(fnam, ". ");
+        od;
+        fnamfull := JoinStringsWithSeparator(n{[1..i-1]}, " ");
+      fi;
+      while Length(fnam) > 0 and fnam[Length(fnam)] in WHITESPACE do
+        fnam := fnam{[1..Length(fnam)-1]};
+      od;
+      return [lnam, fnam, fnamfull];
+    end;
+    
+    names := List(names, norm);
+  else
+    names := str;
+  fi;
   keyshort := "";
   keylong := "";
-  names := List(names, norm);
   res := "";
   for a in names do
     if Length(res)>0 then
@@ -134,10 +142,17 @@ BindGlobal("NormalizedNameAndKey", function(str)
       Add(keyshort, '+');
     else
       p := 1;
-      while not a[1][p] in CAPITALLETTERS do
+      while p <= Length(a[1]) and not a[1][p] in CAPITALLETTERS do
         p := p+1;
       od;
-      Add(keyshort, a[1][p]);
+      if p > Length(a[1]) then
+        p := 1;
+      fi;
+      if a[1][p] in LETTERS then
+        Add(keyshort, a[1][p]);
+      else
+        Add(keyshort, 'X');
+      fi;
       Append(keylong, STRING_LOWER(Filtered(a[1]{[p..Length(a[1])]},
               x-> x in LETTERS)));
     fi;
@@ -362,6 +377,21 @@ InstallGlobalFunction(NormalizeNameAndKey, function(b)
   fi;
 end);
 
+BindGlobal("AndToCommaNames", function(str)
+  local n, p, i;
+  str := NormalizedWhitespace(str);
+  n := 0;
+  p := PositionSublist(str, " and ");
+  while p <> fail do
+    n := n+1;
+    p := PositionSublist(str, " and ", p);
+  od;
+  for i in [1..n-1] do
+    str := SubstitutionSublist(str, " and ", ", ", false);
+  od;
+  return str;
+end);
+  
 
 # print out a bibtex entry, the ordering of fields is normalized and
 # type and field names are in lowercase, also some formatting is done
@@ -411,12 +441,26 @@ InstallGlobalFunction(StringBibAsBib, function(arg)
                 "crossref",
                 "note",
                 "notes",
+                "howpublished", 
                 "key",
+                "coden", 
+                "fjournal", 
+                "isbn", 
+                "issn", 
+                "location", 
+                "mrclass", 
+                "mrnumber", 
+                "mrreviewer", 
+                "organisation", 
+                "reviews", 
+                "source", 
+                "url",
                 "keywords" ];
+
   Append(res, Concatenation("@", r.Type, "{ ", r.Label));
   for comp in Concatenation(fieldlist,
           Difference(NamesOfComponents(r), Concatenation(fieldlist,
-                  ["Type", "Label"]) )) do
+                  ["Type", "Label","authorAsList", "editorAsList"]) )) do
     if IsBound(r.(comp)) then
       Append(res, Concatenation(",\n  ", comp, " = ", 
                                   List([1..16-Length(comp)], i-> ' ')));
@@ -564,7 +608,7 @@ end);
 ##  arg: r[, escape]  (with escape = false it is assumed that entries are
 ##                     already HTML)
 InstallGlobalFunction(StringBibAsHTML, function(arg)
-  local   r,  i, str, res, esc;
+  local   r,  i, str, res, esc, key;
   r := arg[1];
   if Length(arg)=2 then
     esc := arg[2];
@@ -598,21 +642,26 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
     od;
   fi;
   
+  if IsBound(r.key) then
+    key := r.key;
+  else
+    key := r.Label;
+  fi;
   if IsBound(r.mrnumber) then
     Append(res, Concatenation(
       "<p>\n[<a href=\"http://www.ams.org/mathscinet-getitem?mr=",
-      r.mrnumber{[1..9]}, "\">", r.Label, "</a>]   "));
+      r.mrnumber{[1..9]}, "\">", key, "</a>]   "));
   else
     Append(res, Concatenation("<p>\n[<span style=\"color: #8e0000;\">", 
-                    r.Label, "</span>]   "));
+                    key, "</span>]   "));
   fi;
   # we assume with the "," delimiters that at least one of .author,
   # .editor or .title exist
   if IsBound(r.author) then
-    Append(res, Concatenation("<b>",r.author,"</b> "));
+    Append(res, Concatenation("<b>", AndToCommaNames(r.author),"</b> "));
   fi;
   if IsBound(r.editor) then
-    Append(res, Concatenation("(", r.editor, ",Ed.)"));
+    Append(res, Concatenation("(", AndToCommaNames(r.editor), ", Ed.)"));
   fi;
   if IsBound(r.title) then
 #      if IsBound(r.author) or IsBound(r.editor) then
@@ -671,6 +720,9 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
   if IsBound(r.notes) then
     Append(res, Concatenation("<br />\n(", r.notes, ")<br />\n"));
   fi;
+  if IsBound(r.howpublished) then
+    Append(res, Concatenation(",\n", r.howpublished, "\n"));
+  fi;
  
   if IsBound(r.BUCHSTABE) then
     Append(res, Concatenation("<br />\nEinsortiert unter ", 
@@ -693,15 +745,24 @@ end);
 
 ##  arg: r[, ansi]  (for link to BibTeX)
 InstallGlobalFunction(StringBibAsText, function(arg)
-  local   r,  bold,  emph,  us,  lab,  str;
+  local r, ansi, str, f;
   r := arg[1];
-  if Length(arg) = 2  and arg[2] = true then
-    bold := Concatenation(TextAttr.bold, TextAttr.1);
-    emph := TextAttr.4;
-    us := TextAttr.underscore;
-    lab := TextAttr.3;
+  ansi := rec(
+    BibReset := TextAttr.reset,
+    BibAuthor := Concatenation(TextAttr.bold, TextAttr.1),
+    BibTitle := TextAttr.4,
+    BibJournal := "",
+    BibVolume := TextAttr.4,
+    BibLabel := TextAttr.3
+  );
+  if Length(arg) = 2  and arg[2] <> true then
+    for f in RecFields(arg[2]) do
+      ansi.(f) := arg[2].(f);
+    od;
   else
-    bold := ""; emph := ""; us := ""; lab := "";  
+    for f in RecFields(ansi) do
+      ansi.(f) := "";
+    od;
   fi;
   
   if not IsBound(r.Label) then
@@ -712,7 +773,7 @@ InstallGlobalFunction(StringBibAsText, function(arg)
   fi;
   
   str := "";
-  Append(str, lab);
+  Append(str, ansi.BibLabel);
   Add(str, '[');
   if IsBound(r.key) then
     Append(str, r.key);
@@ -724,30 +785,31 @@ InstallGlobalFunction(StringBibAsText, function(arg)
   # we assume with the "," delimiters that at least one of .author,
   # .editor or .title exist
   if IsBound(r.author) then
-    Append(str, Concatenation(bold ,r.author, TextAttr.reset));
+    Append(str, Concatenation(ansi.BibAuthor ,AndToCommaNames(r.author), 
+                  ansi.BibReset));
   fi;
   if IsBound(r.editor) then
-    Append(str, Concatenation(" (", r.editor, ",Ed.) "));
+    Append(str, Concatenation(" (", AndToCommaNames(r.editor), ", Ed.)"));
   fi;
   if IsBound(r.title) then
     if IsBound(r.author) or IsBound(r.editor) then
       Append(str, ", ");
     fi;
-    Append(str, Concatenation(emph, r.title, TextAttr.reset));
+    Append(str, Concatenation(ansi.BibTitle, r.title, ansi.BibReset));
   fi;
   if IsBound(r.booktitle) then
     Append(str, ", ");
     if r.Type in ["inproceedings", "incollection"] then
       Append(str, " in ");
     fi;
-    Append(str, Concatenation(emph, r.booktitle, TextAttr.reset));
+    Append(str, Concatenation(ansi.BibTitle, r.booktitle, ansi.BibReset));
   fi;
   if IsBound(r.subtitle) then
-    Append(str, Concatenation(" -- ", emph, r.subtitle,
-            TextAttr.reset, " "));
+    Append(str, Concatenation(" -- ", ansi.BibTitle, r.subtitle,
+            ansi.BibReset, " "));
   fi;
   if IsBound(r.journal) then
-    Append(str, Concatenation(", ", r.journal));
+    Append(str, Concatenation(", ", ansi.BibJournal, r.journal, ansi.BibReset));
   fi;
   if IsBound(r.organization) then
     Append(str, Concatenation(", ", r.organization));
@@ -765,7 +827,7 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     Append(str, Concatenation(", ", r.series));
   fi;
   if IsBound(r.volume) then
-    Append(str, Concatenation(", ", emph, r.volume, TextAttr.reset));
+    Append(str, Concatenation(", ", ansi.BibVolume, r.volume, ansi.BibReset));
   fi;
   if IsBound(r.number) then
     Append(str, Concatenation(" (", r.number, ")"));
@@ -784,6 +846,9 @@ InstallGlobalFunction(StringBibAsText, function(arg)
   fi;
   if IsBound(r.note) then
     Append(str, Concatenation(", (", r.note, ")"));
+  fi;
+  if IsBound(r.howpublished) then
+    Append(str, Concatenation(", ", r.howpublished));
   fi;
   
   if IsBound(r.BUCHSTABE) then

@@ -1,10 +1,10 @@
 #############################################################################
 ##
-#W  ComposeXML.gi                GAPDoc                          Frank Lübeck
+#W  ComposeXML.gi                GAPDoc                          Frank LÃ¼beck
 ##
-#H  @(#)$Id: ComposeXML.gi,v 1.6 2007-02-02 15:12:36 gap Exp $
+#H  @(#)$Id: ComposeXML.gi,v 1.7 2007-02-20 16:56:27 gap Exp $
 ##
-#Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  Copyright (C)  2000,  Frank LÃ¼beck,  Lehrstuhl D fÃ¼r Mathematik,  
 #Y  RWTH Aachen
 ##
 ## The files ComposeXML.gi/.gd contain a function which allows to construct
