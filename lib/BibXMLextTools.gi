@@ -478,10 +478,10 @@ BIBXMLHANDLER.types();
 BIBXMLHANDLER.fields := function()
   local f;
   for f in [ "title", "booktitle", "publisher", "school", "journal", 
-      "institution", "year", "volume", "number",  "month", "organization", 
-      "howpublished", "note", "key", "annotate", "crossref", "abstract", 
-      "affiliation", "contents", "copyright", "isbn", "issn", "address", 
-      "edition", "keywords", "language", "lccn", "location", 
+      "institution", "year", "series", "volume", "number",  "month", 
+      "organization", "howpublished", "note", "key", "annotate", "crossref", 
+      "abstract", "affiliation", "contents", "copyright", "isbn", "issn", 
+      "address", "edition", "keywords", "language", "lccn", "location", 
       "mrnumber", "mrclass", "mrreviewer", "price", "size", "url", "category"
       ] do
     BIBXMLHANDLER.default.(f) := function(t, r, bib, type)
