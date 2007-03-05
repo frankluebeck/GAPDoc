@@ -2,7 +2,7 @@
 ##
 #W  ComposeXML.gi                GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: ComposeXML.gi,v 1.7 2007-02-20 16:56:27 gap Exp $
+#H  @(#)$Id: ComposeXML.gi,v 1.8 2007-03-05 14:07:07 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -86,9 +86,14 @@ InstallGlobalFunction(ComposedDocument, function(arg)
   origin := rec();
   for f in source do
     fname := Filename(path, f);
-    Info(InfoGAPDoc, 2, "ComposedDocument: Searching for chunks in ",
+    Info(InfoGAPDoc, 2, "#I ComposedDocument: Searching for chunks in ",
                           fname, "\n");
     str := StringFile(fname);
+    if str = fail then
+      Info(InfoGAPDoc, 1, "#W WARNING: no file ", fname, 
+                          " to compose document.\n");
+      continue;
+    fi;
     posnl := Positions(str, '\n');
     i := PositionSublist(str, btag);
     while i <> fail do
@@ -148,10 +153,10 @@ InstallGlobalFunction(ComposedDocument, function(arg)
       fname := cont;
       cont := StringFile(fname);
       if cont = fail and DOCCOMPOSEERROR = true then
-        Error("Cannot include file ", cont, ".\n");
+        Error("Cannot include file ", fname, ".\n");
       elif cont = fail then
-        cont := Concatenation("MISSING FILE ", cont, "\n");
-        from := [cont, 1];
+        cont := Concatenation("MISSING FILE ", fname, "\n");
+        from := [fname, 1];
       else
         from := [fname, 1];
       fi;
@@ -205,8 +210,8 @@ InstallGlobalFunction(ComposedDocument, function(arg)
   src := [];
   # now start the recursion as #Include of the main file in empty string
   Collect(res, src, Filename(path, main), 0);
-  Info(InfoGAPDoc, 2, "Labels of chunks which were not used: ",
-                                  Difference(RecFields(pieces), usedpieces));
+  Info(InfoGAPDoc, 2, "#I Labels of chunks which were not used: ",
+                      Difference(RecFields(pieces), usedpieces), "\n");
   if info then
     return [res, src];
   else
