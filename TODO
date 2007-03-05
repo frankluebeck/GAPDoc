@@ -1,17 +1,12 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.8 2007-01-31 13:45:09 gap Exp $
+         $Id: TODO,v 1.9 2007-03-05 16:51:11 gap Exp $
 
-- use InfoClass(es) instead of Print's
-
-- MakeDocDoc: only pdf-version from LaTeX
-
-- document SetGapDocLaTeXOptions
+- give record with predefined entities to ParseTreeXML...
+  (and use this for the predefined GAPDoc entities)
 
 - document StringBibAs..., change doc for <Bibliography>
-
-- remove mention of DeclarePackageAutoDocumentation and so on.
 
 - maybe add links to "the" example in the reference section of doc?
   (not so sure, if this is necessary).
@@ -28,9 +23,6 @@
 
 - finalize lib/Examples.g for builtin manual example tester and include and
   document it.
-
-- improve explanations of encodings, maybe add example how to handle a
-  latin-2 special character. How about handling UTF-8?
 
 - allow the distribution of different output documents (html, text, pdf,...)
   into different directories (needs to change the handler for GAPDoc books).
