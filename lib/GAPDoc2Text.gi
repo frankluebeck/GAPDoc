@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.16 2007-02-20 16:56:27 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.17 2007-03-06 07:02:42 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -283,7 +283,9 @@ GAPDoc2TextProcs.PutFilesTogether := function(l, six)
     Add(a, files.(a[3][1]).linenr[p]);
     a[6] := SIMPLE_STRING(StripEscapeSequences(a[1]));
     NormalizeWhitespace(a[6]);
-    a[7] := Concatenation(HexStringInt(CrcText(a[6])+2^31), 
+    # the 'X' is to start with a proper letter, since this will be used
+    # for ID type attributes
+    a[7] := Concatenation("X", HexStringInt(CrcText(a[6])+2^31), 
                           HexStringInt(CrcText(Reversed(a[6]))+2^31));
   od;
   

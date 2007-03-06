@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.36 2007-02-20 16:56:27 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.37 2007-03-06 07:02:42 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -970,15 +970,9 @@ GAPDoc2HTMLProcs.ChapSect := function(r, par, sect)
       if r.count[2] >= 1 then
         Append(ind, "<div class=\"ContSect\">");
       fi;
-      Append(ind, "&nbsp;&nbsp;");
+      Append(ind, "<span class=\"nocss\">&nbsp;</span>");
     elif sect="Subsection" then
-      if r.count[3] = 1 then
-        ind := "<br />";
-      else
-        ind := "";
-      fi;
-      Append(ind, 
-                "<span class=\"ContSS\">&nbsp;&nbsp;&nbsp;");
+      ind := "<span class=\"ContSS\"><br /><span class=\"nocss\">&nbsp;&nbsp;</span>";
     else
       ind := "";
     fi;
@@ -994,7 +988,7 @@ GAPDoc2HTMLProcs.ChapSect := function(r, par, sect)
     if sect in ["Chapter", "Appendix", "Section" ] then
       Append(r.root.toc, "</div>\n");
     elif sect="Subsection" then
-      Append(r.root.toc, "<br /></span>\n");
+      Append(r.root.toc, "</span>\n");
     fi;
   fi;
   # if in chapter, also use the section links in top of page
@@ -1575,14 +1569,9 @@ GAPDoc2HTMLProcs.ManSection := function(r, par)
   # append to TOC as subsection
   lab := GAPDoc2HTMLProcs.SectionLabel(r, r.count, "Subsection");
   lab := Concatenation(lab[1], "#", lab[2]);
-  if r.count[3] = 1 then
-    ind := "<br />\n";
-  else
-    ind := "";
-  fi;
-  ind := "<span class=\"ContSS\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+  ind := "<span class=\"ContSS\"><br /><span class=\"nocss\">&nbsp;&nbsp;</span>";
   Append(r.root.toc, Concatenation(ind, "<a href=\"", lab, "\">", s, 
-          "</a><br /></span>\n"));
+          "</a></span>\n"));
   GAPDoc2HTMLContent(r, par);
 end;
 

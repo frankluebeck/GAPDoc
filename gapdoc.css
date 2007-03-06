@@ -1,5 +1,5 @@
 /* gapdoc.css        Frank Lübeck */
-/* $Id: gapdoc.css,v 1.10 2007-03-05 17:00:34 gap Exp $  */
+/* $Id: gapdoc.css,v 1.11 2007-03-06 07:02:42 gap Exp $  */
 
 
 /* basic settings */
@@ -170,6 +170,10 @@ span.ContSS {
   margin-left: 2em;
 }
 
+span.ContSS br {
+  display: none;
+}
+
 div.ContSect:hover span.ContSS {
   display: block;
   text-align: left;
@@ -301,3 +305,7 @@ div.contents {
 div.index {
 }
 
+/* ignore some text for non-css layout */
+span.nocss {
+  display: none;
+}
