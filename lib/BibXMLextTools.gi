@@ -456,6 +456,7 @@ end;
 BIBXMLHANDLER.default.entry := function(t, r, bib, type)
   # empty record and collect content
   t.tmprec := rec(Label := r.attributes.id);
+  t.tmptext := "";
   BIBXMLHANDLER.content(t, r, bib, type);
   BIBXMLHANDLER.AddKey(t.tmprec);
   # add record to bib structure
@@ -557,7 +558,8 @@ InstallGlobalFunction(BibRecBibXML, function(arg)
   else
     bib := [[], [], []];
   fi;
-  BIBXMLHANDLER.default.WHOLEDOCUMENT(t, t, bib, type);
+##    BIBXMLHANDLER.default.WHOLEDOCUMENT(t, t, bib, type);
+  BIBXMLHANDLER.default.(t.name)(t, t, bib, type);
   return bib;
 end);
 
