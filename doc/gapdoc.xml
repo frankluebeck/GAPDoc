@@ -2,7 +2,7 @@
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd">
 
-<!-- $Id: gapdoc.xml,v 1.5 2007-02-20 16:56:27 gap Exp $ -->
+<!-- $Id: gapdoc.xml,v 1.6 2007-04-18 20:38:17 gap Exp $ -->
 
 <!-- The documentation to the GAPDoc system. 
      Copyright 2000 by Frank Lübeck and Max Neunhöffer
@@ -18,11 +18,11 @@
   </Version>
   <Author> Frank Lübeck 
     <Email>Frank.Luebeck@Math.RWTH-Aachen.De</Email>
-    <Homepage>http://www.math.rwth-aachen.de/~Frank.Luebeck</Homepage>
+    <Homepage>http://www.math.rwth-aachen.de/&tilde;Frank.Luebeck</Homepage>
   </Author>
   <Author> Max Neunhöffer 
     <Email>Max.Neunhoeffer@Math.RWTH-Aachen.De</Email>
-    <Homepage>http://www.math.rwth-aachen.de/~Max.Neunhoeffer</Homepage>
+    <Homepage>http://www.math.rwth-aachen.de/&tilde;Max.Neunhoeffer</Homepage>
   </Author>
   <Copyright> &copyright; 2000 by Frank Lübeck and Max Neunhöffer <P/>
               We adopt the copyright regulations of &GAP; as detailed in the 
