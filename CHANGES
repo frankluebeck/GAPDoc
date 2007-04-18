@@ -17,6 +17,8 @@
       those produced by BibTeX.
     
 - LaTeX converter: 
+    - Convert long URLs such that LaTeX can hyphenate them after slashes
+      (but without a maybe confusing hyphenation dash).
     - Documented SetGapDocLaTeXOptions, see ?GAPDoc2LaTeX. (Settings for
       hyperref, using colors or not, using UTF-8 with ucs package.)
     - The default LaTeX markup for <A>, <Arg> is now by slanted typewriter
