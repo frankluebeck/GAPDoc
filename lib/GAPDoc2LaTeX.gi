@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.21 2007-02-20 16:56:27 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.22 2007-04-18 20:39:51 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -601,10 +601,34 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
   Append(str,"\\newpage\n\n");
 end;
 
+## this allows line breaks in URL strings s for use with \texttt{s} by
+## inserting some "}\discretionary{}{}{}\texttt{" 
+GAPDoc2LaTeXProcs.URLBreaks := function(s)
+  local pos, ss, old;
+  # not after ://
+  pos := PositionSublist(s, "://");
+  if pos = fail then
+    pos := Minimum(3, Length(s));
+  else
+    pos := pos + 2;
+  fi;
+  ss := s{[1..pos]};
+  old := pos;
+  pos := Position(s, '/', old);
+  while pos <> fail and pos+3 < Length(s) do
+    Append(ss, s{[old+1..pos]});
+    Append(ss, "}\\discretionary {}{}{}\\texttt{");
+    old := pos;
+    pos := Position(s, '/', old);
+  od;
+  Append(ss, s{[old+1..Length(s)]});
+  return ss;
+end;
+
 ##  ~ and # characters are correctly escaped
 ##  arg:  r, str[, pre]
 GAPDoc2LaTeXProcs.URL := function(arg)
-  local   r,  str,  pre,  s,  p, stilde;
+  local r, str, pre, s, stilde, pos, ss, old;
   r := arg[1];
   str := arg[2];
   if Length(arg)>2 then
@@ -616,6 +640,10 @@ GAPDoc2LaTeXProcs.URL := function(arg)
   GAPDoc2LaTeXContent(r, s);
   stilde := SubstitutionSublist(s, "\\texttt{\\symbol{126}}", "~");
   stilde := SubstitutionSublist(stilde, "\\\#", "\#");
+  # a hack to allow line breaks with long URLs after /'s
+  if Length(stilde) > 20 then
+    s := GAPDoc2LaTeXProcs.URLBreaks(s);
+  fi;
   Append(str, "\\href{");
   Append(str, pre);
   Append(str, stilde);

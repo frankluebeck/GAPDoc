@@ -583,6 +583,9 @@ BIBXMLHANDLER.BibTeX.URL := function(t, r, bib, type)
   save := t.tmptext;
   t.tmptext := "";
   BIBXMLHANDLER.content(t, r, bib, type);
+  if Length(t.tmptext) > 20 then
+    t.tmptext := GAPDoc2LaTeXProcs.URLBreaks(t.tmptext);
+  fi;
   t.tmptext := SubstitutionSublist(t.tmptext, "~", "\\symbol {126}");
   t.tmptext := SubstitutionSublist(t.tmptext, "#", "\\#");
   t.tmptext := Concatenation(save, "\\texttt{", t.tmptext, "}");
@@ -627,6 +630,9 @@ BIBXMLHANDLER.BibTeXhref.URL := function(t, r, bib, type)
   if IsBound(r.attributes.Text) then
     t.tmptext := r.attributes.Text;
   else
+    if Length(t.tmptext) > 20 then
+      t.tmptext := GAPDoc2LaTeXProcs.URLBreaks(t.tmptext);
+    fi;
     t.tmptext := SubstitutionSublist(t.tmptext, "~", "\\symbol {126}");
 ##      t.tmptext := SubstitutionSublist(t.tmptext, "#", "\\#");
     t.tmptext := Concatenation("\\texttt{", t.tmptext, "}");
