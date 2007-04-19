@@ -2,7 +2,7 @@
 ##
 #W  PrintUtil.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: PrintUtil.gi,v 1.3 2007-02-20 16:56:27 gap Exp $
+#H  @(#)$Id: PrintUtil.gi,v 1.4 2007-04-19 22:34:45 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -191,4 +191,27 @@ end);
 ##  <#/GAPDoc>
 ##  
 ##  moved into lib/string.g{d,i}
+
+# GAP3 tyœe dispatcher for viewing and printing records
+InstallMethod(ViewObj, [IsRecord], function(r)
+  if IsBound(r.operations) and IsBound(r.operations.ViewObj) then
+    r.operations.ViewObj(r);
+  else
+    TryNextMethod();
+  fi;
+end);
+
+InstallMethod(PrintObj, [IsRecord], function(r)
+  if IsBound(r.operations) and IsBound(r.operations.ViewObj) then
+    r.operations.PrintObj(r);
+  else
+    TryNextMethod();
+  fi;
+end);
+##  # example:
+##  r := rec( a := 1, b := 2, operations := rec(
+##           ViewObj := function(r) Print("view rec"); end,
+##           PrintObj := function(r) Print("print rec"); end)  );
+##  View(r,  rec( c := 3 )); Print("\n");
+##  Print(r, "\n", rec( c := 3 ), "\n");
 

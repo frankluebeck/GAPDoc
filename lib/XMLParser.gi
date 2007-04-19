@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.17 2007-02-20 16:56:27 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.18 2007-04-19 22:34:45 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -144,16 +144,22 @@ BindGlobal("ParseError", function(str, pos, comment)
   Error();
 end);
 
-##  the predefined entities of the GAPDoc package
-##  in LaTeX we use some saved boxes defined in our preamble for
-##  \, ~, ^, {, } because we think that the \texttt versions of these
-##  characters look better (than mathmode chars or accents without letter)
-BindGlobal("ENTITYDICT", rec(
+##  a container to collect named entities for the parser
+BindGlobal("ENTITYDICT", rec());
+##  the default XML entities
+BindGlobal("ENTITYDICT_default", rec(
  lt := "&#38;#60;",
  gt := "&#62;",
  amp := "&#38;#38;",
  apos := "&#39;",
- quot := "&#34;",
+ quot := "&#34;") );
+##  the predefined entities of the GAPDoc package
+##  in LaTeX we use some saved boxes defined in our preamble for
+##  \, ~, ^, {, } because we think that the \texttt versions of these
+##  characters look better (than mathmode chars or accents without letter)
+# (although this is a general XML parser, we make it convenient for 
+# GAPDoc documents)
+BindGlobal("ENTITYDICT_GAPDoc", rec(
  tamp := "<Alt Only='LaTeX'>\\&amp;</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;amp;</Alt><Alt Not='HTML'>&amp;</Alt></Alt>",
  tlt := "<Alt Only='LaTeX'>{\\textless}</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;lt;</Alt><Alt Not='HTML'>&lt;</Alt></Alt>",
  tgt := "<Alt Only='LaTeX'>{\\textgreater}</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;gt;</Alt><Alt Not='HTML'>&gt;</Alt></Alt>",
@@ -227,7 +233,8 @@ InstallGlobalFunction(GetEnt, function(str, pos)
     # XXX error or better going on here?
 ##      ParseError(str, pos, "don't know entity name");
     Info(InfoXMLParser, 1, "#W WARNING: Entity with name `", nam, 
-             "' not known!\n#W", "        (Specify in <!DOCTYPE ...> tag!)\n");
+             "' not known!\n#W", "        (Specify in <!DOCTYPE ...> tag or ",
+             "in argument to parser!)\n");
     doc := Concatenation("UNKNOWNEntity(", nam, ")");
   else
     doc := ENTITYDICT.(nam);
@@ -408,6 +415,7 @@ end);
 # returns record explained before GetSTag, but with .content component
 # filled
 # assuming str[pos-1] = '<' and str[pos] in NAMECHARS
+# (in this function we read entity definitions inside a <!DOCTYPE declaration)
 InstallGlobalFunction(GetElement, function(str, pos)
   local   res,  r,  s,  pos2,  lev,  dt,  p,  nam,  val,  el, tmp;
   res := GetSTag(str,pos);
@@ -495,6 +503,14 @@ InstallGlobalFunction(GetElement, function(str, pos)
           od;
           dt := rec(name := "XMLDOCTYPE", 
                   content := str{[pos+10..pos2-1]});
+          ##  convenience for parsing GAPDoc document, here we add the
+          ##  GAPDoc defined entities automatically
+          pos := PositionSublist(dt.content, "gapdoc.dtd");
+          if pos <> fail and dt.content[pos-1] in "'\"" then
+            for p in RecFields(ENTITYDICT_GAPDoc) do
+              ENTITYDICT.(p) := ENTITYDICT_GAPDoc.(p);
+            od;
+          fi;
           Add(res.content, dt);
           ##  parse entity declarations in here (no good error checking)
           pos := PositionSublist(dt.content, "<!ENTITY");
@@ -569,20 +585,31 @@ end);
 
 ##  <#GAPDoc Label="ParseTreeXMLString">
 ##  <ManSection >
-##  <Func Arg="str[, srcinfo]" Name="ParseTreeXMLString" />
-##  <Func Arg="fname" Name="ParseTreeXMLFile" />
+##  <Func Arg="str[, srcinfo][, entitydict]" Name="ParseTreeXMLString" />
+##  <Func Arg="fname[, entitydict]" Name="ParseTreeXMLFile" />
 ##  <Returns>a record which is root of a tree structure</Returns>
 ##  <Description>
 ##  The first function parses an  XML-document stored in string <A>str</A>
 ##  and returns the document in form of a tree.<P/>
 ## 
 ##  The  optional argument  <A>srcinfo</A> must  have the  same format
-##  as  in <Ref  Func="OriginalPositionDocument"  />,  if given  error
-##  messages  refer  to the  original  source  of  the text  with  the
-##  problem.
+##  as  in <Ref  Func="OriginalPositionDocument"  />.  If it is given  then
+##  error messages  refer  to the  original  source  of  the text  with  the
+##  problem.<P/>
+##  
+##  With the optional argument <A>entitydict</A> named entities can be 
+##  given to the parser, for example entities which are defined in the 
+##  <C>.dtd</C>-file (which is not read by this parser). The standard
+##  XML-entities do not need to be provided, and for &GAPDoc; documents
+##  the entity definitions from  <C>gapdoc.dtd</C> are automatically
+##  provided. Entities in the documents <C>&tlt;!DOCTYPE</C> declaration
+##  are parsed and also need not to be provided here. The argument
+##  <A>entitydict</A> must be a record where each component name is an entity
+##  name (without the surrounding &tamp; and ;) to which  is assigned its
+##  substitution string.<P/>
 ##  
 ##  The second function is just a shortcut for <C>ParseTreeXMLString( 
-##  StringFile(</C><A>fname</A><C>) )</C>, see <Ref Func="StringFile"/>.
+##  StringFile(</C><A>fname</A><C>), ... )</C>, see <Ref Func="StringFile"/>.
 ##  <P/>
 ##  
 ##  A node  in the result tree  corresponds to an  XML element, or  to some
@@ -636,23 +663,39 @@ end);
 ##  <#/GAPDoc>
 ##  
 InstallGlobalFunction(ParseTreeXMLString, function(arg)
-  local str, res, tmp, enc;
+  local str, ents, res, a;
   # artificial end tag to wrap document in one element
   str := Concatenation(arg[1], "</WHOLEDOCUMENT>");
   # default encoding is UTF-8, may be changed if we find a <?xml ... 
   # processing instruction
   XMLPARSERFLAGS.Encoding := "UTF-8";
-  if Length(arg) > 1 then
+  if Length(arg) > 1 and IsList(arg[2]) then
     XMLPARSEORIGINS := arg[2];
   else
     XMLPARSEORIGINS := false;
+  fi;
+  # reset ENTITYDICT
+  for a in RecFields(ENTITYDICT) do
+    Unbind(ENTITYDICT.(a));
+  od;
+  for a in RecFields(ENTITYDICT_default) do
+    ENTITYDICT.(a) := ENTITYDICT_default.(a);
+  od;
+  # maybe load more entities from last argument
+  if Length(arg) > 1 and IsRecord(arg[Length(arg)]) then
+    ents := arg[Length(arg)];
+    for a in RecFields(ents) do
+      ENTITYDICT.(a) := ents.(a);
+    od;
   fi;
   res := GetElement(str, 1);
   res.input := ShallowCopy(arg[1]);
   return res;
 end);
-InstallGlobalFunction(ParseTreeXMLFile, function(fname)
-  return ParseTreeXMLString(StringFile(fname));
+InstallGlobalFunction(ParseTreeXMLFile, function(arg)
+  arg := ShallowCopy(arg);
+  arg[1] := StringFile(arg[1]);
+  return CallFuncList(ParseTreeXMLString, arg);
 end);
 
 ##  Print document tree structure (without the PCDATA entries)

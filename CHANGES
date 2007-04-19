@@ -67,9 +67,15 @@
   additional data like source code, or to comment non finished parts of
   the document).
 
-- ParseTreeXMLString can use the improved information from ComposedDocument
-  to give better error messages in case of parsing errors. This uses the new
-  function OriginalPositionDocument.
+- ParseTreeXMLString:
+    - can use the improved information from ComposedDocument
+      to give better error messages in case of parsing errors. This uses the 
+      new function OriginalPositionDocument.
+    - can take a record with entity definitions as argument (and a bug was
+      fixed that the entity dictionary for the parser was not reset before
+      parsing).
+    - these is a new command ParseTreeXMLFile which reads the document from
+      a file.
 
 - ComposedXMLString can now return information about the original file and 
   line number of any text in the composed  document. Also, that function is 
