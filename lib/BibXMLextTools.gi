@@ -321,6 +321,19 @@ BIBXMLHANDLER.default.M := function(t, r, bib, type)
   Add(t.tmptext, '$');
 end;
 BIBXMLHANDLER.default.Math := BIBXMLHANDLER.default.M;
+# the Wrap elements, here we do nothing but provide a hook for users to
+# include handler functions
+BIBXMLHANDLER.Wrap := rec(default := rec(), HTML := rec(), 
+                          BibTeX := rec(), BibTeXhref := rec() );
+BIBXMLHANDLER.default.Wrap := function(t, r, bib, type)
+  if IsBound(BIBXMLHANDLER.Wrap.(type)) and
+     IsBound(BIBXMLHANDLER.Wrap.(type).(r.attributes.Name)) then
+    BIBXMLHANDLER.Wrap.(type).(r.attributes.Name)(t, r, bib, type);
+  else
+    BIBXMLHANDLER.content(t, r, bib, type);
+  fi;
+end;
+
 # find initials from UTF-8 string, keep '-'s
 BIBXMLHANDLER.Initials := function(fnam)
   local pre, res, i;
@@ -455,7 +468,7 @@ BIBXMLHANDLER.default.string := function(t, r, bib, type)
 end;
 BIBXMLHANDLER.default.entry := function(t, r, bib, type)
   # empty record and collect content
-  t.tmprec := rec(Label := r.attributes.id);
+  t.tmprec := rec(Label := r.attributes.id, HandlerType := type);
   t.tmptext := "";
   BIBXMLHANDLER.content(t, r, bib, type);
   BIBXMLHANDLER.AddKey(t.tmprec);
@@ -476,6 +489,7 @@ end;
 BIBXMLHANDLER.types();
 
 # and finally handler for the fields, first generic then special cases
+BIBXMLHANDLER.BibXMLext := rec();
 BIBXMLHANDLER.fields := function()
   local f;
   for f in [ "title", "booktitle", "publisher", "school", "journal", 
@@ -491,14 +505,43 @@ BIBXMLHANDLER.fields := function()
       NormalizeWhitespace(t.tmptext);
       t.tmprec.(r.name) := ShallowCopy(t.tmptext);
     end;
+    BIBXMLHANDLER.BibXMLext.(f) := function(t, r, bib, type)
+      local f, l;
+      f := r.name;
+      l := Length(f);
+      t.tmptext := StringElementAsXML(r);
+      # in simple cases without attributes we remove the surrounding tags here
+      if PositionSublist(t.tmptext, Concatenation("<",f,">")) = 1 and
+         PositionSublist(t.tmptext, Concatenation("</",f,">")) = 
+          Length(t.tmptext)-l-2 then
+        t.tmptext := t.tmptext{[l+3..Length(t.tmptext)-l-3]};
+      fi;
+      t.tmprec.(f) := ShallowCopy(t.tmptext);
+    end;
   od;
 end;
 BIBXMLHANDLER.fields();
 BIBXMLHANDLER.default.authed := function(t, r, bib, type, cmp)
+  local f, nams;
   t.tmptext := "";
   t.tmpnames := [];
   BIBXMLHANDLER.content(t, r, bib, type);
-  t.tmprec.(cmp) := t.tmpnames;
+  # save as list
+  t.tmprec.(Concatenation(cmp, "AsList")) := t.tmpnames;
+  f := function(nl, i)
+    if Length(nl[i]) > 0 then
+      return Concatenation(nl[1], ", ", nl[i]);
+    else
+      return nl[1];
+    fi;
+  end;
+  if ForAny(t.tmpnames, nl-> nl[2] <> nl[3]) then
+    nams := List(t.tmpnames, nl-> f(nl, 3));
+    t.tmprec.(Concatenation(cmp, "orig")) := 
+                                 JoinStringsWithSeparator(nams, " and ");
+  fi;
+  nams := List(t.tmpnames, nl-> f(nl, 2));
+  t.tmprec.(cmp) := JoinStringsWithSeparator(nams, " and ");
 end;
 BIBXMLHANDLER.default.author := function(t, r, bib, type)
   BIBXMLHANDLER.default.authed(t, r, bib, type, "author");
@@ -506,30 +549,7 @@ end;
 BIBXMLHANDLER.default.editor := function(t, r, bib, type)
   BIBXMLHANDLER.default.authed(t, r, bib, type, "editor");
 end;
-BIBXMLHANDLER.default.authorold := function(t, r, bib, type)
-  local len;
-  # remove trailing " and "
-  t.tmptext := "";
-  BIBXMLHANDLER.content(t, r, bib, type);
-  NormalizeWhitespace(t.tmptext);
-  len := Length(t.tmptext);
-  if len > 3 and t.tmptext{[len-3..len]} = " and" then
-    t.tmptext := t.tmptext{[1..len-4]};
-  fi;
-  t.tmprec.author := ShallowCopy(t.tmptext);
-end;
-BIBXMLHANDLER.default.editorold := function(t, r, bib, type)
-  local len;
-  # remove trailing " and "
-  t.tmptext := "";
-  BIBXMLHANDLER.content(t, r, bib, type);
-  NormalizeWhitespace(t.tmptext);
-  len := Length(t.tmptext);
-  if len > 3 and t.tmptext{[len-3..len]} = " and" then
-    t.tmptext := t.tmptext{[1..len-4]};
-  fi;
-  t.tmprec.editor := ShallowCopy(t.tmptext);
-end;
+
 BIBXMLHANDLER.default.pages := function(t, r, bib, type)
 # special heuristic unnecessary now with &ndash; ?
 ##    # default with one dash
@@ -565,7 +585,7 @@ end);
 
 #########################################
 # now special handler for special formats
-# BibTeX. adjust author/editor, <C>, pages with --, URL in \texttt
+# BibTeX. adjust <C>, pages with --, URL in \texttt
 BIBXMLHANDLER.BibTeX := rec();
 BIBXMLHANDLER.BibTeX.pages := function(t, r, bib, type)
   BIBXMLHANDLER.default.pages(t, r, bib, type);
@@ -590,33 +610,6 @@ BIBXMLHANDLER.BibTeX.URL := function(t, r, bib, type)
   t.tmptext := SubstitutionSublist(t.tmptext, "#", "\\#");
   t.tmptext := Concatenation(save, "\\texttt{", t.tmptext, "}");
 end;
-BIBXMLHANDLER.BibTeX.authed := function(t, r, bib, type, cmp)
-  local f, nams;
-  BIBXMLHANDLER.default.(cmp)(t, r, bib, type);
-  # save as list
-  t.tmprec.(Concatenation(cmp, "AsList")) := t.tmprec.(cmp);
-  f := function(nl, i)
-    if Length(nl[i]) > 0 then
-      return Concatenation(nl[1], ", ", nl[i]);
-    else
-      return nl[1];
-    fi;
-  end;
-  if ForAny(t.tmprec.(cmp), nl-> nl[2] <> nl[3]) then
-    nams := List(t.tmprec.(cmp), nl-> f(nl, 3));
-    t.tmprec.(Concatenation(cmp, "orig")) := 
-                                 JoinStringsWithSeparator(nams, " and ");
-  fi;
-  nams := List(t.tmprec.(cmp), nl-> f(nl, 2));
-  t.tmprec.(cmp) := JoinStringsWithSeparator(nams, " and ");
-end;
-BIBXMLHANDLER.BibTeX.author := function(t, r, bib, type)
-  BIBXMLHANDLER.BibTeX.authed(t, r, bib, type, "author");
-end;
-BIBXMLHANDLER.BibTeX.editor := function(t, r, bib, type)
-  BIBXMLHANDLER.BibTeX.authed(t, r, bib, type, "editor");
-end;
-
 # BibTeXhref    with \href in URLs
 BIBXMLHANDLER.BibTeXhref := ShallowCopy(BIBXMLHANDLER.BibTeX);
 BIBXMLHANDLER.BibTeXhref.URL := function(t, r, bib, type)
@@ -652,16 +645,17 @@ end;
 
 # HTML: URLs as links, <M> like Text
 BIBXMLHANDLER.HTML := rec();
-BIBXMLHANDLER.HTML.entry := function(t, r, bib, type)
-  # empty record and collect content, mark as HTML to avoid escaping of
-  # markup later (say in PrintBibAsHTML):
-  t.tmprec := rec(Label := r.attributes.id);
-  BIBXMLHANDLER.content(t, r, bib, type);
-  # add record to bib structure
-  t.tmprec.HTML := "yes";
-  BIBXMLHANDLER.AddKey(t.tmprec);
-  Add(bib[1], t.tmprec);
-end;
+# ??? remove
+##  BIBXMLHANDLER.HTML.entry := function(t, r, bib, type)
+##    # empty record and collect content, mark as HTML to avoid escaping of
+##    # markup later (say in PrintBibAsHTML):
+##    t.tmprec := rec(Label := r.attributes.id);
+##    BIBXMLHANDLER.content(t, r, bib, type);
+##    # add record to bib structure
+##    t.tmprec.HTML := "yes";
+##    BIBXMLHANDLER.AddKey(t.tmprec);
+##    Add(bib[1], t.tmprec);
+##  end;
 BIBXMLHANDLER.HTML.M := BIBXMLHANDLER.Text.M;
 BIBXMLHANDLER.HTML.URL := function(t, r, bib, type)
   local save;

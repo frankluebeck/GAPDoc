@@ -162,126 +162,136 @@ Bibxmlext :=
           "mrnumber", "optional", "mrclass", "optional", "mrreviewer", 
           "optional", "price", "optional", "size", "optional", "url", 
           "optional", "category", "optional", "other", "repeated" ],
-      M := [ "PCDATA" ],
-      Math := [ "PCDATA" ],
-      URL := [ "PCDATA" ],
+      M := [ [ "PCDATA", "or", "Alt" ], "repeated" ],
+      Math := [ [ "PCDATA", "or", "Alt" ], "repeated" ],
+      URL := [ [ "PCDATA", "or", "Alt" ], "repeated" ],
       value := [ "EMPTY" ],
       C := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL" ], 
-          "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "Alt", "or", "M", "or", "Math", "or"
+                , "Wrap", "or", "URL" ], "repeated" ],
       Alt := 
        [ [ "PCDATA", "or", "value", "or", "C", "or", "M", "or", "Math", "or", 
-              "URL" ], "repeated" ],
+              "Wrap", "or", "URL" ], "repeated" ],
+      Wrap := [ "EMPTY" ],
       address := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       author := [ [ "name" ], "repeated" ],
       name := [ "first", "optional", "last" ],
       first := [ "PCDATA" ],
       last := [ "PCDATA" ],
       booktitle := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       chapter := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       edition := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       editor := [ [ "name" ], "repeated" ],
       howpublished := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       institution := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       journal := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       month := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       note := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       number := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       organization := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       pages := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       publisher := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       school := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       series := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       title := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       type := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       volume := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       year := [ "PCDATA" ],
       annotate := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       crossref := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       key := [ "PCDATA" ],
       abstract := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       affiliation := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       contents := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       copyright := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       isbn := [ "PCDATA" ],
       issn := [ "PCDATA" ],
       keywords := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
-      language := [ "PCDATA" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
+      language := 
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       lccn := [ "PCDATA" ],
       location := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
-      mrnumber := [ "PCDATA" ],
-      mrclass := [ "PCDATA" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
+      mrnumber := 
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
+      mrclass := 
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       mrreviewer := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
-      price := [ "PCDATA" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
+      price := 
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       size := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       url := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       category := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ],
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ],
       other := 
-       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "URL", 
-              "or", "C", "or", "Alt" ], "repeated" ] ), rec(
+       [ [ "PCDATA", "or", "value", "or", "M", "or", "Math", "or", "Wrap", 
+              "or", "URL", "or", "C", "or", "Alt" ], "repeated" ] ), rec(
       string := [ "key", "CDATA", "REQUIRED", "value", "CDATA", "REQUIRED" ],
       entry := [ "id", "CDATA", "REQUIRED" ],
       URL := [ "Text", "CDATA", "IMPLIED" ],
       value := [ "key", "CDATA", "REQUIRED" ],
       Alt := [ "Only", "CDATA", "IMPLIED", "Not", "CDATA", "IMPLIED" ],
+      Wrap := [ "Name", "CDATA", "REQUIRED" ],
       other := [ "type", "CDATA", "REQUIRED" ] ) ];

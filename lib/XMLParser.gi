@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.18 2007-04-19 22:34:45 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.19 2007-04-20 15:24:28 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -506,7 +506,7 @@ InstallGlobalFunction(GetElement, function(str, pos)
           ##  convenience for parsing GAPDoc document, here we add the
           ##  GAPDoc defined entities automatically
           pos := PositionSublist(dt.content, "gapdoc.dtd");
-          if pos <> fail and dt.content[pos-1] in "'\"" then
+          if pos <> fail and dt.content[pos-1] in "'\"/" then
             for p in RecFields(ENTITYDICT_GAPDoc) do
               ENTITYDICT.(p) := ENTITYDICT_GAPDoc.(p);
             od;
@@ -611,6 +611,9 @@ end);
 ##  The second function is just a shortcut for <C>ParseTreeXMLString( 
 ##  StringFile(</C><A>fname</A><C>), ... )</C>, see <Ref Func="StringFile"/>.
 ##  <P/>
+##  
+##  After these functions return the list of named entities which were known
+##  during the parsing can be found in the record <C>ENTITYDICT</C>. <P/>
 ##  
 ##  A node  in the result tree  corresponds to an  XML element, or  to some
 ##  parsed character data. In the first case it looks as follows:

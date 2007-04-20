@@ -1,4 +1,10 @@
 
+# this is a development utility to generate the files like
+# bibxmlextinfo.g or gapdocdtdinfo.g
+
+## not interesting enough to properly parse DTDs, we later give 
+## access to a proper validating parser instead
+
 dtd := StringFile("bibxmlext.dtd");
 NormalizeWhitespace(dtd);
 
