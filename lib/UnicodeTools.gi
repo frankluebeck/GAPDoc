@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gi                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gi,v 1.3 2007-02-20 16:56:27 gap Exp $
+#H  @(#)$Id: UnicodeTools.gi,v 1.4 2007-04-23 23:57:55 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -38,6 +38,7 @@ UNICODE_RECODE.NormalizedEncodings := rec(
   UTF8 := "UTF-8",
   ASCII := "ANSI_X3.4-1968",
   US\-ASCII := "ANSI_X3.4-1968",
+  xml := "XML",
 );
 UNICODE_RECODE.f := function()
   local nam, i;
@@ -55,6 +56,7 @@ UNICODE_RECODE.f := function()
   end;
 
   UNICODE_RECODE.NormalizedEncodings.("UTF-8") := "UTF-8";
+  UNICODE_RECODE.NormalizedEncodings.("XML") := "XML";
 end;
 UNICODE_RECODE.f();
 Unbind(UNICODE_RECODE.f);
@@ -97,6 +99,30 @@ UNICODE_RECODE.Decoder.("UTF-8") := function(str)
   od;
   return res;
 end;
+
+UNICODE_RECODE.Decoder.("XML") := function(str)
+  local res, i, j, n;
+  res := [];
+  i := 1;
+  while i <= Length(str) do
+    if str[i] = '&' and i < Length(str) and str[i+1] = '#' then
+      j := Position(str, ';', i);
+      n := str{[i+2..j-1]};
+      if n[1] = 'x' then
+        n := IntHexString(n{[2..Length(n)]});
+      else
+        n := Int(n);
+      fi;
+      Add(res, n);
+      i := j+1;
+    else
+      Add(res, INT_CHAR(str[i]));
+      i := i+1;
+    fi;
+  od;
+  return res;
+end;
+
 
 ################################################
 UNICODE_RECODE.TABLES := 
@@ -415,9 +441,11 @@ end);
 ##  integers or a &GAP; string. In the latter case an <A>encoding</A> can be
 ##  specified as string, its default is <C>"UTF-8"</C>. <P/>
 ##  
-##  Currently, supported encodings can be found in
+##  Currently supported encodings can be found in
 ##  <C>UNICODE&uscore;RECODE.NormalizedEncodings</C> (ASCII, 
-##  ISO-8859-X, UTF-8 and aliases).<P/>
+##  ISO-8859-X, UTF-8 and aliases). The encoding <C>"XML"</C> means an ASCII
+##  encoding in which non-ASCII characters are specified by XML character
+##  entities. <P/>
 ##  
 ##  The operation <Ref Oper="Encode"/> translates a unicode string <A>ustr</A>
 ##  into a &GAP; string in some specified <A>encoding</A>. The default
@@ -598,6 +626,20 @@ UNICODE_RECODE.Encoder.("UTF-8") := function(ustr)
   od;
   return res;
 end;
+# non-ASCII characters to XML character entities
+UNICODE_RECODE.Encoder.("XML") := function(ustr)
+  local res, n;
+  res := "";
+  for n in IntListUnicodeString(ustr) do
+    if n < 128 then
+      Add(res, CHAR_INT(n));
+    else
+      Append(res, Concatenation("&#x", LowercaseString(HexStringInt(n)),";"));
+    fi;
+  od;
+  return res;
+end;
+
 # ISO-8859 cases, substitute '?' for unknown characters
 UNICODE_RECODE.f := function()
   local nam, i;

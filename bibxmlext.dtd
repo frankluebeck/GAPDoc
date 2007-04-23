@@ -509,6 +509,8 @@
 <!ENTITY nbsp "<Alt Only='LaTeX'>~</Alt><Alt Not='LaTeX'>&#160;</Alt>">
 
 <!-- Some more generally useful entities -->
+<!ENTITY copyright "<Alt Only='LaTeX'>{\\copyright}</Alt><Alt 
+  Not='LaTeX'>(C)</Alt>">
 <!ENTITY ndash "<Alt Only='BibTeX,BibTeXhref'>--</Alt><Alt 
   Not='LaTeX'>&#x2013;</Alt>">
  

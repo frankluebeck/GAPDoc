@@ -1,4 +1,22 @@
+#############################################################################
+##
+#W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
+##
+#H  @(#)$Id: BibXMLextTools.gi,v 1.8 2007-04-23 23:57:55 gap Exp $
+##
+#Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
+#Y  RWTH Aachen
+##  
+##  The files BibXMLextTools.g{d,i} contain utility functions for dealing
+##  with bibliography data in the BibXMLext format. The corresponding DTD
+##  is in ../bibxmlext.dtd. 
+##  
 
+
+###########################################################################
+##  
+##  templates to fill for new entries, this describes the possible entries
+##  and their structure
 BindGlobal("BibXMLextStructure", rec());
 BibXMLextStructure.fill := function()
   local l, els, i, type;
@@ -21,8 +39,14 @@ BibXMLextStructure.fill := function()
 end;
 BibXMLextStructure.fill();
 
-TemplateBibXML := function(type)
-  local res, add, a, b;
+# args:  [type]         with no argument prints the possible types
+TemplateBibXML := function(arg)
+  local type, res, add, a, b;
+  if Length(arg) = 0 then
+    Print(Filtered(RecFields(BibXMLextStructure), a-> not a in ["fill"]), "\n");
+    return;
+  fi;
+  type := arg[1];
   if type = "fill" or not IsBound(BibXMLextStructure.(type)) then
     Error("There are no bib-entries of type ", type,".\n");
   fi;
@@ -68,8 +92,71 @@ TemplateBibXML := function(type)
   return res;
 end;
 
+###########################################################################
+##  
+##  parsing BibXMLext files
+##  
+# args:  string with BibXMLext document[, list of three lists]
+# the three lists contain: parse trees of <entry> elements,
+#                  pairs   [ <string> key, <string> value ],
+#                  pairs   [ entity name, entity substitution ]
+BibXMLEntryOps := rec(
+  ViewObj := function(entry)
+    Print("<BibXMLext entry: ");
+    Print(entry.attributes.id, ">");
+  end,
+  PrintObj := function(entry)
+    Print(StringElementAsXML(entry));
+  end
+);
+ParseBibXMLextString := function(arg)
+  local str, res, tr, ent, strs, entries, a;
+  str := arg[1];
+  if Length(arg) > 1 then
+    res := arg[2];
+  else
+    res := [[],[],[]];
+  fi;
+  tr := ParseTreeXMLString(str);
+  # get used entities from ENTITYDICT
+  ent := List(RecFields(ENTITYDICT), a-> [a, ENTITYDICT.(a)]);
+  Append(res[3], ent);
+  res[3] := Set(res[3]);
+
+  # read <string> key value pairs
+  strs := XMLElements(tr, ["string"]);
+  for a in strs do 
+    BibRecBibXML(a, "default", res); 
+  od;
+  res[2] := Set(res[2]);
+  entries := XMLElements(tr, ["entry"]);
+  for a in entries do 
+    a.operations := BibXMLEntryOps;
+  od;
+  Append(res[1], entries);
+  return res;
+end;
+
+ParseBibXMLextFiles := function(arg)
+  local res, nam;
+  if Length(arg) > 0 and not IsString(arg[Length(arg)]) then
+    res := arg[Length(arg)];
+    arg := arg{[1..Length(arg)-1]};
+  else
+    res := [[], [], []];
+  fi;
+  for nam in arg do
+    ParseBibXMLextString(StringFile(nam), res);
+  od;
+  return res;
+end;
 
 
+
+###########################################################################
+##  
+##  heuristic translation of BibTeX data to BibXMLext
+##  
 # args:  bibrec[, abbrevs, strings]
 # here the list 'strings' is assumed to be sorted!
 InstallGlobalFunction(StringBibAsXMLext,  function(arg)
@@ -259,6 +346,68 @@ InstallGlobalFunction(WriteBibXMLextFile, function(fname, bib)
   od;
   AppendTo(f, "</file>\n");
 end);
+
+ENTITYDICT_bibxml := rec( 
+  tamp := "<Alt Only='LaTeX'>\\&amp;</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;amp;</Alt><Alt Not='HTML'>&amp;</Alt></Alt>", 
+  tlt := "<Alt Only='LaTeX'>{\\textless}</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;lt;</Alt><Alt Not='HTML'>&lt;</Alt></Alt>", 
+  tgt := "<Alt Only='LaTeX'>{\\textgreater}</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;gt;</Alt><Alt Not='HTML'>&gt;</Alt></Alt>", 
+  hash := "<Alt Only='LaTeX'>\\#</Alt><Alt Not='LaTeX'>#</Alt>", 
+  dollar := "<Alt Only='LaTeX'>\\$</Alt><Alt Not='LaTeX'>$</Alt>", 
+  percent := "<Alt Only='LaTeX'>\\&#37;</Alt><Alt Not='LaTeX'>&#37;</Alt>", 
+  tilde := "<Alt Only='LaTeX'>\\texttt{\\symbol{126}}</Alt><Alt Not='LaTeX'>~</Alt>", 
+  bslash := "<Alt Only='LaTeX'>\\texttt{\\symbol{92}}</Alt><Alt Not='LaTeX'>\\</Alt>", 
+  obrace := "<Alt Only='LaTeX'>\\texttt{\\symbol{123}}</Alt><Alt Not='LaTeX'>{</Alt>", 
+  cbrace := "<Alt Only='LaTeX'>\\texttt{\\symbol{125}}</Alt><Alt Not='LaTeX'>}</Alt>", 
+  uscore := "<Alt Only='LaTeX'>{\\textunderscore}</Alt><Alt Not='LaTeX'>_</Alt>", 
+  circum := "<Alt Only='LaTeX'>\\texttt{\\symbol{94}}</Alt><Alt Not='LaTeX'>^</Alt>", 
+  nbsp := "<Alt Only='LaTeX'>~</Alt><Alt Not='LaTeX'>&#160;</Alt>" ,
+  copyright := "<Alt Only='LaTeX'>{\\copyright}</Alt><Alt Not='LaTeX'>(C)</Alt>",
+  ndash := "<Alt Only='BibTeX,BibTeXhref'>--</Alt><Alt Not='LaTeX'>&#x2013;</Alt>",
+);
+
+# bib is list of three lists as above
+StringBibXMLextDocument := function(bib)
+  local res, ent, main, a;
+  res := Concatenation("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+         "<!DOCTYPE file SYSTEM \"bibxmlext.dtd\"\n[");
+  ent := Difference(List(bib[3], a-> a[1]), RecFields(ENTITYDICT_bibxml));
+  ent := Difference(ent, RecFields(ENTITYDICT_default));
+  for a in ent do
+    Append(res, "<!ENTITY ");
+    Append(res, a);
+    Append(res, " \"");
+    Append(res, bib[3][PositionFirstComponent(bib[3], a)][2]);
+    Append(res, "\">\n");
+  od;
+  Append(res, "\n] />\n<file>\n");
+
+  for a in bib[2] do
+    Append(res, Concatenation("<string key=\"", a[1], "\" \n     value=\"", 
+                              a[2], "\" />\n"));
+  od;
+  main := "";
+  for a in bib[1] do 
+    Append(main, "\n");
+    Append(main, StringElementAsXML(a));
+    Append(main, "\n");
+  od;
+  Append(main, "\n</file>\n");
+  for a in bib[3] do
+    main := SubstitutionSublist(main, a[2], Concatenation("&", a[1], ";"));
+  od;
+  for a in bib[2] do
+    main := SubstitutionSublist(main, a[2], Concatenation("<value key=\"", 
+                   a[1], "\"/>"));
+  od;
+  Append(res, main);
+  return res;
+end;
+
+
+
+
+
+
 
 
 # handler to generate bib records
@@ -463,8 +612,7 @@ BIBXMLHANDLER.default.file := function(t, r, bib, type)
 end;
 BIBXMLHANDLER.default.string := function(t, r, bib, type)
   # add the abbreviation to the bib data
-  Add(bib[2], r.attributes.key);
-  Add(bib[3], NormalizedWhitespace(r.attributes.value));
+  Add(bib[2], [r.attributes.key, NormalizedWhitespace(r.attributes.value)]);
 end;
 BIBXMLHANDLER.default.entry := function(t, r, bib, type)
   # empty record and collect content
