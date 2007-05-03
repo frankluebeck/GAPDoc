@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.11 2007-02-20 16:56:27 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.12 2007-05-03 21:09:09 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -451,3 +451,66 @@ BindGlobal("NormalizedArgList", function(argl)
   return res;
 end);
 
+# shared utility for the converters to read data for bibliography 
+BindGlobal("GAPDocAddBibData", function(r) 
+  local dat, datbt, bib, bibbt, b, keys, need, labels, tmp, pos, diff, a, j;
+  if IsBound(r.bibentries) then
+    return;
+  fi;
+  Info(InfoGAPDoc, 1, "#I Reading bibliography data files . . . \n");
+  dat := SplitString(r.bibdata, "", ", \t\b\n");
+  datbt := Filtered(dat, a-> Length(a) < 4 or 
+                             a{[Length(a)-3..Length(a)]} <> ".xml");
+  bib := rec(entries := [], strings := [], entities := []);
+  # first BibTeX files, then BibXMLext files
+  if Length(datbt) > 0 then
+    Info(InfoGAPDoc, 1, "#I   BibTeX format: ",
+                                    JoinStringsWithSeparator(datbt), "\n");
+    bibbt := 
+        CallFuncList(ParseBibFiles, List(datbt, f-> Filename(r.bibpath, f)));
+    Info(InfoGAPDoc, 1, "#I   checking and translating to BibXMLext . . .\n");
+    for a in bibbt[1] do
+      b := StringBibAsXMLext(a, bibbt[2], bibbt[3]);
+      if b <> fail then
+        b := ParseBibXMLextString(b, bib);
+      fi;
+    od;
+  fi;
+  dat := Difference(dat, datbt);
+  if Length(dat) > 0 then
+    Info(InfoGAPDoc, 1, "#I   BibXMLext format: ",
+                                          JoinStringsWithSeparator(dat), "\n");
+    dat := List(dat, f-> Filename(r.bibpath, f));
+    CallFuncList(ParseBibXMLextFiles, Concatenation(dat, [bib]));
+  fi;
+
+  keys := Immutable(Set(r.bibkeys));
+  need := [];
+  for a in bib.entries do
+    if a.attributes.id in keys then
+      Add(need, a);
+    fi;
+  od;
+  need := List(need, a-> [a, RecBibXMLEntry(a)]);
+  SortParallel(List(need, a-> SortKeyRecBib(a[2])), need);
+  keys := List(need, a-> a[2].Label);
+  labels := List(need, function(a) if IsBound(a[2].key) then return
+                          a[2].key; else return a[2].printedkey; fi; end);
+  # make labels unique
+  tmp := Filtered(Collected(labels), a-> a[2] > 1);
+  for a in tmp do
+    pos := Positions(labels, a[1]);
+    for j in [1..Length(pos)] do
+      Add(labels[pos[j]], SMALLLETTERS[j]);
+    od;
+  od;
+  diff := Difference(r.bibkeys, keys);
+  if Length(diff) > 0 then
+    Info(InfoGAPDoc, 1, "#W WARNING: could not find these references: \n", 
+                                                         diff, "\n");
+  fi;
+  r.bibkeys := keys;
+  r.biblabels := labels;
+  r.bibentries := List(need, a-> a[1]);
+  r.bibstrings := bib.strings;
+end);

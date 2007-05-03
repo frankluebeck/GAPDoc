@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.17 2007-03-06 07:02:42 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.18 2007-05-03 21:09:09 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -547,51 +547,15 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   r.indextext := str;
   
   if Length(r.bibkeys) > 0 then
-    Info(InfoGAPDoc, 1, "#I Reading bibliography data files . . . \n");
-    dat := SplitString(r.bibdata, "", ", \t\b\n");
-    datbt := Filtered(dat, a-> Length(a) < 4 or 
-                               a{[Length(a)-3..Length(a)]} <> ".xml");
-    # first BibTeX files, then BibXMLext files
-    bib := CallFuncList(ParseBibFiles, List(datbt, f-> Filename(r.bibpath, f)));
-    for a in Difference(dat, datbt) do
-      t := ParseTreeXMLFile(Filename(r.bibpath, a));
-      b := BibRecBibXML(t, "Text", bib);
-    od;
-    keys := Immutable(Set(r.bibkeys));
-    need := [];
-    for a in bib[1] do
-      if a.Label in keys then
-        NormalizeNameAndKey(a);
-        Add(need, a);
-      fi;
-    od;
-    SortParallel(List(need, a-> a.keylong), need);
-    keys := List(need, a-> a.Label);
-    labels := List(need, a-> a.key);
-    # make labels unique
-    tmp := Filtered(Collected(labels), a-> a[2] > 1);
-    for a in tmp do
-      pos := Positions(labels, a[1]);
-      for j in [1..Length(pos)] do
-        Add(labels[pos[j]], SMALLLETTERS[j]);
-      od;
-    od;
-
-    diff := Difference(r.bibkeys, keys);
-    if Length(diff) > 0 then
-      Info(InfoGAPDoc, 1, "#W WARNING: could not find these references:\n   ", 
-                           diff, "\n");
-    fi;
-    r.bibkeys := keys;
-    r.biblabels := labels;
+    GAPDocAddBibData(r);
     Info(InfoGAPDoc, 1, "#I Writing bibliography . . .\n");
+    need := List(r.bibentries, a-> RecBibXMLEntry(a, "Text", r.bibstrings));
+    # copy the unique labels
+    for a in [1..Length(need)] do
+      need[a].printedkey := r.biblabels[a];
+    od;
     text := "";
-##      stream := OutputTextString(text, false);
-##      PrintTo1(stream, function()
-##      for a in need do PrintBibAsText(a, true); od;
-##      end);
-##      CloseStream(stream);
-    for a in need do 
+    for a in need do
       Append(text, StringBibAsText(a, GAPDoc2TextProcs.TextAttr));
     od;
     r.bibtext := text;

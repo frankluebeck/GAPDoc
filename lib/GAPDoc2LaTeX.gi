@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.22 2007-04-18 20:39:51 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.23 2007-05-03 21:09:09 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -742,22 +742,30 @@ GAPDoc2LaTeXProcs.Bibliography := function(r, str)
   # BibTeX file
   dat := r.attributes.Databases;
   dat := SplitString(dat, "", ", \n\t\b");
-  for a in dat do
-    if Length(a) > 3 and a{[Length(a)-3..Length(a)]} = ".xml" then
-      fname := Filename(r.root.bibpath, a);
-      t := ParseTreeXMLFile(fname);
-      b := BibRecBibXML(t, "BibTeXhref");
-      Info(InfoGAPDoc, 1, "#I Creating BibTeX file ", 
-                                   fname, ".bib from BibXMLext file.\n");
-      WriteBibFile(Concatenation(fname, ".bib"), b);
-      if GAPDoc2LaTeXProcs.INPUTENCENC = "latin1" then
-        Info(InfoGAPDoc, 1, "#I Recoding BibTeX file to latin1 . . .\n");
-        t := StringFile(Concatenation(fname, ".bib"));
-        t := Encode(Unicode(t, "UTF-8"), "ISO-8859-1");
-        FileString(Concatenation(fname, ".bib"), t);
-      fi;
-    fi;
+  dat := Filtered(dat, a-> Length(a) > 3 and 
+                                     a{[Length(a)-3..Length(a)]} = ".xml");
+  dat := List(dat, a-> Filename(r.root.bibpath, a));
+  for fname in dat do
+    b := ParseBibXMLextFiles(fname);
+    b := List(b.entries, a-> RecBibXMLEntry(a, b.strings, "BibTeX"));
+    WriteBibFile(Concatenation(fname, ".bib"), [b, [], []]);
   od;
+##    for a in dat do
+##      if Length(a) > 3 and a{[Length(a)-3..Length(a)]} = ".xml" then
+##        fname := Filename(r.root.bibpath, a);
+##        t := ParseTreeXMLFile(fname);
+##        b := BibRecBibXML(t, "BibTeXhref");
+##        Info(InfoGAPDoc, 1, "#I Creating BibTeX file ", 
+##                                     fname, ".bib from BibXMLext file.\n");
+##        WriteBibFile(Concatenation(fname, ".bib"), b);
+##        if GAPDoc2LaTeXProcs.INPUTENCENC = "latin1" then
+##          Info(InfoGAPDoc, 1, "#I Recoding BibTeX file to latin1 . . .\n");
+##          t := StringFile(Concatenation(fname, ".bib"));
+##          t := Encode(Unicode(t, "UTF-8"), "ISO-8859-1");
+##          FileString(Concatenation(fname, ".bib"), t);
+##        fi;
+##      fi;
+##    od;
   if IsBound(r.attributes.Style) then
     st := r.attributes.Style;
   else

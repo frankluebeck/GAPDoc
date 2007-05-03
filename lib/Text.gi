@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.8 2007-02-20 16:56:27 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.9 2007-05-03 21:09:09 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -737,6 +737,7 @@ else
   end);
 fi;
 
+### ??? document this and Bind...
 Base64LETTERS :=
          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 Base64REVERSE := 
