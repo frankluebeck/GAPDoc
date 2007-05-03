@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.17 2007-02-20 16:56:27 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.18 2007-05-03 21:01:15 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -249,7 +249,7 @@ InstallGlobalFunction(ParseBibFiles, function(arg)
         p := pb;
       else
         # type and label of entry
-        r := rec(Type := s);
+        r := rec(From := rec(BibTeX := true), Type := s);
         # end of bibtex entry, for better recovery from errors
         ende := PositionMatchingDelimiter(str, "{}", p);
         pb := Position(str, ',', p);
@@ -362,7 +362,7 @@ InstallGlobalFunction(NormalizeNameAndKey, function(b)
         b.(names) := nn[1];
       fi;
       if not IsBound(b.key) then
-        b.key := Concatenation(nn[2], y);
+        b.printedkey := Concatenation(nn[2], y);
       fi;
       if not IsBound(b.keylong) then
         b.keylong := Concatenation(nn[3], yy);
@@ -373,7 +373,7 @@ InstallGlobalFunction(NormalizeNameAndKey, function(b)
     b.keylong := "xxx";
   fi;
   if not IsBound(b.key) then
-    b.key := "xxx";
+    b.printedkey := "xxx";
   fi;
 end);
 
@@ -460,7 +460,7 @@ InstallGlobalFunction(StringBibAsBib, function(arg)
   Append(res, Concatenation("@", r.Type, "{ ", r.Label));
   for comp in Concatenation(fieldlist,
           Difference(NamesOfComponents(r), Concatenation(fieldlist,
-                  ["Type", "Label","authorAsList", "editorAsList"]) )) do
+                ["From", "Type", "Label","authorAsList", "editorAsList"]) )) do
     if IsBound(r.(comp)) then
       Append(res, Concatenation(",\n  ", comp, " = ", 
                                   List([1..16-Length(comp)], i-> ' ')));
@@ -613,7 +613,11 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
   if Length(arg)=2 then
     esc := arg[2];
   else
-    esc := true;
+    if IsBound(r.From) and IsBound(r.From.BibXML) and r.From.BibXML = true then
+      esc := false;
+    else
+      esc := true;
+    fi;
   fi;
   
   if not IsBound(r.Label) then
@@ -630,20 +634,24 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
   if esc = true then
     r := ShallowCopy(r);
     for i in NamesOfComponents(r) do
-      str := "";
-      GAPDoc2HTMLProcs.PCDATAFILTER(rec(content := r.(i)), str);
-      if str <> r.(i) then
-        r.(i) := str;
-      fi;
-      r.(i) := LaTeXToHTMLString(r.(i));
-      if i in ["title", "subtitle", "booktitle"] then
-        r.(i) := Filtered(r.(i), x -> not x in "{}");
+      if IsString(r.(i)) then
+        str := "";
+        GAPDoc2HTMLProcs.PCDATAFILTER(rec(content := r.(i)), str);
+        if str <> r.(i) then
+          r.(i) := str;
+        fi;
+        r.(i) := LaTeXToHTMLString(r.(i));
+        if i in ["title", "subtitle", "booktitle"] then
+          r.(i) := Filtered(r.(i), x -> not x in "{}");
+        fi;
       fi;
     od;
   fi;
   
   if IsBound(r.key) then
     key := r.key;
+  elif IsBound(r.printedkey) then
+    key := r.printedkey;
   else
     key := r.Label;
   fi;
@@ -759,6 +767,11 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     for f in RecFields(arg[2]) do
       ansi.(f) := arg[2].(f);
     od;
+  elif IsBound(r.From) and IsBound(r.From.options) and
+            IsBound(r.From.options.ansi) then
+    for f in RecFields(r.From.options.ansi) do
+      ansi.(f) := r.From.options.ansi.(f);
+    od;
   else
     for f in RecFields(ansi) do
       ansi.(f) := "";
@@ -777,6 +790,8 @@ InstallGlobalFunction(StringBibAsText, function(arg)
   Add(str, '[');
   if IsBound(r.key) then
     Append(str, r.key);
+  elif IsBound(r.printedkey) then
+    Append(str, r.printedkey);
   else
     Append(str, r.Label);
   fi;
