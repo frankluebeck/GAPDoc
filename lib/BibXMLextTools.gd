@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gd             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gd,v 1.2 2007-04-23 23:57:55 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gd,v 1.3 2007-05-03 20:58:42 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -13,12 +13,22 @@
 ##  
 
 # these are utilities to help to translate BibTeX entries to BibXMLext entries
+DeclareGlobalFunction("TemplateBibXML");
 DeclareGlobalFunction("StringBibAsXMLext");
 DeclareGlobalFunction("WriteBibXMLextFile");
 
 
-# translate <entry> elements as parsed XML trees to records for various
-# purposes
-BindGlobal("BIBXMLHANDLER", rec());
-DeclareGlobalFunction("BibRecBibXML");
+# parsing BibXMLext strings and files
+DeclareGlobalFunction("ParseBibXMLextString");
+DeclareGlobalFunction("ParseBibXMLextFiles");
 
+# tranforming parse trees to records and strings
+BindGlobal("RECBIBXMLHNDLR", rec());
+DeclareGlobalFunction("BuildRecBibXMLEntry");
+DeclareGlobalFunction("AddHandlerBuildRecBibXMLEntry");
+DeclareGlobalFunction("RecBibXMLEntry");
+BindGlobal("STRINGBIBXMLHDLR", rec());
+DeclareGlobalFunction("StringBibXMLEntry");
+
+# utility
+DeclareGlobalFunction("SortKeyRecBib");

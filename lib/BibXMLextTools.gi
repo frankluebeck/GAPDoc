@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.8 2007-04-23 23:57:55 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.9 2007-05-03 20:58:42 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -36,11 +36,12 @@ BibXMLextStructure.fill := function()
     # Print(type,": ",Filtered(els, a->not IsString(a[1])),"\n");
     BibXMLextStructure.(type) := els;
   od;
+  Unbind(BibXMLextStructure.fill);
 end;
 BibXMLextStructure.fill();
 
 # args:  [type]         with no argument prints the possible types
-TemplateBibXML := function(arg)
+InstallGlobalFunction(TemplateBibXML, function(arg)
   local type, res, add, a, b;
   if Length(arg) = 0 then
     Print(Filtered(RecFields(BibXMLextStructure), a-> not a in ["fill"]), "\n");
@@ -90,66 +91,85 @@ TemplateBibXML := function(arg)
   Append(res, type);
   Append(res, "></entry>\n");
   return res;
-end;
+end);
 
 ###########################################################################
 ##  
 ##  parsing BibXMLext files
 ##  
-# args:  string with BibXMLext document[, list of three lists]
-# the three lists contain: parse trees of <entry> elements,
-#                  pairs   [ <string> key, <string> value ],
-#                  pairs   [ entity name, entity substitution ]
-BibXMLEntryOps := rec(
+# args:  string with BibXMLext document[, record with three lists]
+# the three lists n: 
+#                     .entries:  parse trees of <entry> elements,
+#                     .strings:  pairs   [ <string> key, <string> value ],
+#                     .entities: pairs   [ entity name, entity substitution ]
+BindGlobal("BibXMLEntryOps", rec(
   ViewObj := function(entry)
     Print("<BibXMLext entry: ");
     Print(entry.attributes.id, ">");
   end,
   PrintObj := function(entry)
-    Print(StringElementAsXML(entry));
+    Print(StringElementAsXML(entry)[1]);
   end
-);
-ParseBibXMLextString := function(arg)
+  ));
+# the entities from bibxmlext.dtd
+BindGlobal("ENTITYDICT_bibxml", rec( 
+  tamp := "<Alt Only='BibTeX'>\\&amp;</Alt><Alt Not='BibTeX'><Alt Only='HTML'>&amp;amp;</Alt><Alt Not='HTML'>&amp;</Alt></Alt>", 
+  tlt := "<Alt Only='BibTeX'>{\\textless}</Alt><Alt Not='BibTeX'><Alt Only='HTML'>&amp;lt;</Alt><Alt Not='HTML'>&lt;</Alt></Alt>", 
+  tgt := "<Alt Only='BibTeX'>{\\textgreater}</Alt><Alt Not='BibTeX'><Alt Only='HTML'>&amp;gt;</Alt><Alt Not='HTML'>&gt;</Alt></Alt>", 
+  hash := "<Alt Only='BibTeX'>\\#</Alt><Alt Not='BibTeX'>#</Alt>", 
+  dollar := "<Alt Only='BibTeX'>\\$</Alt><Alt Not='BibTeX'>$</Alt>", 
+  percent := "<Alt Only='BibTeX'>\\&#37;</Alt><Alt Not='BibTeX'>&#37;</Alt>", 
+  tilde := "<Alt Only='BibTeX'>\\texttt{\\symbol{126}}</Alt><Alt Not='BibTeX'>~</Alt>", 
+  bslash := "<Alt Only='BibTeX'>\\texttt{\\symbol{92}}</Alt><Alt Not='BibTeX'>\\</Alt>", 
+  obrace := "<Alt Only='BibTeX'>\\texttt{\\symbol{123}}</Alt><Alt Not='BibTeX'>{</Alt>", 
+  cbrace := "<Alt Only='BibTeX'>\\texttt{\\symbol{125}}</Alt><Alt Not='BibTeX'>}</Alt>", 
+  uscore := "<Alt Only='BibTeX'>{\\textunderscore}</Alt><Alt Not='BibTeX'>_</Alt>", 
+  circum := "<Alt Only='BibTeX'>\\texttt{\\symbol{94}}</Alt><Alt Not='BibTeX'>^</Alt>", 
+  nbsp := "<Alt Only='BibTeX'>~</Alt><Alt Not='BibTeX'>&#160;</Alt>" ,
+  copyright := "<Alt Only='BibTeX'>{\\copyright}</Alt><Alt Not='BibTeX'>(C)</Alt>",
+  ndash := "<Alt Only='BibTeX'>--</Alt><Alt Not='BibTeX'>&#x2013;</Alt>",
+));
+
+InstallGlobalFunction(ParseBibXMLextString, function(arg)
   local str, res, tr, ent, strs, entries, a;
   str := arg[1];
   if Length(arg) > 1 then
     res := arg[2];
   else
-    res := [[],[],[]];
+    res := rec(entries := [], strings := [], entities := []);
   fi;
-  tr := ParseTreeXMLString(str);
+  tr := ParseTreeXMLString(str, ENTITYDICT_bibxml);
   # get used entities from ENTITYDICT
   ent := List(RecFields(ENTITYDICT), a-> [a, ENTITYDICT.(a)]);
-  Append(res[3], ent);
-  res[3] := Set(res[3]);
+  Append(res.entities, ent);
+  res.entities := Set(res.entities);
 
   # read <string> key value pairs
   strs := XMLElements(tr, ["string"]);
   for a in strs do 
-    BibRecBibXML(a, "default", res); 
+    AddSet(res.strings, [a.attributes.key, a.attributes.value]);
   od;
-  res[2] := Set(res[2]);
   entries := XMLElements(tr, ["entry"]);
   for a in entries do 
     a.operations := BibXMLEntryOps;
   od;
-  Append(res[1], entries);
+  Append(res.entries, entries);
   return res;
-end;
+end);
 
-ParseBibXMLextFiles := function(arg)
+InstallGlobalFunction(ParseBibXMLextFiles, function(arg)
   local res, nam;
   if Length(arg) > 0 and not IsString(arg[Length(arg)]) then
     res := arg[Length(arg)];
     arg := arg{[1..Length(arg)-1]};
   else
-    res := [[], [], []];
+    res := rec(entries := [], strings := [], entities := []);
   fi;
   for nam in arg do
     ParseBibXMLextString(StringFile(nam), res);
   od;
   return res;
-end;
+end);
 
 
 
@@ -302,14 +322,14 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
   od;
   # additional infos
   f := Difference(f, List(struct, a-> a[1]));
-  f := Filtered(f, a-> a <> "Type" and a <> "Label");
+  f := Filtered(f, a-> not a in ["From", "Type", "Label"]);
   for a in f do
     Add(cont, "\n  ");
     Add(cont, rec(name := "other", attributes := rec( type := a ), 
                   content := r.(a)) );
   od;
   Add(cont, "\n");
-  res := StringElementAsXML(res);
+  res := StringElementAsXML(res)[1];
   res := SplitString(res, "\n", "");
   for i in [1..Length(res)] do
     if Length(res[i]) > 76 then
@@ -338,7 +358,7 @@ InstallGlobalFunction(WriteBibXMLextFile, function(fname, bib)
   for i in [1..Length(bib[2])] do
     AppendTo(f, StringElementAsXML(rec(name := "string",
              attributes := rec(key := bib[2][i], value := bib[3][i]),
-                           content := 0)), "\n");
+                           content := 0))[1], "\n");
   od;
   SortParallel(bib[3], bib[2]);
   for a in bib[1] do 
@@ -347,144 +367,105 @@ InstallGlobalFunction(WriteBibXMLextFile, function(fname, bib)
   AppendTo(f, "</file>\n");
 end);
 
-ENTITYDICT_bibxml := rec( 
-  tamp := "<Alt Only='LaTeX'>\\&amp;</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;amp;</Alt><Alt Not='HTML'>&amp;</Alt></Alt>", 
-  tlt := "<Alt Only='LaTeX'>{\\textless}</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;lt;</Alt><Alt Not='HTML'>&lt;</Alt></Alt>", 
-  tgt := "<Alt Only='LaTeX'>{\\textgreater}</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;gt;</Alt><Alt Not='HTML'>&gt;</Alt></Alt>", 
-  hash := "<Alt Only='LaTeX'>\\#</Alt><Alt Not='LaTeX'>#</Alt>", 
-  dollar := "<Alt Only='LaTeX'>\\$</Alt><Alt Not='LaTeX'>$</Alt>", 
-  percent := "<Alt Only='LaTeX'>\\&#37;</Alt><Alt Not='LaTeX'>&#37;</Alt>", 
-  tilde := "<Alt Only='LaTeX'>\\texttt{\\symbol{126}}</Alt><Alt Not='LaTeX'>~</Alt>", 
-  bslash := "<Alt Only='LaTeX'>\\texttt{\\symbol{92}}</Alt><Alt Not='LaTeX'>\\</Alt>", 
-  obrace := "<Alt Only='LaTeX'>\\texttt{\\symbol{123}}</Alt><Alt Not='LaTeX'>{</Alt>", 
-  cbrace := "<Alt Only='LaTeX'>\\texttt{\\symbol{125}}</Alt><Alt Not='LaTeX'>}</Alt>", 
-  uscore := "<Alt Only='LaTeX'>{\\textunderscore}</Alt><Alt Not='LaTeX'>_</Alt>", 
-  circum := "<Alt Only='LaTeX'>\\texttt{\\symbol{94}}</Alt><Alt Not='LaTeX'>^</Alt>", 
-  nbsp := "<Alt Only='LaTeX'>~</Alt><Alt Not='LaTeX'>&#160;</Alt>" ,
-  copyright := "<Alt Only='LaTeX'>{\\copyright}</Alt><Alt Not='LaTeX'>(C)</Alt>",
-  ndash := "<Alt Only='BibTeX,BibTeXhref'>--</Alt><Alt Not='LaTeX'>&#x2013;</Alt>",
-);
 
-# bib is list of three lists as above
-StringBibXMLextDocument := function(bib)
-  local res, ent, main, a;
-  res := Concatenation("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
-         "<!DOCTYPE file SYSTEM \"bibxmlext.dtd\"\n[");
-  ent := Difference(List(bib[3], a-> a[1]), RecFields(ENTITYDICT_bibxml));
-  ent := Difference(ent, RecFields(ENTITYDICT_default));
-  for a in ent do
-    Append(res, "<!ENTITY ");
-    Append(res, a);
-    Append(res, " \"");
-    Append(res, bib[3][PositionFirstComponent(bib[3], a)][2]);
-    Append(res, "\">\n");
-  od;
-  Append(res, "\n] />\n<file>\n");
-
-  for a in bib[2] do
-    Append(res, Concatenation("<string key=\"", a[1], "\" \n     value=\"", 
-                              a[2], "\" />\n"));
-  od;
-  main := "";
-  for a in bib[1] do 
-    Append(main, "\n");
-    Append(main, StringElementAsXML(a));
-    Append(main, "\n");
-  od;
-  Append(main, "\n</file>\n");
-  for a in bib[3] do
-    main := SubstitutionSublist(main, a[2], Concatenation("&", a[1], ";"));
-  od;
-  for a in bib[2] do
-    main := SubstitutionSublist(main, a[2], Concatenation("<value key=\"", 
-                   a[1], "\"/>"));
-  od;
-  Append(res, main);
-  return res;
-end;
-
-
-
-
-
-
-
-
-# handler to generate bib records
-# the handler functions get the tree, a node, an existing bib record 
-# structure and the type of conversion
-# args: t, r, bib, type
-BIBXMLHANDLER.default := rec();
-# recursion caller
-BIBXMLHANDLER.content := function(t, r, bib, type)
-  local nam, h, rr;
-  for rr in r.content do
-    nam := rr.name;
-    if IsBound(BIBXMLHANDLER.(type)) 
-               and IsBound(BIBXMLHANDLER.(type).(nam)) then
-      h := BIBXMLHANDLER.(type).(nam);
-    elif IsBound(BIBXMLHANDLER.default.(nam)) then
-      h := BIBXMLHANDLER.default.(nam);
-    else
-      h := BIBXMLHANDLER.default.default;
+InstallGlobalFunction(BuildRecBibXMLEntry, 
+function(entry, elt, type, strings, opts)
+  local res, f, nam, hdlr, a;
+  if elt = entry then
+    # upper level, create result record
+    res := rec(From := rec(BibXML := true, type := type, options := opts));
+    res.Label := entry.attributes.id;
+    f := First(entry.content, a-> IsRecord(a) and a.name in
+                                             RecFields(BibXMLextStructure));
+    res.Type := f.name;
+    for a in f.content do
+      if IsRecord(a) and not a.name = "PCDATA" then
+        nam := a.name;
+        if nam in ["author", "editor"] then
+          res.(Concatenation(nam, "AsList")) :=
+                BuildRecBibXMLEntry(entry, a, "namesaslists", strings, opts);
+        fi;
+        if nam = "other" then
+          nam := a.attributes.type;
+        fi;
+        res.(nam) := BuildRecBibXMLEntry(entry, a, type, strings, opts);
+      fi;
+    od;
+    # a possibility for some final cleanup/additions, e.g., for handling
+    # some options
+    if IsBound(RECBIBXMLHNDLR.Finish.(type)) then
+      res := RECBIBXMLHNDLR.Finish.(type)(entry, res, type, strings, opts);
     fi;
-    h(t, rr, bib, type);
-  od;
-end;
-# default handler collects text in t.tmptext (used for PCDATA)
-BIBXMLHANDLER.default.default := function(t, r, bib, type)
-  if IsString(r.content) then
-    Append(t.tmptext, r.content);
-  elif r.content = 0 then
-    # ignore
+    return res;
   else
-    BIBXMLHANDLER.content(t, r, bib, type);
+    # return a string (or something else if you know what you are doing)
+    # call this function recursively
+    if IsString(elt) then
+      # end of recursion
+      return elt;
+    fi;
+    nam := elt.name;
+    if IsBound(RECBIBXMLHNDLR.(nam)) then
+      hdlr := RECBIBXMLHNDLR.(nam); else
+      hdlr := RECBIBXMLHNDLR.default;
+    fi;
+    if IsBound(hdlr.(type)) then
+      hdlr := hdlr.(type);
+    elif IsBound(hdlr.default) then
+      hdlr := hdlr.default;
+    else
+      hdlr := RECBIBXMLHNDLR.default.default;
+    fi;
+    return hdlr(entry, elt, type, strings, opts);
   fi;
-end;
-# handler for alternatives
-BIBXMLHANDLER.default.Alt := function(t, r, bib, type)
-  local attr;
-  attr := r.attributes;
-  if IsBound(attr.Only) and 
-       type in SplitString(attr.Only, "", ", \t\b\n") then
-    BIBXMLHANDLER.content(t, r, bib, type);
-  elif IsBound(attr.Not) and 
-            not type in SplitString(attr.Not, "", ", \t\b\n") then
-    BIBXMLHANDLER.content(t, r, bib, type);
-  fi;
-end;
+end);
 
-# first handler functions which produce text which is collected in t.tmptext
-BIBXMLHANDLER.default.URL := function(t, r, bib, type)
-  # collect content
-  BIBXMLHANDLER.content(t, r, bib, type);
-end;
-BIBXMLHANDLER.default.C := function(t, r, bib, type)
-  # collect content
-  BIBXMLHANDLER.content(t, r, bib, type);
-end;
-BIBXMLHANDLER.default.M := function(t, r, bib, type)
-  # enclose by $'s
-  Add(t.tmptext, '$');
-  BIBXMLHANDLER.content(t, r, bib, type);
-  Add(t.tmptext, '$');
-end;
-BIBXMLHANDLER.default.Math := BIBXMLHANDLER.default.M;
-# the Wrap elements, here we do nothing but provide a hook for users to
-# include handler functions
-BIBXMLHANDLER.Wrap := rec(default := rec(), HTML := rec(), 
-                          BibTeX := rec(), BibTeXhref := rec() );
-BIBXMLHANDLER.default.Wrap := function(t, r, bib, type)
-  if IsBound(BIBXMLHANDLER.Wrap.(type)) and
-     IsBound(BIBXMLHANDLER.Wrap.(type).(r.attributes.Name)) then
-    BIBXMLHANDLER.Wrap.(type).(r.attributes.Name)(t, r, bib, type);
+# eltname can be an elementname or a list of elementnames, in the latter
+# case fun is installed for all of them, same with type
+InstallGlobalFunction(AddHandlerBuildRecBibXMLEntry,  
+function(eltname, type, fun)
+  local e;
+  if not IsString(eltname) and IsList(eltname) then
+    for e in eltname do
+      AddHandlerBuildRecBibXMLEntry(e, type, fun);
+    od;
+    return;
+  fi;
+  if not IsString(type) and IsList(type) then
+    for e in type do
+      AddHandlerBuildRecBibXMLEntry(eltname, e, fun);
+    od;
+    return;
+  fi;
+  if not IsBound(RECBIBXMLHNDLR.(eltname)) then
+    RECBIBXMLHNDLR.(eltname) := rec();
+  fi;
+  if fun = "Ignore" then
+    fun := RECBIBXMLHNDLR.default.default;
+  fi;
+  RECBIBXMLHNDLR.(eltname).(type) := fun;
+end);
+
+# this just collect text recursively
+AddHandlerBuildRecBibXMLEntry("default", "default",
+function(entry, elt, type, strings, opts)
+  local res, a;
+  res := "";
+  if IsString(elt.content) then
+    return elt.content;
+  elif elt.content = 0 then
+    return "";
   else
-    BIBXMLHANDLER.content(t, r, bib, type);
+    for a in elt.content do
+      Append(res, BuildRecBibXMLEntry(entry, a, type, strings, opts));
+    od;
   fi;
-end;
+  return res;
+end);
 
-# find initials from UTF-8 string, keep '-'s
-BIBXMLHANDLER.Initials := function(fnam)
+# dealing with names in author and editor fields
+# helper function, find initials from UTF-8 string, keep '-'s
+RECBIBXMLHNDLR.Initials := function(fnam)
   local pre, res, i;
   fnam := NormalizedWhitespace(fnam);
   fnam := Unicode(fnam, "UTF-8");
@@ -500,23 +481,212 @@ BIBXMLHANDLER.Initials := function(fnam)
   od;
   return Encode(res, "UTF-8");
 end;
-BIBXMLHANDLER.AddKey := function(r)
-  local nams, letters, res, a;
-  if IsBound(r.key) then
-    return;
+# produce the names as lists (result will be bound to elt.AsList
+# before 'author' and 'editor' are produced)
+AddHandlerBuildRecBibXMLEntry("name", "namesaslists", 
+function(entry, elt, type, strings, opts)
+  local res, f;
+  res := [];
+  f := First(elt.content, a-> IsRecord(a) and a.name = "last");
+  Add(res, BuildRecBibXMLEntry(entry, f, type, strings, opts));
+  NormalizeWhitespace(res[1]);
+  f := First(elt.content, a-> IsRecord(a) and a.name = "first");
+  if f <> fail then
+    res[3] := BuildRecBibXMLEntry(entry, f, type, strings, opts);
+    NormalizeWhitespace(res[3]);
+    res[2] := RECBIBXMLHNDLR.Initials(res[3]);
   fi;
-  if IsBound(r.authorAsList) then
-    nams := r.authorAsList;
-  elif IsBound(r.editorAsList) then
-    nams := r.editorAsList;
-  elif IsBound(r.author) then
-    nams := r.author;
-  elif IsBound(r.editor) then
-    nams := r.editor;
+  return res;
+end);
+AddHandlerBuildRecBibXMLEntry(["author", "editor"], "namesaslists", 
+function(entry, elt, namesaslists, strings, opts)
+  local res, a;
+  res := [];
+  for a in elt.content do
+    if IsRecord(a) and a.name = "name" then
+      Add(res, BuildRecBibXMLEntry(entry, a, namesaslists, strings, opts));
+    fi;
+  od;
+  elt.AsList := res;
+  return res;
+end);
+# now the default (BibTeX) version
+AddHandlerBuildRecBibXMLEntry(["author", "editor"], "default", 
+function(entry, elt, default, strings, opts)
+  local res, a;
+  res := [];
+  for a in elt.AsList do
+    if Length(a) = 1 then
+      Add(res, a[1]);
+    elif IsBound(opts.fullname) and opts.fullname = true then
+      Add(res, Concatenation(a[1], ", ", a[3]));
+    else
+      Add(res, Concatenation(a[1], ", ", a[2]));
+    fi;
+  od;
+  return JoinStringsWithSeparator(res, " and ");
+end);
+
+# now the special markup elements
+# <C>
+AddHandlerBuildRecBibXMLEntry("C", "default", 
+function(entry, elt, default, strings, opts)
+  local res, a;
+  res := "{";
+  for a in elt.content do 
+    Append(res, BuildRecBibXMLEntry(entry, a, default, strings, opts));
+  od;
+  Append(res, "}");
+  return res;
+end);
+AddHandlerBuildRecBibXMLEntry("C", ["Text", "HTML"], "Ignore");
+# <M>, <Math>
+AddHandlerBuildRecBibXMLEntry(["M", "Math"], "default",
+function(entry, elt, default, strings, opts)
+  local res, a;
+  res := "$";
+  for a in elt.content do 
+    Append(res, BuildRecBibXMLEntry(entry, a, default, strings, opts));
+  od;
+  Append(res, "$");
+  return res;
+end);
+AddHandlerBuildRecBibXMLEntry("M", ["Text", "HTML"],
+function(entry, elt, default, strings, opts)
+  local res, a;
+  res := "";
+  for a in elt.content do 
+    Append(res, BuildRecBibXMLEntry(entry, a, default, strings, opts));
+  od;
+  return TextM(res);
+end);
+# <value key= />
+AddHandlerBuildRecBibXMLEntry("value", "default",
+function(entry, elt, default, strings, opts)
+  local pos;
+  pos := PositionFirstComponent(strings, elt.attributes.key);
+  if not IsBound(strings[pos]) or strings[pos][1] <> elt.attributes.key then
+    return Concatenation("UNKNOWNVALUE(", elt.attributes.key, ")");
   else
-    r.key := "NOAUTHOROREDITOR_SPECIFYKEY";
-    return;
+    return strings[pos][2];
   fi;
+end);
+# <URL>
+AddHandlerBuildRecBibXMLEntry("URL", "default",
+function(entry, elt, default, strings, opts)
+  local res, esc, txt, a;
+  res := "";
+  for a in elt.content do
+    Append(res, BuildRecBibXMLEntry(entry, a, default, strings, opts));
+  od;
+  esc := SubstitutionSublist(res, "~", "\\texttt{\\symbol{126}}");
+  esc := Concatenation("\\texttt{", SubstitutionSublist(esc, "#", "\\#"), "}");
+  if IsBound(opts.href) and opts.href = false then
+    return esc;
+  fi;
+  if IsBound(elt.attributes.Text) then
+    txt := elt.attributes.Text;
+  else
+    txt := esc;
+  fi;
+  return Concatenation("\\href{", res, "}{", txt, "}");
+end);
+AddHandlerBuildRecBibXMLEntry("URL", "HTML",
+function(entry, elt, html, strings, opts)
+  local res, txt, a;
+  res := "";
+  for a in elt.content do
+    Append(res, BuildRecBibXMLEntry(entry, a, html, strings, opts));
+  od;
+  if IsBound(elt.attributes.Text) then
+    txt := elt.attributes.Text;
+  else
+    txt := res;
+  fi;
+  return Concatenation("<a href=\"", res, "\">", res, "</a>");
+end);
+AddHandlerBuildRecBibXMLEntry("URL", "Text",
+function(entry, elt, text, strings, opts)
+  local res, a;
+  res := "";
+  for a in elt.content do
+    Append(res, BuildRecBibXMLEntry(entry, a, text, strings, opts));
+  od;
+  if IsBound(elt.attributes.Text) then
+    return Concatenation(elt.attributes.Text, " (", res, ")");
+  else
+    return res;
+  fi;
+end);
+AddHandlerBuildRecBibXMLEntry("Alt", "default",
+function(entry, elt, type, strings, opts)
+  local poss, att, ok, res, a;
+  poss := [type];
+  if IsBound(opts.useAlt) then
+    Append(poss, opts.useAlt);
+  fi;
+  att := elt.attributes;
+  if IsBound(att.Only) then
+    ok := SplitString(att.Only, "", ", \n\r\t");
+  else
+    ok := SplitString(att.Not, "", ", \n\r\t");
+  fi;
+
+  if (IsBound(att.Only) and ForAny(poss, a-> a in ok)) or
+     (IsBound(att.Not) and ForAll(poss, a-> not a in ok)) then
+    res := "";
+    for a in elt.content do
+      Append(res, BuildRecBibXMLEntry(entry, a, type, strings, opts));
+    od;
+    return res;
+  else
+    return "";
+  fi;
+end);
+AddHandlerBuildRecBibXMLEntry("Wrap", "default",
+function(entry, elt, type, strings, opts)
+  local n, hdlr, res, a;
+  n := Concatenation("Wrap:", elt.attributes.Name);
+  hdlr := fail;
+  if IsBound(RECBIBXMLHNDLR.(n)) then
+    if IsBound(RECBIBXMLHNDLR.(n).(type)) then
+      hdlr := RECBIBXMLHNDLR.(n).(type);
+    elif IsBound(RECBIBXMLHNDLR.(n).default) then
+      hdlr := RECBIBXMLHNDLR.(n).default;
+    fi;
+  fi;
+  if hdlr = fail then
+    # default is to ignore the markup
+    res := "";
+    for a in elt.content do
+      Append(res, BuildRecBibXMLEntry(entry, a, type, strings, opts));
+    od;
+    return res;
+  else
+    return hdlr(entry, elt, type, strings, opts);
+  fi;
+end);
+
+# Finish functions
+AddHandlerBuildRecBibXMLEntry("Finish", ["BibTeX", "LaTeX"],
+function(entry, res, type, strings, opts)
+  local f;
+  if not IsBound(opts.utf8) or opts.utf8 <> true then
+    # by default we try to translate non-ASCII characters to LaTeX macros
+    for f in RecFields(res) do
+      if IsString(res.(f)) then
+        res.(f) := Encode(Unicode(res.(f), "UTF-8"), "LaTeX");
+      fi;
+    od;
+  fi;
+  return res;
+end);
+
+# args: 
+#  xml tree of entry[, type][, strings (as list of pairs)][, options record]
+InstallGlobalFunction(RecBibXMLEntry, function(arg)
+  local letters, entry, type, strings, opts, res, nams, key, i, a;
+  # helper to find a key
   letters := function(str, one)
     local pos;
     str := Unicode(str, "UTF-8");
@@ -536,289 +706,90 @@ BIBXMLHANDLER.AddKey := function(r)
       return Encode(str{[1..pos]}, "UTF-8");
     fi;
   end;
-  res := "";
-  if Length(nams) = 1 then
-    Append(res, letters(nams[1][1], false));
-  else
-    for a in nams do
-      Append(res, letters(a[1], true));
-    od;
-  fi;
-  if IsBound(r.year) and Length(r.year) >= 2 then
-    Append(res, r.year{[Length(r.year)-1, Length(r.year)]});
-  fi;
-  r.key := res;
-end;
-BIBXMLHANDLER.default.first := function(t, r, bib, type)
-  local old;
-  old := t.tmptext;
-  t.tmptext := "";
-  BIBXMLHANDLER.content(t, r, bib, type);
-  t.tmpfirst := t.tmptext;
-  t.tmptext := old;
-end;
-BIBXMLHANDLER.default.last := function(t, r, bib, type)
-  local old;
-  old := t.tmptext;
-  t.tmptext := "";
-  BIBXMLHANDLER.content(t, r, bib, type);
-  t.tmplast := t.tmptext;
-  t.tmptext := old;
-end;
-BIBXMLHANDLER.default.name := function(t, r, bib, type)
-  t.tmplast := "";
-  t.tmpfirst := "";
-  BIBXMLHANDLER.content(t, r, bib, type);
-##    Append(t.tmptext, t.tmplast);
-##    if Length(t.tmpfirst) > 0 then
-##      Append(t.tmptext, ", ");
-##      Append(t.tmptext, t.tmpfirst);
-##    fi;
-##    Append(t.tmptext, " and ");
-  Add(t.tmpnames, [t.tmplast, BIBXMLHANDLER.Initials(t.tmpfirst), t.tmpfirst]);
-end;
-
-BIBXMLHANDLER.default.value := function(t, r, bib, type)
-  local pos;
-  pos := Position(bib[2], r.attributes.key);
-  if pos = fail then
-    Info(InfoBibTools, 1, "#W WARNING: Cannot resolve abbreviation: ", 
-                                     r.attributes.key, "\n"); 
-    Info(InfoBibTools, 2, r, "\n");
-    Append(t.tmptext, r.attributes.key);
-    Append(t.tmptext, "???");
-  else
-    Append(t.tmptext, bib[3][pos]);
-  fi;
-end;
-
-# now handle the entries
-BIBXMLHANDLER.default.WHOLEDOCUMENT := function(t, r, bib, type)
-  # create temporary data structures
-  t.tmptext := "";
-  t.tmprec := rec();
-  BIBXMLHANDLER.content(t, r, bib, type);
-  Unbind(t.tmptext);
-  Unbind(t.tmprec);
-end;
-BIBXMLHANDLER.default.XMLPI := function(t, r, bib, type)
-  # ignore
-end;
-BIBXMLHANDLER.default.XMLDOCTYPE := function(t, r, bib, type)
-  # ignore
-end;
-BIBXMLHANDLER.default.file := function(t, r, bib, type)
-  BIBXMLHANDLER.content(t, r, bib, type);
-end;
-BIBXMLHANDLER.default.string := function(t, r, bib, type)
-  # add the abbreviation to the bib data
-  Add(bib[2], [r.attributes.key, NormalizedWhitespace(r.attributes.value)]);
-end;
-BIBXMLHANDLER.default.entry := function(t, r, bib, type)
-  # empty record and collect content
-  t.tmprec := rec(Label := r.attributes.id, HandlerType := type);
-  t.tmptext := "";
-  BIBXMLHANDLER.content(t, r, bib, type);
-  BIBXMLHANDLER.AddKey(t.tmprec);
-  # add record to bib structure
-  Add(bib[1], t.tmprec);
-end;
-BIBXMLHANDLER.types := function()
-  local typ; 
-  for typ in  [ "article", "book", "booklet", "manual", "techreport", 
-      "mastersthesis", "phdthesis", "inbook", "incollection", "proceedings", 
-      "inproceedings", "conference", "unpublished", "misc" ] do
-    BIBXMLHANDLER.default.(typ) := function(t, r, bib, type)
-      t.tmprec.Type := r.name;
-      BIBXMLHANDLER.content(t, r, bib, type);
-    end;
-  od;
-end;
-BIBXMLHANDLER.types();
-
-# and finally handler for the fields, first generic then special cases
-BIBXMLHANDLER.BibXMLext := rec();
-BIBXMLHANDLER.fields := function()
-  local f;
-  for f in [ "title", "booktitle", "publisher", "school", "journal", 
-      "institution", "year", "series", "volume", "number",  "month", 
-      "organization", "howpublished", "note", "key", "annotate", "crossref", 
-      "abstract", "affiliation", "contents", "copyright", "isbn", "issn", 
-      "address", "edition", "keywords", "language", "lccn", "location", 
-      "mrnumber", "mrclass", "mrreviewer", "price", "size", "url", "category"
-      ] do
-    BIBXMLHANDLER.default.(f) := function(t, r, bib, type)
-      t.tmptext := "";
-      BIBXMLHANDLER.content(t, r, bib, type);
-      NormalizeWhitespace(t.tmptext);
-      t.tmprec.(r.name) := ShallowCopy(t.tmptext);
-    end;
-    BIBXMLHANDLER.BibXMLext.(f) := function(t, r, bib, type)
-      local f, l;
-      f := r.name;
-      l := Length(f);
-      t.tmptext := StringElementAsXML(r);
-      # in simple cases without attributes we remove the surrounding tags here
-      if PositionSublist(t.tmptext, Concatenation("<",f,">")) = 1 and
-         PositionSublist(t.tmptext, Concatenation("</",f,">")) = 
-          Length(t.tmptext)-l-2 then
-        t.tmptext := t.tmptext{[l+3..Length(t.tmptext)-l-3]};
-      fi;
-      t.tmprec.(f) := ShallowCopy(t.tmptext);
-    end;
-  od;
-end;
-BIBXMLHANDLER.fields();
-BIBXMLHANDLER.default.authed := function(t, r, bib, type, cmp)
-  local f, nams;
-  t.tmptext := "";
-  t.tmpnames := [];
-  BIBXMLHANDLER.content(t, r, bib, type);
-  # save as list
-  t.tmprec.(Concatenation(cmp, "AsList")) := t.tmpnames;
-  f := function(nl, i)
-    if Length(nl[i]) > 0 then
-      return Concatenation(nl[1], ", ", nl[i]);
-    else
-      return nl[1];
+  entry := arg[1];
+  type := fail; strings := fail; opts := fail;
+  for i in [2..Length(arg)] do
+    if IsString(arg[i]) then
+      type := arg[i];
+    elif IsDenseList(arg[i]) and ForAll(arg[i], IsList) then
+      strings := arg[i];
+    elif IsRecord(arg[i]) then
+      opts := arg[i];
     fi;
-  end;
-  if ForAny(t.tmpnames, nl-> nl[2] <> nl[3]) then
-    nams := List(t.tmpnames, nl-> f(nl, 3));
-    t.tmprec.(Concatenation(cmp, "orig")) := 
-                                 JoinStringsWithSeparator(nams, " and ");
+  od;
+  if opts = fail then
+    opts := rec();
   fi;
-  nams := List(t.tmpnames, nl-> f(nl, 2));
-  t.tmprec.(cmp) := JoinStringsWithSeparator(nams, " and ");
-end;
-BIBXMLHANDLER.default.author := function(t, r, bib, type)
-  BIBXMLHANDLER.default.authed(t, r, bib, type, "author");
-end;
-BIBXMLHANDLER.default.editor := function(t, r, bib, type)
-  BIBXMLHANDLER.default.authed(t, r, bib, type, "editor");
-end;
-
-BIBXMLHANDLER.default.pages := function(t, r, bib, type)
-# special heuristic unnecessary now with &ndash; ?
-##    # default with one dash
-  t.tmptext := "";
-  BIBXMLHANDLER.content(t, r, bib, type);
-##    NormalizeWhitespace(t.tmptext);
-##    if ForAll(t.tmptext, c-> c in "0123456789-") then
-##      t.tmptext := SubstitutionSublist(t.tmptext, "--", "-");
-##    fi;
-  t.tmprec.pages := ShallowCopy(t.tmptext);
-end;
-BIBXMLHANDLER.default.other := function(t, r, bib, type)
-  t.tmptext := "";
-  BIBXMLHANDLER.content(t, r, bib, type);
-  NormalizeWhitespace(t.tmptext);
-  t.tmprec.(r.attributes.type) := ShallowCopy(t.tmptext);
-end;
-
-# args: tree, type[, bib]
-InstallGlobalFunction(BibRecBibXML, function(arg)
-  local t, type, bib;
-  t := arg[1];
-  type := arg[2];
-  if Length(arg) > 2 then
-    bib := arg[3];
-  else
-    bib := [[], [], []];
+  if type = fail or type = "default" then  
+    type := "BibTeX";
+    if not IsBound(opts.useAlt) then
+      opts.useAlt := ["BibTeX", "LaTeX"];
+    fi;
   fi;
-##    BIBXMLHANDLER.default.WHOLEDOCUMENT(t, t, bib, type);
-  BIBXMLHANDLER.default.(t.name)(t, t, bib, type);
-  return bib;
+  if strings = fail then
+    strings := [];
+  fi;
+  res := BuildRecBibXMLEntry(entry, entry, type, strings, opts);
+  # we produce a key if not given
+  if not IsBound(res.key) then
+    if IsBound(res.authorAsList) then
+      nams := res.authorAsList;
+    elif IsBound(res.editorAsList) then
+      nams := res.editorAsList;
+    else
+      nams := 0;
+    fi;
+    if nams = 0 then
+      key := "NOAUTHOROREDITOR_SPECIFYKEY";
+    else
+      key := "";
+      if Length(nams) = 1 then
+        Append(key, letters(nams[1][1], false));
+      else
+        for a in nams do
+          Append(key, letters(a[1], true));
+        od;
+      fi;
+      if IsBound(res.year) and Length(res.year) >= 2 then
+        Append(key, res.year{[Length(res.year)-1, Length(res.year)]});
+      fi;
+    fi;
+    res.printedkey := key;
+  fi;
+  return res;
 end);
 
-#########################################
-# now special handler for special formats
-# BibTeX. adjust <C>, pages with --, URL in \texttt
-BIBXMLHANDLER.BibTeX := rec();
-BIBXMLHANDLER.BibTeX.pages := function(t, r, bib, type)
-  BIBXMLHANDLER.default.pages(t, r, bib, type);
-  if PositionSublist(t.tmprec.pages, "--") = fail then
-    t.tmprec.pages := SubstitutionSublist(t.tmprec.pages, "-", "--");
-  fi;
-end;
-BIBXMLHANDLER.BibTeX.C := function(t, r, bib, type)
-  Add(t.tmptext, '{');
-  BIBXMLHANDLER.content(t, r, bib, type);
-  Add(t.tmptext, '}');
-end;
-BIBXMLHANDLER.BibTeX.URL := function(t, r, bib, type)
-  local save;
-  save := t.tmptext;
-  t.tmptext := "";
-  BIBXMLHANDLER.content(t, r, bib, type);
-  if Length(t.tmptext) > 20 then
-    t.tmptext := GAPDoc2LaTeXProcs.URLBreaks(t.tmptext);
-  fi;
-  t.tmptext := SubstitutionSublist(t.tmptext, "~", "\\symbol {126}");
-  t.tmptext := SubstitutionSublist(t.tmptext, "#", "\\#");
-  t.tmptext := Concatenation(save, "\\texttt{", t.tmptext, "}");
-end;
-# BibTeXhref    with \href in URLs
-BIBXMLHANDLER.BibTeXhref := ShallowCopy(BIBXMLHANDLER.BibTeX);
-BIBXMLHANDLER.BibTeXhref.URL := function(t, r, bib, type)
-  local save;
-  save := t.tmptext;
-  t.tmptext := "";
-  BIBXMLHANDLER.content(t, r, bib, type);
-  Append(save, "\\href{");
-  Append(save, t.tmptext);
-  Append(save, "} ");
-  if IsBound(r.attributes.Text) then
-    t.tmptext := r.attributes.Text;
+InstallGlobalFunction(StringBibXMLEntry, function(arg)
+  local r, type, opts;
+  r := CallFuncList(RecBibXMLEntry, arg);
+  type := r.From.type;
+  opts := r.From.options;
+  if IsBound(STRINGBIBXMLHDLR.(type)) then
+    return STRINGBIBXMLHDLR.(type)(r);
   else
-    if Length(t.tmptext) > 20 then
-      t.tmptext := GAPDoc2LaTeXProcs.URLBreaks(t.tmptext);
-    fi;
-    t.tmptext := SubstitutionSublist(t.tmptext, "~", "\\symbol {126}");
-##      t.tmptext := SubstitutionSublist(t.tmptext, "#", "\\#");
-    t.tmptext := Concatenation("\\texttt{", t.tmptext, "}");
+    InfoBibTools(1, "Don't know how to make a string of type ", type, "\n");
+    return fail;
   fi;
-  t.tmptext := Concatenation(save, "{", t.tmptext, "}");
-end;
+end);
+STRINGBIBXMLHDLR.BibTeX := StringBibAsBib;
+STRINGBIBXMLHDLR.Text := StringBibAsText;
+STRINGBIBXMLHDLR.HTML := StringBibAsHTML;
 
-# Text:  with <M> translation
-BIBXMLHANDLER.Text := rec();
-BIBXMLHANDLER.Text.M := function(t, r, bib, type)
-  local save;
-  save := t.tmptext;
-  t.tmptext := "";
-  BIBXMLHANDLER.content(t, r, bib, type);
-  t.tmptext := Concatenation(save, TextM(t.tmptext));
-end;
-
-# HTML: URLs as links, <M> like Text
-BIBXMLHANDLER.HTML := rec();
-# ??? remove
-##  BIBXMLHANDLER.HTML.entry := function(t, r, bib, type)
-##    # empty record and collect content, mark as HTML to avoid escaping of
-##    # markup later (say in PrintBibAsHTML):
-##    t.tmprec := rec(Label := r.attributes.id);
-##    BIBXMLHANDLER.content(t, r, bib, type);
-##    # add record to bib structure
-##    t.tmprec.HTML := "yes";
-##    BIBXMLHANDLER.AddKey(t.tmprec);
-##    Add(bib[1], t.tmprec);
-##  end;
-BIBXMLHANDLER.HTML.M := BIBXMLHANDLER.Text.M;
-BIBXMLHANDLER.HTML.URL := function(t, r, bib, type)
-  local save;
-  save := t.tmptext;
-  t.tmptext := "";
-  BIBXMLHANDLER.content(t, r, bib, type);
-  Append(save, "<a href=\"");
-  Append(save, t.tmptext);
-  Append(save, "\">");
-  if IsBound(r.attributes.Text) then
-    t.tmptext := r.attributes.Text;
+# Utility for a sort key, can be given as field 'sortkey' or <other
+# type="sortkey"> element, respectively: as list of strings separated by ",". 
+# If not given we use list of last names of authors/editors (or the title)
+# transformed to lower case.
+InstallGlobalFunction(SortKeyRecBib, function(r)
+  if IsBound(r.sortkey) then
+    return List(SplitString(r.sortkey, "", ","), NormalizedWhitespace);
+  elif IsBound(r.authorAsList) then
+    return List(r.authorAsList, a-> LowercaseString(a[1]));
+  elif IsBound(r.editorAsList) then
+    return List(r.editorAsList, a-> LowercaseString(a[1]));
+  elif IsBound(r.title) then
+    return LowercaseString(NormalizedWhitespace(r.title));
+  else
+    return "zzzzzzzzzz";
   fi;
-  t.tmptext := Concatenation(save, t.tmptext, "</a>");
-end;
-
-
-
-
+end);
+        
