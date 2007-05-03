@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.19 2007-04-20 15:24:28 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.20 2007-05-03 20:35:50 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -806,49 +806,79 @@ InstallGlobalFunction(RemoveRootParseTree, function(r)
   ApplyToNodesParseTree(r, function(a) Unbind(a.root); end);  
 end);
 
-StringElementAsXML := function(r)
-  local res, att, a;
+### ??? document this
+# args: r[, count, pos, str]    count, pos, str is for use within recursion
+StringElementAsXML := function(arg)
+  local r, count, pos, str, tmp, att, a;
+  if Length(arg) = 1 then
+    return StringElementAsXML(arg[1], 0, [], "");
+  fi;
+  r := arg[1];
+  count := arg[2];
+  pos := arg[3];
+  str := arg[4];
+  
   if IsRecord(r) then
     if r.name = "PCDATA" then
-      r := r.content;
+      return StringElementAsXML(r.content, count, pos, str);
     elif r.name = "XMLPI" then
-      return Concatenation("<?", r.content, "?>");
+      Add(pos, [Length(str)+1, 0]);
+      Append(str, Concatenation("<?", r.content, "?>"));
+      return [str, pos];
     elif r.name = "XMLDOCTYPE" then
-      return Concatenation("<!DOCTYPE ", r.content, ">");
+      Add(pos, [Length(str)+1, 0]);
+      Append(str, Concatenation("<!DOCTYPE ", r.content, ">"));
+      return [str, pos];
     elif r.name = "XMLCOMMENT" then
-      return Concatenation("<!--", r.content, "-->");
+      Add(pos, [Length(str)+1, 0]);
+      Append(str, Concatenation("<!--", r.content, "-->"));
+      return [str, pos];
     fi;
   fi;
   if IsString(r) then 
     r := SubstitutionSublist(r, "&", "&amp;");
     r := SubstitutionSublist(r, "<", "&lt;");
-    return r;
+    if Length(r) > 0 then
+      Add(pos, [Length(str)+1, count]);
+      Append(str, r);
+    fi;
+    return [str, pos];
   fi;
-  res := "<";
-  Append(res, r.name);
+  count := count + 1;
+  Add(pos, [Length(str)+1, 0]);
+  Append(str, "<");
+  Append(str, r.name);
   for att in RecFields(r.attributes) do
-    Add(res, ' ');
-    Append(res, att);
-    Append(res, "=\"");
-    Append(res, SubstitutionSublist(r.attributes.(att), "\"", "&#34;"));
-    Append(res, "\"");
+    Add(str, ' ');
+    Append(str, att);
+    Append(str, "=\"");
+    tmp := SubstitutionSublist(r.attributes.(att), "\"", "&#34;");
+    tmp := SubstitutionSublist(tmp, "&", "&amp;");
+    tmp := SubstitutionSublist(tmp, "<", "&lt;");
+    if Length(tmp)>0 then
+      Add(pos, [Length(str)+1, -count]);
+    fi;
+    Append(str, tmp);
+    Add(pos, [Length(str)+1, 0]);
+    Append(str, "\"");
   od;
   if r.content = 0 then
-    Append(res, "/>");
-    return res;
+    Append(str, "/>");
+    return [str, pos];
   fi;
-  Add(res, '>');
+  Add(str, '>');
   if IsString(r.content) then
-    Append(res, StringElementAsXML(r.content));
+    StringElementAsXML(r.content, count, pos, str);
   else
     for a in r.content do 
-      Append(res, StringElementAsXML(a));
+      StringElementAsXML(a, count, pos, str);
     od;
   fi;
-  Append(res, "</");
-  Append(res, r.name);
-  Add(res, '>');
-  return res;
+  Add(pos, [Length(str)+1, 0]);
+  Append(str, "</");
+  Append(str, r.name);
+  Add(str, '>');
+  return [str, pos];
 end;
 
   
