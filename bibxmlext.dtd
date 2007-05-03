@@ -339,7 +339,7 @@
      - <Alt Only="...">, <Alt Not="...">, alternatives for different 
        output formats:  Use this to specify alternatives, the GAPDoc
        utilities will do some special handling for "Text", "HTML",
-       "BibTeX" and "BibTeXhref" as output type.
+       and "BibTeX" as output type.
 
      - <Wrap Name="...">, generic wrapper for other markup:
        Use this for any other type of markup you are interested in. The
@@ -357,7 +357,7 @@
                                              element -->
 <!ELEMENT   C    (#PCDATA | value | Alt |
                   M | Math | Wrap | URL)* >  <!-- protect from case changes -->
-<!ELEMENT   Alt  (#PCDATA | value | C |    
+<!ELEMENT   Alt  (#PCDATA | value | C | Alt |    
                   M | Math | Wrap | URL)* > <!-- specify alternatives for 
                                              various types of output -->
 <!ATTLIST   Alt  Only CDATA #IMPLIED
@@ -484,35 +484,35 @@
      meanings in either XML or LaTeX: -->
      
 <!ENTITY tamp 
-  "<Alt Only='LaTeX'>\&amp;</Alt><Alt Not='LaTeX'><Alt 
+  "<Alt Only='BibTeX'>\&amp;</Alt><Alt Not='BibTeX'><Alt 
         Only='HTML'>&amp;amp;</Alt><Alt Not='HTML'>&amp;</Alt></Alt>">
 <!ENTITY tlt 
-  "<Alt Only='LaTeX'>{\textless}</Alt><Alt Not='LaTeX'><Alt 
+  "<Alt Only='BibTeX'>{\textless}</Alt><Alt Not='BibTeX'><Alt 
         Only='HTML'>&amp;lt;</Alt><Alt Not='HTML'>&lt;</Alt></Alt>">
 <!ENTITY tgt 
-  "<Alt Only='LaTeX'>{\textgreater}</Alt><Alt Not='LaTeX'><Alt 
+  "<Alt Only='BibTeX'>{\textgreater}</Alt><Alt Not='BibTeX'><Alt 
         Only='HTML'>&amp;gt;</Alt><Alt Not='HTML'>&gt;</Alt></Alt>">
-<!ENTITY hash "<Alt Only='LaTeX'>\#</Alt><Alt Not='LaTeX'>#</Alt>">
-<!ENTITY dollar "<Alt Only='LaTeX'>\$</Alt><Alt Not='LaTeX'>$</Alt>">
+<!ENTITY hash "<Alt Only='BibTeX'>\#</Alt><Alt Not='BibTeX'>#</Alt>">
+<!ENTITY dollar "<Alt Only='BibTeX'>\$</Alt><Alt Not='BibTeX'>$</Alt>">
 <!ENTITY percent 
-  "<Alt Only='LaTeX'>\&#37;</Alt><Alt Not='LaTeX'>&#37;</Alt>">
+  "<Alt Only='BibTeX'>\&#37;</Alt><Alt Not='BibTeX'>&#37;</Alt>">
 <!ENTITY tilde 
-  "<Alt Only='LaTeX'>{\textasciitilde}</Alt><Alt Not='LaTeX'>~</Alt>">
+  "<Alt Only='BibTeX'>{\textasciitilde}</Alt><Alt Not='BibTeX'>~</Alt>">
 <!ENTITY bslash 
-  "<Alt Only='LaTeX'>{\textbackslash}</Alt><Alt Not='LaTeX'>\</Alt>">
-<!ENTITY obrace "<Alt Only='LaTeX'>\{</Alt><Alt Not='LaTeX'>{</Alt>">
-<!ENTITY cbrace "<Alt Only='LaTeX'>\}</Alt><Alt Not='LaTeX'>}</Alt>">
+  "<Alt Only='BibTeX'>{\textbackslash}</Alt><Alt Not='BibTeX'>\</Alt>">
+<!ENTITY obrace "<Alt Only='BibTeX'>\{</Alt><Alt Not='BibTeX'>{</Alt>">
+<!ENTITY cbrace "<Alt Only='BibTeX'>\}</Alt><Alt Not='BibTeX'>}</Alt>">
 <!ENTITY uscore 
-  "<Alt Only='LaTeX'>{\textunderscore}</Alt><Alt Not='LaTeX'>_</Alt>">
+  "<Alt Only='BibTeX'>{\textunderscore}</Alt><Alt Not='BibTeX'>_</Alt>">
 <!ENTITY circum 
-  "<Alt Only='LaTeX'>{\textasciicircum}</Alt><Alt Not='LaTeX'>^</Alt>">
-<!ENTITY nbsp "<Alt Only='LaTeX'>~</Alt><Alt Not='LaTeX'>&#160;</Alt>">
+  "<Alt Only='BibTeX'>{\textasciicircum}</Alt><Alt Not='BibTeX'>^</Alt>">
+<!ENTITY nbsp "<Alt Only='BibTeX'>~</Alt><Alt Not='BibTeX'>&#160;</Alt>">
 
 <!-- Some more generally useful entities -->
-<!ENTITY copyright "<Alt Only='LaTeX'>{\\copyright}</Alt><Alt 
-  Not='LaTeX'>(C)</Alt>">
-<!ENTITY ndash "<Alt Only='BibTeX,BibTeXhref'>--</Alt><Alt 
-  Not='LaTeX'>&#x2013;</Alt>">
+<!ENTITY copyright "<Alt Only='BibTeX'>{\\copyright}</Alt><Alt 
+  Not='BibTeX'>(C)</Alt>">
+<!ENTITY ndash "<Alt Only='BibTeX'>--</Alt><Alt 
+  Not='BibTeX'>&#x2013;</Alt>">
  
 
 <!-- ..................................................................... -->
