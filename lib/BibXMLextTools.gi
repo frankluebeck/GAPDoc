@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.9 2007-05-03 20:58:42 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.10 2007-05-04 16:01:55 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -97,6 +97,33 @@ end);
 ##  
 ##  parsing BibXMLext files
 ##  
+##  <#GAPDoc Label="ParseBibXMLextString">
+##  <ManSection >
+##  <Func Arg="str" Name="ParseBibXMLextString" />
+##  <Func Arg="fname1[, fname2[, ...]]" Name="ParseBibXMLextFiles" />
+##  <Returns>a record with fields <C>.entries</C>, <C>.strings</C> and
+##  <C>.entities</C></Returns>
+##  <Description>
+##  The first function gets a string <A>str</A> containing a <C>BibXMLext</C>
+##  document or a part of it. It returns a record with the three mentioned
+##  fields. Here <C>.entries</C> is a list of partial XML parse trees for
+##  the <C>&lt;entry></C>-elements in <A>str</A>. The field <C>.strings</C>
+##  is a list of key-value pairs from the <C>&lt;string</C>-elements in 
+##  <A>str</A>. And <C>.strings</C> is a list of name-value pairs of the 
+##  named entities which were used during the parsing.
+##  <P/>
+##  
+##  The second function <Ref Func="ParseBibXMLextFiles"/> uses the first 
+##  on the content of all files given by filenames <A>fname1</A> and so on.
+##  It collects the results in a single record.
+##  
+##  <Example>
+##  ??? to be done ???
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+##  
 # args:  string with BibXMLext document[, record with three lists]
 # the three lists n: 
 #                     .entries:  parse trees of <entry> elements,
@@ -173,12 +200,45 @@ end);
 
 
 
+
 ###########################################################################
 ##  
 ##  heuristic translation of BibTeX data to BibXMLext
 ##  
+##  <#GAPDoc Label="StringBibAsXMLext">
+##  <ManSection >
+##  <Func Arg="bibentry[, abbrvs, vals]" Name="StringBibAsXMLext" />
+##  <Returns>a string with XML code</Returns>
+##  <Func Arg="fname, bib" Name="WriteBibXMLextFile" />
+##  <Returns>nothing</Returns>
+##  <Description>
+##  The argument <A>bibentry</A> is a record representing an entry from a 
+##  &BibTeX; file, as returned in the first list of the result of <Ref
+##  Func="ParseBibFiles"/>. The optional further two arguments can be 
+##  lists of abbreviations and substitution strings, as returned as second
+##  an third list element in the result of <Ref Func="ParseBibFiles"/>.
+##  <P/>
+##  The function <Ref Func="StringBibAsXMLext"/> creates XML code of an
+##  <C>&lt;entry></C>-element in   <C>BibXMLext</C> format. It tries to do
+##  some heuristic translations, like splitting name lists, finding places for
+##  <C>&lt;C></C>-elements, putting formulae in <C>&lt;M></C>-elements,
+##  substituting some characters. The result should always be checked and
+##  maybe improved by hand.
+##  <P/>
+##  The function <Ref Func="WriteBibXMLextFile"/> gets as arguments a file
+##  name <A>fname</A> and a list of three lists as returned by <Ref
+##  Func="ParseBibFiles"/>. It applies <Ref Func="StringBibAsXMLext"/> to
+##  all entries and writes all the results into a <C>BibXMLext</C>-file 
+##  <A>fname</A>.
+##  
+##  <Example>
+##  ???still missing???
+##  
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
 # args:  bibrec[, abbrevs, strings]
-# here the list 'strings' is assumed to be sorted!
 InstallGlobalFunction(StringBibAsXMLext,  function(arg)
   local r, abbrevs, texts, struct, f, res, content, a, 
         tmp, nams, b, cont, MandC, i, pos;
@@ -190,6 +250,9 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
   else
     abbrevs := [  ];
     texts := [  ];
+  fi;
+  if not IsSet(texts) then
+    SortParallel(texts, abbrevs);
   fi;
 
   # helper, to change {}'s outside math mode and $'s in 
@@ -366,6 +429,8 @@ InstallGlobalFunction(WriteBibXMLextFile, function(fname, bib)
   od;
   AppendTo(f, "</file>\n");
 end);
+
+
 
 
 InstallGlobalFunction(BuildRecBibXMLEntry, 
@@ -589,7 +654,7 @@ function(entry, elt, default, strings, opts)
   else
     txt := esc;
   fi;
-  return Concatenation("\\href{", res, "}{", txt, "}");
+  return Concatenation("\\href {", res, "} {", txt, "}");
 end);
 AddHandlerBuildRecBibXMLEntry("URL", "HTML",
 function(entry, elt, html, strings, opts)

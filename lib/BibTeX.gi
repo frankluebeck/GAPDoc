@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.18 2007-05-03 21:01:15 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.19 2007-05-04 16:01:55 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -184,7 +184,9 @@ end);
 ##  reference in the  form <C>rec(key1 = value1,  ...)</C>. The names
 ##  of  the  keys are  converted  to  lower  case.  The type  of  the
 ##  reference (i.e.,  book, article,  ...) and  the citation  key are
-##  stored as components <C>.Type</C> and <C>.Label</C>.<P/>
+##  stored as  components <C>.Type</C> and <C>.Label</C>. The records
+##  also have a   <C>.From</C> field that says that the data are read 
+##  from a &BibTeX; source.<P/>
 ##  
 ##  As an example consider the following &BibTeX; file.
 ##  
@@ -196,10 +198,10 @@ end);
 ##  
 ##  <Example>
 ##  gap> bib := ParseBibFiles("my.bib");
-##  [ [ rec( Type := "article", Label := "AB2000", 
+##  [ [ rec( From := rec( BibTeX := true ), Type := "article", 
+##            Label := "AB2000", 
 ##            author := "Fritz A. First and Sec, X. Y.", title := "Short", 
-##            journal := "Important Journal", year := "2000" ) ], 
-##    [ "j" ], 
+##            journal := "Important Journal", year := "2000" ) ], [ "j" ], 
 ##    [ "Important Journal" ] ]
 ##  </Example>
 ##  </Description>
@@ -323,17 +325,19 @@ end);
 ##  Where="Appendix  B 1.2"/>.  The  original entries  are stored  in
 ##  <C>.authororig</C> and <C>.editororig</C>.<P/>
 ##  
-##  Furthermore a short and a long citation key is generated.<P/> 
+##  Furthermore a short and a long citation key is generated and stored
+##  in components <C>.printedkey</C> (only if no <C>.key</C> is already
+##  bound) and <C>.keylong</C>.<P/> 
 ##  
 ##  We continue the example from <Ref  Func="ParseBibFiles"  />.
 ##  
 ##  <Example>
 ##  gap> NormalizeNameAndKey(bib[1][1]);
 ##  gap> bib[1][1];
-##  rec( Type := "article", Label := "AB2000", 
-##    author := "First, F. A. and Sec, X. Y. ", title := "Short", 
+##  rec( From := rec( BibTeX := true ), Type := "article", Label := "AB2000", 
+##    author := "First, F. A. and Sec, X. Y.", title := "Short", 
 ##    journal := "Important Journal", year := "2000", 
-##    authororig := "Fritz A. First and Sec, X. Y.", key := "FS00", 
+##    authororig := "Fritz A. First and Sec, X. Y.", printedkey := "FS00", 
 ##    keylong := "firstsec2000" )
 ##  </Example>
 ##  </Description>
@@ -372,11 +376,12 @@ InstallGlobalFunction(NormalizeNameAndKey, function(b)
   if not IsBound(b.keylong) then
     b.keylong := "xxx";
   fi;
-  if not IsBound(b.key) then
+  if not (IsBound(b.key) or IsBound(b.printedkey)) then
     b.printedkey := "xxx";
   fi;
 end);
 
+# small utility
 BindGlobal("AndToCommaNames", function(str)
   local n, p, i;
   str := NormalizedWhitespace(str);
