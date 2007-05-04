@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.15 2007-02-20 16:56:27 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.16 2007-05-04 15:57:49 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -947,7 +947,7 @@ present in the document all <C>Index</C> elements are ignored.
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;URL&tgt;</C></Heading>
+<Subsection Label="URL"><Heading><C>&tlt;URL&tgt;</C></Heading>
 <Index Key="URL"><C>URL</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -957,8 +957,10 @@ present in the document all <C>Index</C> elements are ignored.
 </Listing>
 
 This element is for references into the internet. The text within the
-element should be a valid URL. It is typeset in the document. For the case 
-of an output document format
+element should be a valid URL; in particular use the common characters
+<C>&tilde;</C> and <C>&hash;</C> directly (not the &GAPDoc; entities 
+from&nbsp;<Ref Subsect="GDspchar"/>). The URL is typeset in the document. 
+For the case  of an output document format
 that supports links the value of the attribute <C>Text</C> is typeset
 as visible text for the link.
 

@@ -2,7 +2,7 @@
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd">
 
-<!-- $Id: gapdoc.xml,v 1.6 2007-04-18 20:38:17 gap Exp $ -->
+<!-- $Id: gapdoc.xml,v 1.7 2007-05-04 15:57:49 gap Exp $ -->
 
 <!-- The documentation to the GAPDoc system. 
      Copyright 2000 by Frank Lübeck and Max Neunhöffer
@@ -59,6 +59,17 @@ For  easier reference  we  repeat  here the  complete  content  of the  file
 
 </Appendix>
 
+<Appendix Label="bibxmlextdtd">
+<Heading>The File <F>bibxmlext.dtd</F></Heading>
+
+For  easier reference  we  repeat  here the  complete  content  of the  file
+<F>bibxmlext.dtd</F> which is explained in <Ref Sect="BibXMLformat"/>.
+
+<Listing Type="bibxmlext.dtd">
+<![CDATA[<#Include SYSTEM "../bibxmlext.dtd">
+]]></Listing>
+
+</Appendix>
 <Bibliography Databases="gapdocbib.xml" />
 
 <TheIndex/>
