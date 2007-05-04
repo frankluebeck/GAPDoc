@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.20 2007-05-03 20:35:50 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.21 2007-05-04 16:01:18 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -178,6 +178,7 @@ BindGlobal("ENTITYDICT_GAPDoc", rec(
 ##   circum := "<Alt Only='LaTeX'>{\\textasciicircum}</Alt><Alt Not='LaTeX'>^</Alt>",
  circum := "<Alt Only='LaTeX'>\\texttt{\\symbol{94}}</Alt><Alt Not='LaTeX'>^</Alt>",
  nbsp := "<Alt Only='LaTeX'>~</Alt><Alt Not='LaTeX'>&#160;</Alt>",
+ ndash := "<Alt Only='LaTeX'>--</Alt><Alt Not='LaTeX'>&#x2013;</Alt>",
  GAP := "<Package>GAP</Package>",
  GAPDoc := "<Package>GAPDoc</Package>",
  TeX    := "<Alt Only='LaTeX'>{\\TeX}</Alt><Alt Not='LaTeX'>TeX</Alt>",

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.12 2007-05-03 21:09:09 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.13 2007-05-04 16:01:18 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -288,7 +288,7 @@ end);
 
 # non-documented utility
 ##  This prints templates for all elements (e.g., for editor helper functions)
-PrintGAPDocElementTemplates := function ( file )
+InstallGlobalFunction(PrintGAPDocElementTemplates, function ( file )
   local a, x;
   PrintTo(file, "<--  Templates for GAPDoc XML Elements  -->\n");
   Sort(GAPDOCDTDINFO, function(a,b) return a.name<b.name;end);
@@ -307,7 +307,7 @@ PrintGAPDocElementTemplates := function ( file )
     fi;
   od;
   return;
-end;
+end);
 
 BindGlobal("TEXTMTRANSLATIONS",
   rec(

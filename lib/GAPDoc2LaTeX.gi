@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.23 2007-05-03 21:09:09 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.24 2007-05-04 16:01:18 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -82,7 +82,7 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  should be easy to adjust layout  details to your own taste by slight
 ##  modifications of the program. <P/>
 ##  
-##  A    few     settings   can     be    adjusted    by     a    function
+##  A    few     settings    can    be    adjusted     by    a    function
 ##  <C>SetGapDocLaTeXOptions</C>.  It  takes  one or  several  strings  as
 ##  arguments. If the  arguments contain one of  the strings <C>"pdf"</C>,
 ##  <C>"dvi"</C>  or  <C>"ps"</C>  then &LaTeX;s  <C>hyperref</C>  package
@@ -95,6 +95,9 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  given, &LaTeX;  will use the  <C>ucs</C> package and set  the encoding
 ##  for the <C>inputenc</C> package to  <C>"utf8x"</C>. This allows to use
 ##  many unicode characters (in UTF-8 encoding) in your document directly.
+##  (In  some cases  you may  also need  to load  some additional  &LaTeX;
+##  packages,  see  the  <C><![CDATA[<?LaTeX  ExtraPreamble=  ...?>]]></C>
+##  processing instruction mentioned above.)
 ##  <P/>
 ##  </Description>
 ##  </ManSection>

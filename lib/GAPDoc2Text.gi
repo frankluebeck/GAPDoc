@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.18 2007-05-03 21:09:09 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.19 2007-05-04 16:01:18 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1697,14 +1697,13 @@ end;
 ##  <F>chap0.txt</F>,  <F>chap1.txt</F>, ...,  <F>chapBib.txt</F>, and
 ##  <F>chapInd.txt</F>.<P/>
 ##  
-##  If  you want  to  make  your document  accessible  via the  &GAP;
-##  online  help you  must  put at  least these  files  for the  text
-##  version  into a  directory and  use  the name  of this  directory
-##  as  an  argument for  one  of  the commands  <Ref  BookName="Ref"
-##  Func="DeclarePackageDocumentation"  />   or  <Ref  BookName="Ref"
-##  Func="DeclarePackageAutoDocumentation"  />. Furthermore  you need
-##  to put the  file <F>manual.six</F> into this  directory, see <Ref
-##  Func="PrintSixFile" />. <P/>
+##  If you want to make your  document accessible via the &GAP; online
+##  help  you must  put  at least  these files  for  the text  version
+##  into  a  directory,  together  with  the  file  <F>manual.six</F>,
+##  see  <Ref Func="PrintSixFile"  />. Then  specify the  path to  the
+##  <F>manual.six</F> file in  the packages <F>PackageInfo.g</F> file,
+##  see  <Ref  Sect="The PackageInfo.g  File"  BookName="extending"/>.
+##  <P/>
 ##  
 ##  Optionally you can add the <C>dvi</C>- and <C>pdf</C>-versions of
 ##  the  document which  are produced  with <Ref  Func="GAPDoc2LaTeX"
