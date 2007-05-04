@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.9 2007-05-03 21:09:09 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.10 2007-05-04 15:59:03 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -737,12 +737,37 @@ else
   end);
 fi;
 
-### ??? document this and Bind...
-Base64LETTERS :=
-         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-Base64REVERSE := 
-[,,,,,,,,,-1,,,-1,,,,,,,,,,,,,,,,,,,-1,,,,,,,,,,,62,,62,,63,52,53,54,55,56,57,58,59,60,61,,,,-2,,,,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,,,,,63,,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51];
-Base64String := function(str)
+##  <#GAPDoc Label="Base64String">
+##  <ManSection >
+##  <Func Arg="str" Name="Base64String" />
+##  <Func Arg="bstr" Name="StringBase64" />
+##  <Returns>a string</Returns>
+##  <Description>
+##  The  first  function  translates  arbitrary   binary  data  given  as  a
+##  GAP  string  into   a  <E>base  64</E>  encoded   string.  This  encoded
+##  string  contains  only  printable  ASCII   characters  and  is  used  in
+##  various  data  transfer  protocols  (<C>MIME</C>  encoded  emails,  weak
+##  password   encryption,  ...).   We   use  the   specification  in   <URL
+##  Text="RFC&#160;2045">http://tools.ietf.org/html/rfc2045</URL>.<P/>
+##  
+##  The second function  has the reverse functionality. Here  we also accept
+##  the characters  <C>-&uscore;</C> instead of  <C>+/</C> as last  two 
+##  characters.  Whitespace is ignored.
+##  
+##  <Example>
+##  gap> b := Base64String("This is a secret!");
+##  "VGhpcyBpcyBhIHNlY3JldCEA="
+##  gap> StringBase64(b);                       
+##  "This is a secret!"
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+BindGlobal("Base64LETTERS",
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+BindGlobal("Base64REVERSE",
+[,,,,,,,,,-1,,,-1,,,,,,,,,,,,,,,,,,,-1,,,,,,,,,,,62,,62,,63,52,53,54,55,56,57,58,59,60,61,,,,-2,,,,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,,,,,63,,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51]);
+InstallGlobalFunction(Base64String, function(str)
   local istr, pad, i, res, a, d, c, b;
   istr := INTLIST_STRING(str, 1);
   pad := (-Length(istr)) mod 3;
@@ -765,13 +790,16 @@ Base64String := function(str)
     Append(res, Base64LETTERS{[a,b,c,d]+1});
     i := i+3;
   od;
+  if i mod 57 = 1 and pad > 0 then
+    Add(res, '\n');
+  fi;
   for i in [1..pad] do
     Add(res, '=');
   od;
   return res;
-end;
+end);
  
-StringBase64 := function(bstr)
+InstallGlobalFunction(StringBase64, function(bstr)
   local istr, res, j, n, d, c, a;
   istr := Base64REVERSE{INTLIST_STRING(bstr, 1)};
   res := [];
@@ -797,6 +825,6 @@ StringBase64 := function(bstr)
     fi;
   od;
   return STRING_SINTLIST(res);
-end;
+end);
 
 
