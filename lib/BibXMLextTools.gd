@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gd             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gd,v 1.3 2007-05-03 20:58:42 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gd,v 1.4 2007-05-07 16:02:32 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -25,6 +25,7 @@ DeclareGlobalFunction("ParseBibXMLextFiles");
 # tranforming parse trees to records and strings
 BindGlobal("RECBIBXMLHNDLR", rec());
 DeclareGlobalFunction("BuildRecBibXMLEntry");
+DeclareGlobalFunction("ContentBuildRecBibXMLEntry");
 DeclareGlobalFunction("AddHandlerBuildRecBibXMLEntry");
 DeclareGlobalFunction("RecBibXMLEntry");
 BindGlobal("STRINGBIBXMLHDLR", rec());

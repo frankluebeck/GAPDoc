@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.10 2007-05-04 16:01:55 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.11 2007-05-07 16:02:32 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -17,6 +17,8 @@
 ##  
 ##  templates to fill for new entries, this describes the possible entries
 ##  and their structure
+##  (This is generated from Bibxmlext from bibxmlextinfo.g, which is created
+##  automatically with the adhoc utility parsedtd.g.)
 BindGlobal("BibXMLextStructure", rec());
 BibXMLextStructure.fill := function()
   local l, els, i, type;
@@ -40,12 +42,80 @@ BibXMLextStructure.fill := function()
 end;
 BibXMLextStructure.fill();
 
+
+##  <#GAPDoc Label="TemplateBibXML">
+##  <ManSection >
+##  <Func Arg="[type]" Name="TemplateBibXML" />
+##  <Returns>list of types or string</Returns>
+##  <Description>
+##  Without an argument this function returns a list of the supported entry
+##  types in  BibXMLext documents.
+##  <P/>
+##  With an argument <A>type</A> of one of the supported types the function
+##  returns a string which is a template for a corresponding BibXMLext entry.
+##  Optional field elements have a <C>*</C> appended. If an element has
+##  the word <C>OR</C> appended, then either this element or the next must/can
+##  be given, not both. If <C>AND/OR</C> is appended then this and/or the next
+##  can/must be given. Elements which can appear several times  have a 
+##  <C>+</C> appended. Places to fill are marked by an <C>X</C>.
+##  
+##  <Example><![CDATA[
+##  gap> TemplateBibXML();
+##  [ "article", "book", "booklet", "manual", "techreport", "mastersthesis", 
+##    "phdthesis", "inbook", "incollection", "proceedings", "inproceedings", 
+##    "conference", "unpublished", "misc" ]
+##  gap> Print(TemplateBibXML("inbook"));
+##  <entry id="X"><inbook>
+##    <author>
+##      <name><first>X</first><last>X</last></name>+
+##    </author>OR
+##    <editor>
+##      <name><first>X</first><last>X</last></name>+
+##    </editor>
+##    <title>X</title>
+##    <chapter>X</chapter>AND/OR
+##    <pages>X</pages>
+##    <publisher>X</publisher>
+##    <year>X</year>
+##    <volume>X</volume>*OR
+##    <number>X</number>*
+##    <series>X</series>*
+##    <type>X</type>*
+##    <address>X</address>*
+##    <edition>X</edition>*
+##    <month>X</month>*
+##    <note>X</note>*
+##    <key>X</key>*
+##    <annotate>X</annotate>*
+##    <crossref>X</crossref>*
+##    <abstract>X</abstract>*
+##    <affiliation>X</affiliation>*
+##    <contents>X</contents>*
+##    <copyright>X</copyright>*
+##    <isbn>X</isbn>*OR
+##    <issn>X</issn>*
+##    <keywords>X</keywords>*
+##    <language>X</language>*
+##    <lccn>X</lccn>*
+##    <location>X</location>*
+##    <mrnumber>X</mrnumber>*
+##    <mrclass>X</mrclass>*
+##    <mrreviewer>X</mrreviewer>*
+##    <price>X</price>*
+##    <size>X</size>*
+##    <url>X</url>*
+##    <category>X</category>*
+##    <other type="X">X</other>*+
+##  </inbook></entry>
+##  ]]></Example>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
 # args:  [type]         with no argument prints the possible types
 InstallGlobalFunction(TemplateBibXML, function(arg)
   local type, res, add, a, b;
   if Length(arg) = 0 then
-    Print(Filtered(RecFields(BibXMLextStructure), a-> not a in ["fill"]), "\n");
-    return;
+    return Filtered(RecFields(BibXMLextStructure), a-> not a in ["fill"]);
   fi;
   type := arg[1];
   if type = "fill" or not IsBound(BibXMLextStructure.(type)) then
@@ -58,7 +128,7 @@ InstallGlobalFunction(TemplateBibXML, function(arg)
     if a[1] in [ "author", "editor" ] then
       Append(res, "  <");
       Append(res, a[1]);
-      Append(res, ">\n    <name><first>X</first><last>X</last></name>\n  </");
+      Append(res, ">\n    <name><first>X</first><last>X</last></name>+\n  </");
       Append(res, a[1]);
       Append(res, ">");
     elif a[1] = "other" then
@@ -73,18 +143,31 @@ InstallGlobalFunction(TemplateBibXML, function(arg)
     if not a[2] then 
       Add(res, '*');
     fi;
+    if a[1] = "other" then
+      Add(res, '+');
+    fi;
     Append(res, "\n");
+  if not IsString(res) then Error("nanu");fi;
   end;
 
   for a in BibXMLextStructure.(type) do
     if IsString(a[1]) then
       add(a);
+    elif Length(a[1]) = 3 and a[1][2] = "or" then
+      if IsString(a[1][1]) then
+        add([a[1][1], a[2]]);
+        Unbind(res[Length(res)]);
+        Append(res,"OR\n");
+      elif a[1][1] = [ "chapter", "pages", "optional" ] then
+        add([a[1][1][1], a[2]]);
+        Unbind(res[Length(res)]);
+        Append(res,"AND/OR\n");
+      else
+        Error("unknown case 1?");
+      fi;
+      add([a[1][3], a[2]]);
     else
-      for b in a[1] do
-        if b <> "or" then
-          add([b, a[2]]);
-        fi;
-      od;
+      Error("unknown case 2?");
     fi;
   od;
   Append(res, "</");
@@ -430,9 +513,135 @@ InstallGlobalFunction(WriteBibXMLextFile, function(fname, bib)
   AppendTo(f, "</file>\n");
 end);
 
+###########################################################################
+##  
+##  translating BibXML entries to records
+##  
+##  
+##  <#GAPDoc Label="RecBibXMLEntry">
+##  <ManSection >
+##  <Func Arg="entry[, restype][, strings][, options]" Name="RecBibXMLEntry" />
+##  <Returns>a record with fields as strings</Returns>
+##  <Description>
+##  This  function  generates   a  content  string  for  each   field  of  a
+##  bibliography entry and  assigns them to record  components. This content
+##  may depend on the requested result type and possibly some given options.
+##  <P/>
+##  
+##  The   arguments   are   as    follows:   <A>entry</A>   is   the   parse
+##  tree   of   an   <C>&lt;entry></C>   element   as   returned   by   <Ref
+##  Func="ParseBibXMLextString"/>   or  <Ref   Func="ParseBibXMLextFiles"/>.
+##  The  optional   argument  <A>restype</A>  describes  the   type  of  the
+##  result.  This  package  supports currently  the  types  <C>"BibTeX"</C>,
+##  <C>"Text"</C>  and <C>"HTML"</C>.  The default  is <C>"BibTeX"</C>.  The
+##  optional argument  <A>strings</A> must be  a list of key-value  pairs as
+##  returned  in  the  component  <C>.strings</C>  in  the  result  of  <Ref
+##  Func="ParseBibXMLextString"/>.  The argument  <A>options</A>  must be  a
+##  record.<P/>
+##  
+##  If the entry  contains an <C>author</C> field then the  result will also
+##  contain a component <C>.authorAsList</C> which  is a list containing for
+##  each author a  list with three entries of the  form <C>[last name, first
+##  name initials, first name]</C> (the third  entry means the first name as
+##  given in the data). Similarly,  an <C>editor</C> field is accompanied by
+##  a component <C>.editorAsList</C>.<P/>
+##  
+##  The following <A>options</A> are currently supported. <P/>
+##  
+##  If <C>options.fullname</C>is bound and set  to <K>true</K> then the full
+##  given first names  for authors and editors will be  used, the default is
+##  to use the initials of the first names. <P/>
+##  
+##  If   <C>options.href</C>  is   bound   and  set   to   false  then   the
+##  <C>"BibTeX"</C> type  result will not use  <C>&bslash;href</C> commands.
+##  The   default   is   to  produce   <C>&bslash;href</C>   commands   from
+##  <C>&lt;URL></C>-elements  such  that  &LaTeX;   can  produce  links  for
+##  them.<P/>
+##  
+##  The content of an  <C>&lt;Alt></C>-element with <C>Only</C>-attribute is
+##  included  if  <A>restype</A>  is  given in  the  attribute  and  ignored
+##  otherwise,  and  vice  versa  in  case  of  a  <C>Not</C>-attribute.  If
+##  <C>options.useAlt</C>  is   bound,  it  must   be  a  list   of  strings
+##  to  which  <A>restype</A>  is  added.  Then  an  <C>&lt;Alt></C>-element
+##  with  <C>Only</C>-attribute   is  evaluated   if  the   intersection  of
+##  <C>options.useAlt</C> and the types given in the attribute is not empty.
+##  In  case of  a <C>Not</C>-attribute  the  element is  evaluated if  this
+##  intersection is empty. <P/>
+##  
+##  If  <A>restype</A>  is  <C>"BibTeX"</C>  then there  are  any  non-ASCII
+##  characters in the result then these characters are translated to &LaTeX;
+##  via <Ref  Oper="Encode"/>. If  <C>options.utf8</C> is  bound and  set to
+##  true then this translation is not done.<P/>
+##  
+##  <Example>
+##  ??? to be done ???
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
 
 
+##  <#GAPDoc Label="AddHandlerBuildRecBibXMLEntry">
+##  <ManSection >
+##  <Func Arg="elementname, restype, handler" 
+##                          Name="AddHandlerBuildRecBibXMLEntry" />
+##  <Returns>nothing</Returns>
+##  <Description>
+##  The  argument <A>elementname</A>  must be  the  name of  an entry  field
+##  supported  by the  BibXMLext  format, the  name of  one  of the  special
+##  elements (<C>"C"</C>, <C>"M"</C>, <C>"Math"</C>,  <C>"URL"</C> or of the
+##  form  <C>"Wrap:myname"</C> or  any  string  <C>"mytype"</C> (which  then
+##  corresponds to entry fields <C>&lt;other type="mytype"></C>). The string
+##  <C>"Finish"</C> has an exceptional meaning, see below. <P/>
+##  
+##  <A>restype</A>  is a  string describing  the result  type for  which the
+##  handler is installed, see <Ref Func="RecBibXMLEntry"/>. <P/>
+##  
+##  For both  arguments, <A>elementname</A>  and <A>restype</A>, it  is also
+##  possible  to give  lists of  the described  ones for  installing several
+##  handler at once. <P/>
+##  
+##  The   argument   <A>handler</A>   must   be   a   function   with   five
+##  arguments  of the  form  <A>handler</A><C>(entry,  r, restype,  strings,
+##  options)</C>.  Here  <A>entry</A>  is  a   parse  tree  of  a  BibXMLext
+##  <C>&lt;entry></C>-element,  <A>r</A>  is a  node  in  this tree  for  an
+##  element  <A>elementname</A>,  and   <A>restype</A>,  <A>strings</A>  and
+##  <A>options</A>  are   as  explained  in   <Ref  Func="RecBibXMLEntry"/>.
+##  The   function  should   return  a   string  representing   the  content
+##  of   the  node   <A>r</A>.  If   <A>elementname</A>  is   of  the   form
+##  <C>"Wrap:myname"</C>  the   handler  is   used  for  elements   of  form
+##  <C>&lt;Wrap Name="myname">...&lt;/Wrap></C>.<P/>
+##  
+##  If <A>elementname</A>  is <C>"Finish"</C>  the handler should  look like
+##  above  except  that  now  <A>r</A>  is  the  record  generated  by  <Ref
+##  Func="RecBibXMLEntry"/>  just before  it is  returned. Here  the handler
+##  should return nothing. It can be used to manipulate the record <A>r</A>,
+##  for example for changing the encoding  of the strings or for adding some
+##  more components.<P/>
+##  
+##  The        installed         handler        is          called        by
+##  <C>BuildRecBibXMLEntry(</C><A>entry</A>,    <A>r</A>,    <A>restype</A>,
+##  <A>strings</A>,    <A>options</A><C>)</C>.    The   string    for    the
+##  whole     content     of     an     element     can     be     generated
+##  by       <C>ContentBuildRecBibXMLEntry(</C><A>entry</A>,       <A>r</A>,
+##  <A>restype</A>, <A>strings</A>, <A>options</A><C>)</C>.
+##  
+##  <Example>
+##  ??? to be done ???
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
 
+InstallGlobalFunction(ContentBuildRecBibXMLEntry,
+function(entry, elt, type, strings, opts)
+  local res, a;
+  res := "";
+  for a in elt.content do
+    Append(res, BuildRecBibXMLEntry(entry, a, type, strings, opts));
+  od;
+  return res;
+end);
 InstallGlobalFunction(BuildRecBibXMLEntry, 
 function(entry, elt, type, strings, opts)
   local res, f, nam, hdlr, a;
@@ -514,18 +723,13 @@ end);
 # this just collect text recursively
 AddHandlerBuildRecBibXMLEntry("default", "default",
 function(entry, elt, type, strings, opts)
-  local res, a;
-  res := "";
   if IsString(elt.content) then
     return elt.content;
   elif elt.content = 0 then
     return "";
   else
-    for a in elt.content do
-      Append(res, BuildRecBibXMLEntry(entry, a, type, strings, opts));
-    od;
+    return ContentBuildRecBibXMLEntry(entry, elt, type, strings, opts);
   fi;
-  return res;
 end);
 
 # dealing with names in author and editor fields
@@ -596,34 +800,19 @@ end);
 # <C>
 AddHandlerBuildRecBibXMLEntry("C", "default", 
 function(entry, elt, default, strings, opts)
-  local res, a;
-  res := "{";
-  for a in elt.content do 
-    Append(res, BuildRecBibXMLEntry(entry, a, default, strings, opts));
-  od;
-  Append(res, "}");
-  return res;
+  return Concatenation("{", ContentBuildRecBibXMLEntry(entry, elt,
+                                          default, strings, opts), "}");
 end);
 AddHandlerBuildRecBibXMLEntry("C", ["Text", "HTML"], "Ignore");
 # <M>, <Math>
 AddHandlerBuildRecBibXMLEntry(["M", "Math"], "default",
 function(entry, elt, default, strings, opts)
-  local res, a;
-  res := "$";
-  for a in elt.content do 
-    Append(res, BuildRecBibXMLEntry(entry, a, default, strings, opts));
-  od;
-  Append(res, "$");
-  return res;
+  return Concatenation("$", ContentBuildRecBibXMLEntry(entry, elt,
+                                          default, strings, opts), "$");
 end);
 AddHandlerBuildRecBibXMLEntry("M", ["Text", "HTML"],
 function(entry, elt, default, strings, opts)
-  local res, a;
-  res := "";
-  for a in elt.content do 
-    Append(res, BuildRecBibXMLEntry(entry, a, default, strings, opts));
-  od;
-  return TextM(res);
+  return TextM( ContentBuildRecBibXMLEntry(entry, elt, default, strings, opts));
 end);
 # <value key= />
 AddHandlerBuildRecBibXMLEntry("value", "default",
@@ -639,11 +828,8 @@ end);
 # <URL>
 AddHandlerBuildRecBibXMLEntry("URL", "default",
 function(entry, elt, default, strings, opts)
-  local res, esc, txt, a;
-  res := "";
-  for a in elt.content do
-    Append(res, BuildRecBibXMLEntry(entry, a, default, strings, opts));
-  od;
+  local res, esc, txt;
+  res := ContentBuildRecBibXMLEntry(entry, elt, default, strings, opts);
   esc := SubstitutionSublist(res, "~", "\\texttt{\\symbol{126}}");
   esc := Concatenation("\\texttt{", SubstitutionSublist(esc, "#", "\\#"), "}");
   if IsBound(opts.href) and opts.href = false then
@@ -658,25 +844,19 @@ function(entry, elt, default, strings, opts)
 end);
 AddHandlerBuildRecBibXMLEntry("URL", "HTML",
 function(entry, elt, html, strings, opts)
-  local res, txt, a;
-  res := "";
-  for a in elt.content do
-    Append(res, BuildRecBibXMLEntry(entry, a, html, strings, opts));
-  od;
+  local res, txt;
+  res := ContentBuildRecBibXMLEntry(entry, elt, html, strings, opts);
   if IsBound(elt.attributes.Text) then
     txt := elt.attributes.Text;
   else
     txt := res;
   fi;
-  return Concatenation("<a href=\"", res, "\">", res, "</a>");
+  return Concatenation("<a href=\"", res, "\">", txt, "</a>");
 end);
 AddHandlerBuildRecBibXMLEntry("URL", "Text",
 function(entry, elt, text, strings, opts)
-  local res, a;
-  res := "";
-  for a in elt.content do
-    Append(res, BuildRecBibXMLEntry(entry, a, text, strings, opts));
-  od;
+  local res;
+  res := ContentBuildRecBibXMLEntry(entry, elt, text, strings, opts);
   if IsBound(elt.attributes.Text) then
     return Concatenation(elt.attributes.Text, " (", res, ")");
   else
@@ -685,7 +865,7 @@ function(entry, elt, text, strings, opts)
 end);
 AddHandlerBuildRecBibXMLEntry("Alt", "default",
 function(entry, elt, type, strings, opts)
-  local poss, att, ok, res, a;
+  local poss, att, ok;
   poss := [type];
   if IsBound(opts.useAlt) then
     Append(poss, opts.useAlt);
@@ -699,11 +879,7 @@ function(entry, elt, type, strings, opts)
 
   if (IsBound(att.Only) and ForAny(poss, a-> a in ok)) or
      (IsBound(att.Not) and ForAll(poss, a-> not a in ok)) then
-    res := "";
-    for a in elt.content do
-      Append(res, BuildRecBibXMLEntry(entry, a, type, strings, opts));
-    od;
-    return res;
+    return ContentBuildRecBibXMLEntry(entry, elt, type, strings, opts);
   else
     return "";
   fi;
@@ -722,11 +898,7 @@ function(entry, elt, type, strings, opts)
   fi;
   if hdlr = fail then
     # default is to ignore the markup
-    res := "";
-    for a in elt.content do
-      Append(res, BuildRecBibXMLEntry(entry, a, type, strings, opts));
-    od;
-    return res;
+    return ContentBuildRecBibXMLEntry(entry, elt, type, strings, opts);
   else
     return hdlr(entry, elt, type, strings, opts);
   fi;
