@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gi                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gi,v 1.5 2007-05-03 20:40:47 gap Exp $
+#H  @(#)$Id: UnicodeTools.gi,v 1.6 2007-05-07 15:59:16 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1457,6 +1457,7 @@ end);
 ##  <Filt Name="IsUnicodeCharacter" />
 ##  <Func Name="IntListUnicodeString" Arg="ustr" />
 ##  <Oper Name="Encode" Arg="ustr[, encoding]" />
+##  <Var Name="TransTabLaTeXUnicode" />
 ##  
 ##  <Description>
 ##  Unicode characters are described by their <Emph>codepoint</Emph>, an
@@ -1488,6 +1489,16 @@ end);
 ##  The operation <Ref Oper="Encode"/> translates a unicode string <A>ustr</A>
 ##  into a &GAP; string in some specified <A>encoding</A>. The default
 ##  encoding is <C>"UTF-8"</C>. <P/>
+##  
+##  There is also an encoding <C>"LaTeX"</C> which can only be used with
+##  <Ref Oper="Encode"/> but not with <Ref Oper="Unicode"/>. It substitutes 
+##  non-ASCII characters by &LaTeX; code as given in an ordered list 
+##  <C>TransTabLaTeXUnicode</C> of pairs [codepoint, string]. If you have a
+##  unicode character for which no substitution is contained in that list,
+##  then find a substitution and add a corresponding [codepoint, string] 
+##  pair to  <C>TransTabLaTeXUnicode</C> using <Ref BookName="reference"
+##  Oper="AddSet"/>. Also, please, tell the &GAPDoc; authors about your 
+##  addition, such that we can extend the list <C>TransTabLaTeXUnicode</C>.
 ##  </Description>
 ##  </ManSection>
 ##  
@@ -1682,7 +1693,6 @@ UNICODE_RECODE.Encoder.("XML") := function(ustr)
   od;
   return res;
 end;
-### ??? document LaTeX and XML encodings 
 # non-ASCII characters to LaTeX code, if known from TransTabLaTeXUnicode
 UNICODE_RECODE.Encoder.("LaTeX") := function(ustr)
   local tt, res, pos, n;
@@ -1704,6 +1714,7 @@ UNICODE_RECODE.Encoder.("LaTeX") := function(ustr)
 end;
 UNICODE_RECODE.NormalizedEncodings.LaTeX := "LaTeX";
 UNICODE_RECODE.NormalizedEncodings.latex := "LaTeX";
+UNICODE_RECODE.NormalizedEncodings.BibTeX := "LaTeX";
 
 # ISO-8859 cases, substitute '?' for unknown characters
 UNICODE_RECODE.f := function()
