@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.13 2007-05-04 16:01:18 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.14 2007-05-07 15:57:53 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -389,66 +389,52 @@ end);
 # non-documented utility
 ##  normalizes the Args attribute in function like elements
 BindGlobal("NormalizedArgList", function(argl)
-  local res, c, i, j;
-  # normalize whitespace including commas
-  argl := SubstitutionSublist(argl, ",", " ");
-  argl := NormalizedWhitespace(argl);
-  # delete spaces around ['s and ]'s
-  res := "";
-  for i in [1..Length(argl)] do
-    c := argl[i];
-    if c <> ' ' or ((not argl[i-1] in "[]") and (not argl[i+1] in "[]")) then
-      Add(res, c);
-    fi;
-  od;
-  # now include appropriate commas
-  argl := res;
-  res := "";
-  i := 1;
-  while i <= Length(argl) do
-    c := argl[i];
-    if c = '[' then
-      j := Length(res);
-      while j > 0 and res[j] in "[ " do
-        j := j-1;
-      od;
-      if j = 0 or res[j] = ',' then
-        Add(res, c);
+  local f, tr, g;
+  # remove ',' and split into tree
+  argl := NormalizedWhitespace(SubstitutionSublist(argl, ",", ""));
+  f := function(argl) 
+    local tr, pos, pos2;
+    tr := [];
+    pos := 0;
+    while true do
+      pos2 := Position(argl, '[', pos);
+      if pos2 <> fail then
+        Append(tr, SplitString(argl{[pos+1..pos2-1]}, "", " "));
+        pos := pos2;
+        pos2 := PositionMatchingDelimiter(argl, "[]", pos);
+        Add(tr, f(argl{[pos+1..pos2-1]}));
+        pos := pos2;
       else
-        Append(res, "[, ");
+        Append(tr, SplitString(argl{[pos+1..Length(argl)]}, "", " "));
+        return tr;
       fi;
-    elif c = ']' then
-      # what is next?
-      j := i+1;
-      while j <= Length(argl) and argl[j] = ']' do
-        j := j+1;
-      od;
-      if not (j > Length(argl) or argl[j] = '[') then
-        Add(res, ',');
+    od;
+  end;
+  tr := f(argl);
+  # put it back in a string with ','s and '[]'s in the right places
+  g := function(tr, ne)
+    local res, r, a;
+    res := "";
+    for a in tr do
+      if IsString(a) then
+        if ne then
+          Append(res, ", ");
+        elif Length(res) > 0 then
+          Append(res, "[,]");
+        fi;
+        ne := true;
+        Append(res, a);
+      else
+        r := Concatenation("[", g(a, ne), "]");
+        if not ne and Length(res) > 0  then
+          Append(res, "[,]");
+        fi;
+        Append(res, r);
       fi;
-      for i in [1..j-i] do
-        Add(res, ']');
-      od;
-      if j <= Length(argl) and argl[j] = '[' then
-        Append(res, "[,]");
-        while argl[j] = '[' do
-          Add(res, '[');
-          j := j+1;
-        od;
-        Add(res, argl[j]);
-        j := j+1;
-      elif j <= Length(argl) then
-        Add(res, ' ');
-      fi;
-      i := j-1;
-    elif c = ' ' then
-      Append(res, ", ");
-    else
-      Add(res, c);
-    fi;
-    i := i+1;
-  od;
-  return res;
+    od;
+    return res;
+  end;
+  return g(tr, false);
 end);
 
 # shared utility for the converters to read data for bibliography 
