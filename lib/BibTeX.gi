@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.19 2007-05-04 16:01:55 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.20 2007-05-07 16:01:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -487,7 +487,6 @@ InstallGlobalFunction(PrintBibAsBib, function(arg)
   PrintFormattedString(CallFuncList(StringBibAsBib, arg));
 end);
 
-##  
 ##  <#GAPDoc Label="WriteBibFile">
 ##  <ManSection >
 ##  <Func Arg="bibfile, bib" Name="WriteBibFile" />
@@ -516,9 +515,9 @@ end);
 ##    title =            {Short},
 ##    journal =          j,
 ##    year =             {2000},
-##    key =              {FS00},
 ##    authororig =       {Fritz A. First and Sec, X. Y.},
-##    keylong =          {firstsec2000}
+##    keylong =          {firstsec2000},
+##    printedkey =       {FS00}
 ##  }
 ##  </Listing>
 ##  </Description>
