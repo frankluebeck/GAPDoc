@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.19 2007-05-04 16:01:18 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.20 2007-05-07 16:00:21 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -275,7 +275,8 @@ GAPDoc2TextProcs.PutFilesTogether := function(l, six)
   #   and stays in the same chapter)
   Info(InfoGAPDoc, 1, "#I Producing simplified search strings and labels ",
                       "for hyperlinks . . .\n");
-  for a in six do
+  for i in [1..Length(six)] do
+    a := six[i];
     p := Position(files.(a[3][1]).ssnr, a[3]);
     if p = fail then
       Error("don't find subsection ", a[3], " in text documention");
@@ -284,9 +285,14 @@ GAPDoc2TextProcs.PutFilesTogether := function(l, six)
     a[6] := SIMPLE_STRING(StripEscapeSequences(a[1]));
     NormalizeWhitespace(a[6]);
     # the 'X' is to start with a proper letter, since this will be used
-    # for ID type attributes
-    a[7] := Concatenation("X", HexStringInt(CrcText(a[6])+2^31), 
+    # for ID type attributes; we use the same label for all entries with
+    # the same subsection number
+    if i > 1 and a[3] = six[i-1][3] then
+      a[7] := six[i-1][7];
+    else
+      a[7] := Concatenation("X", HexStringInt(CrcText(a[6])+2^31), 
                           HexStringInt(CrcText(Reversed(a[6]))+2^31));
+    fi;
   od;
   
   return files;
