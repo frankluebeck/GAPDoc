@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.11 2007-05-07 16:02:32 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.12 2007-05-09 12:59:55 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -830,8 +830,11 @@ AddHandlerBuildRecBibXMLEntry("URL", "default",
 function(entry, elt, default, strings, opts)
   local res, esc, txt;
   res := ContentBuildRecBibXMLEntry(entry, elt, default, strings, opts);
-  esc := SubstitutionSublist(res, "~", "\\texttt{\\symbol{126}}");
-  esc := Concatenation("\\texttt{", SubstitutionSublist(esc, "#", "\\#"), "}");
+  # escape all LaTeX special characters
+  esc := GAPDoc2LaTeXProcs.EscapeAttrVal(res);
+  esc := Concatenation("\\texttt{", esc, "}");
+  # allow hyphenation of long entries without hyphen dash
+  esc := GAPDoc2LaTeXProcs.URLBreaks(esc);
   if IsBound(opts.href) and opts.href = false then
     return esc;
   fi;
