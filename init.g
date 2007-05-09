@@ -2,7 +2,7 @@
 ##
 #A  init.g                  GAPDoc              Frank Lübeck / Max Neunhöffer
 ##
-#H  @(#)$Id: init.g,v 1.13 2007-03-05 16:51:11 gap Exp $
+#H  @(#)$Id: init.g,v 1.14 2007-05-09 12:58:12 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck and Max Neunhöffer,  
 #Y  Lehrstuhl D für Mathematik,  RWTH Aachen
@@ -25,3 +25,40 @@ ReadPackage("GAPDoc", "lib/Examples.gd");
 # The handler functions for GAP's help system are read now:
 ReadPackage("GAPDoc", "lib/HelpBookHandler.g");
 
+# try to find terminal encoding
+GAPInfo.tmpfunc := function()
+  local env, pos, enc, a;
+  if not IsBound(GAPInfo.TermEncoding) then
+    if IsList(GAPInfo.SystemEnvironment) then
+      # for compatibility with GAP 4.4.
+      env := rec();
+      for a in GAPInfo.SystemEnvironment do
+        pos := Position(a, '=');
+        env.(a{[1..pos-1]}) := a{[pos+1..Length(a)]};
+      od;
+    else
+      env := GAPInfo.SystemEnvironment;
+    fi;
+    enc := fail;
+    if IsBound(env.LC_CTYPE) then
+      enc := env.LC_CTYPE;
+    fi;
+    if enc = fail then
+      enc := env.LC_ALL;
+    fi;
+    if enc = fail then
+      enc := env.LANG;
+    fi;
+    if enc <> fail and 
+                   (PositionSublist(enc, ".UTF-8") <> fail  or
+                    PositionSublist(enc, ".utf8") <> fail) then
+      GAPInfo.TermEncoding := "UTF-8";
+    fi;
+    if not IsBound(GAPInfo.TermEncoding) then
+      # default is latin1
+      GAPInfo.TermEncoding := "ISO-8859-1";
+    fi;
+  fi;
+end;
+GAPInfo.tmpfunc();
+Unbind(GAPInfo.tmpfunc);
