@@ -4,7 +4,7 @@
      By Frank Lübeck and Max Neunhöffer
      ================================================================== -->
 
-<!-- $Id: gapdoc.dtd,v 1.11 2007-05-04 15:56:19 gap Exp $ -->
+<!-- $Id: gapdoc.dtd,v 1.12 2007-05-13 16:20:35 gap Exp $ -->
 
 <!-- Note that this definition goes "bottom-up" because entities can only
      be used after their definition in the file. -->
@@ -313,7 +313,8 @@
 <!ELEMENT Subsection (%Text;| Heading)*>
 <!ATTLIST Subsection Label CDATA #IMPLIED> <!-- For reference purposes -->
 
-<!ELEMENT ManSection (((Func, Returns?) | (Oper, Returns?) | 
+<!ELEMENT ManSection ( Heading?, 
+                      ((Func, Returns?) | (Oper, Returns?) | 
                        (Meth, Returns?) | (Filt, Returns?) | 
                        (Prop, Returns?) | (Attr, Returns?) |
                        Var | Fam | InfoClass)+, Description )>

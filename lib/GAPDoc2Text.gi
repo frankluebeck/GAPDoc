@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.20 2007-05-07 16:00:21 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.21 2007-05-13 16:20:35 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -826,7 +826,7 @@ end;
 ##  the sectioning commands are just translated and labels are
 ##  generated, if given as attribute
 GAPDoc2TextProcs.ChapSect := function(r, par, sect)
-  local   num,  posh,  s,  ind, strn;
+  local   num,  posh,  s,  ind, strn, sm;
   
   # section number as string
   num := GAPDoc2TextProcs.SectionNumber(r.count, sect);
@@ -837,7 +837,11 @@ GAPDoc2TextProcs.ChapSect := function(r, par, sect)
     s := "";
     # first the .six entry
     GAPDoc2TextProcs.Heading1(r.content[posh], s);
-    Add(r.root.six, [NormalizedWhitespace(FormatParagraph(s,
+    # reset to heading markup where overwritten
+    sm := SubstitutionSublist(s, GAPDoc2TextProcs.TextAttr.reset,
+               Concatenation(GAPDoc2TextProcs.TextAttr.reset,
+                             GAPDoc2TextProcs.TextAttr.Heading));
+    Add(r.root.six, [NormalizedWhitespace(FormatParagraph(sm,
                  r.root.linelength, [GAPDoc2TextProcs.TextAttr.Heading,
                  GAPDoc2TextProcs.TextAttr.reset])), num, r.count{[1..3]}]);
     
@@ -848,10 +852,10 @@ GAPDoc2TextProcs.ChapSect := function(r, par, sect)
     fi;
   
     # the heading text
-    s := Concatenation(num, " ", s);
+    sm := Concatenation(num, " ", sm);
     Add(par, r.count);
     # here we assume that r.indent = ""
-    Add(par, Concatenation("\n", FormatParagraph(s,
+    Add(par, Concatenation("\n", FormatParagraph(sm,
                  r.root.linelength, [GAPDoc2TextProcs.TextAttr.Heading,
                          GAPDoc2TextProcs.TextAttr.reset]), "\n"));
     
@@ -863,6 +867,7 @@ GAPDoc2TextProcs.ChapSect := function(r, par, sect)
     else
       ind := "";
     fi;
+    # here s without heading markup
     Append(r.root.toc, FormatParagraph(s,
             r.root.linelength-Length(ind), "left", [ind, ""]));
   fi;
@@ -1437,6 +1442,11 @@ end;
 GAPDoc2TextProcs.ManSection := function(r, par)
   local   funclike,  i,  num,  s, strn;
   
+  # if there is a Heading then handle as subsection
+  if ForAny(r.content, a-> IsRecord(a) and a.name = "Heading") then
+    GAPDoc2TextProcs.ChapSect(r, par, "Subsection");
+    return;
+  fi;
   strn := "";
   # function like elements
   funclike := [ "Func", "Oper", "Meth", "Filt", "Prop", "Attr", "Var", 

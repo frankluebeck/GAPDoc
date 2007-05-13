@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.38 2007-05-03 21:09:09 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.39 2007-05-13 16:20:35 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1508,6 +1508,11 @@ end;
 GAPDoc2HTMLProcs.ManSection := function(r, par)
   local   strn,  funclike,  i,  num,  s,  lab, ind;
   
+  # if there is a Heading then handle as subsection
+  if ForAny(r.content, a-> IsRecord(a) and a.name = "Heading") then
+    GAPDoc2HTMLProcs.ChapSect(r, par, "Subsection");
+    return;
+  fi;
   strn := "";
   # function like elements
   funclike := [ "Func", "Oper", "Meth", "Filt", "Prop", "Attr", "Var", 

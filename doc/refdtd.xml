@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.16 2007-05-04 15:57:49 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.17 2007-05-13 16:20:35 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -557,7 +557,8 @@ in the UNIX environment.
 <Index Key="Returns"><C>Returns</C></Index>
 
 <Listing Type="From gapdoc.dtd">
-<![CDATA[<!ELEMENT ManSection (((Func, Returns?) | (Oper, Returns?) | 
+<![CDATA[<!ELEMENT ManSection ( Heading?, 
+                      ((Func, Returns?) | (Oper, Returns?) | 
                        (Meth, Returns?) | (Filt, Returns?) | 
                        (Prop, Returns?) | (Attr, Returns?) |
                        Var | Fam | InfoClass)+, Description )>
@@ -594,7 +595,11 @@ for the  use of a  function (together  with a good  choice of names  for the
 formal arguments).<P/>
 
 <C>ManSection</C>s are also sectioning  elements which count as subsections.
-A possible heading is generated automatically from the first element.
+Usually there  should be  no <C>Heading</C>-element in  a <C>ManSection</C>,
+in  that  case   a  heading  is  generated  automatically   from  the  first
+<C>Func</C>-like  element. Sometimes  this default  behaviour does  not look
+appropriate, for  example when there are  several <C>Func</C>-like elements.
+For such cases an optional <C>Heading</C> is allowed.
 
 </Subsection>
 

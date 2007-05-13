@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.24 2007-05-04 16:01:18 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.25 2007-05-13 16:20:35 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1239,6 +1239,13 @@ end;
 GAPDoc2LaTeXProcs.ManSection := function(r, str)
   local   funclike,  f,  lab,  i, a;
   
+  # if there is a Heading then handle as subsection
+  if ForAny(r.content, a-> IsRecord(a) and a.name = "Heading") then
+    GAPDoc2LaTeXProcs._currentSubsection := r.count{[1..3]};
+    GAPDoc2LaTeXProcs.ChapSect(r, str, "subsection");
+    Unbind(GAPDoc2LaTeXProcs._currentSubsection);
+    return;
+  fi;
   # function like elements
   funclike := [ "Func", "Oper", "Meth", "Filt", "Prop", "Attr", "Var", 
                 "Fam", "InfoClass" ];
