@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gi                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gi,v 1.6 2007-05-07 15:59:16 gap Exp $
+#H  @(#)$Id: UnicodeTools.gi,v 1.7 2007-05-13 16:18:50 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -394,7 +394,7 @@ UNICODE_RECODE.TABLES.reverse := rec();
 ##  od;
 ################################################
 
-InstallValue(TransTabLaTeXUnicode,
+InstallValue(LaTeXUnicodeTable,
  [
  [160,"{\\nobreakspace}"],
  [161,"{\\textexclamdown}"],
@@ -1451,13 +1451,14 @@ end);
 
 ##  <#GAPDoc Label="Unicode">
 ##  <ManSection>
+##  <Heading>Recoding to and from Unicode</Heading>
 ##  <Oper Name="Unicode" Arg="list[, encoding]"/>
 ##  <Oper Name="UChar" Arg="num"/>
 ##  <Filt Name="IsUnicodeString" />
 ##  <Filt Name="IsUnicodeCharacter" />
 ##  <Func Name="IntListUnicodeString" Arg="ustr" />
 ##  <Oper Name="Encode" Arg="ustr[, encoding]" />
-##  <Var Name="TransTabLaTeXUnicode" />
+##  <Var Name="LaTeXUnicodeTable" />
 ##  
 ##  <Description>
 ##  Unicode characters are described by their <Emph>codepoint</Emph>, an
@@ -1493,12 +1494,15 @@ end);
 ##  There is also an encoding <C>"LaTeX"</C> which can only be used with
 ##  <Ref Oper="Encode"/> but not with <Ref Oper="Unicode"/>. It substitutes 
 ##  non-ASCII characters by &LaTeX; code as given in an ordered list 
-##  <C>TransTabLaTeXUnicode</C> of pairs [codepoint, string]. If you have a
+##  <C>LaTeXUnicodeTable</C> of pairs [codepoint, string]. If you have a
 ##  unicode character for which no substitution is contained in that list,
 ##  then find a substitution and add a corresponding [codepoint, string] 
-##  pair to  <C>TransTabLaTeXUnicode</C> using <Ref BookName="reference"
+##  pair to  <C>LaTeXUnicodeTable</C> using <Ref BookName="reference"
 ##  Oper="AddSet"/>. Also, please, tell the &GAPDoc; authors about your 
-##  addition, such that we can extend the list <C>TransTabLaTeXUnicode</C>.
+##  addition, such that we can extend the list <C>LaTeXUnicodeTable</C>.
+##  <Example>
+##  ???
+##  </Example>
 ##  </Description>
 ##  </ManSection>
 ##  
@@ -1693,16 +1697,16 @@ UNICODE_RECODE.Encoder.("XML") := function(ustr)
   od;
   return res;
 end;
-# non-ASCII characters to LaTeX code, if known from TransTabLaTeXUnicode
+# non-ASCII characters to LaTeX code, if known from LaTeXUnicodeTable
 UNICODE_RECODE.Encoder.("LaTeX") := function(ustr)
   local tt, res, pos, n;
-  tt := TransTabLaTeXUnicode;
+  tt := LaTeXUnicodeTable;
   res := "";
   for n in IntListUnicodeString(ustr) do
     if n < 128 then
       Add(res, CHAR_INT(n));
     else
-      pos := PositionFirstComponent(TransTabLaTeXUnicode, n);
+      pos := PositionFirstComponent(LaTeXUnicodeTable, n);
       if IsBound(tt[pos]) and tt[pos][1] = n then
         Append(res, tt[pos][2]);
       else
