@@ -363,11 +363,11 @@
 <!ATTLIST   Alt  Only CDATA #IMPLIED
                  Not  CDATA #IMPLIED  > <!-- specify output types in comma and 
                   whitespace separated list (use exactly one of Only or Not) -->
-<!ELEMENT   Wrap             EMPTY   > <!-- a generic wrapper  -->
-<!ATTLIST   Wrap Name CDATA #REQUIRED > <!-- needs a 'Name' attribute  -->
 
 <!ENTITY % withMURL "(#PCDATA | value | M | Math | Wrap | URL | C | Alt )*" >
 
+<!ELEMENT   Wrap           %withMURL; > <!-- a generic wrapper  -->
+<!ATTLIST   Wrap Name CDATA #REQUIRED > <!-- needs a 'Name' attribute  -->
 
 <!ELEMENT   address         %withMURL; >
 <!-- here we don't want the complicated definition from the LaTeX book,

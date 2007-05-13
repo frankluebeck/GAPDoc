@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.12 2007-05-09 12:59:55 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.13 2007-05-13 23:22:06 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -198,10 +198,21 @@ end);
 ##  
 ##  The second function <Ref Func="ParseBibXMLextFiles"/> uses the first 
 ##  on the content of all files given by filenames <A>fname1</A> and so on.
-##  It collects the results in a single record.
+##  It collects the results in a single record.<P/>
+##  
+##  As an example we parse the file <F>mybib.xml</F> from 
+##  <Ref Sect="BibXMLformat"/>.
 ##  
 ##  <Example>
-##  ??? to be done ???
+##  gap> bib := ParseBibXMLextFiles("mybib.xml");;
+##  gap> RecFields(bib);
+##  [ "entries", "strings", "entities" ]
+##  gap> bib.entries;
+##  [ &lt;BibXMLext entry: AB2000> ]
+##  gap> bib.strings;
+##  [ [ "j", "Important Journal" ] ]
+##  gap> bib.entities[1]; 
+##  [ "amp", "&amp;#38;#38;" ]
 ##  </Example>
 ##  </Description>
 ##  </ManSection>

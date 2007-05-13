@@ -11,7 +11,7 @@
       and overfull boxes; these are displayed. 
       
 
-- Bibliography data: ???
+- Bibliography data: ??? TO BE EXTENDED ???
     - new XML format with DTD, handling of .xml databases in converters,
     - Labels for references in Text and HTML converter are now similar to
       those produced by BibTeX.
@@ -49,6 +49,14 @@
       This should make links between different manuals much more robust
       across different versions. 
 
+- GAPDoc language
+  - New element <Ignore Remark="...">. Can be used everywhere (e.g., for
+    additional data like source code, or to comment non finished parts of
+    the document).
+  - A <ManSection> does now allow an optional <Heading> (I would not like
+    if this would be used extensively, but can be sensible for ManSections
+    which explain several commands. 
+
 - Print statements in some functions are now substituted by Info statements,
   such that they can be switched off, or can be set to debug level
   (new Info classes: InfoGAPDoc, InfoXMLParser, InfoBibTools).
@@ -58,14 +66,12 @@
 - The internal encoding for the parsed data is now UTF-8, this is also 
   recommended for input (all GAPDoc files are now in UTF-8 encoding).
 
+- Introduced a unidirectional partial translation from unicode to LaTeX.
+
 - Maybe also of independent interest:
   Introduced unicode characters and strings as GAP objects and de- and
   encoding of these from and to GAP strings in UTF-8 or ISO-8859-X encodings.
   See ?Unicode for documentation.
-
-- New element <Ignore Remark="...">. Can be used everywhere (e.g., for
-  additional data like source code, or to comment non finished parts of
-  the document).
 
 - ParseTreeXMLString:
     - can use the improved information from ComposedDocument
