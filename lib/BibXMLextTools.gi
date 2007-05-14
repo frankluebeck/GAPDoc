@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.13 2007-05-13 23:22:06 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.14 2007-05-14 19:19:18 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -191,7 +191,7 @@ end);
 ##  document or a part of it. It returns a record with the three mentioned
 ##  fields. Here <C>.entries</C> is a list of partial XML parse trees for
 ##  the <C>&lt;entry></C>-elements in <A>str</A>. The field <C>.strings</C>
-##  is a list of key-value pairs from the <C>&lt;string</C>-elements in 
+##  is a list of key-value pairs from the <C>&lt;string></C>-elements in 
 ##  <A>str</A>. And <C>.strings</C> is a list of name-value pairs of the 
 ##  named entities which were used during the parsing.
 ##  <P/>
@@ -200,7 +200,7 @@ end);
 ##  on the content of all files given by filenames <A>fname1</A> and so on.
 ##  It collects the results in a single record.<P/>
 ##  
-##  As an example we parse the file <F>mybib.xml</F> from 
+##  As an example we parse the file <F>mybib.xml</F>  shown in
 ##  <Ref Sect="BibXMLformat"/>.
 ##  
 ##  <Example>
@@ -229,7 +229,7 @@ BindGlobal("BibXMLEntryOps", rec(
     Print(entry.attributes.id, ">");
   end,
   PrintObj := function(entry)
-    Print(StringElementAsXML(entry)[1]);
+    Print(StringXMLElement(entry)[1]);
   end
   ));
 # the entities from bibxmlext.dtd
@@ -303,8 +303,6 @@ end);
 ##  <ManSection >
 ##  <Func Arg="bibentry[, abbrvs, vals]" Name="StringBibAsXMLext" />
 ##  <Returns>a string with XML code</Returns>
-##  <Func Arg="fname, bib" Name="WriteBibXMLextFile" />
-##  <Returns>nothing</Returns>
 ##  <Description>
 ##  The argument <A>bibentry</A> is a record representing an entry from a 
 ##  &BibTeX; file, as returned in the first list of the result of <Ref
@@ -318,12 +316,6 @@ end);
 ##  <C>&lt;C></C>-elements, putting formulae in <C>&lt;M></C>-elements,
 ##  substituting some characters. The result should always be checked and
 ##  maybe improved by hand.
-##  <P/>
-##  The function <Ref Func="WriteBibXMLextFile"/> gets as arguments a file
-##  name <A>fname</A> and a list of three lists as returned by <Ref
-##  Func="ParseBibFiles"/>. It applies <Ref Func="StringBibAsXMLext"/> to
-##  all entries and writes all the results into a <C>BibXMLext</C>-file 
-##  <A>fname</A>.
 ##  
 ##  <Example>
 ##  ???still missing???
@@ -486,7 +478,7 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
                   content := r.(a)) );
   od;
   Add(cont, "\n");
-  res := StringElementAsXML(res)[1];
+  res := StringXMLElement(res)[1];
   res := SplitString(res, "\n", "");
   for i in [1..Length(res)] do
     if Length(res[i]) > 76 then
@@ -500,27 +492,70 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
 end);
 
 
+##  <#GAPDoc Label="WriteBibXMLextFile">
+##  <ManSection >
+##  <Func Arg="fname, bib" Name="WriteBibXMLextFile" />
+##  <Returns>nothing</Returns>
+##  <Description>
+##  This function writes a BibXMLext file with name <A>fname</A>.<P/>
+##  
+##  There are three possibilities to specify the bibliography entries in the
+##  argument <A>bib</A>. It can be a list of three lists as returned by <Ref
+##  Func="ParseBibFiles"/>. Or it can be just  the first of such three lists
+##  in  which case  the other  two lists  are assumed  to be  empty. To  all
+##  entries of the (first) list the function <Ref Func="StringBibAsXMLext"/>
+##  is applied and the resulting strings are written to the result file.<P/>
+##  
+##  The  third   possibility  is  that   <A>bib</A>  is  a  record   in  the
+##  format  as  returned  by  <Ref  Func="ParseBibXMLextString"/>  and  <Ref
+##  Func="ParseBibXMLextFiles"/>.  In   this  case   the  entries   for  the
+##  BibXMLext  file  are  produced  with  <Ref  Func="StringXMLElement"/>,
+##  and  if  <A>bib</A><C>.entities</C>  is  bound   then  it  is  tried  to
+##  resubstitute  parts  of the  string  by  the  given entities  with  <Ref
+##  Func="EntitySubstitution"/>.
+##  
+##  <Example>
+##  ???still missing???
+##  
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
 InstallGlobalFunction(WriteBibXMLextFile, function(fname, bib)
-  local  i, a, f;
+  local  i, a, s, f;
   f := OutputTextFile(fname, false);
   SetPrintFormattingStatus(f, false);
   PrintTo(f, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
                          "<!DOCTYPE file SYSTEM \"bibxmlext.dtd\">\n",
                          "<file>\n");
   # make sure, strings are sorted
-  bib := ShallowCopy(bib);
-  bib[2] := ShallowCopy(bib[2]);
-  bib[3] := ShallowCopy(bib[3]);
-  # strings first
-  for i in [1..Length(bib[2])] do
-    AppendTo(f, StringElementAsXML(rec(name := "string",
-             attributes := rec(key := bib[2][i], value := bib[3][i]),
-                           content := 0))[1], "\n");
-  od;
-  SortParallel(bib[3], bib[2]);
-  for a in bib[1] do 
-    AppendTo(f, StringBibAsXMLext(a, bib[2], bib[3]), "\n");
-  od;
+  if IsList(bib) then
+    if not IsRecord(bib[1]) then
+      bib := ShallowCopy(bib);
+      bib[2] := ShallowCopy(bib[2]);
+      bib[3] := ShallowCopy(bib[3]);
+    else
+      bib := [bib, [], []];
+    fi;
+    # strings first
+    for i in [1..Length(bib[2])] do
+      AppendTo(f, StringXMLElement(rec(name := "string",
+               attributes := rec(key := bib[2][i], value := bib[3][i]),
+                             content := 0))[1], "\n");
+    od;
+    SortParallel(bib[3], bib[2]);
+    for a in bib[1] do 
+      AppendTo(f, StringBibAsXMLext(a, bib[2], bib[3]), "\n");
+    od;
+  else
+    for a in bib.entries do
+      s := StringXMLElement(a);
+      if IsBound(bib.entities) then
+        s := EntitySubstitution(s, bib.entities);
+      fi;
+      AppendTo(f, s, "\n");
+    od;
+  fi;
   AppendTo(f, "</file>\n");
 end);
 
@@ -559,15 +594,15 @@ end);
 ##  
 ##  The following <A>options</A> are currently supported. <P/>
 ##  
-##  If <C>options.fullname</C>is bound and set  to <K>true</K> then the full
+##  If <C>options.fullname</C> is bound and set to <K>true</K> then the full
 ##  given first names  for authors and editors will be  used, the default is
 ##  to use the initials of the first names. <P/>
 ##  
 ##  If   <C>options.href</C>  is   bound   and  set   to   false  then   the
 ##  <C>"BibTeX"</C> type  result will not use  <C>&bslash;href</C> commands.
 ##  The   default   is   to  produce   <C>&bslash;href</C>   commands   from
-##  <C>&lt;URL></C>-elements  such  that  &LaTeX;   can  produce  links  for
-##  them.<P/>
+##  <C>&lt;URL></C>-elements   such  that  &LaTeX; with the  <C>hyperref</C>  
+##  package can  produce  links  for them.<P/>
 ##  
 ##  The content of an  <C>&lt;Alt></C>-element with <C>Only</C>-attribute is
 ##  included  if  <A>restype</A>  is  given in  the  attribute  and  ignored
@@ -579,7 +614,7 @@ end);
 ##  In  case of  a <C>Not</C>-attribute  the  element is  evaluated if  this
 ##  intersection is empty. <P/>
 ##  
-##  If  <A>restype</A>  is  <C>"BibTeX"</C>  then there  are  any  non-ASCII
+##  If  <A>restype</A>  is  <C>"BibTeX"</C>  and  there  are  any  non-ASCII
 ##  characters in the result then these characters are translated to &LaTeX;
 ##  via <Ref  Oper="Encode"/>. If  <C>options.utf8</C> is  bound and  set to
 ##  true then this translation is not done.<P/>

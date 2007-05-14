@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.21 2007-05-04 16:01:18 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.22 2007-05-14 19:19:18 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -807,32 +807,74 @@ InstallGlobalFunction(RemoveRootParseTree, function(r)
   ApplyToNodesParseTree(r, function(a) Unbind(a.root); end);  
 end);
 
-### ??? document this
+##  <#GAPDoc Label="StringXMLElement">
+##  <ManSection >
+##  <Func Arg="tree" Name="StringXMLElement" />
+##  <Returns>a list <C>[string, positions]</C></Returns>
+##  <Description>
+##  
+##  The argument <A>tree</A> must have a format  of a node in the parse tree
+##  of  an  XML  document  as  returned  by <Ref Func="ParseTreeXMLString"/>
+##  (including the root node representing  the full document). This function
+##  computes a pair <C>[string,  positions]</C> where <C>string</C> contains
+##  XML  code which  is  equivalent to  the  code which  was  parsed to  get
+##  <A>tree</A>. And  <C>positions</C> is  a list of  lists of  four numbers
+##  <C>[eltb, elte, contb,  conte]</C>. There is one such list  for each XML
+##  element occuring in <C>string</C>, where <C>eltb</C> and <C>elte</C> are
+##  the begin  and end position of  this element in <C>string</C>  and where
+##  <C>contb</C> and <C>conte</C> are begin  and end position of the content
+##  of this element, or both are <C>0</C> if there is no content.<P/>
+##  
+##  Note that parsing XML code is an irreversible task, we can only expect
+##  to get equivalent XML code from this function. But parsing the resulting
+##  <C>string</C> again and applying <Ref Func="StringXMLElement"/> again
+##  gives the same result. See the function <Ref Func="EntitySubstitution"/>
+##  for back-substitutions of entities in the result.
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
 # args: r[, count, pos, str]    count, pos, str is for use within recursion
-StringElementAsXML := function(arg)
-  local r, count, pos, str, tmp, att, a;
+StringXMLElement := function(arg)
+  local r, str, pos, p, tmp, att, a;
   if Length(arg) = 1 then
-    return StringElementAsXML(arg[1], 0, [], "");
+    r := arg[1];
+    str := StringXMLElement(r, [], "");
+    # revert the WHOLEDOCUMENT trick of the parser
+    if IsRecord(r) and r.name = "WHOLEDOCUMENT" then
+      str[1] := str[1]{[16..Length(str[1])-16]};
+      str[2] := str[2] - 15;
+      str[2][Length(str[2])] := [1, Length(str[1]), 1, Length(str[1])];
+      for a in str[2] do
+        if a[3] = -15 then
+          a[3] := 0;
+          a[4] := 0;
+        fi;
+      od;
+    fi;
+    return str;
   fi;
+  # now we are in the recursion
   r := arg[1];
-  count := arg[2];
-  pos := arg[3];
-  str := arg[4];
+  pos := arg[2];
+  str := arg[3];
   
   if IsRecord(r) then
     if r.name = "PCDATA" then
-      return StringElementAsXML(r.content, count, pos, str);
+      return StringXMLElement(r.content, pos, str);
     elif r.name = "XMLPI" then
-      Add(pos, [Length(str)+1, 0]);
+      p := Length(str)+1;
       Append(str, Concatenation("<?", r.content, "?>"));
+      Add(pos, [p, Length(str), 0, 0]);
       return [str, pos];
     elif r.name = "XMLDOCTYPE" then
-      Add(pos, [Length(str)+1, 0]);
+      p := Length(str)+1;
       Append(str, Concatenation("<!DOCTYPE ", r.content, ">"));
+      Add(pos, [p, Length(str), 0, 0]);
       return [str, pos];
     elif r.name = "XMLCOMMENT" then
-      Add(pos, [Length(str)+1, 0]);
+      p := Length(str)+1;
       Append(str, Concatenation("<!--", r.content, "-->"));
+      Add(pos, [p, Length(str), 0, 0]);
       return [str, pos];
     fi;
   fi;
@@ -840,13 +882,11 @@ StringElementAsXML := function(arg)
     r := SubstitutionSublist(r, "&", "&amp;");
     r := SubstitutionSublist(r, "<", "&lt;");
     if Length(r) > 0 then
-      Add(pos, [Length(str)+1, count]);
       Append(str, r);
     fi;
     return [str, pos];
   fi;
-  count := count + 1;
-  Add(pos, [Length(str)+1, 0]);
+  p := [Length(str)+1];
   Append(str, "<");
   Append(str, r.name);
   for att in RecFields(r.attributes) do
@@ -857,29 +897,133 @@ StringElementAsXML := function(arg)
     tmp := SubstitutionSublist(tmp, "&", "&amp;");
     tmp := SubstitutionSublist(tmp, "<", "&lt;");
     if Length(tmp)>0 then
-      Add(pos, [Length(str)+1, -count]);
     fi;
     Append(str, tmp);
-    Add(pos, [Length(str)+1, 0]);
     Append(str, "\"");
   od;
   if r.content = 0 then
     Append(str, "/>");
+    Add(pos, [p[1], Length(str), 0, 0]);
     return [str, pos];
   fi;
   Add(str, '>');
+  p[3] := Length(str)+1;
   if IsString(r.content) then
-    StringElementAsXML(r.content, count, pos, str);
+    StringXMLElement(r.content, pos, str);
   else
     for a in r.content do 
-      StringElementAsXML(a, count, pos, str);
+      StringXMLElement(a, pos, str);
     od;
   fi;
-  Add(pos, [Length(str)+1, 0]);
+  p[4] := Length(str);
   Append(str, "</");
   Append(str, r.name);
   Add(str, '>');
+  p[2] := Length(str);
+  Add(pos, p);
   return [str, pos];
 end;
+
+##  <#GAPDoc Label="EntitySubstitution">
+##  <ManSection >
+##  <Func Arg="xmlstring, entities" Name="EntitySubstitution" />
+##  <Returns>a string</Returns>
+##  <Description>
+##  The  argument   <A>xmlstring</A>  must   be  a  string   containing  XML
+##  code  or  a   pair  <C>[string,  positions]</C>  as   returned  by  <Ref
+##  Func="StringXMLElement"/>. The argument <A>entities</A> specifies entity
+##  names  (without the  surrounding <A>&tamp;</A>  and <C>;</C>)  and their
+##  substitution strings, either  a list of pairs of strings  or as a record
+##  with the names as components and the substitutions as values.<P/>
+##  
+##  This   function   tries   to  substitute   non-intersecting   parts   of
+##  <C>string</C> by the given entities. If the <C>positions</C> information
+##  is  given  then  only  parts  of   the  document  which  allow  a  valid
+##  substitution  by  an entity  are  considered.  Otherwise a  simple  text
+##  substitution without further check is done. <P/>
+##  
+##  Note that in general the entity resolution in XML documents is a
+##  complicated and non-reversible task. But nevertheless this utility may
+##  be useful in not too complicated situations.
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+EntitySubstitution := function(xmlstr, entities)
+  local posinfo, entities2, check, subs, pos, npos, new, res, off, a;
+  if not IsString(xmlstr) then
+    posinfo := xmlstr[2];
+    xmlstr := xmlstr[1];
+  else
+    posinfo := fail;
+  fi;
+  if IsRecord(entities) then
+    entities := List(RecFields(entities), f-> [f, entities.(f)]);
+  fi;
+  # parse and rewrite entities
+  entities2 := List(entities, a-> [a[1], StringXMLElement(
+                                           ParseTreeXMLString(a[2]))[1]]);
+  # checks if beginning and end of a substring are in the content of the
+  # same element (if this information is available)
+  check := function(b, e)
+    local pb, a;
+    if posinfo = fail then
+      return true;
+    fi;
+    pb := [-1];
+    for a in posinfo do
+      if a[1] <= b and a[1] > pb[1] and a[2] >= e then
+        pb := a;
+      fi;
+    od;
+    if b = pb[1] and e = pb[2] then
+      return true;
+    fi;
+    for a in posinfo do
+      if a <> pb and a[1] > pb[1] and a[2] < pb[2] then
+        if not Intersection([b..e],[a[1]..a[2]]) in [[], [a[1]..a[2]]] then
+          return false;
+        fi;
+      fi;
+    od;
+    return true;
+  end;
+
+  subs := [];
+  for a in entities2 do
+    if not a[1] in ["lt", "gt", "amp", "apos", "quot"] then
+      pos := 0;
+      while pos <> fail do
+        npos := PositionSublist(xmlstr, a[2], pos);
+        if npos <> fail and check(npos, npos-1+Length(a[2])) then
+          new := [npos, npos-1+Length(a[2]), a];
+          if ForAll(subs, b-> b[1] > new[2] or b[2] < new[1]) then
+            Add(subs, new);
+          fi;
+          pos := new[2];
+        else
+          pos := npos;
+        fi;
+      od;
+    fi;
+  od;
+  Sort(subs);
+  if Length(subs) > 0 then
+    res := xmlstr{[1..subs[1][1]-1]};
+    off := 0;
+    res := "";
+    for a in subs do
+      Append(res, xmlstr{[off+1..a[1]-1]});
+      Append(res, Concatenation("&", a[3][1], ";"));
+      off := a[2];
+    od;
+    Append(res, xmlstr{[off+1..Length(xmlstr)]});
+    xmlstr := res;
+  fi;
+  return xmlstr;
+end;
+
+
+
+        
 
   
