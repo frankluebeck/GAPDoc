@@ -2,7 +2,7 @@
 ##
 #A  init.g                  GAPDoc              Frank Lübeck / Max Neunhöffer
 ##
-#H  @(#)$Id: init.g,v 1.14 2007-05-09 12:58:12 gap Exp $
+#H  @(#)$Id: init.g,v 1.15 2007-05-14 20:10:57 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck and Max Neunhöffer,  
 #Y  Lehrstuhl D für Mathematik,  RWTH Aachen
@@ -43,10 +43,10 @@ GAPInfo.tmpfunc := function()
     if IsBound(env.LC_CTYPE) then
       enc := env.LC_CTYPE;
     fi;
-    if enc = fail then
+    if enc = fail and IsBound(env.LC_ALL) then
       enc := env.LC_ALL;
     fi;
-    if enc = fail then
+    if enc = fail and IsBound(env.LANG) then
       enc := env.LANG;
     fi;
     if enc <> fail and 
