@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.39 2007-05-13 16:20:35 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.40 2007-05-15 21:04:16 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1632,16 +1632,21 @@ GAPDoc2HTMLProcs.AltYes := function(r)
       od;
     fi;
   end;
-  if (not IsBound(r.attributes.Only) and not IsBound(r.attributes.Not)) or
-     (IsBound(r.attributes.Only) and 
-      "HTML" in SplitString(r.attributes.Only, "", " ,"))  or
-     (IsBound(r.attributes.Not) and 
-     not "HTML" in SplitString(r.attributes.Not, "", " ,")) then
-    mark(r);
-    return true;
-  else
-    return false;
+  if IsBound(r.attributes.Only) then
+    if "HTML" in SplitString(r.attributes.Only, "", "\n\r\t ,") then
+      mark(r);
+      return true;
+    else
+      return false;
+    fi;
+  elif IsBound(r.attributes.Not) then
+    if not "HTML" in SplitString(r.attributes.Not, "", "\n\r\t ,") then
+      return true;
+    else
+      return false;
+    fi;
   fi;
+  return true;
 end;
 
 GAPDoc2HTMLProcs.Alt := function(r, str)

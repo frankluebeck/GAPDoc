@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   - (C) Frank Lübeck (http://www.math.rwth-aachen.de/~Frank.Luebeck)
+  -
+  - The BibXMLext data format.
   - 
   - This DTD expresses XML markup similar to the BibTeX language
   - specified for LaTeX, or actually its content model.
@@ -516,4 +518,4 @@
  
 
 <!-- ..................................................................... -->
-<!-- End of bibtex dtd -->
+<!-- End of BibXMLext dtd -->

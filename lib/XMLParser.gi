@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.22 2007-05-14 19:19:18 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.23 2007-05-15 21:04:16 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -160,30 +160,27 @@ BindGlobal("ENTITYDICT_default", rec(
 # (although this is a general XML parser, we make it convenient for 
 # GAPDoc documents)
 BindGlobal("ENTITYDICT_GAPDoc", rec(
- tamp := "<Alt Only='LaTeX'>\\&amp;</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;amp;</Alt><Alt Not='HTML'>&amp;</Alt></Alt>",
- tlt := "<Alt Only='LaTeX'>{\\textless}</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;lt;</Alt><Alt Not='HTML'>&lt;</Alt></Alt>",
- tgt := "<Alt Only='LaTeX'>{\\textgreater}</Alt><Alt Not='LaTeX'><Alt Only='HTML'>&amp;gt;</Alt><Alt Not='HTML'>&gt;</Alt></Alt>",
- hash := "<Alt Only='LaTeX'>\\#</Alt><Alt Not='LaTeX'>#</Alt>",
- dollar := "<Alt Only='LaTeX'>\\$</Alt><Alt Not='LaTeX'>$</Alt>",
- percent := "<Alt Only='LaTeX'>\\&#37;</Alt><Alt Not='LaTeX'>&#37;</Alt>",
-##   tilde := "<Alt Only='LaTeX'>{\\textasciitilde}</Alt><Alt Not='LaTeX'>~</Alt>",
- tilde := "<Alt Only='LaTeX'>\\texttt{\\symbol{126}}</Alt><Alt Not='LaTeX'>~</Alt>",
-##   bslash := "<Alt Only='LaTeX'>{\\textbackslash}</Alt><Alt Not='LaTeX'>\\</Alt>",
- bslash := "<Alt Only='LaTeX'>\\texttt{\\symbol{92}}</Alt><Alt Not='LaTeX'>\\</Alt>",
-##   obrace := "<Alt Only='LaTeX'>\\{</Alt><Alt Not='LaTeX'>{</Alt>",
- obrace := "<Alt Only='LaTeX'>\\texttt{\\symbol{123}}</Alt><Alt Not='LaTeX'>{</Alt>",
-##   cbrace := "<Alt Only='LaTeX'>\\}</Alt><Alt Not='LaTeX'>}</Alt>",
- cbrace := "<Alt Only='LaTeX'>\\texttt{\\symbol{125}}</Alt><Alt Not='LaTeX'>}</Alt>",
- uscore := "<Alt Only='LaTeX'>{\\textunderscore}</Alt><Alt Not='LaTeX'>_</Alt>",
-##   circum := "<Alt Only='LaTeX'>{\\textasciicircum}</Alt><Alt Not='LaTeX'>^</Alt>",
- circum := "<Alt Only='LaTeX'>\\texttt{\\symbol{94}}</Alt><Alt Not='LaTeX'>^</Alt>",
+ # compatibility entities, no longer needed by GAPDoc >= 1.0
+ tamp := "&amp;",
+ tlt := "&lt;",
+ tgt := "&gt;",
+ hash := "#",
+ dollar := "$",
+ percent := "%",
+ tilde := "~",
+ bslash := "\\",
+ obrace := "{",
+ cbrace := "}",
+ uscore := "_",
+ circum := "^",
+ 
  nbsp := "<Alt Only='LaTeX'>~</Alt><Alt Not='LaTeX'>&#160;</Alt>",
  ndash := "<Alt Only='LaTeX'>--</Alt><Alt Not='LaTeX'>&#x2013;</Alt>",
  GAP := "<Package>GAP</Package>",
  GAPDoc := "<Package>GAPDoc</Package>",
  TeX    := "<Alt Only='LaTeX'>{\\TeX}</Alt><Alt Not='LaTeX'>TeX</Alt>",
  LaTeX  := "<Alt Only='LaTeX'>{\\LaTeX}</Alt><Alt Not='LaTeX'>LaTeX</Alt>",
- BibTeX := "<Alt Only='LaTeX'>BibTeX</Alt><Alt Not='LaTeX'>BibTeX</Alt>",
+ BibTeX := "<Alt Only='LaTeX'>Bib{\\TeX}</Alt><Alt Not='LaTeX'>BibTeX</Alt>",
  MeatAxe := "<Package>MeatAxe</Package>",
  XGAP   := "<Package>XGAP</Package>",
  copyright := "<Alt Only='LaTeX'>{\\copyright}</Alt><Alt Not='LaTeX'>(C)</Alt>"

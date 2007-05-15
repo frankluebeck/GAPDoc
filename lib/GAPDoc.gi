@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.14 2007-05-07 15:57:53 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.15 2007-05-15 21:04:16 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -499,4 +499,8 @@ BindGlobal("GAPDocAddBibData", function(r)
   r.biblabels := labels;
   r.bibentries := List(need, a-> a[1]);
   r.bibstrings := bib.strings;
+  if Length(r.bibstrings) = 0 then
+    # to avoid that this is an empty string
+    r.bibstrings := [[0,0]];
+  fi;
 end);

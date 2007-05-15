@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.25 2007-05-13 16:20:35 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.26 2007-05-15 21:04:16 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -143,9 +143,12 @@ BindGlobal("GAPDoc2LaTeXContent", function(r, str)
   od;
 end);
 
+# a flag for recoding to LaTeX
+GAPDoc2LaTeXProcs.recode := true;
+
 # two utilities for attribute values like labels or text with special
 # XML or LaTeX characters which gets printed (always as \texttt text)
-GAPDoc2LaTeXProcs.EscapeAttrVal := function(str)
+GAPDoc2LaTeXProcs.EscapeAttrValOld := function(str)
   local res, c;
   res := "";
   for c in str do
@@ -183,6 +186,10 @@ GAPDoc2LaTeXProcs.EscapeAttrVal := function(str)
     fi;
   od;
   return res;
+end;
+# now via Unicode, handle many more characters as well
+GAPDoc2LaTeXProcs.EscapeAttrVal := function(str)
+  return Encode(Unicode(str), "LaTeX");
 end;
 
 GAPDoc2LaTeXProcs.DeleteUsBs := function(str)
@@ -289,27 +296,6 @@ GAPDoc2LaTeXProcs.Head3 := Concatenation([
 "\n",
 "\\newcommand{\\GAP}{\\textsf{GAP}}\n",
 "\n",
-"% don't use this because they don't recognize size or color changes\n",
-"\\newsavebox{\\xgdttbs}\n",
-"\\sbox{\\xgdttbs}{\\texttt{\\symbol{92}}}\n",
-"\\newcommand{\\gdttbs}{\\usebox{\\xgdttbs}}\n",
-"\n",                                   
-"\\newsavebox{\\xgdttob}\n",
-"\\sbox{\\xgdttob}{\\texttt{\\symbol{123}}}\n",
-"\\newcommand{\\gdttob}{\\usebox{\\xgdttob}}\n",
-"\n",                                   
-"\\newsavebox{\\xgdttcb}\n",
-"\\sbox{\\xgdttcb}{\\texttt{\\symbol{125}}}\n",
-"\\newcommand{\\gdttcb}{\\usebox{\\xgdttcb}}\n",
-"\n",                                   
-"\\newsavebox{\\xgdttti}\n",
-"\\sbox{\\xgdttti}{\\texttt{\\symbol{126}}}\n",
-"\\newcommand{\\gdttti}{\\usebox{\\xgdttti}}\n",
-"\n",                                   
-"\\newsavebox{\\xgdttht}\n",
-"\\sbox{\\xgdttht}{\\texttt{\\symbol{94}}}\n",
-"\\newcommand{\\gdttht}{\\usebox{\\xgdttht}}\n",
-"\n",                                   
 "\\begin{document}\n",
 "\n"]);
                                    
@@ -640,18 +626,20 @@ GAPDoc2LaTeXProcs.URL := function(arg)
     pre := "";
   fi;
   s := "";
+  # need it non-recoded for first argument of \href
+  GAPDoc2LaTeXProcs.recode := false;
   GAPDoc2LaTeXContent(r, s);
-  stilde := SubstitutionSublist(s, "\\texttt{\\symbol{126}}", "~");
-  stilde := SubstitutionSublist(stilde, "\\\#", "\#");
+  GAPDoc2LaTeXProcs.recode := true;
+  ss := Encode(Unicode(s), "LaTeX");
   # a hack to allow line breaks with long URLs after /'s
-  if Length(stilde) > 20 then
-    s := GAPDoc2LaTeXProcs.URLBreaks(s);
+  if Length(s) > 20 then
+    ss := GAPDoc2LaTeXProcs.URLBreaks(ss);
   fi;
   Append(str, "\\href{");
   Append(str, pre);
-  Append(str, stilde);
-  Append(str, "}{\\texttt{");
   Append(str, s);
+  Append(str, "}{\\texttt{");
+  Append(str, ss);
   Append(str, "}}");
 end;
 
@@ -794,7 +782,11 @@ GAPDoc2LaTeXProcs.PCDATA := function(r, str)
   if Length(r.content)>0 and r.content[1] in WHITESPACE then
     Add(str, ' ');
   fi;
-  lines := FormatParagraph(r.content, "left");
+  lines := r.content;
+  if GAPDoc2LaTeXProcs.recode = true then
+    lines := Encode(Unicode(lines), "LaTeX");
+  fi;
+  lines := FormatParagraph(lines, "left");
   if Length(lines)>0 then
     if r.content[Length(r.content)] in WHITESPACE then
       lines[Length(lines)] := ' ';
@@ -855,17 +847,15 @@ end;
 GAPDoc2LaTeXProcs.M := function(r, str)
   local   a;
   Append(str, "$");
+  # here the input is already coded in LaTeX
+  GAPDoc2LaTeXProcs.recode := false;
   GAPDoc2LaTeXContent(r, str);
+  GAPDoc2LaTeXProcs.recode := true;
   Append(str, "$");
 end;
 
 ##  in LaTeX same as <M>
-GAPDoc2LaTeXProcs.Math := function(r, str)
-  local   a;
-  Append(str, "$");
-  GAPDoc2LaTeXContent(r, str);
-  Append(str, "$");
-end;
+GAPDoc2LaTeXProcs.Math := GAPDoc2LaTeXProcs.M;
 
 ##  displayed maths
 GAPDoc2LaTeXProcs.Display := function(r, str)
@@ -874,7 +864,9 @@ GAPDoc2LaTeXProcs.Display := function(r, str)
     Add(str, '\n');
   fi;
   Append(str, "\\[");
+  GAPDoc2LaTeXProcs.recode := false;
   GAPDoc2LaTeXContent(r, str);
+  GAPDoc2LaTeXProcs.recode := true;
   Append(str, "\\]\n");
 end;
 
@@ -983,7 +975,7 @@ GAPDoc2LaTeXProcs.Cite := function(r, str)
   Append(str, "\\cite");
   if IsBound(r.attributes.Where) then
     Add(str, '[');
-    Append(str, r.attributes.Where);
+    Append(str, Encode(Unicode(r.attributes.Where), "LaTeX"));
     Add(str, ']');
   fi;
   Add(str, '{');
@@ -1329,33 +1321,6 @@ end;
 # like PCDATA
 GAPDoc2LaTeXProcs.EntityValue := GAPDoc2LaTeXProcs.PCDATA;
 
-GAPDoc2LaTeXProcs.Table_old := function(r, str)
-  local cap;
-  if (IsBound(r.attributes.Only) and r.attributes.Only <> "LaTeX") or
-     (IsBound(r.attributes.Not) and r.attributes.Not = "LaTeX") then
-    return;
-  fi;
-  # head part of table and tabular
-  Append(str, "\n\\begin{table}[h]");
-  if IsBound(r.attributes.Label) then
-    Append(str, "\\label{");
-    Append(str, r.attributes.Label);
-    Add(str, '}');
-  fi;
-  Append(str, "\\begin{center}\n\\begin{tabular}{");
-  Append(str, r.attributes.Align);
-  Add(str, '}');
-  # the rows of the table
-  GAPDoc2LaTeXContent(r, str);
-  # the trailing part with caption, if given
-  Append(str, "\\end{tabular}\n\\end{center}\n");
-  cap := Filtered(r.content, a-> a.name = "Caption");
-  if Length(cap) > 0 then
-    GAPDoc2LaTeXProcs.Caption1(cap[1], str);
-  fi;
-  Append(str, "\\end{table}\n");
-end;
-
 GAPDoc2LaTeXProcs.Table := function(r, str)
   local cap;
   if (IsBound(r.attributes.Only) and r.attributes.Only <> "LaTeX") or
@@ -1388,11 +1353,6 @@ GAPDoc2LaTeXProcs.Caption := function(r, str)
 end;
 
 # here the caption text is produced
-GAPDoc2LaTeXProcs.Caption1_old := function(r, str)
-  Append(str, "\\caption{");
-  GAPDoc2LaTeXContent(r, str);
-  Append(str, "}\n");
-end;
 GAPDoc2LaTeXProcs.Caption1 := function(r, str)
   Append(str, "\\textbf{Table: }");
   GAPDoc2LaTeXContent(r, str);
@@ -1414,10 +1374,27 @@ GAPDoc2LaTeXProcs.Row := function(r, str)
 end;
 
 GAPDoc2LaTeXProcs.Alt := function(r, str)
-  if (IsBound(r.attributes.Only) and r.attributes.Only = "LaTeX") or
-     (IsBound(r.attributes.Not) and r.attributes.Not <> "LaTeX") then
+  local take, types;
+  take := false;
+  if IsBound(r.attributes.Only) then
+    NormalizeWhitespace(r.attributes.Only);
+    types := SplitString(r.attributes.Only, "", " ,");
+    if "LaTeX" in types or "BibTeX" in types then
+      take := true;
+      GAPDoc2LaTeXProcs.recode := false;
+    fi;
+  fi;
+  if IsBound(r.attributes.Not) then
+    NormalizeWhitespace(r.attributes.Not);
+    types := SplitString(r.attributes.Not, "", " ,");
+    if not "LaTeX" in types then
+      take := true;
+    fi;
+  fi;
+  if take then
     GAPDoc2LaTeXContent(r, str);
   fi;
+  GAPDoc2LaTeXProcs.recode := true;
 end;
 
 # copy a few entries with two element names

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.21 2007-05-13 16:20:35 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.22 2007-05-15 21:04:16 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -28,7 +28,7 @@
 ##  
 ##  Some   handlers  of paragraph   containing  elements do the formatting
 ##  themselves (e.g., .List), the others are handled in the main recursion
-##  function `GAPDoc2TextContent'.
+##  function 'GAPDoc2TextContent'.
 ##  
 ##  We produce  a full version of  the document  in text format, including
 ##  title   page, abstract and  other front   matter,  table of  contents,
@@ -565,6 +565,7 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
       Append(text, StringBibAsText(a, GAPDoc2TextProcs.TextAttr));
     od;
     r.bibtext := text;
+##  Error("Text, see r.bibtext   \n");
   fi;
   
   # second run
@@ -785,7 +786,7 @@ end;
 GAPDoc2TextProcs.Homepage := GAPDoc2TextProcs.URL;
 
 GAPDoc2TextProcs.Email := function(r, str)
-  # we add the `mailto://' phrase
+  # we add the 'mailto://' phrase
   GAPDoc2TextProcs.URL(r, str, "mailto:");
 end;
 
@@ -868,7 +869,7 @@ GAPDoc2TextProcs.ChapSect := function(r, par, sect)
       ind := "";
     fi;
     # here s without heading markup
-    Append(r.root.toc, FormatParagraph(s,
+    Append(r.root.toc, FormatParagraph(Concatenation(num, " ", s),
             r.root.linelength-Length(ind), "left", [ind, ""]));
   fi;
   
@@ -1358,7 +1359,7 @@ GAPDoc2TextProcs.Ref := function(r, str)
         ref := Concatenation(lab, "???");
       else
         # the search text for online help including book name
-        ref := Concatenation("`", StripBeginEnd(ref[1], " "), "'");
+        ref := Concatenation("'", StripBeginEnd(ref[1], " "), "'");
       fi;
     else
       # with sectioning references Label must be given
@@ -1367,7 +1368,7 @@ GAPDoc2TextProcs.Ref := function(r, str)
       # attribute
       if IsBound(r.attributes.Style) and r.attributes.Style = "Text" and
          IsBound(r.root.labeltexts.(lab)) then
-        ref := Concatenation("`", StripBeginEnd(
+        ref := Concatenation("'", StripBeginEnd(
                                   r.root.labeltexts.(lab), WHITESPACE), "'"); 
       elif IsBound(r.root.labels.(lab)) then
         ref := r.root.labels.(lab);

@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.14 2007-05-14 19:19:18 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.15 2007-05-15 21:04:16 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -817,11 +817,13 @@ AddHandlerBuildRecBibXMLEntry(["author", "editor"], "namesaslists",
 function(entry, elt, namesaslists, strings, opts)
   local res, a;
   res := [];
+  RECBIBXMLHNDLR.recode := false;
   for a in elt.content do
     if IsRecord(a) and a.name = "name" then
       Add(res, BuildRecBibXMLEntry(entry, a, namesaslists, strings, opts));
     fi;
   od;
+  RECBIBXMLHNDLR.recode := true;
   elt.AsList := res;
   return res;
 end);
@@ -853,10 +855,24 @@ AddHandlerBuildRecBibXMLEntry("C", ["Text", "HTML"], "Ignore");
 # <M>, <Math>
 AddHandlerBuildRecBibXMLEntry(["M", "Math"], "default",
 function(entry, elt, default, strings, opts)
-  return Concatenation("$", ContentBuildRecBibXMLEntry(entry, elt,
+  local res;
+  RECBIBXMLHNDLR.recode := false;
+  res := Concatenation("$", ContentBuildRecBibXMLEntry(entry, elt,
                                           default, strings, opts), "$");
+  RECBIBXMLHNDLR.recode := true;
+  return res;
 end);
-AddHandlerBuildRecBibXMLEntry("M", ["Text", "HTML"],
+AddHandlerBuildRecBibXMLEntry("M", "HTML",
+function(entry, elt, default, strings, opts)
+  local res;
+  RECBIBXMLHNDLR.recode := false;
+  res := TextM( ContentBuildRecBibXMLEntry(entry, elt, default, strings, opts));
+  RECBIBXMLHNDLR.recode := true;
+  res := SubstitutionSublist(res, "<", "&lt;");
+  res := SubstitutionSublist(res, "&", "&amp;");
+  return res;
+end);
+AddHandlerBuildRecBibXMLEntry("M", "Text",
 function(entry, elt, default, strings, opts)
   return TextM( ContentBuildRecBibXMLEntry(entry, elt, default, strings, opts));
 end);
@@ -875,7 +891,10 @@ end);
 AddHandlerBuildRecBibXMLEntry("URL", "default",
 function(entry, elt, default, strings, opts)
   local res, esc, txt;
+  RECBIBXMLHNDLR.recode := false;
   res := ContentBuildRecBibXMLEntry(entry, elt, default, strings, opts);
+  RECBIBXMLHNDLR.recode := true;
+  NormalizeWhitespace(res);
   # escape all LaTeX special characters
   esc := GAPDoc2LaTeXProcs.EscapeAttrVal(res);
   esc := Concatenation("\\texttt{", esc, "}");
@@ -895,6 +914,7 @@ AddHandlerBuildRecBibXMLEntry("URL", "HTML",
 function(entry, elt, html, strings, opts)
   local res, txt;
   res := ContentBuildRecBibXMLEntry(entry, elt, html, strings, opts);
+  NormalizeWhitespace(res);
   if IsBound(elt.attributes.Text) then
     txt := elt.attributes.Text;
   else
@@ -906,6 +926,7 @@ AddHandlerBuildRecBibXMLEntry("URL", "Text",
 function(entry, elt, text, strings, opts)
   local res;
   res := ContentBuildRecBibXMLEntry(entry, elt, text, strings, opts);
+  NormalizeWhitespace(res);
   if IsBound(elt.attributes.Text) then
     return Concatenation(elt.attributes.Text, " (", res, ")");
   else
@@ -914,7 +935,7 @@ function(entry, elt, text, strings, opts)
 end);
 AddHandlerBuildRecBibXMLEntry("Alt", "default",
 function(entry, elt, type, strings, opts)
-  local poss, att, ok;
+  local poss, att, ok, res;
   poss := [type];
   if IsBound(opts.useAlt) then
     Append(poss, opts.useAlt);
@@ -926,8 +947,12 @@ function(entry, elt, type, strings, opts)
     ok := SplitString(att.Not, "", ", \n\r\t");
   fi;
 
-  if (IsBound(att.Only) and ForAny(poss, a-> a in ok)) or
-     (IsBound(att.Not) and ForAll(poss, a-> not a in ok)) then
+  if (IsBound(att.Only) and ForAny(poss, a-> a in ok)) then
+    RECBIBXMLHNDLR.recode := false;
+    res := ContentBuildRecBibXMLEntry(entry, elt, type, strings, opts);
+    RECBIBXMLHNDLR.recode := true;
+    return res;
+  elif   (IsBound(att.Not) and ForAll(poss, a-> not a in ok)) then
     return ContentBuildRecBibXMLEntry(entry, elt, type, strings, opts);
   else
     return "";
@@ -953,19 +978,40 @@ function(entry, elt, type, strings, opts)
   fi;
 end);
 
-# Finish functions
-AddHandlerBuildRecBibXMLEntry("Finish", ["BibTeX", "LaTeX"],
-function(entry, res, type, strings, opts)
-  local f;
-  if not IsBound(opts.utf8) or opts.utf8 <> true then
-    # by default we try to translate non-ASCII characters to LaTeX macros
-    for f in RecFields(res) do
-      if IsString(res.(f)) then
-        res.(f) := Encode(Unicode(res.(f), "UTF-8"), "LaTeX");
-      fi;
-    od;
+RECBIBXMLHNDLR.Finish := rec();
+##  # Finish functions
+##  AddHandlerBuildRecBibXMLEntry("Finish", ["BibTeX", "LaTeX"],
+##  function(entry, res, type, strings, opts)
+##    local f;
+##    if not IsBound(opts.utf8) or opts.utf8 <> true then
+##      # by default we try to translate non-ASCII characters to LaTeX macros
+##      for f in RecFields(res) do
+##        if IsString(res.(f)) then
+##          res.(f) := Encode(Unicode(res.(f), "UTF-8"), "LaTeX");
+##        fi;
+##      od;
+##    fi;
+##    return res;
+##  end);
+
+RECBIBXMLHNDLR.recode := true;
+AddHandlerBuildRecBibXMLEntry("PCDATA", ["BibTeX", "LaTeX"],
+function(entry, elt, type, strings, opts)
+  if RECBIBXMLHNDLR.recode then
+    return Encode(Unicode(elt.content, "UTF-8"), "LaTeX");
+  else
+    return elt.content;
   fi;
-  return res;
+end);
+AddHandlerBuildRecBibXMLEntry("PCDATA", "HTML",
+function(entry, elt, type, strings, opts)
+  local res;
+  if RECBIBXMLHNDLR.recode then
+    res := SubstitutionSublist(elt.content, "<", "&lt;");
+    return SubstitutionSublist(res, "&", "&amp;");
+  else
+    return elt.content;
+  fi;
 end);
 
 # args: 
@@ -993,6 +1039,7 @@ InstallGlobalFunction(RecBibXMLEntry, function(arg)
     fi;
   end;
   entry := arg[1];
+  RECBIBXMLHNDLR.recode := true;
   type := fail; strings := fail; opts := fail;
   for i in [2..Length(arg)] do
     if IsString(arg[i]) then

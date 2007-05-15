@@ -4,7 +4,7 @@
      By Frank Lübeck and Max Neunhöffer
      ================================================================== -->
 
-<!-- $Id: gapdoc.dtd,v 1.12 2007-05-13 16:20:35 gap Exp $ -->
+<!-- $Id: gapdoc.dtd,v 1.13 2007-05-15 21:04:16 gap Exp $ -->
 
 <!-- Note that this definition goes "bottom-up" because entities can only
      be used after their definition in the file. -->
@@ -23,40 +23,29 @@
 <!ENTITY quot   "&#34;">
 
 
-<!-- The following are necessary because these characters have special
-     meanings in either XML or LaTeX: -->
+<!-- The following were introduced in GAPDoc version < 1.0, it is no longer
+     necessary to take care of LaTeX special characters
+     (we keep the entities with simplified definitions for compatibility) -->
      
-<!ENTITY tamp 
-  "<Alt Only='LaTeX'>\&amp;</Alt><Alt Not='LaTeX'><Alt 
-        Only='HTML'>&amp;amp;</Alt><Alt Not='HTML'>&amp;</Alt></Alt>">
-<!ENTITY tlt 
-  "<Alt Only='LaTeX'>{\textless}</Alt><Alt Not='LaTeX'><Alt 
-        Only='HTML'>&amp;lt;</Alt><Alt Not='HTML'>&lt;</Alt></Alt>">
-<!ENTITY tgt 
-  "<Alt Only='LaTeX'>{\textgreater}</Alt><Alt Not='LaTeX'><Alt 
-        Only='HTML'>&amp;gt;</Alt><Alt Not='HTML'>&gt;</Alt></Alt>">
-<!ENTITY hash "<Alt Only='LaTeX'>\#</Alt><Alt Not='LaTeX'>#</Alt>">
-<!ENTITY dollar "<Alt Only='LaTeX'>\$</Alt><Alt Not='LaTeX'>$</Alt>">
-<!ENTITY percent 
-  "<Alt Only='LaTeX'>\&#37;</Alt><Alt Not='LaTeX'>&#37;</Alt>">
-<!ENTITY tilde 
-  "<Alt Only='LaTeX'>{\textasciitilde}</Alt><Alt Not='LaTeX'>~</Alt>">
-<!ENTITY bslash 
-  "<Alt Only='LaTeX'>{\textbackslash}</Alt><Alt Not='LaTeX'>\</Alt>">
-<!ENTITY obrace "<Alt Only='LaTeX'>\{</Alt><Alt Not='LaTeX'>{</Alt>">
-<!ENTITY cbrace "<Alt Only='LaTeX'>\}</Alt><Alt Not='LaTeX'>}</Alt>">
-<!ENTITY uscore 
-  "<Alt Only='LaTeX'>{\textunderscore}</Alt><Alt Not='LaTeX'>_</Alt>">
-<!ENTITY circum 
-  "<Alt Only='LaTeX'>{\textasciicircum}</Alt><Alt Not='LaTeX'>^</Alt>">
-<!ENTITY nbsp "<Alt Only='LaTeX'>~</Alt><Alt Not='LaTeX'>&#160;</Alt>">
-<!ENTITY ndash "<Alt Only='LaTeX'>--</Alt><Alt 
-  Not='LaTeX'>&#x2013;</Alt>">
+<!ENTITY tamp "&amp;">
+<!ENTITY tlt "&lt;">
+<!ENTITY tgt "&gt;">
+<!ENTITY hash "#">
+<!ENTITY dollar "$">
+<!ENTITY percent "%">
+<!ENTITY tilde "~">
+<!ENTITY bslash "\\">
+<!ENTITY obrace "{">
+<!ENTITY cbrace "}">
+<!ENTITY uscore "_">
+<!ENTITY circum "^">
 
 <!-- ==================================================================
      Our predefined entities:
      ================================================================== -->
 
+<!ENTITY nbsp "&#160;">
+<!ENTITY ndash "&#x2013;">
 <!ENTITY GAP    "<Package>GAP</Package>">
 <!ENTITY GAPDoc "<Package>GAPDoc</Package>">
 <!ENTITY TeX    

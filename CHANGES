@@ -56,6 +56,9 @@
   - A <ManSection> does now allow an optional <Heading> (I would not like
     if this would be used extensively, but can be sensible for ManSections
     which explain several commands. 
+  - Made entities for LaTeX special characters ($tamp;, &percent; and so on)
+    unnecessary (but kept them--with simplified definitions--for backward 
+    compatibility).
 
 - Print statements in some functions are now substituted by Info statements,
   such that they can be switched off, or can be set to debug level

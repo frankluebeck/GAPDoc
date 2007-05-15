@@ -1,4 +1,4 @@
-<!-- $Id: enter.xml,v 1.8 2007-05-04 15:57:49 gap Exp $ -->
+<!-- $Id: enter.xml,v 1.9 2007-05-15 21:04:16 gap Exp $ -->
 <Chapter Label="HowEnter">
 <Heading>How To Type a &GAPDoc; Document</Heading>
 
@@ -278,7 +278,7 @@ in &LaTeX; or in XML. These are the following characters:<P/>
 <Q><C>&circum;</C></Q>,
 <Q><C>&nbsp;</C></Q> (this is a non-breakable space, similar to
 &LaTeX;'s <Q><C>&tilde;</C></Q> character) and
-<Q><C>&ndash;</C></Q> (an en dash, used instead of &LaTeX;'s double
+<Q>&ndash;</Q> (an en dash, used instead of &LaTeX;'s double
 <C>--</C>).
 <P/>
 

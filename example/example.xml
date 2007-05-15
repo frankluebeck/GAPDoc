@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id: example.xml,v 1.12 2007-05-03 21:15:31 gap Exp $ -->
+<!-- $Id: example.xml,v 1.13 2007-05-15 21:04:16 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
  [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&tgt;</Alt>'>]>
@@ -359,9 +359,9 @@ Email addresses have a special element:
 <P/>
 
 and Homepages another one:
-<Homepage>http://www.math.rwth-aachen.de/&tilde;Max.Neunhoeffer/</Homepage>
+<Homepage>http://www.math.rwth-aachen.de/~Max.Neunhoeffer/</Homepage>
 <P/>
-<URL>http://www.math.rwth-aachen.de/&tilde;Frank.Luebeck/gap/EDIM/index.html&hash;ARCHS</URL>
+<URL>http://www.math.rwth-aachen.de/~Frank.Luebeck/gap/EDIM/index.html&hash;ARCHS</URL>
 <P/>
 
 One can generate index entries as follows (look up the words 

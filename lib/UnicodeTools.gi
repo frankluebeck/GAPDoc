@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gi                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gi,v 1.7 2007-05-13 16:18:50 gap Exp $
+#H  @(#)$Id: UnicodeTools.gi,v 1.8 2007-05-15 21:04:16 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -396,6 +396,25 @@ UNICODE_RECODE.TABLES.reverse := rec();
 
 InstallValue(LaTeXUnicodeTable,
  [
+ # we actually start with some ASCII characters which are special characters
+ # in  LaTeX
+ [35,"\\#"],
+ [36,"\\$"],
+ [37,"\\%"],
+ [38,"\\&"],
+ [60,"{\\textless}"],
+ [62,"{\\textgreater}"],
+##   [92,"{\\textbackslash}"],
+ [92,"\\texttt{\\symbol{92}}"],
+##   [94,"{\\textasciicircum}"],
+ [94,"\\texttt{\\symbol{94}}"],
+ [95,"{\\textunderscore}"],
+##   [123,"\\{"],
+##   [125,"\\}"],
+ [123,"\\texttt{\\symbol{123}}"],
+ [125,"\\texttt{\\symbol{125}}"],
+##   [126,"\\textasciitilde"],
+ [126,"\\texttt{\\symbol{126}}"],
  [160,"{\\nobreakspace}"],
  [161,"{\\textexclamdown}"],
  [162,"{\\textcent}"],
@@ -1699,17 +1718,24 @@ UNICODE_RECODE.Encoder.("XML") := function(ustr)
 end;
 # non-ASCII characters to LaTeX code, if known from LaTeXUnicodeTable
 UNICODE_RECODE.Encoder.("LaTeX") := function(ustr)
-  local tt, res, pos, n;
+  local tt, res, pos, n, s;
   tt := LaTeXUnicodeTable;
   res := "";
   for n in IntListUnicodeString(ustr) do
-    if n < 128 then
+    pos := Position([ 35, 36, 37, 38, 60, 62, 92, 94, 95, 123, 125, 126], n);
+    if pos <> fail then
+      Append(res, tt[pos][2]);
+    elif n < 128 then
       Add(res, CHAR_INT(n));
     else
       pos := PositionFirstComponent(LaTeXUnicodeTable, n);
       if IsBound(tt[pos]) and tt[pos][1] = n then
         Append(res, tt[pos][2]);
       else
+        s := Encode(Unicode([n]), GAPInfo.TermEncoding);
+        Info(InfoWarning, 1, 
+              "#W Missing LaTeX translation of unicode character ",
+              String(n), ":", s, ",\nadd to LaTeXUnicodeTable\n");
         Append(res, Concatenation("Unicode(", String(n), ")"));
       fi;
     fi;

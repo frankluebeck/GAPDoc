@@ -1,10 +1,14 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.9 2007-03-05 16:51:11 gap Exp $
+         $Id: TODO,v 1.10 2007-05-15 21:04:16 gap Exp $
 
-- give record with predefined entities to ParseTreeXML...
-  (and use this for the predefined GAPDoc entities)
+- Check handling of bibliography in all formats
+
+- Use in FormatParagraph the correct "width" function, depending
+  on encoding
+
+- SIMPLE_STRING wrong for UTF-8 setup
 
 - document StringBibAs..., change doc for <Bibliography>
 
