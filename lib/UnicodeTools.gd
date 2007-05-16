@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gd                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gd,v 1.4 2007-05-13 16:18:50 gap Exp $
+#H  @(#)$Id: UnicodeTools.gd,v 1.5 2007-05-16 16:07:21 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -17,7 +17,10 @@ BindGlobal("UNICODE_RECODE", rec());
 # more a hack, some unicode characters can be translated to LaTeX with
 # this table: this is a set of pairs [ codepoint, LaTeX text ]
 DeclareGlobalVariable("LaTeXUnicodeTable");
-
+# similar for simplification to ASCII
+DeclareGlobalVariable("SimplifiedUnicodeTable");
+# and for translation to lower case
+DeclareGlobalVariable("LowercaseUnicodeTable");
 
 ##  declarations of unicode characters and strings as GAP objects
 DeclareFilter("IsUnicodeString", IsString and IsHomogeneousList and
