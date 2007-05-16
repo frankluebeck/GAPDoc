@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.40 2007-05-15 21:04:16 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.41 2007-05-16 16:03:12 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -604,13 +604,17 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
     od;
   fi;
   
-  # .index has entries of form [sorttext, subtext, numbertext, entrytext]
+  # .index has entries of form [sorttext, subsorttext, numbertext, 
+  # entrytext, url[, subtext]]
   Info(InfoGAPDoc, 1, "#I Producing the index . . .\n");
   Sort(r.index);
   str := "";
   for a in r.index do
     Append(str, a[4]);
-    if Length(a[2])>0 then
+    if IsBound(a[6]) then
+      Append(str, ", ");
+      Append(str, a[6]);
+    elif Length(a[2])>0 then
       Append(str, ", ");
       Append(str, a[2]);
     fi;
@@ -791,8 +795,10 @@ end;
 
 ##  these produce text for an URL
 ##  arg:  r, str[, pre]
+GAPDoc2HTMLProcs.Link := GAPDoc2HTMLContent;
+GAPDoc2HTMLProcs.LinkText := GAPDoc2HTMLContent;
 GAPDoc2HTMLProcs.URL := function(arg)
-  local   r,  str,  pre,  s,  p;
+  local r, str, pre, rr, txt, s;
   r := arg[1];
   str := arg[2];
   if Length(arg)>2 then
@@ -800,17 +806,29 @@ GAPDoc2HTMLProcs.URL := function(arg)
   else
     pre := "";
   fi;
-  
-  s := "";
-  GAPDoc2HTMLContent(r, s);
-  Append(str, Concatenation(GAPDoc2HTMLProcs.TextAttr.URL[1], 
-                                            "<a href=\"", pre, s, "\">"));
-  if IsBound(r.attributes.Text) then
-    Append(str,  r.attributes.Text);
+  rr := First(r.content, a-> a.name = "LinkText");
+  if rr <> fail then
+    txt := "";
+    GAPDoc2HTML(rr, txt);
+    rr := First(r.content, a-> a.name = "Link");
+    if rr = fail then
+      Info(InfoGAPDoc, 1, "#W missing <Link> element for text ", txt, "\n");
+      s := "MISSINGLINK";
+    else
+      s := "";
+      GAPDoc2HTMLContent(rr, s);
+    fi;
   else
-    Append(str, s);
+    s := "";
+    GAPDoc2HTMLContent(r, s);
+    if IsBound(r.attributes.Text) then
+      txt := r.attributes.Text;
+    else
+      txt := s;
+    fi;
   fi;
-  Append(str,"</a>");
+  Append(str, Concatenation(GAPDoc2HTMLProcs.TextAttr.URL[1], 
+                    "<a href=\"", pre, s, "\">", txt, "</a>"));
   Append(str, GAPDoc2HTMLProcs.TextAttr.URL[2]);
 end;
 
@@ -1275,12 +1293,21 @@ GAPDoc2HTMLProcs.Cite := function(r, str)
 end;
 
 ##  explicit index entries
+GAPDoc2HTMLProcs.Subkey := GAPDoc2HTMLContent;
 GAPDoc2HTMLProcs.Index := function(r, str)
-  local   s,  entry, url;
+  local s, sub, entry, url, a;
   
   s := "";
-  GAPDoc2HTMLContent(r, s);
+  sub := "";
+  for a in r.content do
+    if a.name = "Subkey" then
+      GAPDoc2HTML(a, sub);
+    else
+      GAPDoc2HTML(a, s);
+    fi;
+  od;
   NormalizeWhitespace(s);
+  NormalizeWhitespace(sub);
   if IsBound(r.attributes.Key) then
     entry := [STRING_LOWER(r.attributes.Key)];
   else
@@ -1289,12 +1316,15 @@ GAPDoc2HTMLProcs.Index := function(r, str)
   if IsBound(r.attributes.Subkey) then
     Add(entry, r.attributes.Subkey);
   else
-    Add(entry, "");
+    Add(entry, STRING_LOWER(sub));
   fi;
   Add(entry, GAPDoc2HTMLProcs.SectionNumber(r.count, "Subsection"));
   Add(entry, s);
   url := GAPDoc2HTMLProcs.SectionLabel(r, r.count, "Subsection");
   Add(entry, Concatenation(url[1],"#",url[2]));
+  if Length(sub) > 0 then
+    Add(entry, sub);
+  fi;
   Add(r.root.index, entry);
 end;
 

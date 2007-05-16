@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.22 2007-05-15 21:04:16 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.23 2007-05-16 16:03:12 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -536,13 +536,17 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   Info(InfoGAPDoc, 1, "#I Table of contents complete.\n");
   r.toctext := r.toc;
   
-  # .index has entries of form [sorttext, subtext, numbertext, entrytext]
+  # .index has entries of form [sorttext, subsorttext, numbertext, 
+  #  entrytext, count[, subtext]]
   Info(InfoGAPDoc, 1, "#I Producing the index . . .\n");
   Sort(r.index);
   str := "";
   for a in r.index do
     Append(str, a[4]);
-    if Length(a[2])>0 then
+    if IsBound(a[6]) then
+      Append(str, ", ");
+      Append(str, a[6]);
+    elif Length(a[2])>0 then
       Append(str, ", ");
       Append(str, a[2]);
     fi;
@@ -765,10 +769,11 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
 end;
 
 ##  these produce text for an URL
-##  ~ and # characters are correctly escaped
 ##  arg:  r, str[, pre]
+GAPDoc2TextProcs.Link := GAPDoc2TextContent;
+GAPDoc2TextProcs.LinkText := GAPDoc2TextContent;
 GAPDoc2TextProcs.URL := function(arg)
-  local   r,  str,  pre,  s,  p;
+  local r, str, pre, rr, txt, s;
   r := arg[1];
   str := arg[2];
   if Length(arg)>2 then
@@ -776,11 +781,36 @@ GAPDoc2TextProcs.URL := function(arg)
   else
     pre := "";
   fi;
-  
-  s := "";
-  GAPDoc2TextContent(r, s);
-  Append(str, Concatenation(GAPDoc2TextProcs.TextAttr.URL, 
-          pre, s, GAPDoc2TextProcs.TextAttr.reset));
+  rr := First(r.content, a-> a.name = "LinkText");
+  if rr <> fail then
+    txt := "";
+    GAPDoc2TextContent(rr, txt);
+    rr := First(r.content, a-> a.name = "Link");
+    if rr = fail then
+      Info(InfoGAPDoc, 1, "#W missing <Link> element for text ", txt, "\n");
+      s := "MISSINGLINK";
+    else
+      s := "";
+      GAPDoc2TextContent(rr, s);
+    fi;
+  else
+    s := "";
+    GAPDoc2TextContent(r, s);
+    if IsBound(r.attributes.Text) then
+      txt := r.attributes.Text;
+    else
+      txt := s;
+    fi;
+  fi;
+  NormalizeWhitespace(s);
+  NormalizeWhitespace(txt);
+  if txt=s then
+    Append(str, Concatenation(GAPDoc2TextProcs.TextAttr.URL, pre, s,
+                 GAPDoc2TextProcs.TextAttr.reset));
+  else
+    Append(str, Concatenation(txt, " (", GAPDoc2TextProcs.TextAttr.URL,
+                 pre, s, GAPDoc2TextProcs.TextAttr.reset, ")"));
+  fi;
 end;
 
 GAPDoc2TextProcs.Homepage := GAPDoc2TextProcs.URL;
@@ -1175,12 +1205,21 @@ GAPDoc2TextProcs.Cite := function(r, str)
 end;
 
 ##  explicit index entries
+GAPDoc2TextProcs.Subkey := GAPDoc2TextContent;
 GAPDoc2TextProcs.Index := function(r, str)
-  local   s,  entry;
+  local s, sub, entry, a;
   
   s := "";
-  GAPDoc2TextContent(r, s);
+  sub := "";
+  for a in r.content do
+    if a.name = "Subkey" then
+      GAPDoc2Text(a, sub);
+    else
+      GAPDoc2Text(a, s);
+    fi;
+  od;
   NormalizeWhitespace(s);
+  NormalizeWhitespace(sub);
   if IsBound(r.attributes.Key) then
     entry := [STRING_LOWER(r.attributes.Key)];
   else
@@ -1189,11 +1228,14 @@ GAPDoc2TextProcs.Index := function(r, str)
   if IsBound(r.attributes.Subkey) then
     Add(entry, r.attributes.Subkey);
   else
-    Add(entry, "");
+    Add(entry, STRING_LOWER(StripEscapeSequences(sub)));
   fi;
   Add(entry, GAPDoc2TextProcs.SectionNumber(r.count, "Subsection"));
   Add(entry, s);
   Add(entry, r.count{[1..3]});
+  if Length(sub) > 0 then
+    Add(entry, sub);
+  fi;
   Add(r.root.index, entry);
 end;
       

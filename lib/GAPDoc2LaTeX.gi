@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.26 2007-05-15 21:04:16 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.27 2007-05-16 16:03:12 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -616,8 +616,10 @@ end;
 
 ##  ~ and # characters are correctly escaped
 ##  arg:  r, str[, pre]
+GAPDoc2LaTeXProcs.Link := GAPDoc2LaTeXContent;
+GAPDoc2LaTeXProcs.LinkText := GAPDoc2LaTeXContent;
 GAPDoc2LaTeXProcs.URL := function(arg)
-  local r, str, pre, s, stilde, pos, ss, old;
+  local r, str, pre, rr, txt, s;
   r := arg[1];
   str := arg[2];
   if Length(arg)>2 then
@@ -625,22 +627,35 @@ GAPDoc2LaTeXProcs.URL := function(arg)
   else
     pre := "";
   fi;
-  s := "";
-  # need it non-recoded for first argument of \href
-  GAPDoc2LaTeXProcs.recode := false;
-  GAPDoc2LaTeXContent(r, s);
-  GAPDoc2LaTeXProcs.recode := true;
-  ss := Encode(Unicode(s), "LaTeX");
-  # a hack to allow line breaks with long URLs after /'s
-  if Length(s) > 20 then
-    ss := GAPDoc2LaTeXProcs.URLBreaks(ss);
+  rr := First(r.content, a-> a.name = "LinkText");
+  if rr <> fail then
+    txt := "";
+    GAPDoc2LaTeXContent(rr, txt);
+    rr := First(r.content, a-> a.name = "Link");
+    if rr = fail then
+      Info(InfoGAPDoc, 1, "#W missing <Link> element for text ", txt, "\n");
+      s := "MISSINGLINK";
+    else
+      s := "";
+      # must avoid recoding for first argument of \href
+      GAPDoc2LaTeXProcs.recode := false;
+      GAPDoc2LaTeXContent(rr, s);
+      GAPDoc2LaTeXProcs.recode := true;
+    fi;
+  else
+    s := "";
+    GAPDoc2LaTeXProcs.recode := false;
+    GAPDoc2LaTeXContent(r, s);
+    GAPDoc2LaTeXProcs.recode := true;
+    if IsBound(r.attributes.Text) then
+      txt := r.attributes.Text;
+    else
+      # need recode in second argument of \href
+      txt := Encode(Unicode(s, "UTF-8"), "LaTeX");
+      txt := Concatenation("\\texttt{", txt, "}");
+    fi;
   fi;
-  Append(str, "\\href{");
-  Append(str, pre);
-  Append(str, s);
-  Append(str, "}{\\texttt{");
-  Append(str, ss);
-  Append(str, "}}");
+  Append(str, Concatenation("\\href{", pre, s, "} {", txt, "}"));
 end;
 
 GAPDoc2LaTeXProcs.Homepage := GAPDoc2LaTeXProcs.URL;
@@ -741,22 +756,6 @@ GAPDoc2LaTeXProcs.Bibliography := function(r, str)
     b := List(b.entries, a-> RecBibXMLEntry(a, b.strings, "BibTeX"));
     WriteBibFile(Concatenation(fname, ".bib"), [b, [], []]);
   od;
-##    for a in dat do
-##      if Length(a) > 3 and a{[Length(a)-3..Length(a)]} = ".xml" then
-##        fname := Filename(r.root.bibpath, a);
-##        t := ParseTreeXMLFile(fname);
-##        b := BibRecBibXML(t, "BibTeXhref");
-##        Info(InfoGAPDoc, 1, "#I Creating BibTeX file ", 
-##                                     fname, ".bib from BibXMLext file.\n");
-##        WriteBibFile(Concatenation(fname, ".bib"), b);
-##        if GAPDoc2LaTeXProcs.INPUTENCENC = "latin1" then
-##          Info(InfoGAPDoc, 1, "#I Recoding BibTeX file to latin1 . . .\n");
-##          t := StringFile(Concatenation(fname, ".bib"));
-##          t := Encode(Unicode(t, "UTF-8"), "ISO-8859-1");
-##          FileString(Concatenation(fname, ".bib"), t);
-##        fi;
-##      fi;
-##    od;
   if IsBound(r.attributes.Style) then
     st := r.attributes.Style;
   else
@@ -765,8 +764,14 @@ GAPDoc2LaTeXProcs.Bibliography := function(r, str)
 
   # page number info for online help
   Append(str, Concatenation("\\def\\bibname{References\\logpage{", 
-          GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}}\n"));
-  
+          GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}\n"));
+  if IsBound(r.root.six) then
+    a := First(r.root.six, x-> x[3] = r.count{[1..3]});
+    if a <> fail and IsBound(a[7]) then
+      Append(str, Concatenation("\\hyperdef{L}{", a[7], "}{}\n"));
+    fi;
+  fi;
+  Append(str, "}\n");
   Append(str, "\n\\bibliographystyle{");
   Append(str, st);
   Append(str,"}\n\\bibliography{");
@@ -984,15 +989,26 @@ GAPDoc2LaTeXProcs.Cite := function(r, str)
 end;
 
 ##  explicit index entries
+GAPDoc2LaTeXProcs.Subkey := GAPDoc2LaTeXContent;
 GAPDoc2LaTeXProcs.Index := function(r, str)
-  local   s;
+  local s, sub, a;
   s := "";
-  GAPDoc2LaTeXContent(r, s);
+  sub := "";
+  for a in r.content do
+    if a.name = "Subkey" then
+      GAPDoc2LaTeX(a, sub);
+    else
+      GAPDoc2LaTeX(a, s);
+    fi;
+  od;
   NormalizeWhitespace(s);
+  NormalizeWhitespace(sub);
   if IsBound(r.attributes.Key) then
     s := Concatenation(r.attributes.Key, "@", s);
   fi;
-  if IsBound(r.attributes.Subkey) then
+  if Length(sub) > 0 then
+    s := Concatenation(s, "!", sub);
+  elif IsBound(r.attributes.Subkey) then
     s := Concatenation(s, "!", r.attributes.Subkey);
   fi;
   Append(str, "\\index{");
@@ -1311,12 +1327,19 @@ GAPDoc2LaTeXProcs.Enum := function(r, str)
 end;
 
 GAPDoc2LaTeXProcs.TheIndex := function(r, str)
+  local a;
   # page number info for online help
   Append(str, Concatenation("\\def\\indexname{Index\\logpage{", 
-          GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}}\n"));
+            GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}\n"));
+  if IsBound(r.root.six) then
+    a := First(r.root.six, x-> x[3] = r.count{[1..3]});
+    if a <> fail and IsBound(a[7]) then
+      Append(str, Concatenation("\\hyperdef{L}{", a[7], "}{}\n"));
+    fi;
+  fi;
+  Append(str, "}\n");
   Append(str, "\n\n\\printindex\n\n");
 end;
-
 
 # like PCDATA
 GAPDoc2LaTeXProcs.EntityValue := GAPDoc2LaTeXProcs.PCDATA;

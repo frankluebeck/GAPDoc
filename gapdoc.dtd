@@ -4,7 +4,7 @@
      By Frank Lübeck and Max Neunhöffer
      ================================================================== -->
 
-<!-- $Id: gapdoc.dtd,v 1.13 2007-05-15 21:04:16 gap Exp $ -->
+<!-- $Id: gapdoc.dtd,v 1.14 2007-05-16 16:03:12 gap Exp $ -->
 
 <!-- Note that this definition goes "bottom-up" because entities can only
      be used after their definition in the file. -->
@@ -32,7 +32,7 @@
 <!ENTITY tgt "&gt;">
 <!ENTITY hash "#">
 <!ENTITY dollar "$">
-<!ENTITY percent "%">
+<!ENTITY percent "&#37;">
 <!ENTITY tilde "~">
 <!ENTITY bslash "\\">
 <!ENTITY obrace "{">
@@ -168,15 +168,16 @@
      are  terminal and  need special  methods  to make  up the  actual
      output during document generation. -->
 
-<!ELEMENT URL (#PCDATA|Alt)*>    <!-- Can we define this better? -->
+<!ELEMENT URL (#PCDATA|Alt|Link|LinkText)*>  <!-- Link, LinkText
+     variant for case where text needs further markup -->
 <!ATTLIST URL Text CDATA #IMPLIED>   <!-- This is for output formats
                                           that have links like HTML -->
-
+<!ELEMENT Link     (%InnerText;)*> <!-- the URL -->
+<!ELEMENT LinkText (%InnerText;)*> <!-- text for links, can contain markup -->
 <!-- The following two are actually URLs, but the element name determines
      the type. -->
-     
-<!ELEMENT Email (#PCDATA|Alt)*>
-<!ELEMENT Homepage (#PCDATA|Alt)*>
+<!ELEMENT Email (#PCDATA|Alt|Link|LinkText)*>
+<!ELEMENT Homepage (#PCDATA|Alt|Link|LinkText)*>
 
 <!-- Those who still want to give postal addresses can use the following
      element. Use <Br/> for specifying typical line breaks  -->
@@ -214,9 +215,15 @@
      and  Style  can  be  specified in  addition  to  handle  external
      references and the typesetting style of the reference. -->
 
-<!ELEMENT Index (%InnerText;)*>
+<!-- For explicit index entries (Func and so on should cause an
+     automatically generated index entry). Use the attributes Key,
+     Subkey for sorting (simplified, without markup). The Subkey value
+     also gets printed. Use the optional Subkey element if the printed
+     version needs some markup.                                        -->
+<!ELEMENT Index (%InnerText;|Subkey)*>
 <!ATTLIST Index Key    CDATA #IMPLIED
                 Subkey CDATA #IMPLIED>
+<!ELEMENT Subkey (%InnerText;)*>
 
 
 <!-- ==================================================================
