@@ -2,7 +2,7 @@
 ##
 #W  HelpBookHandler.g                GAPDoc                      Frank Lübeck
 ##
-#H  @(#)$Id: HelpBookHandler.g,v 1.9 2007-02-20 16:56:27 gap Exp $
+#H  @(#)$Id: HelpBookHandler.g,v 1.10 2007-05-18 13:35:47 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -194,16 +194,23 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
       enc := info.encoding;
     else
       # from older versions, so latin1
-      enc := "latin1";
+      enc := "ISO-8859-1";
     fi;
     if IsBound(GAPInfo.TermEncoding) then
       outenc := GAPInfo.TermEncoding;
     else
-      outenc := "latin1";
+      outenc := "ISO-8859-1";
     fi;
-    if UNICODE_RECODE.NormalizedEncodings.(enc) <>
-                          UNICODE_RECODE.NormalizedEncodings.(outenc) then
-      str := Encode(Unicode(str, enc), outenc);
+    enc := UNICODE_RECODE.NormalizedEncodings.(enc);
+    outenc := UNICODE_RECODE.NormalizedEncodings.(outenc);
+    if enc <> outenc then
+      str := Unicode(str, enc);
+      if outenc = "ISO-8859-1" then
+        str := SimplifiedUnicodeString(str, "single", "latin1");
+      elif outenc = "ANSI_X3.4-1968" then
+        str := SimplifiedUnicodeString(str, "single", "ascii");
+      fi;
+      str := Encode(str, outenc);
     fi;
     return rec(lines := str, formatted := true, start := a[4]);
   fi;

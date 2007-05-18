@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.41 2007-05-16 16:03:12 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.42 2007-05-18 13:35:47 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1802,13 +1802,11 @@ end;
 ##  symbol  fonts  and  <F>chap0&uscore;mml.xml</F>  for  files  with
 ##  MathML translations.<P/>
 ##  
-##  You  can  make  these  files  accessible  via  the  &GAP;  online
-##  help  by  putting  them  into  a  directory  and  using  this  as
-##  an  argument   for  one  of  the   commands  <Ref  BookName="Ref"
-##  Func="DeclarePackageDocumentation"  />   or  <Ref  BookName="Ref"
-##  Func="DeclarePackageAutoDocumentation" />.  You may also  want to
-##  put  a  file  <F>manual.css</F>  into that  directory,  see  <Ref
-##  Func="GAPDoc2HTML" />.
+##  You may also want to place a style sheet file <F>manual.css</F> into 
+##  the same directory as the HTML files. You can copy for example the 
+##  file <F>gapdoc.css</F> in the root directory of the &GAPDoc; package
+##  (<C>Filename( Directory( PackageInfo( "gapdoc" )[1].InstallationPath),
+##  "gapdoc.css");</C>).
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>

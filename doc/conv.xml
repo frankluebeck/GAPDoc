@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.18 2007-05-14 19:19:18 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.19 2007-05-18 13:35:47 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters and an XML Parser</Heading>
@@ -284,6 +284,10 @@ and strings. These can be used for recoding text strings between various
 encodings.
 
 <#Include Label="Unicode">
+
+<#Include Label="Encode">
+
+<#Include Label="WidthUTF8String">
 
 </Section>
 

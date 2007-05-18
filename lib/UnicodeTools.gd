@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gd                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gd,v 1.5 2007-05-16 16:07:21 gap Exp $
+#H  @(#)$Id: UnicodeTools.gd,v 1.6 2007-05-18 13:35:47 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -21,6 +21,8 @@ DeclareGlobalVariable("LaTeXUnicodeTable");
 DeclareGlobalVariable("SimplifiedUnicodeTable");
 # and for translation to lower case
 DeclareGlobalVariable("LowercaseUnicodeTable");
+# width of unicode characters on terminal
+DeclareGlobalVariable("WidthUnicodeTable");
 
 ##  declarations of unicode characters and strings as GAP objects
 DeclareFilter("IsUnicodeString", IsString and IsHomogeneousList and
@@ -48,7 +50,11 @@ UNICODE_RECODE.Decoder := rec();
 DeclareOperation("Encode", [IsUnicodeString]);
 DeclareOperation("Encode", [IsUnicodeString, IsString]);
 UNICODE_RECODE.Encoder := rec();
+DeclareGlobalFunction("SimplifiedUnicodeString");
+DeclareGlobalFunction("LowercaseUnicodeString");
+DeclareGlobalFunction("UppercaseUnicodeString");
 
-###### Utility for UTF-8 encoded GAP strings ########
+###### Utilities for different lengths of UTF-8 encoded GAP strings ########
 DeclareGlobalFunction("NrCharsUTF8String");
+DeclareGlobalFunction("WidthUTF8String");
 

@@ -2,6 +2,8 @@
 
 0.99999 -> 1.0
 
+- Changed the status of the package from "deposited" to "accepted".
+
 - MakeGAPDocDoc: 
     - The text converter is called first now to produce labels for
       (sub-)sections which are independent of their number (see 
@@ -41,6 +43,8 @@
       place holder markup, which is substituted on the fly while browsing via 
       the help system (using a user configurable "style sheet", see
       ?SetGAPDocTextTheme).
+    - The text version of a manual is now in UTF-8 encoding, this is
+      translated by the GAP help system to other terminal encodings on the fly.
     - As a side effect the converter produces labels for all chapters
       and (sub-)sections which are independent of their current number.
       These can be used in the HTML and PDF versions of the manual. Using
@@ -50,31 +54,37 @@
       across different versions. 
 
 - GAPDoc language
-  - New element <Ignore Remark="...">. Can be used everywhere (e.g., for
-    additional data like source code, or to comment non finished parts of
-    the document).
   - A <ManSection> does now allow an optional <Heading> (I would not like
     if this would be used extensively, but can be sensible for ManSections
     which explain several commands. 
   - Made entities for LaTeX special characters ($tamp;, &percent; and so on)
     unnecessary (but kept them--with simplified definitions--for backward 
     compatibility).
+  - <Index> does now allow an optional <Subkey> element to specify subkeys with
+    further markup (not possible in Subkey attribute).
+  - <URL>, <Email>, <Homepage> now allow optional elements <Link> and
+    <LinkText> to specify text with further markup (not possible in Text
+    attribute).
+  - New element <Ignore Remark="...">. Can be used everywhere (e.g., for
+    additional data like source code, or to comment non finished parts of
+    the document).
 
 - Print statements in some functions are now substituted by Info statements,
   such that they can be switched off, or can be set to debug level
   (new Info classes: InfoGAPDoc, InfoXMLParser, InfoBibTools).
 
-- Removed some pre-GAP 4.4 syntax.
-
 - The internal encoding for the parsed data is now UTF-8, this is also 
   recommended for input (all GAPDoc files are now in UTF-8 encoding).
 
-- Introduced a unidirectional partial translation from unicode to LaTeX.
-
-- Maybe also of independent interest:
-  Introduced unicode characters and strings as GAP objects and de- and
-  encoding of these from and to GAP strings in UTF-8 or ISO-8859-X encodings.
-  See ?Unicode for documentation.
+- Unicode strings (may be of interest outside GAPDoc)
+  - Introduced unicode strings and characters as GAP objects,
+    see '?Unicode'.
+  - Translations between unicode strings and GAP strings in various 
+    character encodings, see '?Encode'. (Mainly UTF-8, ISO-8859-X and "XML"
+    encodings.)
+  - Some non-injective (partial) maps from unicode: a "LaTeX" encoding,
+    simplifications to ASCII or latin1, conversions to lowercase and 
+    uppercase characters.
 
 - ParseTreeXMLString:
     - can use the improved information from ComposedDocument
@@ -100,7 +110,7 @@
   now try to use always the nicer characters for \{}~^ from the \texttt
   font.
 
-- Changed the status of the package from "deposited" to "accepted".
+- Removed some pre-GAP 4.4 syntax.
 
 0.9999 -> 0.99999
 

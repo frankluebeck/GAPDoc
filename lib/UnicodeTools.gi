@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gi                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gi,v 1.9 2007-05-16 16:07:21 gap Exp $
+#H  @(#)$Id: UnicodeTools.gi,v 1.10 2007-05-18 13:35:47 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -433,14 +433,12 @@ end);
 
 ##  <#GAPDoc Label="Unicode">
 ##  <ManSection>
-##  <Heading>Recoding to and from Unicode</Heading>
+##  <Heading>Unicode Strings and Characters</Heading>
 ##  <Oper Name="Unicode" Arg="list[, encoding]"/>
 ##  <Oper Name="UChar" Arg="num"/>
 ##  <Filt Name="IsUnicodeString" />
 ##  <Filt Name="IsUnicodeCharacter" />
 ##  <Func Name="IntListUnicodeString" Arg="ustr" />
-##  <Oper Name="Encode" Arg="ustr[, encoding]" />
-##  <Var Name="LaTeXUnicodeTable" />
 ##  
 ##  <Description>
 ##  Unicode characters are described by their <Emph>codepoint</Emph>, an
@@ -467,21 +465,10 @@ end);
 ##  <C>UNICODE&uscore;RECODE.NormalizedEncodings</C> (ASCII, 
 ##  ISO-8859-X, UTF-8 and aliases). The encoding <C>"XML"</C> means an ASCII
 ##  encoding in which non-ASCII characters are specified by XML character
-##  entities. <P/>
-##  
-##  The operation <Ref Oper="Encode"/> translates a unicode string <A>ustr</A>
-##  into a &GAP; string in some specified <A>encoding</A>. The default
-##  encoding is <C>"UTF-8"</C>. <P/>
-##  
-##  There is also an encoding <C>"LaTeX"</C> which can only be used with
-##  <Ref Oper="Encode"/> but not with <Ref Oper="Unicode"/>. It substitutes 
-##  non-ASCII characters by &LaTeX; code as given in an ordered list 
-##  <C>LaTeXUnicodeTable</C> of pairs [codepoint, string]. If you have a
-##  unicode character for which no substitution is contained in that list,
-##  then find a substitution and add a corresponding [codepoint, string] 
-##  pair to  <C>LaTeXUnicodeTable</C> using <Ref BookName="reference"
-##  Oper="AddSet"/>. Also, please, tell the &GAPDoc; authors about your 
-##  addition, such that we can extend the list <C>LaTeXUnicodeTable</C>.
+##  entities. The listed encodings <C>"LaTeX"</C> and aliases
+##  cannot be used with <Ref Oper="Unicode" />.
+##  See the operation <Ref Oper="Encode"/> for mapping  a unicode string 
+##  to a &GAP; string.<P/>
 ##  <Example>
 ##  ???
 ##  </Example>
@@ -489,7 +476,7 @@ end);
 ##  </ManSection>
 ##  
 ##  <#/GAPDoc>
-##  
+
 
 # NC method, assume that l is (plain?) list of integers in correct range
 InstallMethod(Unicode, [IsList], function(l)
@@ -619,6 +606,83 @@ function(ustr, ustr2, pos)
                                             IntListUnicodeString(ustr2), pos);
 end);
 
+##  <#GAPDoc Label="Encode">
+##  <ManSection>
+##  <Oper Name="Encode" Arg="ustr[, encoding]" />
+##  <Returns>a &GAP; string</Returns>
+##  <Func Name="SimplifiedUnicodeString" Arg='ustr[, encoding][, "single"]' />
+##  <Returns>a unicode string</Returns>
+##  <Func Name="LowercaseUnicodeString" Arg="ustr" />
+##  <Returns>a unicode string</Returns>
+##  <Func Name="UppercaseUnicodeString" Arg="ustr" />
+##  <Returns>a unicode string</Returns>
+##  <Var Name="LaTeXUnicodeTable" />
+##  <Var Name="SimplifiedUnicodeTable" />
+##  <Var Name="LowercaseUnicodeTable" />
+##  
+##  <Description>
+##  The operation <Ref Oper="Encode"/> translates a unicode string <A>ustr</A>
+##  into a &GAP; string in some specified <A>encoding</A>. The default
+##  encoding is <C>"UTF-8"</C>. <P/>
+##  
+##  Supported encodings can be found in 
+##  <C>UNICODE_RECODE.NormalizedEncodings</C>. Except for some cases
+##  mentioned below characters which are not available in the target
+##  encoding are substituted by '?' characters.<P/>
+##  
+##  The encoding <C>"LaTeX"</C>  substitutes 
+##  non-ASCII characters by &LaTeX; code as given in an ordered list 
+##  <C>LaTeXUnicodeTable</C> of pairs [codepoint, string]. If you have a
+##  unicode character for which no substitution is contained in that list,
+##  you will get a warning. In this case find a substitution and add a 
+##  corresponding [codepoint, string] 
+##  pair to  <C>LaTeXUnicodeTable</C> using <Ref BookName="reference"
+##  Oper="AddSet"/>. Also, please, tell the &GAPDoc; authors about your 
+##  addition, such that we can extend the list <C>LaTeXUnicodeTable</C>.
+##  (Most of the initial entries were generated from lists in the
+##  &TeX; projects enc&TeX; and <C>ucs</C>.)<P/>
+##  
+##  Note that the <C>"LaTeX"</C> encoding can only be used with <Ref
+##  Oper="Encode"/> but not for the opposite translation with <Ref
+##  Oper="Unicode" /> (which would need far too complicated heuristics).<P/>
+##  
+##  The  function  <Ref  Func="SimplifiedUnicodeString"/>  can  be  used  to
+##  substitute  many  non-ASCII  characters   by  related  ASCII  characters
+##  or  strings  (e.g.,  by  a  corresponding  character  without  accents).
+##  The  argument  <A>ustr</A>  and  the  result  are  unicode  strings,  if
+##  <A>encoding</A>  is <C>"ASCII"</C>  then  all  non-ASCII characters  are
+##  translated,  otherwise only  the  non-latin1 characters.  If the  string
+##  <C>"single"</C> in  an argument  then only substitutions  are considered
+##  which don't make  the result string longer. The  translations are stored
+##  in a sorted  list <C>SimplifiedUnicodeTable</C>. Its entries  are of the
+##  form <C>[codepoint, trans1, trans2,  ...]</C>. Here <C>trans1</C> and so
+##  on is either an integer for the codepoint of a substitution character or
+##  it is  a list of  codepoint integers. If  you are missing  characters in
+##  this list  and know a  sensible ASCII  approximation, then add  an entry
+##  (with <Ref  BookName="reference" Oper="AddSet"/>) and tell  the &GAPDoc;
+##  authors about it. (The  initial content of <C>SimplifiedUnicodeTable</C>
+##  was mainly  generated from  the <Q><C>transtab</C></Q> tables  by Markus
+##  Kuhn.)<P/>
+##  
+##  The function <Ref Func="LowercaseUnicodeString"/> gets and returns a 
+##  unicode string and translates each uppercase character to its
+##  corresponding lowercase version. This function uses a list 
+##  <C>LowercaseUnicodeTable</C> of pairs of codepoint integers.
+##  This list was generated using the file <F>UnicodeData.txt</F> from the
+##  unicode definition (field 14 in each row).<P/>
+##  
+##  The function <Ref Func="UppercaseUnicodeString"/> does the similar
+##  translation to uppercase characters.
+##  
+##  <Example>
+##  ???
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  
+##  <#/GAPDoc>
+##  
+
 # helper function for encoding a unicode character to UTF-8
 UNICODE_RECODE.UTF8UnicodeChar := function(n)
   local res, a, b, c, d;
@@ -691,7 +755,7 @@ UNICODE_RECODE.Encoder.("LaTeX") := function(ustr)
     elif n < 128 then
       Add(res, CHAR_INT(n));
     else
-      pos := PositionFirstComponent(LaTeXUnicodeTable, n);
+      pos := POSITION_FIRST_COMPONENT_SORTED(tt, n);
       if IsBound(tt[pos]) and tt[pos][1] = n then
         Append(res, tt[pos][2]);
       else
@@ -708,6 +772,81 @@ end;
 UNICODE_RECODE.NormalizedEncodings.LaTeX := "LaTeX";
 UNICODE_RECODE.NormalizedEncodings.latex := "LaTeX";
 UNICODE_RECODE.NormalizedEncodings.BibTeX := "LaTeX";
+
+
+InstallGlobalFunction(SimplifiedUnicodeString, function(arg)
+  local ustr, single, max, tt, res, pos, a, f, n;
+  ustr := arg[1];
+  # at most single character substitutions?
+  single := false;
+  # maximal untouched character (255 for latin1 and 127 for ASCII)
+  max := 255;
+  if "single" in arg then
+    single := true;
+  fi;
+  if "ascii" in arg or "ASCII" in arg or "ANSI_X3.4-1968" in arg then
+    max := 127;
+  fi;
+  tt := SimplifiedUnicodeTable;
+  res := [];
+  for n in IntListUnicodeString(ustr) do
+    if n <= max then
+      Add(res, n);
+    else
+      pos := POSITION_FIRST_COMPONENT_SORTED(tt, n);
+      if IsBound(tt[pos]) and tt[pos][1] = n then
+        a := tt[pos];
+        f := Filtered([2..Length(a)], i-> (IsInt(a[i]) and a[i] <= max)
+             or (IsList(a[i]) and ForAll(a[i], j-> j <= max)));
+        if single then
+          f := Filtered(f, i-> IsInt(a[i]) or Length(a[i]) <= 1);
+        fi;
+        if Length(f) > 0 then
+          a := a[f[1]];
+          if IsInt(a) then
+            Add(res, a);
+          else
+            Append(res, a);
+          fi;
+        else
+          # &#63; is '?'
+          Add(res, 63);
+        fi;
+      else
+        Add(res, 63);
+      fi;
+    fi;
+  od;
+  return Unicode(res);
+end);
+
+InstallGlobalFunction(LowercaseUnicodeString, function(ustr)
+  local res, tt, pos, i;
+  res := ShallowCopy(IntListUnicodeString(ustr));
+  tt := LowercaseUnicodeTable;
+  for i in [1..Length(res)] do
+    pos := POSITION_FIRST_COMPONENT_SORTED(tt, res[i]);
+    if IsBound(tt[pos]) and tt[pos][1] = res[i] then
+      res[i] := tt[pos][2];
+    fi;
+  od;
+  return Unicode(res);
+end);
+InstallGlobalFunction(UppercaseUnicodeString, function(ustr)
+  local res, UppercaseUnicodeTable, tt, pos, i;
+  res := ShallowCopy(IntListUnicodeString(ustr));
+  if not IsBound(UppercaseUnicodeTable) then
+    UppercaseUnicodeTable := Set(List(LowercaseUnicodeTable, a-> [a[2],a[1]]));
+  fi;
+  tt := UppercaseUnicodeTable;
+  for i in [1..Length(res)] do
+    pos := POSITION_FIRST_COMPONENT_SORTED(tt, res[i]);
+    if IsBound(tt[pos]) and tt[pos][1] = res[i] then
+      res[i] := tt[pos][2];
+    fi;
+  od;
+  return Unicode(res);
+end);
 
 # ISO-8859 cases, substitute '?' for unknown characters
 UNICODE_RECODE.f := function()
@@ -763,6 +902,45 @@ InstallMethod(Encode, [IsUnicodeString], function(ustr)
   return UNICODE_RECODE.Encoder.("UTF-8")(ustr);
 end);
 
+##  <#GAPDoc Label="WidthUTF8String">
+##  <ManSection >
+##  <Heading>Lengths of UTF-8 strings</Heading>
+##  <Func Arg="str" Name="WidthUTF8String" />
+##  <Func Arg="str" Name="NrCharsUTF8String" />
+##  <Returns>an integer</Returns>
+##  <Description>
+##  Let <A>str</A> be a &GAP; string  with text in UTF-8 encoding. There are
+##  three <Q>lengths</Q> of  such a string which must  be distinguished. The
+##  operation <Ref BookName="reference" Oper="Length"/> returns the number of
+##  bytes  and so  the  memory  occupied by  <A>str</A>.  The function  <Ref
+##  Func="NrCharsUTF8String"/> returns the number of unicode  characters  in
+##  <A>str</A>, that is the length of <C>Unicode(<A>str</A>)</C>. <P/>
+##  
+##  In many applications the  function <Ref Func="WidthUTF8String"/> is more
+##  interesting, it  returns the number of  columns needed by the  string if
+##  printed  to  a terminal.  This  takes  into  account that  some  unicode
+##  characters are combining  characters and that there  are wide characters
+##  which need two columns (e.g., for  Chinese or Japanese). (To be precise:
+##  This  implementation assumes  that there  are no  control characters  in
+##  <A>str</A> and uses  the character width returned  by the <C>wcwidth</C>
+##  function in the GNU C-library called with UTF-8 locale.)
+##  <Example>
+##  gap> # A, German umlaut u, B, zero width space, C, newline
+##  gap> str := Encode( Unicode( "A&amp;#xFC;B&amp;#x200B;C\n", "XML" ) );;
+##  gap> Print(str);
+##  AüB​C
+##  gap> # umlaut u needs two bytes and the zero width space three
+##  gap> Length(str);
+##  9
+##  gap> NrCharsUTF8String(str);
+##  6
+##  gap> # zero width space and newline don't contribute to width
+##  gap> WidthUTF8String(str);
+##  4
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
 InstallGlobalFunction(NrCharsUTF8String, function(str)
   local n, nc, c;
   n := 0;
@@ -774,4 +952,27 @@ InstallGlobalFunction(NrCharsUTF8String, function(str)
   od;
   return n;
 end);
+
+InstallGlobalFunction(WidthUTF8String, function(str)
+  local res, pos, i;
+  if not IsUnicodeString(str) then
+    str := Unicode(str, "UTF-8");
+  fi;
+  str := IntListUnicodeString(str);
+  res := 0;
+  for i in str do
+    if i > 31 and i < 127 then
+      res := res+1;
+    else
+      pos := POSITION_FIRST_COMPONENT_SORTED(WidthUnicodeTable, i);
+      if not IsBound(WidthUnicodeTable[pos]) or WidthUnicodeTable[pos][1] <> i
+          then
+        pos := pos-1;
+      fi;
+      res := res + WidthUnicodeTable[pos][2];
+    fi;
+  od;
+  return res;
+end);
+
 

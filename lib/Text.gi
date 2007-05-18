@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.10 2007-05-04 15:59:03 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.11 2007-05-18 13:35:47 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -401,7 +401,8 @@ end);
 
 ##  <#GAPDoc Label="FormatParagraph">
 ##  <ManSection >
-##  <Func Arg="str[, len[, flush[, attr]]]" Name="FormatParagraph" />
+##  <Func Arg="str[, len][, flush][, attr][, widthfun]]]" 
+##      Name="FormatParagraph" />
 ##  <Returns>the formatted paragraph as string</Returns>
 ##  <Description>
 ##  This function formats a text given  in the string <A>str</A> as a
@@ -422,6 +423,12 @@ end);
 ##  be  used  for  indenting,  <C>["  ",  ""]</C>,  or  some  markup,
 ##  <C>[TextAttr.bold,   TextAttr.reset]</C>,   default  is   <C>["",
 ##  ""]</C>)</Item>
+##  <Mark><A>widthfun</A></Mark>
+##  <Item>must be a function which returns the display width of text in 
+##  <A>str</A>. The default is <C>Length</C> assuming that each byte 
+##  corresponds to a character of width one. If <A>str</A> is given in 
+##  <C>UTF-8</C> encoding one can use <Ref Func="WidthUTF8String"/> here.
+##  </Item>
 ##  </List>
 ##  
 ##  This function  tries to handle  markup with the  escape sequences
@@ -440,7 +447,7 @@ end);
 ##  
 BindGlobal("SPACESTRINGS", [" "]);
 InstallGlobalFunction(FormatParagraph, function(arg)
-  local   str,  len,  flush,  attr,  i,  words,  esc,  l,  j,  k,  lw,  
+  local   str,  len,  flush,  attr, width, i, words, esc, l, j, k, lw,  
           lines,  s,  ss,  nsp,  res,  a,  new,  qr,  b;
   str := arg[1];
   # default line length
@@ -449,6 +456,8 @@ InstallGlobalFunction(FormatParagraph, function(arg)
   flush := "both";
   # default attribute (empty)
   attr := false;
+  # default width function assumes that one byte is one character
+  width := Length;
   # scan further arg's
   for i in [2..Length(arg)] do
     if IsInt(arg[i]) then
@@ -457,6 +466,8 @@ InstallGlobalFunction(FormatParagraph, function(arg)
       flush := arg[i];
     elif IsList(arg[i]) then
       attr := arg[i];
+    elif IsFunction(arg[i]) then
+      width := arg[i];
     else
       Error("wrong argument", arg[i]);
     fi;
@@ -499,7 +510,7 @@ InstallGlobalFunction(FormatParagraph, function(arg)
         j := j+1;
       od;
       if ForAll([i..j-1], k-> IsChar(str[k])) then
-        Add(words, [NrCharsUTF8String(str{[i..j-1]}), [i..j-1]]);
+        Add(words, [width(str{[i..j-1]}), [i..j-1]]);
       else
         Add(words, [j-i, [i..j-1]]);
       fi;

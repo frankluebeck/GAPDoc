@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.23 2007-05-16 16:03:12 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.24 2007-05-18 13:35:47 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -441,8 +441,8 @@ BindGlobal("GAPDoc2TextContent", function(r, l)
         s := s{[pos+1..Length(s)]};
         pos := Position(s, '\004');
       fi;
-      Append(sn, FormatParagraph(ss, r.root.linelength -
-                   Length(r.root.indent), "both", [r.root.indent, ""]));
+      Append(sn, FormatParagraph(ss, r.root.linelength - Length(r.root.indent),
+                               "both", [r.root.indent, ""], WidthUTF8String));
     od;
     if Length(sn)>0 then
       GAPDoc2TextProcs.P(0, sn);
@@ -628,7 +628,7 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
   GAPDoc2TextContent(l[1], s);
   s := FormatParagraph(s, r.root.linelength, "center",
                [GAPDoc2TextProcs.TextAttr.Heading, 
-               GAPDoc2TextProcs.TextAttr.reset]); 
+               GAPDoc2TextProcs.TextAttr.reset], WidthUTF8String); 
   Append(strn, s);
   Append(strn, "\n\n");
   
@@ -639,7 +639,7 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
     GAPDoc2TextContent(l[1], s);
     s := FormatParagraph(s, r.root.linelength, "center",
                  [GAPDoc2TextProcs.TextAttr.Heading, 
-                 GAPDoc2TextProcs.TextAttr.reset]); 
+                 GAPDoc2TextProcs.TextAttr.reset], WidthUTF8String); 
     Append(strn, s);
     Append(strn, "\n\n");
   fi;
@@ -652,7 +652,7 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
     while Length(s)>0 and s[Length(s)] in  WHITESPACE do
       Unbind(s[Length(s)]);
     od;
-    s := FormatParagraph(s, r.root.linelength, "center");
+    s := FormatParagraph(s, r.root.linelength, "center", WidthUTF8String);
     Append(strn, s);
     Append(strn, "\n\n");
   fi;
@@ -662,7 +662,7 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
   if Length(l)>0 then
     s := "";
     GAPDoc2TextContent(l[1], s);
-    s := FormatParagraph(s, r.root.linelength, "center");
+    s := FormatParagraph(s, r.root.linelength, "center", WidthUTF8String);
     Append(strn, s);
     Append(strn, "\n\n");
   fi;
@@ -675,7 +675,7 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
     aa.content := Filtered(a.content, b-> 
                   not b.name in ["Email", "Homepage", "Address"]);
     GAPDoc2TextContent(aa, s);
-    s := FormatParagraph(s, r.root.linelength, "center");
+    s := FormatParagraph(s, r.root.linelength, "center", WidthUTF8String);
     Append(strn, s);
     Append(strn, "\n");
   od;
@@ -874,7 +874,8 @@ GAPDoc2TextProcs.ChapSect := function(r, par, sect)
                              GAPDoc2TextProcs.TextAttr.Heading));
     Add(r.root.six, [NormalizedWhitespace(FormatParagraph(sm,
                  r.root.linelength, [GAPDoc2TextProcs.TextAttr.Heading,
-                 GAPDoc2TextProcs.TextAttr.reset])), num, r.count{[1..3]}]);
+                 GAPDoc2TextProcs.TextAttr.reset], WidthUTF8String)), 
+                 num, r.count{[1..3]}]);
     
     # label entry, if present
     if IsBound(r.attributes.Label) then
@@ -888,7 +889,7 @@ GAPDoc2TextProcs.ChapSect := function(r, par, sect)
     # here we assume that r.indent = ""
     Add(par, Concatenation("\n", FormatParagraph(sm,
                  r.root.linelength, [GAPDoc2TextProcs.TextAttr.Heading,
-                         GAPDoc2TextProcs.TextAttr.reset]), "\n"));
+                   GAPDoc2TextProcs.TextAttr.reset], WidthUTF8String), "\n"));
     
     # table of contents entry
     if sect="Section" then 
@@ -900,7 +901,8 @@ GAPDoc2TextProcs.ChapSect := function(r, par, sect)
     fi;
     # here s without heading markup
     Append(r.root.toc, FormatParagraph(Concatenation(num, " ", s),
-            r.root.linelength-Length(ind), "left", [ind, ""]));
+            r.root.linelength-Length(ind), "left", [ind, ""],
+            WidthUTF8String));
   fi;
   
   # the actual content
@@ -1069,7 +1071,7 @@ GAPDoc2TextProcs.Display := function(r, par)
 #  s := StripBeginEnd(s, "\n");
 #  s := Concatenation("\\[\n", s, "\n\\]\n\n");
   s := FormatParagraph(s, r.root.linelength - 10 - Length(r.root.indent), 
-                    "left", [Concatenation(r.root.indent, "     "), ""]);
+          "left", [Concatenation(r.root.indent, "     "), ""], WidthUTF8String);
 ##    s := Concatenation("\\[\n", s, "\\]\n\n");
   s := Concatenation("\n", s, "\n\n");
   Add(par, r.count);
@@ -1268,7 +1270,7 @@ GAPDoc2TextProcs.LikeFunc := function(r, par, typ)
                         GAPDoc2TextProcs.TextAttr.reset, lab),
           r.count{[1..3]}]);
   # some hint about the type of the variable
-  for i in [Length(StripEscapeSequences(s))+1 .. 
+  for i in [WidthUTF8String(StripEscapeSequences(s))+1 .. 
           r.root.linelength - Length(typ)] do
     Add(s, '_');
   od;
@@ -1669,7 +1671,7 @@ GAPDoc2TextProcs.Table := function(r, str)
 
   # equalize width of entries in columns
   for i in [2,4..2*QuoInt(Length(align), 2)] do
-    a := List(t, b-> Length(StripEscapeSequences(b[i])));
+    a := List(t, b-> WidthUTF8String(StripEscapeSequences(b[i])));
     m := Maximum(a);
     z := "";
     for b in [1..m] do 
@@ -1699,7 +1701,7 @@ GAPDoc2TextProcs.Table := function(r, str)
     fi;
   od;
   t := List(t, Concatenation);
-  a := Maximum(List(t, x-> Length(StripEscapeSequences(x))));
+  a := Maximum(List(t, x-> WidthUTF8String(StripEscapeSequences(x))));
   z := "   ";
   for b in [1..a] do 
     Add(z, '-');
@@ -1740,7 +1742,7 @@ GAPDoc2TextProcs.Caption1 := function(r, str)
               GAPDoc2TextProcs.TextAttr.reset, " "));
   GAPDoc2TextContent(r, s);
   Append(str, FormatParagraph(s, r.root.linelength - 10, 
-                                                  "both", ["     ", ""]));
+                                "both", ["     ", ""], WidthUTF8String));
 end;
 
 ##  
