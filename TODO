@@ -1,7 +1,11 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.10 2007-05-15 21:04:16 gap Exp $
+         $Id: TODO,v 1.11 2007-05-18 16:01:31 gap Exp $
+
+- document changes to elements
+
+- finish example for bib stuff.
 
 - Check handling of bibliography in all formats
 

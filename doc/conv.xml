@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.20 2007-05-18 14:37:09 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.21 2007-05-18 16:01:31 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters and an XML Parser</Heading>
@@ -432,9 +432,8 @@ it can be a useful hook for introducing arbitrary further markup
 (and our tools can easily be extended to handle it).</Item>
 <Mark>Extra entities</Mark>
 <Item>The DTD defines the standard XML entities (<Ref
-Subsect="XMLspchar"/> and the entities for special characters in &LaTeX;
-as also defined in &GAPDoc; (<Ref Subsect="GDspchar"/>). In particular,
-use <C>&amp;ndash;</C> in page ranges. We also define <C>&amp;copyright;</C>.
+Subsect="XMLspchar"/> and the entities <C>&amp;ndash;</C> and
+<C>&amp;copyright;</C>. Use <C>&amp;ndash;</C> in page ranges.
 </Item>
 </List>
 

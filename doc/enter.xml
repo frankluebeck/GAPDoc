@@ -1,4 +1,4 @@
-<!-- $Id: enter.xml,v 1.10 2007-05-18 14:37:09 gap Exp $ -->
+<!-- $Id: enter.xml,v 1.11 2007-05-18 16:01:31 gap Exp $ -->
 <Chapter Label="HowEnter">
 <Heading>How To Type a &GAPDoc; Document</Heading>
 
@@ -118,7 +118,7 @@ or  double  quotes.  The  attribute  value  may  not  contain  the  type  of
 quote  used  as  a  delimiter  or  the  character  <Q><C>&lt;</C></Q>, the 
 character <Q><C>&amp;</C></Q> may only appear to start an entity, 
 see&nbsp;<Ref Subsect="XMLent"/>. We describe 
-in&nbsp;<Ref Subsect="AttrValRules"/> and&nbsp;<Ref Subsect="GDspchar"/> how 
+in&nbsp;<Ref Subsect="AttrValRules"/>  how 
 to enter special characters in attribute values.<P/>
 
 Note  especially  that  no  whitespace   is  allowed  between  the  starting
@@ -165,8 +165,8 @@ is directly followed  by a semicolon <Q><C>;</C></Q>. Such  entities must be
 declared somewhere by  giving a substitution text. This text  is included in
 the document  and the document is  parsed again afterwards. The  exact rules
 are a  bit subtle but you  probably want to  use this only in  simple cases.
-Important entities for &GAPDoc; are described in <Ref Subsect="XMLspchar"/>,
-<Ref Subsect="GDspchar"/> and <Ref Subsect="GDent"/>.<P/>
+Predefined entities for &GAPDoc; are described in <Ref Subsect="XMLspchar"/>
+and <Ref Subsect="GDent"/>.<P/>
 
 </Subsection>
 
@@ -257,16 +257,12 @@ the file <F>gapdoc.dtd</F> and so the markup language defined there.
 
 Here are some additional rules for writing &GAPDoc; XML documents.
 
-<Subsection Label="GDspchar">
-<Heading>More Special Characters</Heading>
-
-Since one purpose of &GAPDoc; documents is to produce a high quality &LaTeX;
-output version we have to pay attention to characters with a special meaning
-in &LaTeX; or in XML. These are the following characters:<P/>
-
+<Subsection Label="otherspecchar">
+<Heading>Other special characters</Heading>
+As &GAPDoc; documents are used to produce  &LaTeX; and HTML
+documents, the question arises how to deal with characters with a
+special meaning for other applications (for example 
 <Q><C>&amp;</C></Q>,
-<Q><C>&lt;</C></Q>,
-<Q><C>></C></Q>,
 <Q><C>#</C></Q>,
 <Q><C>$</C></Q>,
 <Q><C>%</C></Q>,
@@ -276,65 +272,36 @@ in &LaTeX; or in XML. These are the following characters:<P/>
 <Q><C>}</C></Q>,
 <Q><C>_</C></Q>,
 <Q><C>^</C></Q>,
-<Q><C>&nbsp;</C></Q> (this is a non-breakable space, similar to
-&LaTeX;'s <Q><C>~</C></Q> character) and
-<Q>&ndash;</Q> (an en dash, used instead of &LaTeX;'s double
-<C>--</C>).
-<P/>
+<Q><C>&nbsp;</C></Q> (this is a non-breakable space, 
+<Q><C>~</C></Q> in &LaTeX;) have a special meaning for &LaTeX; and
+<Q><C>&amp;</C></Q>,
+<Q><C>&lt;</C></Q>,
+<Q><C>></C></Q> have a special meaning for HTML (and XML). 
+In &GAPDoc; you can usually just type these characters directly, it is
+the task of the converter programs which translate to some output format
+to take care of such special characters. The exceptions to this simple
+rule are: 
+<List >
+<Item>
+&amp; and &lt; must be entered as <C>&amp;amp;</C> and 
+<C>&amp;lt;</C> as explained in <Ref Subsect="XMLspchar"/>. 
+</Item>
+<Item>The content of the &GAPDoc; elements <C>&lt;M></C>, 
+<C>&lt;Math></C> and <C>&lt;Display></C> is &LaTeX; code,
+see <Ref  Sect="MathForm"/>.</Item>
+<Item>The content of an <C>&lt;Alt></C> element with <C>Only</C>
+attribute contains code for the specified output type, see 
+<Ref Subsect="Alt"/>.</Item>
+</List>
 
-The  right  way  to  specify these  symbols in element content is  by  
-using  <Q>entities</Q>,
-see&nbsp;<Ref Subsect="XMLent"/>. The following table  shows what to type to
-get these characters in the output text of the document.<P/>
-
-<Table Align="|l|l|" Label="charsInCDATA"> 
- <Caption>What to type for special characters in character data</Caption>
- <HorLine/> <Row> 
-  <Item><C>&amp;</C></Item><Item><C>&amp;tamp;</C></Item>
- </Row> <HorLine/> <Row>
-  <Item><C>&lt;</C></Item>  <Item><C>&amp;tlt;</C></Item>
- </Row> <HorLine/> <Row>
-  <Item><C>></C></Item>  <Item><C>&amp;tgt;</C></Item>
- </Row> <HorLine/> <Row>
-  <Item><C>#</C></Item>    <Item><C>&amp;hash;</C></Item>
- </Row> <HorLine/> <Row>
-  <Item><C>$</C></Item>    <Item><C>&amp;dollar;</C></Item>
- </Row> <HorLine/> <Row>
-  <Item><C>%</C></Item>    <Item><C>&amp;percent;</C></Item>
- </Row> <HorLine/> <Row>
-  <Item><C>~</C></Item> <Item><C>&amp;tilde;</C></Item>
- </Row> <HorLine/> <Row>
-  <Item><C>\</C></Item>   <Item><C>&amp;bslash;</C></Item>
- </Row> <HorLine/> <Row>
-  <Item><C>{</C></Item>    <Item><C>&amp;obrace;</C></Item>
- </Row> <HorLine/> <Row>
-  <Item><C>}</C></Item>    <Item><C>&amp;cbrace;</C></Item>
- </Row> <HorLine/> <Row>
-  <Item><C>_</C></Item>    <Item><C>&amp;uscore;</C></Item>
- </Row> <HorLine/> <Row>
-  <Item><C>^</C></Item>    <Item><C>&amp;circum;</C></Item>
- </Row> <HorLine/> <Row>
-  <Item><C>&nbsp;</C></Item>      <Item><C>&amp;nbsp;</C></Item>
- </Row> <HorLine/>
-</Table><P/>
-
-Note  that  the  first  three  have  an  extra  <Q>t</Q>  at  the  beginning
-in  comparison with  the  standard entities  of  XML described  in&nbsp;<Ref
-Subsect="XMLspchar"/>.  The  difference  is necessary  because  for  example
-<Q><C>&amp;tamp;</C></Q> produces  <Q><C>\&amp;</C></Q> for &LaTeX;
-to  actually  get  an  ampersand  character  in  the  printed  version.  Use
-<Q><C>&amp;amp;</C></Q> if you want to  pass an ampersand character without
-a backslash in front directly to &LaTeX;.<P/>
-
-Inside attribute  values you should  <E>not</E> use these  entities. Instead
-use <Q><C>&amp;lt;</C></Q> for <Q>&lt;</Q>, <Q><C>&amp;amp;</C></Q> for
-<Q>&amp;</Q>, and the other   characters directly.  
-A program which uses attribute values as printable text has to make sure
-that special characters are appropriately escaped.
-<P/>
-
-Also, these entities  are <E>not</E> used inside  mathematical formulae, see
-&nbsp;<Ref Subsect="GDformulae"/> below.
+Remark: In former versions of &GAPDoc; one had to use particular
+entities for all the special characters mentioned above 
+(<C>&amp;tamp;</C>, <C>&amp;hash;</C>, 
+<C>&amp;dollar;</C>, <C>&amp;percent;</C>, <C>&amp;tilde;</C>, 
+<C>&amp;bslash;</C>, <C>&amp;obrace;</C>, <C>&amp;cbrace;</C>, 
+<C>&amp;uscore;</C>, <C>&amp;circum;</C>, <C>&amp;tlt;</C>, <C>&amp;tgt;</C>).
+These are no longer needed, but they are still defined for backwards
+compatibility with older &GAPDoc; documents.
 
 </Subsection>
 
@@ -351,8 +318,8 @@ mode  and  display  math mode.  The  last  one  is  a special  form  of  the
 content. On  the other  hand the  content of  an <Q><C>M</C></Q>  element is
 processed in a well defined way for text terminal or HTML output.<P/>
 
-The remarks  about special  characters in&nbsp;<Ref  Subsect="GDspchar"/> do
-not  apply to  the content  of these  elements. But  the special  characters
+Note that the content of these element is &LaTeX; code, but  
+the special  characters
 <Q><C>&lt;</C></Q>  and <Q><C>&amp;</C></Q>  for XML  must be  entered via
 the  entities described  in&nbsp;<Ref  Subsect="XMLspchar"/> or  by using  a
 <C>CDATA</C> statement, see&nbsp;<Ref Subsect="XMLcdata"/>.<P/>
@@ -383,7 +350,14 @@ In &GAPDoc; there are some more predefined  entities:
 <HorLine/>
 <Row> <Item><C>&amp;copyright;</C></Item> <Item>&copyright;</Item> </Row>
 <HorLine/>
+<Row> <Item><C>&amp;nbsp;</C></Item> <Item><Q>&nbsp;</Q></Item> </Row>
+<HorLine/>
+<Row> <Item><C>&amp;ndash;</C></Item> <Item>&ndash;</Item> </Row>
+<HorLine/>
 </Table>
+
+Here <C>&amp;nbsp;</C> is a non-breakable space character.
+<P/>
 
 One can define  further local entities right inside  the head (see&nbsp;<Ref
 Subsect="XMLhead"/>) of a &GAPDoc; XML document as in the following example.
