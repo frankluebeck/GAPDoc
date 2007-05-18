@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id: example.xml,v 1.14 2007-05-16 16:03:12 gap Exp $ -->
+<!-- $Id: example.xml,v 1.15 2007-05-18 14:37:09 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
- [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&tgt;</Alt>'>]>
+ [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&gt;</Alt>'>]>
 
 <Book Name="GAPDoc Example">
 
@@ -12,7 +12,7 @@
   <Subtitle>Every element shows up</Subtitle>
   <Version>Version 1.0</Version>
   <TitleComment>
-  If the subtitle ist not sufficient, this &tlt;TitleComment&tgt; 
+  If the subtitle ist not sufficient, this &lt;TitleComment> 
   element can be used for a slightly longer text on the front page.
   </TitleComment>
   <Author>Frank Lübeck 
@@ -114,7 +114,7 @@
     This is the super-fast method for the operation
     <Ref Oper="MyOperation"/> if the argument <A>x</A> is in the
     representation <Ref Filt="IsBla"/>. It will become even faster if
-    the optional argument <A>good&uscore;hint</A> is given.
+    the optional argument <A>good_hint</A> is given.
    </Description>
   </ManSection>
 
@@ -414,11 +414,11 @@ Here is a <E>table</E>:
  <HorLine/>
  <HorLine/>
   <Row>
-   <Item>Shoe</Item><Item>&dollar;1,00</Item><Item>there</Item>
+   <Item>Shoe</Item><Item>$1,00</Item><Item>there</Item>
   </Row>
  <HorLine/>
   <Row>
-   <Item>Hat</Item><Item>&dollar;2,00</Item><Item>not there</Item>
+   <Item>Hat</Item><Item>$2,00</Item><Item>not there</Item>
   </Row>
  <HorLine/>
 </Table>
@@ -436,18 +436,18 @@ Here is the table of special characters:
 <Table Align="|c|c|c|c|c|c|c|c|c|c|c|c|c|" Label="charsInCDATA"> 
  <Caption>Special characters in character data</Caption>
  <HorLine/> <Row> 
-  <Item><C>&tamp;</C></Item>
-  <Item><C>&tlt;</C></Item>
-  <Item><C>&tgt;</C></Item>
-  <Item><C>&hash;</C></Item>
-  <Item><C>&dollar;</C></Item>
-  <Item><C>&percent;</C></Item>
-  <Item><C>&tilde;</C></Item>
-  <Item><C>&bslash;</C></Item>   
-  <Item><C>&obrace;</C></Item>
-  <Item><C>&cbrace;</C></Item>
-  <Item><C>&uscore;</C></Item>
-  <Item><C>&circum;</C></Item>
+  <Item><C>&amp;</C></Item>
+  <Item><C>&lt;</C></Item>
+  <Item><C>></C></Item>
+  <Item><C>#</C></Item>
+  <Item><C>$</C></Item>
+  <Item><C>%</C></Item>
+  <Item><C>~</C></Item>
+  <Item><C>\</C></Item>   
+  <Item><C>{</C></Item>
+  <Item><C>}</C></Item>
+  <Item><C>_</C></Item>
+  <Item><C>^</C></Item>
   <Item><C>&nbsp;</C></Item>
  </Row> <HorLine/>
 </Table>
@@ -457,21 +457,21 @@ And here are the predefined entities in &GAPDoc;:
 <Table Align="|l|l|">
 <Caption>Predefined Entities in the &GAPDoc; system</Caption>
 <HorLine/>
-<Row> <Item><C>&tamp;GAP;</C></Item>       <Item>&GAP;</Item> </Row>
+<Row> <Item><C>&amp;GAP;</C></Item>       <Item>&GAP;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;GAPDoc;</C></Item>    <Item>&GAPDoc;</Item> </Row>
+<Row> <Item><C>&amp;GAPDoc;</C></Item>    <Item>&GAPDoc;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;TeX;</C></Item>       <Item>&TeX;</Item> </Row>
+<Row> <Item><C>&amp;TeX;</C></Item>       <Item>&TeX;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;LaTeX;</C></Item>     <Item>&LaTeX;</Item> </Row>
+<Row> <Item><C>&amp;LaTeX;</C></Item>     <Item>&LaTeX;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;BibTeX;</C></Item>    <Item>&BibTeX;</Item> </Row>
+<Row> <Item><C>&amp;BibTeX;</C></Item>    <Item>&BibTeX;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;MeatAxe;</C></Item>   <Item>&MeatAxe;</Item> </Row>
+<Row> <Item><C>&amp;MeatAxe;</C></Item>   <Item>&MeatAxe;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;XGAP;</C></Item>      <Item>&XGAP;</Item> </Row>
+<Row> <Item><C>&amp;XGAP;</C></Item>      <Item>&XGAP;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;copyright;</C></Item> <Item>&copyright;</Item> </Row>
+<Row> <Item><C>&amp;copyright;</C></Item> <Item>&copyright;</Item> </Row>
 <HorLine/>
 </Table>
 
@@ -609,7 +609,7 @@ This is an appendix.
     This is the super-fast method for the operation
     <Ref Oper="MyOperation"/> if the argument <A>x</A> is in the
     representation <Ref Filt="IsBla"/>. It will become even faster if
-    the optional argument <A>good&uscore;hint</A> is given.
+    the optional argument <A>good_hint</A> is given.
    </Description>
   </ManSection>
 
@@ -875,7 +875,7 @@ Email addresses have a special element:
 <P/>
 
 and Homepages another one:
-<Homepage>http://www.math.rwth-aachen.de/&tilde;Max.Neunhoeffer/</Homepage>
+<Homepage>http://www.math.rwth-aachen.de/~Max.Neunhoeffer/</Homepage>
 <P/>
 
 One can generate index entries as follows (look up the words 
@@ -927,11 +927,11 @@ Here is a <E>table</E>:
  <HorLine/>
  <HorLine/>
   <Row>
-   <Item>Shoe</Item><Item>&dollar;1,00</Item><Item>there</Item>
+   <Item>Shoe</Item><Item>$1,00</Item><Item>there</Item>
   </Row>
  <HorLine/>
   <Row>
-   <Item>Hat</Item><Item>&dollar;2,00</Item><Item>not there</Item>
+   <Item>Hat</Item><Item>$2,00</Item><Item>not there</Item>
   </Row>
  <HorLine/>
 </Table>
@@ -955,18 +955,18 @@ Here is the table of special characters:
 <Table Align="|c|c|c|c|c|c|c|c|c|c|c|c|c|c|" Label="charsInCDATA"> 
  <Caption>Special characters in character data</Caption>
  <HorLine/> <Row> 
-  <Item><C>&tamp;</C></Item>
-  <Item><C>&tlt;</C></Item>
-  <Item><C>&tgt;</C></Item>
-  <Item><C>&hash;</C></Item>
-  <Item><C>&dollar;</C></Item>
-  <Item><C>&percent;</C></Item>
-  <Item><C>&tilde;</C></Item>
-  <Item><C>&bslash;</C></Item>   
-  <Item><C>&obrace;</C></Item>
-  <Item><C>&cbrace;</C></Item>
-  <Item><C>&uscore;</C></Item>
-  <Item><C>&circum;</C></Item>
+  <Item><C>&amp;</C></Item>
+  <Item><C>&lt;</C></Item>
+  <Item><C>></C></Item>
+  <Item><C>#</C></Item>
+  <Item><C>$</C></Item>
+  <Item><C>%</C></Item>
+  <Item><C>~</C></Item>
+  <Item><C>\</C></Item>   
+  <Item><C>{</C></Item>
+  <Item><C>}</C></Item>
+  <Item><C>_</C></Item>
+  <Item><C>^</C></Item>
   <Item><C>&nbsp;</C></Item>
  </Row> <HorLine/>
 </Table>
@@ -976,21 +976,21 @@ And here are the predefined entities in &GAPDoc;:
 <Table Align="|l|l|">
 <Caption>Predefined Entities in the &GAPDoc; system</Caption>
 <HorLine/>
-<Row> <Item><C>&tamp;GAP;</C></Item>       <Item>&GAP;</Item> </Row>
+<Row> <Item><C>&amp;GAP;</C></Item>       <Item>&GAP;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;GAPDoc;</C></Item>    <Item>&GAPDoc;</Item> </Row>
+<Row> <Item><C>&amp;GAPDoc;</C></Item>    <Item>&GAPDoc;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;TeX;</C></Item>       <Item>&TeX;</Item> </Row>
+<Row> <Item><C>&amp;TeX;</C></Item>       <Item>&TeX;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;LaTeX;</C></Item>     <Item>&LaTeX;</Item> </Row>
+<Row> <Item><C>&amp;LaTeX;</C></Item>     <Item>&LaTeX;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;BibTeX;</C></Item>    <Item>&BibTeX;</Item> </Row>
+<Row> <Item><C>&amp;BibTeX;</C></Item>    <Item>&BibTeX;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;MeatAxe;</C></Item>   <Item>&MeatAxe;</Item> </Row>
+<Row> <Item><C>&amp;MeatAxe;</C></Item>   <Item>&MeatAxe;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;XGAP;</C></Item>      <Item>&XGAP;</Item> </Row>
+<Row> <Item><C>&amp;XGAP;</C></Item>      <Item>&XGAP;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;copyright;</C></Item> <Item>&copyright;</Item> </Row>
+<Row> <Item><C>&amp;copyright;</C></Item> <Item>&copyright;</Item> </Row>
 <HorLine/>
 </Table>
 

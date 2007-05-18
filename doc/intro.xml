@@ -1,4 +1,4 @@
-<!-- $Id: intro.xml,v 1.8 2007-03-06 07:02:42 gap Exp $ -->
+<!-- $Id: intro.xml,v 1.9 2007-05-18 14:37:09 gap Exp $ -->
 <Chapter Label="ch:intro"><Heading>Introduction and Example</Heading>
 
 The main  purpose of  the &GAPDoc; package  is to define  a file  format for
@@ -67,12 +67,12 @@ character set (other common encodings are ASCII or ISO-8895-X encodings).
 
 <Listing Type="from 3k+1.xml">
 <![CDATA[<!--   A complete "fake package" documentation   
-   $Id: intro.xml,v 1.8 2007-03-06 07:02:42 gap Exp $
+   $Id: intro.xml,v 1.9 2007-05-18 14:37:09 gap Exp $
 -->
 ]]></Listing>
 
-Everything   in    a   XML    file   between    <Q><C>&tlt;!--</C></Q>   and
-<Q><C>--&tgt;</C></Q> is a comment and not part of the document content.
+Everything   in    a   XML    file   between    <Q><C>&lt;!--</C></Q>   and
+<Q><C>--></C></Q> is a comment and not part of the document content.
 
 <Listing Type="from 3k+1.xml">
 <![CDATA[<!DOCTYPE Book SYSTEM "gapdoc.dtd">
@@ -109,12 +109,12 @@ for example <C>&lt;TableOfContents/&gt;</C> below).
 
 If   you   know   &LaTeX;,   you   are   familiar   with   quite   different
 types  of   markup,  for   example:  The   equivalent  of   the  <C>Book</C>
-element   in   &LaTeX;   is   <C>&bslash;begin&obrace;document&cbrace;   ...
-&bslash;end&obrace;document&cbrace;</C>.  The sectioning  in &LaTeX;  is not
+element   in   &LaTeX;   is   <C>\begin{document}   ...
+\end{document}</C>.  The sectioning  in &LaTeX;  is not
 done  by  explicit  start  and   end  markup,  but  implicitly  via  heading
-commands  like  <C>&bslash;section</C>.  Other   markup  is  done  by  using
-braces  <C>&obrace;&cbrace;</C> and  putting some  commands inside.  And for
-mathematical  formulae  one  can  use  the  <C>&dollar;</C>  for  the  start
+commands  like  <C>\section</C>.  Other   markup  is  done  by  using
+braces  <C>{}</C> and  putting some  commands inside.  And for
+mathematical  formulae  one  can  use  the  <C>$</C>  for  the  start
 <E>and</E> the end of the markup.  In XML <E>all</E> markup looks similar to
 that of the <C>Book</C> element. <P/>
 
@@ -146,20 +146,20 @@ the actual layout of  the title page in any output  version of the document.
 It just adds information about the <E>meaning</E> of pieces of text. <P/>
 
 Within the <C>Copyright</C> element there are two more things to learn about
-XML markup. The <C>&tlt;P/&tgt;</C> is a  complete element. It is a combined
+XML markup. The <C>&lt;P/></C> is a  complete element. It is a combined
 start and end  tag. This shortcut is allowed for  elements which are defined
 to be  always <Q>empty</Q>, i.e., to  have no content. You  may have already
-guessed that <C>&tlt;P/&tgt;</C> is used as a paragraph separator. Note that
+guessed that <C>&lt;P/></C> is used as a paragraph separator. Note that
 empty lines do not separate paragraphs (as in &LaTeX;). <P/>
 
-The  other construct  we see  here  is <C>&tamp;copyright;</C>.  This is  an
+The  other construct  we see  here  is <C>&amp;copyright;</C>.  This is  an
 example of  an <Q>entity</Q>  in XML  and is a  macro for  some substitution
 text. Here we use an entity as a shortcut for a complicated expression which
 makes it  possible that the  term <E>copyright</E>  is printed as  some text
 like <C>(C)</C>  in text  terminal output  and as  a copyright  character in
 other output formats. In &GAPDoc;  we predefine some entities, in particular
 certain <Q>special  characters</Q> must be  typed via entities,  for example
-<Q>&tlt;</Q>, <Q>&tgt;</Q> and <Q>&tamp;</Q> to avoid a misinterpretation as
+<Q>&lt;</Q>, <Q>></Q> and <Q>&amp;</Q> to avoid a misinterpretation as
 XML markup.  But also  the special  characters in  &LaTeX; are  written with
 entities,  since  they  need  a  different  handling  in  a  &LaTeX;  and  a
 text  output  format,  see&nbsp;<Ref  Subsect="XMLspchar"  />  and&nbsp;<Ref
@@ -195,8 +195,8 @@ elements:
 </Body>
 ]]></Listing>
 
-These   elements   are   used  similarly   to   <Q>&bslash;chapter</Q>   and
-<Q>&bslash;section</Q> in &LaTeX;.  But note that the explicit  end tags are
+These   elements   are   used  similarly   to   <Q>\chapter</Q>   and
+<Q>\section</Q> in &LaTeX;.  But note that the explicit  end tags are
 necessary here.
 <P/>
 The sectioning commands allow to assign an optional attribute <Q>Label</Q>.
@@ -227,7 +227,7 @@ readable  terminal text.  More complicated  formulae are  in <Q>Math</Q>  or
 output. So,  to make a  section well readable  inside a terminal  window you
 should  try to  put as  many  formulae as  possible into  <Q>M</Q>-elements.
 In  our  example  text  we  used the  notation  <C>n(i,  k)</C>  instead  of
-<C>n&uscore;i(k)</C>  because  it  is  easier  to read  in  text  mode.  See
+<C>n_i(k)</C>  because  it  is  easier  to read  in  text  mode.  See
 Sections&nbsp;<Ref Sect="GDformulae"/> and&nbsp;<Ref  Sect="sec:misc" /> for
 more  details.  <P/>  
 

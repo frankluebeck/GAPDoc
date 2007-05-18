@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.19 2007-05-18 13:35:47 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.20 2007-05-18 14:37:09 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters and an XML Parser</Heading>
@@ -20,7 +20,7 @@ Here   we    explain   how    to   use    the   functions    which   are
 described  in  more   detail  in  the  following   sections.  We  assume
 that   we   have   the   main   file   <F>MyBook.xml</F>   of   a   book
 <C>"MyBook"</C>  in the  directory  <F>/my/book/path</F>. This  contains
-<C>&tlt;&hash;Include    ...&tgt;</C>-statements    as   explained    in
+<C>&lt;#Include    ...></C>-statements    as   explained    in
 Chapter&nbsp;<Ref Sect="Distributing"/>. These refer to some other files
 as well as pieces of text which  are found in the comments of some &GAP;
 source files <F>../lib/a.gd</F> and  <F>../lib/b.gi</F> (relative to the
@@ -35,7 +35,7 @@ All the commands shown in this  Section are collected in the single function
 
 First   we  construct   the   complete  XML-document   as   a  string   with
 <Ref   Func="ComposedDocument"/>.     This   interprets    recursively   the
-<C>&tlt;&hash;Include ...&tgt;</C>-statements.
+<C>&lt;#Include ...></C>-statements.
 
 <Log>
 gap> path := Directory("/my/book/path");;
@@ -357,7 +357,7 @@ Bibliographical data in &BibTeX; files have the disadvantage that the
 actual data are given in &LaTeX; syntax. This makes it difficult to use
 the data for anything but for &LaTeX;, say for representations of the
 data as plain text or HTML. For example: mathematical formulae are in
-&LaTeX; <C>&dollar;</C> environments,  non-ASCII characters can be
+&LaTeX; <C>$</C> environments,  non-ASCII characters can be
 specified in many strange ways, and how to specify URLs for links if the
 output format allows them?<P/>
 
@@ -390,7 +390,7 @@ and a <C>&lt;last></C>-element for the first and last names,
 respectively.</Item>
 <Mark><C>&lt;M></C> and <C>&lt;Math></C></Mark>
 <Item>These elements enclose mathematical formulae, the content is
-&LaTeX; code (without the <C>&dollar;</C>). These should be handled in
+&LaTeX; code (without the <C>$</C>). These should be handled in
 the same way as the elements with the same names in &GAPDoc;, see
 <Ref Subsect="M"/> and <Ref Subsect="Math"/>. In particular, simple
 formulae which have a well defined plain text representation can be
@@ -414,7 +414,7 @@ on the output format of the data. This is possible with the
 </Item>
 <Mark><C>&lt;C></C></Mark>
 <Item>This element should be used to protect text from case changes by
-converters (the extra <C>&obrace;&cbrace;</C> characters in &BibTeX;
+converters (the extra <C>{}</C> characters in &BibTeX;
 title fields).</Item>
 <Mark><C>&lt;string key="..." value="..."/></C> and 
 <C>&lt;value key="..."/></C></Mark>
@@ -434,7 +434,7 @@ it can be a useful hook for introducing arbitrary further markup
 <Item>The DTD defines the standard XML entities (<Ref
 Subsect="XMLspchar"/> and the entities for special characters in &LaTeX;
 as also defined in &GAPDoc; (<Ref Subsect="GDspchar"/>). In particular,
-use <C>&tamp;ndash;</C> in page ranges. We also define <C>&tamp;copyright;</C>.
+use <C>&amp;ndash;</C> in page ranges. We also define <C>&amp;copyright;</C>.
 </Item>
 </List>
 

@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.23 2007-05-15 21:04:16 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.24 2007-05-18 14:37:09 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -600,10 +600,10 @@ end);
 ##  <C>.dtd</C>-file (which is not read by this parser). The standard
 ##  XML-entities do not need to be provided, and for &GAPDoc; documents
 ##  the entity definitions from  <C>gapdoc.dtd</C> are automatically
-##  provided. Entities in the documents <C>&tlt;!DOCTYPE</C> declaration
+##  provided. Entities in the documents <C>&lt;!DOCTYPE</C> declaration
 ##  are parsed and also need not to be provided here. The argument
 ##  <A>entitydict</A> must be a record where each component name is an entity
-##  name (without the surrounding &tamp; and ;) to which  is assigned its
+##  name (without the surrounding &amp; and ;) to which  is assigned its
 ##  substitution string.<P/>
 ##  
 ##  The second function is just a shortcut for <C>ParseTreeXMLString( 
@@ -626,7 +626,7 @@ end);
 ##  </Listing>
 ##  
 ##  This  means   that  <C><A>str</A>{[312..15610]}</C>   looks  like
-##  <C>&tlt;Book Name="EDIM"> ... content ... &tlt;/Book></C>.<P/>
+##  <C>&lt;Book Name="EDIM"> ... content ... &lt;/Book></C>.<P/>
 ##  
 ##  The leaves  of the tree  encode parsed  character data as  in the
 ##  following example:
@@ -929,7 +929,7 @@ end;
 ##  The  argument   <A>xmlstring</A>  must   be  a  string   containing  XML
 ##  code  or  a   pair  <C>[string,  positions]</C>  as   returned  by  <Ref
 ##  Func="StringXMLElement"/>. The argument <A>entities</A> specifies entity
-##  names  (without the  surrounding <A>&tamp;</A>  and <C>;</C>)  and their
+##  names  (without the  surrounding <A>&amp;</A>  and <C>;</C>)  and their
 ##  substitution strings, either  a list of pairs of strings  or as a record
 ##  with the names as components and the substitutions as values.<P/>
 ##  

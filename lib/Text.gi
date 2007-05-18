@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.11 2007-05-18 13:35:47 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.12 2007-05-18 14:37:09 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -25,7 +25,7 @@
 ##  text processing. They are defined as follows.<P/>
 ##  <List >
 ##  <Mark>WHITESPACE</Mark>
-##  <Item><C>" &bslash;n&bslash;t&bslash;r"</C></Item>
+##  <Item><C>" \n\t\r"</C></Item>
 ##  <Mark>CAPITALLETTERS</Mark><Item><C>"ABCDEFGHIJKLMNOPQRSTUVWXYZ"</C></Item>
 ##  <Mark>SMALLLETTERS</Mark><Item><C>"abcdefghijklmnopqrstuvwxyz"</C></Item>
 ##  <Mark>LETTERS</Mark>
@@ -84,10 +84,10 @@ InstallValue(HEXDIGITS, "0123456789ABCDEFabcdef");
 ##  od;
 ##  </Listing>
 ##  
-##  <Index>ANSI&uscore;COLORS</Index> 
+##  <Index>ANSI_COLORS</Index> 
 ##  Whenever  you  use  this  in   some  printing  routines  you  should
 ##  make  it optional.  Use  these attributes  only,  when the  variable
-##  <C>ANSI&uscore;COLORS</C> has the value <K>true</K>.
+##  <C>ANSI_COLORS</C> has the value <K>true</K>.
 ##  </Description>
 ##  </ManSection>
 ##  
@@ -762,7 +762,7 @@ fi;
 ##  Text="RFC&#160;2045">http://tools.ietf.org/html/rfc2045</URL>.<P/>
 ##  
 ##  The second function  has the reverse functionality. Here  we also accept
-##  the characters  <C>-&uscore;</C> instead of  <C>+/</C> as last  two 
+##  the characters  <C>-_</C> instead of  <C>+/</C> as last  two 
 ##  characters.  Whitespace is ignored.
 ##  
 ##  <Example>

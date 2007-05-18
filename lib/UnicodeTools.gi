@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gi                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gi,v 1.10 2007-05-18 13:35:47 gap Exp $
+#H  @(#)$Id: UnicodeTools.gi,v 1.11 2007-05-18 14:37:09 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -462,7 +462,7 @@ end);
 ##  specified as string, its default is <C>"UTF-8"</C>. <P/>
 ##  
 ##  Currently supported encodings can be found in
-##  <C>UNICODE&uscore;RECODE.NormalizedEncodings</C> (ASCII, 
+##  <C>UNICODE_RECODE.NormalizedEncodings</C> (ASCII, 
 ##  ISO-8859-X, UTF-8 and aliases). The encoding <C>"XML"</C> means an ASCII
 ##  encoding in which non-ASCII characters are specified by XML character
 ##  entities. The listed encodings <C>"LaTeX"</C> and aliases

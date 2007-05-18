@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.17 2007-05-13 16:20:35 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.18 2007-05-18 14:37:09 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -52,7 +52,7 @@ syntax of DTD's see again the official standard in: <P/>
 A &GAPDoc; document contains on its  top level exactly one element with name
 <C>Book</C>. This element is declared in the DTD as follows:
 
-<Subsection><Heading><C>&tlt;Book&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Book></C></Heading>
 <Index Key="Book"><C>Book</C></Index>
 
 <Listing Type="From gapdoc.dtd"><![CDATA[
@@ -97,11 +97,11 @@ for each allowed attribute name). The  first (<C>Name</C>) is the name of an
 attribute for  a <C>Book</C>  element. The  second (<C>CDATA</C>)  is always
 the  same  for  all  of  our  declarations,  it  means  that  the  value  of
 the  attribute  consists  of  <Q>character  data</Q>.  The  third  parameter
-<C>&hash;REQUIRED</C> means that  this attribute must be  specified with any
+<C>#REQUIRED</C> means that  this attribute must be  specified with any
 <C>Book</C> element.  Later we will  also see optional attributes  which are
-declared as <C>&hash;IMPLIED</C>. </Subsection>
+declared as <C>#IMPLIED</C>. </Subsection>
 
-<Subsection><Heading><C>&tlt;TitlePage&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;TitlePage></C></Heading>
 <Index Key="TitlePage"><C>TitlePage</C></Index>
 
 <Listing Type="From gapdoc.dtd"><![CDATA[
@@ -120,7 +120,7 @@ Before going on with the other elements inside the <C>Book</C> element we
 explain the elements for the title page. 
 </Subsection>
 
-<Subsection Label="Title"><Heading><C>&tlt;Title&tgt;</C></Heading>
+<Subsection Label="Title"><Heading><C>&lt;Title></C></Heading>
 <Index Key="Title"><C>Title</C></Index>
 
 <Label Name="Text"/>
@@ -129,7 +129,7 @@ explain the elements for the title page.
 </Listing>
 
 Here   is  the   last  construct   you  need   to  understand   for  reading
-<F>gapdoc.dtd</F>.   The   expression  <Q><C>&percent;Text;</C></Q>   is   a
+<F>gapdoc.dtd</F>.   The   expression  <Q><C>%Text;</C></Q>   is   a
 so-called <Q>parameter entity</Q>.  It is something like a  macro within the
 DTD. It is defined as follows:
 
@@ -137,7 +137,7 @@ DTD. It is defined as follows:
 <Listing Type="From gapdoc.dtd">
 <![CDATA[<!ENTITY % Text "%InnerText; | List | Enum | Table">]]>
 </Listing>
-This means, that every occurrence of <Q><C>&percent;Text;</C></Q> in the DTD 
+This means, that every occurrence of <Q><C>%Text;</C></Q> in the DTD 
 is replaced by the expression 
 <Label Name="Innertext"/>
 <Listing Type="From gapdoc.dtd"><![CDATA[%InnerText; | List | Enum | Table]]>
@@ -158,21 +158,21 @@ which is then expanded further because of the following definition:
 
 These are the only two parameter entities we are using. They expand to lists
 of  element names  which are  explained in  the sequel  <Emph>and</Emph> the
-keyword  <C>&hash;PCDATA</C>  (concatenated  with  the  <Q>or</Q>  character
+keyword  <C>#PCDATA</C>  (concatenated  with  the  <Q>or</Q>  character
 <Q><C>|</C></Q>). <P/>
 
 So, the element (<C>Title</C>) is  of so-called <Q>mixed content</Q>: It can
 contain <E>parsed character  data</E> which does not  contain further markup
-(<C>&hash;PCDATA</C>) or  any of the  other above mentioned  elements. Mixed
+(<C>#PCDATA</C>) or  any of the  other above mentioned  elements. Mixed
 content must always have the  asterisk qualifier (like in <C>Title</C>) such
 that any sequence of elements (of the  above list) and character data can be
 contained in a <C>Title</C> element. <P/>
 
-The <C>&percent;Text;</C> parameter entity is used in all places 
+The <C>%Text;</C> parameter entity is used in all places 
 in the DTD, where <Q>normal text</Q> should be allowed, including lists,
 enumerations, and tables, but <E>no</E> sectioning elements. <P/>
 
-The <C>&percent;InnerText;</C> parameter entity is used in all places
+The <C>%InnerText;</C> parameter entity is used in all places
 in the DTD, where <Q>inner text</Q> should be allowed. This means, that no 
 structures like lists, enumerations, and tables are allowed. This is used
 for example in headings. <P/>
@@ -180,7 +180,7 @@ for example in headings. <P/>
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Subtitle&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Subtitle></C></Heading>
 <Index Key="Subtitle"><C>Subtitle</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -191,7 +191,7 @@ Contains the subtitle of the document.
 </Subsection>
 
 
-<Subsection Label="Version"><Heading><C>&tlt;Version&tgt;</C></Heading>
+<Subsection Label="Version"><Heading><C>&lt;Version></C></Heading>
 <Index Key="Version"><C>Version</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -206,7 +206,7 @@ word <Q>Version</Q> in front of the text in this element.
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;TitleComment&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;TitleComment></C></Heading>
 <Index Key="TitleComment"><C>TitleComment</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -221,7 +221,7 @@ Subsect="elAbstract"/>) for longer explanations.
 
 </Subsection>
 
-<Subsection><Heading><C>&tlt;Author&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Author></C></Heading>
 <Index Key="Author"><C>Author</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -239,7 +239,7 @@ Subsect="elAddress" />.
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Date&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Date></C></Heading>
 <Index Key="Date"><C>Date</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -250,7 +250,7 @@ Only character data is allowed in this element which gives a date for the
 document. No automatic formatting is done. 
 </Subsection>
 
-<Subsection Label="elAddress"><Heading><C>&tlt;Address&tgt;</C></Heading>
+<Subsection Label="elAddress"><Heading><C>&lt;Address></C></Heading>
 <Index Key="Date"><C>Address</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -271,7 +271,7 @@ address is easy to find via a link to a personal web page.
 </Subsection>
 
 
-<Subsection Label="elAbstract"><Heading><C>&tlt;Abstract&tgt;</C></Heading>
+<Subsection Label="elAbstract"><Heading><C>&lt;Abstract></C></Heading>
 <Index Key="Abstract"><C>Abstract</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -282,7 +282,7 @@ This element contains an abstract of the whole book.
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Copyright&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Copyright></C></Heading>
 <Index Key="Copyright"><C>Copyright</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -290,13 +290,13 @@ This element contains an abstract of the whole book.
 </Listing>
 
 This   element    is   used   for    the   copyright   notice.    Note   the
-<C>&tamp;copyright;</C>    entity    as    described   in    section    <Ref
+<C>&amp;copyright;</C>    entity    as    described   in    section    <Ref
 Subsect="GDent"/>.
 
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Acknowledgements&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Acknowledgements></C></Heading>
 <Index Key="Acknowledgements"><C>Acknowledgements</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -307,7 +307,7 @@ This element contains the acknowledgements.
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Colophon&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Colophon></C></Heading>
 <Index Key="Colophon"><C>Colophon</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -319,7 +319,7 @@ document.
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;TableOfContents&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;TableOfContents></C></Heading>
 <Index Key="TableOfContents"><C>TableOfContents</C></Index>
 
 <Listing Type="From gapdoc.dtd"><![CDATA[
@@ -339,7 +339,7 @@ to denote this empty element.
 
 </Subsection>
 
-<Subsection Label="Bibliography"><Heading><C>&tlt;Bibliography&tgt;</C>
+<Subsection Label="Bibliography"><Heading><C>&lt;Bibliography></C>
 </Heading>
 <Index Key="Bibliography"><C>Bibliography</C></Index>
 
@@ -366,7 +366,7 @@ Key="La85" Where="Appendix B"/>.
 
 </Subsection>
 
-<Subsection Label="TheIndex"><Heading><C>&tlt;TheIndex&tgt;</C></Heading>
+<Subsection Label="TheIndex"><Heading><C>&lt;TheIndex></C></Heading>
 <Index Key="TheIndex"><C>TheIndex</C></Index>
 
 <Listing Type="From gapdoc.dtd"><![CDATA[<!ELEMENT TheIndex EMPTY>]]></Listing>
@@ -405,7 +405,7 @@ subsections. So, they should not be too long.<P/>
 
 We start our description of the sectioning elements <Q>top-down</Q>:
 
-<Subsection><Heading><C>&tlt;Body&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Body></C></Heading>
 <Index Key="Body"><C>Body</C></Index>
 
 The <C>Body</C> element  marks the main part of the  document. It must occur
@@ -424,7 +424,7 @@ nearly everywhere. Here is the definition in the DTD:
 
 The fact  that <C>Chapter</C> and  <C>Section</C> elements are  allowed here
 leads  to  the  possibility  to  omit the  chapter  level  entirely  in  the
-document. For  a description of <C>&percent;Text;</C>  see <Ref Label="Text"
+document. For  a description of <C>%Text;</C>  see <Ref Label="Text"
 Text="here"/>.<P/>
 
 (Remark:   The  purpose   of  this   element  is   to  make   sure  that   a
@@ -433,7 +433,7 @@ is only possible when the top element <C>Book</C> has element content.)
 
 </Subsection>
 
-<Subsection Label="Chapter"><Heading><C>&tlt;Chapter&tgt;</C></Heading>
+<Subsection Label="Chapter"><Heading><C>&lt;Chapter></C></Heading>
 <Index Key="Chapter"><C>Chapter</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -447,7 +447,7 @@ chapter can be referenced later on with a <C>Ref</C> element (see section
 the chapter as there is no automatic labelling!<P/>
 
 <C>Chapter</C>   elements   can  contain   text   (for   a  description   of
-<C>&percent;Text;</C> see  <Ref Label="Text"  Text="here"/>), <C>Section</C>
+<C>%Text;</C> see  <Ref Label="Text"  Text="here"/>), <C>Section</C>
 elements, and  <C>Heading</C> elements.<P/>
 
 The  following <Emph>additional</Emph>  rule  cannot be  stated  in the  DTD
@@ -457,7 +457,7 @@ element, containing the heading of the chapter. Here is its definition:
 
 </Subsection>
 
-<Subsection Label="Heading"><Heading><C>&tlt;Heading&tgt;</C></Heading>
+<Subsection Label="Heading"><Heading><C>&lt;Heading></C></Heading>
 <Index Key="Heading"><C>Heading</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -466,7 +466,7 @@ element, containing the heading of the chapter. Here is its definition:
 
 This  element  is  used  for  headings  in  <C>Chapter</C>,  <C>Section</C>,
 <C>Subsection</C>,  and  <C>Appendix</C>  elements.   It  may  only  contain
-<C>&percent;InnerText;</C>   (for  a   description   see  <Ref   Text="here"
+<C>%InnerText;</C>   (for  a   description   see  <Ref   Text="here"
 Label="InnerText"/>).<P/>
 
 Each of  the mentioned sectioning  elements must contain exactly  one direct
@@ -476,7 +476,7 @@ sectioning element).
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Appendix&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Appendix></C></Heading>
 <Index Key="Appendix"><C>Appendix</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -493,7 +493,7 @@ Again there is an optional <C>Label</C> attribute used for references.
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Section&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Section></C></Heading>
 <Index Key="Section"><C>Section</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -507,7 +507,7 @@ section can  be referenced later on  with a <C>Ref</C> element  (see section
 the section as there is no automatic labelling!<P/>
 
 <C>Section</C>   elements   can  contain   text   (for   a  description   of
-<C>&percent;Text;</C> see  <Ref Label="Text"  Text="here"/>), <C>Heading</C>
+<C>%Text;</C> see  <Ref Label="Text"  Text="here"/>), <C>Heading</C>
 elements, and subsections. <P/>
 
 There must be exactly one  direct <C>Heading</C> element in a <C>Section</C>
@@ -519,7 +519,7 @@ Note  that  a  subsection  is   either  a  <C>Subsection</C>  element  or  a
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Subsection&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Subsection></C></Heading>
 <Index Key="Subsection"><C>Subsection</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -533,7 +533,7 @@ section <Ref  Subsect="Ref"/>). Note  that you  have to  specify a  label to
 reference the subsection as there is no automatic labelling!<P/>
 
 <C>Subsection</C>   elements   can   contain   text   (for   a   description
-of   <C>&percent;Text;</C>  see   <Ref   Label="Text"  Text="here"/>),   and
+of   <C>%Text;</C>  see   <Ref   Label="Text"  Text="here"/>),   and
 <C>Heading</C> elements.<P/>
 
 There  must be  exactly one  <C>Heading</C> element  in a  <C>Subsection</C>
@@ -551,7 +551,7 @@ Another type of subsection is a <C>ManSection</C>, explained now:
 variable, or some other technical instance. It is analogous to a manpage
 in the UNIX environment. 
 
-<Subsection><Heading><C>&tlt;ManSection&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;ManSection></C></Heading>
 <Index Key="ManSection"><C>ManSection</C></Index>
 <Index Key="Description"><C>Description</C></Index>
 <Index Key="Returns"><C>Returns</C></Index>
@@ -577,7 +577,7 @@ labels for cross referencing.<P/>
 The  content  of  a  <C>ManSection</C>  element  is  one  or  more  elements
 describing  certain  items  in  &GAP;,  each  of  them  optionally  followed
 by  a  <C>Returns</C> element,  followed  by  a <C>Description</C>  element,
-which contains  <C>&percent;Text;</C> (see <Ref  Label="Text" Text="here"/>)
+which contains  <C>%Text;</C> (see <Ref  Label="Text" Text="here"/>)
 describing it. (Remember to include examples  in the description as often as
 possible,  see&nbsp;<Ref Subsect="Log"  />). The  classes of  items &GAPDoc;
 knows  of are:  functions (<C>Func</C>),  operations (<C>Oper</C>),  methods
@@ -603,7 +603,7 @@ For such cases an optional <C>Heading</C> is allowed.
 
 </Subsection>
 
-<Subsection Label="Func"><Heading><C>&tlt;Func&tgt;</C></Heading>
+<Subsection Label="Func"><Heading><C>&lt;Func></C></Heading>
 <Index Key="Func"><C>Func</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -647,7 +647,7 @@ function and, if present, the text of the <C>Label</C> attribute as subentry
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Oper&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Oper></C></Heading>
 <Index Key="Oper"><C>Oper</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -672,7 +672,7 @@ attributes.
 </Subsection>
 
 
-<Subsection Label="Meth"><Heading><C>&tlt;Meth&tgt;</C></Heading>
+<Subsection Label="Meth"><Heading><C>&lt;Meth></C></Heading>
 <Index Key="Meth"><C>Meth</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -697,7 +697,7 @@ attributes.
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Filt&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Filt></C></Heading>
 <Index Key="Filt"><C>Filt</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -719,7 +719,7 @@ something like <Q><C>Category</C></Q> or <Q><C>Representation</C></Q>.
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Prop&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Prop></C></Heading>
 <Index Key="Prop"><C>Prop</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -736,7 +736,7 @@ way as in the <C>Func</C> element (see <Ref Subsect="Func"/>). <P/>
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Attr&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Attr></C></Heading>
 <Index Key="Attr"><C>Attr</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -753,7 +753,7 @@ way  as  in  the  <C>Func</C>  element  (see  <Ref  Subsect="Func"/>).  <P/>
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Var&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Var></C></Heading>
 <Index Key="Var"><C>Var</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -770,7 +770,7 @@ that there is no <C>Arg</C> attribute. <P/>
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Fam&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Fam></C></Heading>
 <Index Key="Fam"><C>Fam</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -787,7 +787,7 @@ that there is no <C>Arg</C> attribute. <P/>
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;InfoClass&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;InfoClass></C></Heading>
 <Index Key="InfoClass"><C>InfoClass</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -820,7 +820,7 @@ chapter reference as a number with a link in the other case.<P/>
 Referencing is done with the <C>Ref</C> element:
 
 
-<Subsection Label="Ref"><Heading><C>&tlt;Ref&tgt;</C></Heading>
+<Subsection Label="Ref"><Heading><C>&lt;Ref></C></Heading>
 <Index Key="Ref"><C>Ref</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -896,7 +896,7 @@ produces: <Ref Subsect="Func" Style="Text"/> described in section
 <Ref Subsect="Func" Style="Number"/>.
 </Subsection>
 
-<Subsection Label="Label"><Heading><C>&tlt;Label&tgt;</C></Heading>
+<Subsection Label="Label"><Heading><C>&lt;Label></C></Heading>
 <Index Key="Label"><C>Label</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -913,7 +913,7 @@ unique under all <C>Label</C> elements.
 </Subsection>
 
 
-<Subsection Label="Cite"><Heading><C>&tlt;Cite&tgt;</C></Heading>
+<Subsection Label="Cite"><Heading><C>&lt;Cite></C></Heading>
 <Index Key="Cite"><C>Cite</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -927,11 +927,11 @@ definition. The attribute  <C>Key</C> is the key for a  lookup in a &BibTeX;
 database that  has to be  specified in the <C>Bibliography</C>  element (see
 <Ref  Subsect="Bibliography"/>). The  value  of  the <C>Where</C>  attribute
 specifies  the position  in the  document  as in  the corresponding  &LaTeX;
-syntax <C>&bslash;cite[Where value]&obrace;Key value&cbrace;</C>.
+syntax <C>\cite[Where value]{Key value}</C>.
 </Subsection>
 
 
-<Subsection Label="Index"><Heading><C>&tlt;Index&tgt;</C></Heading>
+<Subsection Label="Index"><Heading><C>&lt;Index></C></Heading>
 <Index Key="Index"><C>Index</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -952,7 +952,7 @@ present in the document all <C>Index</C> elements are ignored.
 </Subsection>
 
 
-<Subsection Label="URL"><Heading><C>&tlt;URL&tgt;</C></Heading>
+<Subsection Label="URL"><Heading><C>&lt;URL></C></Heading>
 <Index Key="URL"><C>URL</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -963,7 +963,7 @@ present in the document all <C>Index</C> elements are ignored.
 
 This element is for references into the internet. The text within the
 element should be a valid URL; in particular use the common characters
-<C>&tilde;</C> and <C>&hash;</C> directly (not the &GAPDoc; entities 
+<C>~</C> and <C>#</C> directly (not the &GAPDoc; entities 
 from&nbsp;<Ref Subsect="GDspchar"/>). The URL is typeset in the document. 
 For the case  of an output document format
 that supports links the value of the attribute <C>Text</C> is typeset
@@ -972,7 +972,7 @@ as visible text for the link.
 </Subsection>
 
 
-<Subsection Label="elEmail"><Heading><C>&tlt;Email&tgt;</C></Heading>
+<Subsection Label="elEmail"><Heading><C>&lt;Email></C></Heading>
 <Index Key="Email"><C>Email</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -988,7 +988,7 @@ format like HTML the converter can produce a link with a
 </Subsection>
 
 
-<Subsection Label="elHomepage"><Heading><C>&tlt;Homepage&tgt;</C></Heading>
+<Subsection Label="elHomepage"><Heading><C>&lt;Homepage></C></Heading>
 <Index Key="Homepage"><C>Homepage</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -1013,7 +1013,7 @@ formats. The elements in this section are guaranteed to produce something
 reasonable in all output formats.
 
 
-<Subsection Label="List"><Heading><C>&tlt;List&tgt;</C></Heading>
+<Subsection Label="List"><Heading><C>&lt;List></C></Heading>
 <Index Key="List"><C>List</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -1040,7 +1040,7 @@ converters.
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Mark&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Mark></C></Heading>
 <Index Key="Mark"><C>Mark</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -1053,7 +1053,7 @@ This element is used in the <C>List</C> element to mark items. See
 </Subsection>
 
 
-<Subsection Label="Item"><Heading><C>&tlt;Item&tgt;</C></Heading>
+<Subsection Label="Item"><Heading><C>&lt;Item></C></Heading>
 <Index Key="Item"><C>Item</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -1067,7 +1067,7 @@ elements to specify the items. See sections <Ref Subsect="List"/>,
 </Subsection>
 
 
-<Subsection Label="Enum"><Heading><C>&tlt;Enum&tgt;</C></Heading>
+<Subsection Label="Enum"><Heading><C>&lt;Enum></C></Heading>
 <Index Key="Enum"><C>Enum</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -1085,7 +1085,7 @@ apply.
 </Subsection>
 
 
-<Subsection Label="Table"><Heading><C>&tlt;Table&tgt;</C></Heading>
+<Subsection Label="Table"><Heading><C>&lt;Table></C></Heading>
 <Index Key="Table"><C>Table</C></Index>
 
 <Index Key="Caption"><C>Caption</C></Index>
@@ -1145,7 +1145,7 @@ data and no further markup elements. It is however necessary to
 allow <C>Alt</C> elements to resolve the entities described in section
 <Ref Subsect="GDent"/>.
 
-<Subsection><Heading><C>&tlt;Emph&tgt;</C> and <C>&tlt;E&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Emph></C> and <C>&lt;E></C></Heading>
 <Index Key="Emph"><C>Emph</C></Index>
 <Index Key="E"><C>E</C></Index>
 
@@ -1155,10 +1155,10 @@ allow <C>Alt</C> elements to resolve the entities described in section
 </Listing>
 
 This element is used to emphasize some piece of text. It may contain
-<C>&percent;InnerText;</C> (see <Ref Text="here" Label="InnerText"/>). 
+<C>%InnerText;</C> (see <Ref Text="here" Label="InnerText"/>). 
 </Subsection>
 
-<Subsection><Heading><C>&tlt;Quoted&tgt;</C> and <C>&tlt;Q&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Quoted></C> and <C>&lt;Q></C></Heading>
 <Index Key="Quoted"><C>Quoted</C></Index>
 <Index Key="Q"><C>Q</C></Index>
 
@@ -1168,13 +1168,13 @@ This element is used to emphasize some piece of text. It may contain
 </Listing>
 
 This element  is used to put  some piece of text  into <Q>&nbsp;</Q>-quotes.
-It   may   contain    <C>&percent;InnerText;</C>   (see   <Ref   Text="here"
+It   may   contain    <C>%InnerText;</C>   (see   <Ref   Text="here"
 Label="InnerText"/>).
 
 </Subsection>
 
 
-<Subsection><Heading><C>&tlt;Keyword&tgt;</C> and <C>&tlt;K&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Keyword></C> and <C>&lt;K></C></Heading>
 <Index Key="Keyword"><C>Keyword</C></Index>
 <Index Key="K"><C>K</C></Index>
 
@@ -1189,8 +1189,8 @@ No further markup elements are allowed within this element except for
 the <C>Alt</C> element, which is necessary. 
 </Subsection>
 
-<Subsection Label="Arg"><Heading><C>&tlt;Arg&tgt;</C> and 
-                                 <C>&tlt;A&tgt;</C></Heading>
+<Subsection Label="Arg"><Heading><C>&lt;Arg></C> and 
+                                 <C>&lt;A></C></Heading>
 <Index Key="Arg"><C>Arg</C></Index>
 <Index Key="A"><C>A</C></Index>
 
@@ -1206,8 +1206,8 @@ of functions. No further markup elements are allowed within this element.
 
 </Subsection>
 
-<Subsection Label="Code"><Heading><C>&tlt;Code&tgt;</C> and 
-                                  <C>&tlt;C&tgt;</C></Heading>
+<Subsection Label="Code"><Heading><C>&lt;Code></C> and 
+                                  <C>&lt;C></C></Heading>
 <Index Key="Code"><C>Code</C></Index>
 <Index Key="C"><C>C</C></Index>
 
@@ -1224,7 +1224,7 @@ element.
 
 </Subsection>
 
-<Subsection><Heading><C>&tlt;File&tgt;</C> and <C>&tlt;F&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;File></C> and <C>&lt;F></C></Heading>
 <Index Key="File"><C>File</C></Index>
 <Index Key="F"><C>F</C></Index>
 
@@ -1239,7 +1239,7 @@ within this element.
 
 </Subsection>
 
-<Subsection><Heading><C>&tlt;Button&tgt;</C> and <C>&tlt;B&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Button></C> and <C>&lt;B></C></Heading>
 <Index Key="Button"><C>Button</C></Index>
 <Index Key="B"><C>B</C></Index>
 
@@ -1255,7 +1255,7 @@ within this element.
 
 </Subsection>
 
-<Subsection><Heading><C>&tlt;Package&tgt;</C></Heading>
+<Subsection><Heading><C>&lt;Package></C></Heading>
 <Index Key="Package"><C>Package</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -1270,7 +1270,7 @@ within this element.
 </Subsection>
 
 
-<Subsection Label="Listing"><Heading><C>&tlt;Listing&tgt;</C></Heading>
+<Subsection Label="Listing"><Heading><C>&lt;Listing></C></Heading>
 <Index Key="Listing"><C>Listing</C></Index>
 
 <Listing Type="From gapdoc.dtd">
@@ -1285,7 +1285,7 @@ character  data and  no  other  elements are  allowed  in  the content.  You
 should  <E>not</E> use  the  character entities  described  in section  <Ref
 Subsect="GDent"/> but instead type the characters directly. Only the general
 XML rules  from section  <Ref Sect="EnterXML"/>  apply. Note  especially the
-usage  of <C>&tlt;![CDATA[</C>  sections described  there. It  is guaranteed
+usage  of <C>&lt;![CDATA[</C>  sections described  there. It  is guaranteed
 that all  converters use a  fixed width font for  typesetting <C>Listing</C>
 elements. Compare also the usage of the <C>Code</C> and <C>C</C> elements in
 <Ref Subsect="Code"/>. <P/>
@@ -1296,8 +1296,8 @@ It may appear in the output.
 </Subsection>
 
 
-<Subsection Label="Log"><Heading><C>&tlt;Log&tgt;</C> and
-                                 <C>&tlt;Example&tgt;</C></Heading>
+<Subsection Label="Log"><Heading><C>&lt;Log></C> and
+                                 <C>&lt;Example></C></Heading>
 <Index Key="Log"><C>Log</C></Index>
 <Index Key="Example"><C>Example</C></Index>
 
@@ -1315,7 +1315,7 @@ correctness of the &GAP; manual whereas <C>Log</C> is not touched by this.
 
 </Subsection>
 
-<Subsection Label="Verb"><Heading>&tlt;Verb&tgt;</Heading>
+<Subsection Label="Verb"><Heading>&lt;Verb></Heading>
 
 There is one further type of verbatim-like element. 
 
@@ -1337,8 +1337,8 @@ formulae or <C>Table</C>s.
 </Section>
 <Section Label="MathForm"><Heading>Elements for Mathematical Formulae</Heading>
 
-<Subsection Label="Math"><Heading><C>&tlt;Math&tgt;</C> 
-                              and <C>&tlt;Display&tgt;</C></Heading>
+<Subsection Label="Math"><Heading><C>&lt;Math></C> 
+                              and <C>&lt;Display></C></Heading>
 <Index Key="Math"><C>Math</C></Index>
 <Index Key="Display"><C>Display</C></Index>
 
@@ -1355,9 +1355,9 @@ mode  respectively.<P/>
 
 The formulae  are typed in  as in  &LaTeX;, <E>except</E> that  the standard
 XML  entities,   see&nbsp;<Ref  Subsect="XMLent"   />  (in   particular  the
-characters  <C>&tlt;</C> and  <C>&tamp;</C>), must  be escaped  - either  by
+characters  <C>&lt;</C> and  <C>&amp;</C>), must  be escaped  - either  by
 using  the  corresponding  entities  or by  enclosing  the  formula  between
-<Q><C>&tlt;![CDATA[</C></Q> and  <Q><C>]]&tgt;</C></Q>. (The  main reference
+<Q><C>&lt;![CDATA[</C></Q> and  <Q><C>]]></C></Q>. (The  main reference
 for &LaTeX; is <Cite Key="La85" />.)<P/>
 
 The only  element type that  is allowed within  the formula elements  is the
@@ -1376,7 +1376,7 @@ Subsect="Alt" /> and&nbsp;<Ref Subsect="Verb" />).
 </Subsection>
 
 
-<Subsection Label="M"><Heading><C>&tlt;M&tgt;</C></Heading>
+<Subsection Label="M"><Heading><C>&lt;M></C></Heading>
 <Index Key="M"><C>M</C></Index>
 
 <Listing Type="From gapdoc.dtd"><![CDATA[
@@ -1398,61 +1398,61 @@ guaranteed to be translated accordingly by text (and HTML) converters:
 <Table Align="|l|l|">
  <Caption>&LaTeX; macros with special text translation</Caption>
  <HorLine/>
-  <Row><Item>&bslash;ast</Item>           <Item><C>*</C></Item></Row>
+  <Row><Item>\ast</Item>           <Item><C>*</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;cdot</Item>           <Item><C>*</C></Item></Row>
+  <Row><Item>\cdot</Item>           <Item><C>*</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;colon</Item>           <Item><C>:</C></Item></Row>
+  <Row><Item>\colon</Item>           <Item><C>:</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;equiv</Item>          <Item><C>=</C></Item></Row>
+  <Row><Item>\equiv</Item>          <Item><C>=</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;geq</Item>            <Item><C>&tgt;=</C></Item></Row>
+  <Row><Item>\geq</Item>            <Item><C>>=</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;hookrightarrow</Item>     <Item><C>-&tgt;</C></Item></Row>
+  <Row><Item>\hookrightarrow</Item>     <Item><C>-></C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;iff</Item> <Item><C>&tlt;=&tgt;</C></Item></Row>
+  <Row><Item>\iff</Item> <Item><C>&lt;=></C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;langle</Item>         <Item><C>&tlt;</C></Item></Row>
+  <Row><Item>\langle</Item>         <Item><C>&lt;</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;ldots</Item>          <Item><C>...</C></Item></Row>
+  <Row><Item>\ldots</Item>          <Item><C>...</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;left</Item>           <Item><C>&nbsp;</C></Item></Row>
+  <Row><Item>\left</Item>           <Item><C>&nbsp;</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;leq</Item>            <Item><C>&tlt;=</C></Item></Row>
+  <Row><Item>\leq</Item>            <Item><C>&lt;=</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;leftarrow</Item>      <Item><C>&tlt;-</C></Item></Row>
+  <Row><Item>\leftarrow</Item>      <Item><C>&lt;-</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;Leftarrow</Item> <Item><C>&tlt;=</C></Item></Row>
+  <Row><Item>\Leftarrow</Item> <Item><C>&lt;=</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;limits</Item>         <Item><C>&nbsp;</C></Item></Row>
+  <Row><Item>\limits</Item>         <Item><C>&nbsp;</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;longrightarrow</Item> <Item><C>--&tgt;</C></Item></Row>
+  <Row><Item>\longrightarrow</Item> <Item><C>--></C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;Longrightarrow</Item> <Item><C>==&tgt;</C></Item></Row>
+  <Row><Item>\Longrightarrow</Item> <Item><C>==></C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;mapsto</Item>         <Item><C>-&tgt;</C></Item></Row>
+  <Row><Item>\mapsto</Item>         <Item><C>-></C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;mathbb</Item>         <Item><C>&nbsp;</C></Item></Row>
+  <Row><Item>\mathbb</Item>         <Item><C>&nbsp;</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;mathop</Item>         <Item><C>&nbsp;</C></Item></Row>
+  <Row><Item>\mathop</Item>         <Item><C>&nbsp;</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;mid</Item>            <Item><C>|</C></Item></Row>
+  <Row><Item>\mid</Item>            <Item><C>|</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;pmod</Item>           <Item><C>mod</C></Item></Row>
+  <Row><Item>\pmod</Item>           <Item><C>mod</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;rangle</Item>         <Item><C>&tgt;</C></Item></Row>
+  <Row><Item>\rangle</Item>         <Item><C>></C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;right</Item>          <Item><C>&nbsp;</C></Item></Row>
+  <Row><Item>\right</Item>          <Item><C>&nbsp;</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;rightarrow</Item>     <Item><C>-&tgt;</C></Item></Row>
+  <Row><Item>\rightarrow</Item>     <Item><C>-></C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;Rightarrow</Item> <Item><C>=&tgt;</C></Item></Row>
+  <Row><Item>\Rightarrow</Item> <Item><C>=></C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;setminus</Item>     <Item><C>&bslash;</C></Item></Row>
+  <Row><Item>\setminus</Item>     <Item><C>\</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;times</Item>     <Item><C>x</C></Item></Row>
+  <Row><Item>\times</Item>     <Item><C>x</C></Item></Row>
  <HorLine/>
-  <Row><Item>&bslash;to</Item>             <Item><C>-&tgt;</C></Item></Row>
+  <Row><Item>\to</Item>             <Item><C>-></C></Item></Row>
  <HorLine/>
 </Table>
 
@@ -1461,12 +1461,12 @@ In all other macros only the  backslash is removed. Whitespace is normalized
 may  want to  add a  few more  spaces than  you usually  do in  your &LaTeX;
 documents.<P/>
 
-Braces  <C>&obrace;&cbrace;</C> are  removed  in general,  however pairs  of
+Braces  <C>{}</C> are  removed  in general,  however pairs  of
 double braces are converted to one pair of braces. This can be used to write
-<C>&tlt;M&tgt;x&circum;&obrace;12&cbrace;&tlt;/M&tgt;</C> 
-for <C>x&circum;12</C> and
-<C>&tlt;M&tgt;x&uscore;&obrace;&obrace;i+1&cbrace;&cbrace;&tlt;/M&tgt;</C> 
-for <C>x&uscore;&obrace;i+1&cbrace;</C>.  <P/>
+<C>&lt;M>x^{12}&lt;/M></C> 
+for <C>x^12</C> and
+<C>&lt;M>x_{{i+1}}&lt;/M></C> 
+for <C>x_{i+1}</C>.  <P/>
 
 
 </Subsection>
@@ -1477,7 +1477,7 @@ for <C>x&uscore;&obrace;i+1&cbrace;</C>.  <P/>
 <Section Label="sec:misc">
 <Heading>Everything else</Heading>
 
-<Subsection Label="Alt"><Heading><C>&tlt;Alt&tgt;</C></Heading>
+<Subsection Label="Alt"><Heading><C>&lt;Alt></C></Heading>
 <Index Key="Alt"><C>Alt</C></Index>
 
 This  element  is   used  to  specify  alternatives   for  different  output
@@ -1504,19 +1504,19 @@ specify special alternatives for other converters of &GAPDoc; documents.<P/>
 
 We fix  a rule for  handling the content of  an <C>Alt</C> element  which is
 relevant for <C>HTML</C> output. In  this content the special XML characters
-<C>&tlt;</C>, <C>&tgt;</C> and <C>&tamp;</C> are not escaped. This allows to
+<C>&lt;</C>, <C>></C> and <C>&amp;</C> are not escaped. This allows to
 put  HTML text  directly  in  the &GAPDoc;  document,  probably enclosed  in
-<C>&lt;![CDATA[</C> and <C>]]&tgt;</C>. <P/>
+<C>&lt;![CDATA[</C> and <C>]]></C>. <P/>
 
-Within  the element  only <C>&percent;InnerText;</C>  (see <Ref  Text="here"
+Within  the element  only <C>%InnerText;</C>  (see <Ref  Text="here"
 Label="InnerText"/>) is  allowed. This  is to  ensure that  the same  set of
 chapters, sections, and subsections show up in all output formats.
 
 </Subsection>
 
 
-<Subsection Label="Par"><Heading><C>&tlt;Par&tgt;</C> and 
-                                 <C>&tlt;P&tgt;</C></Heading>
+<Subsection Label="Par"><Heading><C>&lt;Par></C> and 
+                                 <C>&lt;P></C></Heading>
 <Index Key="Par"><C>Par</C></Index>
 <Index Key="P"><C>P</C></Index>
 
@@ -1539,7 +1539,7 @@ conversion program for &GAPDoc; documents.)
 
 </Subsection>
 
-<Subsection Label="Br"><Heading><C>&tlt;Br&tgt;</C></Heading>
+<Subsection Label="Br"><Heading><C>&lt;Br></C></Heading>
 <Index Key="Br"><C>Br</C></Index>
 
 <Listing Type="From gapdoc.dtd"> 
@@ -1553,7 +1553,7 @@ often lead to ugly output versions of your document.
 
 </Subsection> 
 
-<Subsection Label="Ignore"><Heading><C>&tlt;Ignore&tgt;</C></Heading>
+<Subsection Label="Ignore"><Heading><C>&lt;Ignore></C></Heading>
 <Index Key="Ignore"><C>Ignore</C></Index>
 
 <Listing Type="From gapdoc.dtd"> 

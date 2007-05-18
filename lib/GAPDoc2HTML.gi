@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.42 2007-05-18 13:35:47 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.43 2007-05-18 14:37:09 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1798,8 +1798,8 @@ end;
 ##  
 ##  The  experimental versions  which  are  produced with  <C>tth</C>
 ##  or  <C>ttm</C>   use  different  names  for   the  files,  namely
-##  <F>chap0&uscore;sym.html</F>,  and so  on  for  files which  need
-##  symbol  fonts  and  <F>chap0&uscore;mml.xml</F>  for  files  with
+##  <F>chap0_sym.html</F>,  and so  on  for  files which  need
+##  symbol  fonts  and  <F>chap0_mml.xml</F>  for  files  with
 ##  MathML translations.<P/>
 ##  
 ##  You may also want to place a style sheet file <F>manual.css</F> into 

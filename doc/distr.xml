@@ -1,4 +1,4 @@
-<!-- $Id: distr.xml,v 1.6 2007-02-02 15:12:36 gap Exp $ -->
+<!-- $Id: distr.xml,v 1.7 2007-05-18 14:37:09 gap Exp $ -->
 <Chapter Label="Distributing">
 <Heading>Distributing a Document into Several Files</Heading>
 
@@ -14,8 +14,8 @@ documents into respectively from several files (e.g., source code, examples).
 <P/>
 
 <Section Label="DistrConv">
-<Index Key="Include"><C>&tlt;&hash;Include&tgt;</C></Index>
-<Index Key="GAPDoc"><C>&tlt;&hash;GAPDoc&tgt;</C></Index>
+<Index Key="Include"><C>&lt;#Include></C></Index>
+<Index Key="GAPDoc"><C>&lt;#GAPDoc></C></Index>
 
 <Heading>The Conventions</Heading>
 
@@ -35,7 +35,7 @@ are marked as follows:
 
 This piece is then included into another file by a statement like:
 <!-- <Listing Type="Example"> -->
-<C>&tlt;&hash;Include Label="MyPiece"&tgt;</C>
+<C>&lt;#Include Label="MyPiece"></C>
 <!--</Listing> -->
 
 Here are the exact rules, how pieces are gathered:
@@ -43,7 +43,7 @@ Here are the exact rules, how pieces are gathered:
 <List>
 <Item>
 All lines up to a line containing the character sequence 
-<Q><C>&tlt;&hash;GAPDoc&nbsp;Label="</C></Q> (exactly one space
+<Q><C>&lt;#GAPDoc&nbsp;Label="</C></Q> (exactly one space
 character) are ignored. The characters
 on the same line before this sequence are stored as <Q>prefix</Q>. 
 The characters after the sequence up to the next double quotes character
@@ -52,7 +52,7 @@ are stored as <Q>label</Q>. All other characters in the line are ignored.
 
 <Item>
 The following lines up to a line containing the character sequence
-<Q><C>&tlt;&hash;/GAPDoc&tgt;</C></Q> are stored under the label.
+<Q><C>&lt;#/GAPDoc></C></Q> are stored under the label.
 These lines are processed as follows: The longest possible 
 substring from the beginning of the line that equals the corresponding
 substring of the prefix is removed.
@@ -65,14 +65,14 @@ be used as follows.
 <List>
 <Item>
 In &GAPDoc; documentation files all statements
-of the form <Q><C>&tlt;&hash;Include Label="Key"&tgt;</C></Q> are 
+of the form <Q><C>&lt;#Include Label="Key"></C></Q> are 
 replaced by the 
 sequence of lines stored under the label <C>Key</C>. 
 </Item>
 
 <Item>
 Additionally, every occurrence of a statement of the form
-<Q><C>&tlt;&hash;Include SYSTEM "Filename"&tgt;</C></Q> is replaced by the
+<Q><C>&lt;#Include SYSTEM "Filename"></C></Q> is replaced by the
 whole file stored under the name <C>Filename</C> in the file system.
 </Item>
 
@@ -91,7 +91,7 @@ Here is another example:
 #<#/GAPDoc>]]>
 </Listing>
 
-replaces <C>&tlt;&hash;Include Label="AnotherPiece"&tgt;</C> by
+replaces <C>&lt;#Include Label="AnotherPiece"></C> by
 
 <Listing Type="Example">
 <![CDATA[This text is not indented.

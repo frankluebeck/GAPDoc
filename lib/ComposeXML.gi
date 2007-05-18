@@ -2,7 +2,7 @@
 ##
 #W  ComposeXML.gi                GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: ComposeXML.gi,v 1.8 2007-03-05 14:07:07 gap Exp $
+#H  @(#)$Id: ComposeXML.gi,v 1.9 2007-05-18 14:37:09 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -35,9 +35,9 @@
 ##  Sect="DistrConv"/>.<P/>
 ##  
 ##  First  the   files  given   in  <A>source</A>  are   scanned  for
-##  chunks of the document marked  by <C>&tlt;&hash;<A>tagname</A>
-##  Label="..."></C> and  <C>&tlt;/&hash;<A>tagname</A>></C> pairs.  
-##  Then the file <A>main</A> is read and all <C>&tlt;&hash;Include  ...
+##  chunks of the document marked  by <C>&lt;#<A>tagname</A>
+##  Label="..."></C> and  <C>&lt;/#<A>tagname</A>></C> pairs.  
+##  Then the file <A>main</A> is read and all <C>&lt;#Include  ...
 ##  ></C>-tags are  substituted recursively by other  files or chunks
 ##  of documentation found in the first step, respectively.
 ##  

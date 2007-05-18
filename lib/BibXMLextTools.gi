@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.15 2007-05-15 21:04:16 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.16 2007-05-18 14:37:09 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -599,8 +599,8 @@ end);
 ##  to use the initials of the first names. <P/>
 ##  
 ##  If   <C>options.href</C>  is   bound   and  set   to   false  then   the
-##  <C>"BibTeX"</C> type  result will not use  <C>&bslash;href</C> commands.
-##  The   default   is   to  produce   <C>&bslash;href</C>   commands   from
+##  <C>"BibTeX"</C> type  result will not use  <C>\href</C> commands.
+##  The   default   is   to  produce   <C>\href</C>   commands   from
 ##  <C>&lt;URL></C>-elements   such  that  &LaTeX; with the  <C>hyperref</C>  
 ##  package can  produce  links  for them.<P/>
 ##  

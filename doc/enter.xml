@@ -1,4 +1,4 @@
-<!-- $Id: enter.xml,v 1.9 2007-05-15 21:04:16 gap Exp $ -->
+<!-- $Id: enter.xml,v 1.10 2007-05-18 14:37:09 gap Exp $ -->
 <Chapter Label="HowEnter">
 <Heading>How To Type a &GAPDoc; Document</Heading>
 
@@ -51,7 +51,7 @@ see Subsection&nbsp;<Ref Subsect="GDent" /> below.)
 <Heading>Comments</Heading>
 
 A   <Q>comment</Q>    in   XML   starts   with    the   character   sequence
-<Q><C>&tlt;!--</C></Q> and ends with the sequence <Q><C>--></C></Q>. Between
+<Q><C>&lt;!--</C></Q> and ends with the sequence <Q><C>--></C></Q>. Between
 these sequences there must not be two adjacent dashes <Q><C>--</C></Q>.
 
 </Subsection>
@@ -60,10 +60,10 @@ these sequences there must not be two adjacent dashes <Q><C>--</C></Q>.
 <Heading>Processing Instructions</Heading>
 
 A <Q>processing  instruction</Q> in XML  starts with the  character sequence
-<Q><C>&tlt;?</C></Q> followed  by a name (<Q><C>xml</C></Q>  is only allowed
+<Q><C>&lt;?</C></Q> followed  by a name (<Q><C>xml</C></Q>  is only allowed
 at the very beginning  of the document to declare it  being an XML document,
 see <Ref Subsect="XMLhead"/>). After that  any characters may follow, except
-that  the ending  sequence <Q><C>?&tgt;</C></Q>  must not  occur within  the
+that  the ending  sequence <Q><C>?></C></Q>  must not  occur within  the
 processing instruction.
 
 </Subsection>
@@ -77,7 +77,7 @@ actual content.
 
 A <Q>name</Q> in XML (used for element and attribute identifiers, see below)
 must  start with  a letter  (in  the encoding  of  the document)  or with  a
-colon  <Q><C>:</C></Q> or  underscore <Q><C>&uscore;</C></Q>  character. The
+colon  <Q><C>:</C></Q> or  underscore <Q><C>_</C></Q>  character. The
 following  characters may  also  be digits,  dots  <Q><C>.</C></Q> or dashes
 <Q><C>-</C></Q>.<P/>
 
@@ -106,23 +106,23 @@ Subsect="XMLcombtag"/>).
 <Subsection Label="XMLstarttag">
 <Heading>Start Tags</Heading>
 
-A  <Q>start-tag</Q> consists  of  a less-than-character  <Q><C>&tlt;</C></Q>
+A  <Q>start-tag</Q> consists  of  a less-than-character  <Q><C>&lt;</C></Q>
 directly  followed (without  whitespace) by  an element  name (see&nbsp;<Ref
 Subsect="XMLnames"/>),  optional  attributes,  optional  whitespace,  and  a
-greater-than-character <Q><C>&tgt;</C></Q>.<P/>
+greater-than-character <Q><C>></C></Q>.<P/>
 
 An  <Q>attribute</Q>  consists   of  some  whitespace  and   then  its  name
 followed by  an equal sign  <Q><C>=</C></Q> which is optionally  enclosed by
 whitespace,  and the  attribute value,  which is  enclosed either  in single
 or  double  quotes.  The  attribute  value  may  not  contain  the  type  of
-quote  used  as  a  delimiter  or  the  character  <Q><C>&tlt;</C></Q>, the 
-character <Q><C>&tamp;</C></Q> may only appear to start an entity, 
+quote  used  as  a  delimiter  or  the  character  <Q><C>&lt;</C></Q>, the 
+character <Q><C>&amp;</C></Q> may only appear to start an entity, 
 see&nbsp;<Ref Subsect="XMLent"/>. We describe 
 in&nbsp;<Ref Subsect="AttrValRules"/> and&nbsp;<Ref Subsect="GDspchar"/> how 
 to enter special characters in attribute values.<P/>
 
 Note  especially  that  no  whitespace   is  allowed  between  the  starting
-<Q><C>&tlt;</C></Q> character  and the  element name.  The quotes  around an
+<Q><C>&lt;</C></Q> character  and the  element name.  The quotes  around an
 attribute value cannot be omitted. The  names of elements and attributes are
 <E>case sensitive</E>.
 </Subsection>
@@ -130,9 +130,9 @@ attribute value cannot be omitted. The  names of elements and attributes are
 <Subsection Label="XMLendtag">
 <Heading>End Tags</Heading>
 
-An  <Q>end  tag</Q>  consists  of the  two  characters  <Q><C>&tlt;/</C></Q>
+An  <Q>end  tag</Q>  consists  of the  two  characters  <Q><C>&lt;/</C></Q>
 directly  followed   by  the  element   name,  optional  whitespace   and  a
-greater-than-character <Q><C>&tgt;</C></Q>.
+greater-than-character <Q><C>></C></Q>.
 </Subsection>
 
 <Subsection Label="XMLcombtag">
@@ -140,8 +140,8 @@ greater-than-character <Q><C>&tgt;</C></Q>.
 
 Elements  which always  have  empty content  can be  written  with a  single
 tag.  This looks  like a  start tag  (see&nbsp;<Ref Subsect="XMLstarttag"/>)
-<E>except</E> that  the trailing  greater-than-character <Q><C>&tgt;</C></Q>
-is substituted by the two character sequence <Q><C>/&tgt;</C></Q>.
+<E>except</E> that  the trailing  greater-than-character <Q><C>></C></Q>
+is substituted by the two character sequence <Q><C>/></C></Q>.
 
 </Subsection>
 
@@ -154,13 +154,13 @@ types of entities. <P/>
 A <Q>character entity</Q> can be used  to specify characters in the encoding
 of the document  (can be useful for entering non-ASCII  characters which you
 cannot  manage to  type  in  directly). They  are  entered  with a  sequence
-<Q><C>&tamp;&hash;</C></Q>, directly followed by  either some decimal digits
+<Q><C>&amp;#</C></Q>, directly followed by  either some decimal digits
 or an  <Q><C>x</C></Q> and some  hexadecimal digits, directly followed  by a
 semicolon <Q><C>;</C></Q>. Using such a  character entity is just equivalent
 to typing the corresponding character directly.<P/>
 
 Then there are references to <Q>named entities</Q>. They are entered with an
-ampersand character  <Q><C>&tamp;</C></Q> directly followed by  a name which
+ampersand character  <Q><C>&amp;</C></Q> directly followed by  a name which
 is directly followed  by a semicolon <Q><C>;</C></Q>. Such  entities must be
 declared somewhere by  giving a substitution text. This text  is included in
 the document  and the document is  parsed again afterwards. The  exact rules
@@ -173,13 +173,13 @@ Important entities for &GAPDoc; are described in <Ref Subsect="XMLspchar"/>,
 <Subsection Label="XMLspchar">
 <Heading>Special Characters in XML</Heading>
 
-We   have  seen   that  the   less-than-character  <Q><C>&tlt;</C></Q>   and
-the  ampersand   character  <Q><C>&tamp;</C></Q>  start  a   tag  or  entity
+We   have  seen   that  the   less-than-character  <Q><C>&lt;</C></Q>   and
+the  ampersand   character  <Q><C>&amp;</C></Q>  start  a   tag  or  entity
 reference  in  XML.   To  get  these  characters  into   the  document  text
-one   has  to   use   entity   references,  namely   <Q><C>&tamp;lt;</C></Q>
-to   get    <Q><C>&tlt;</C></Q>   and   <Q><C>&tamp;amp;</C></Q>    to   get
-<Q><C>&tamp;</C></Q>.  Furthermore <Q><C>&tamp;gt;</C></Q>  should sometimes
-be used to get <Q><C>&tgt;</C></Q>.<P/>
+one   has  to   use   entity   references,  namely   <Q><C>&amp;lt;</C></Q>
+to   get    <Q><C>&lt;</C></Q>   and   <Q><C>&amp;amp;</C></Q>    to   get
+<Q><C>&amp;</C></Q>.  Furthermore <Q><C>&amp;gt;</C></Q>  should sometimes
+be used to get <Q><C>></C></Q>.<P/>
 
 Another   possibility  is   to  use   a  <C>CDATA</C>   statement  explained
 in&nbsp;<Ref Subsect="XMLcdata"/>.
@@ -190,8 +190,8 @@ in&nbsp;<Ref Subsect="XMLcdata"/>.
 <Heading>Rules for Attribute Values</Heading>
 
 Attribute values can contain entities which are substituted recursively.
-But except for the entities &tamp;lt;  or a character entity it is not
-allowed that a &tlt; character is introduced by the substitution (there is 
+But except for the entities &amp;lt;  or a character entity it is not
+allowed that a &lt; character is introduced by the substitution (there is 
 no XML parsing for evaluating the attribute value, just entity substitutions).
 </Subsection>
 
@@ -200,13 +200,13 @@ no XML parsing for evaluating the attribute value, just entity substitutions).
 
 Pieces   of   text   which   contain    many   characters   which   can   be
 misinterpreted  as  markup  can  be  enclosed  by  the  character  sequences
-<Q><C><![CDATA[<![CDATA[]]></C></Q>  and  <Q><C>]]&tgt;</C></Q>.  Everything
+<Q><C><![CDATA[<![CDATA[]]></C></Q>  and  <Q><C>]]></C></Q>.  Everything
 between these sequences is considered as  content of the document and is not
 further interpreted  as XML  text. All  the rules explained  so far  in this
 section  do <E>not  apply</E>  to such  a  part of  the  document. The  only
 document  content which  cannot be  entered directly  inside a  <C>CDATA</C>
-statement  is the  sequence <Q><C>]]&tgt;</C></Q>.  This can  be entered  as
-<Q><C>]]&tamp;gt;</C></Q> outside the <C>CDATA</C> statement.
+statement  is the  sequence <Q><C>]]></C></Q>.  This can  be entered  as
+<Q><C>]]&amp;gt;</C></Q> outside the <C>CDATA</C> statement.
 
 <Listing Type="Example">
 A nesting of tags like <![CDATA[<a> <b> </a> </b>]]> is not allowed.
@@ -264,20 +264,20 @@ Since one purpose of &GAPDoc; documents is to produce a high quality &LaTeX;
 output version we have to pay attention to characters with a special meaning
 in &LaTeX; or in XML. These are the following characters:<P/>
 
-<Q><C>&tamp;</C></Q>,
-<Q><C>&tlt;</C></Q>,
-<Q><C>&tgt;</C></Q>,
-<Q><C>&hash;</C></Q>,
-<Q><C>&dollar;</C></Q>,
-<Q><C>&percent;</C></Q>,
-<Q><C>&tilde;</C></Q>,
-<Q><C>&bslash;</C></Q>,
-<Q><C>&obrace;</C></Q>,
-<Q><C>&cbrace;</C></Q>,
-<Q><C>&uscore;</C></Q>,
-<Q><C>&circum;</C></Q>,
+<Q><C>&amp;</C></Q>,
+<Q><C>&lt;</C></Q>,
+<Q><C>></C></Q>,
+<Q><C>#</C></Q>,
+<Q><C>$</C></Q>,
+<Q><C>%</C></Q>,
+<Q><C>~</C></Q>,
+<Q><C>\</C></Q>,
+<Q><C>{</C></Q>,
+<Q><C>}</C></Q>,
+<Q><C>_</C></Q>,
+<Q><C>^</C></Q>,
 <Q><C>&nbsp;</C></Q> (this is a non-breakable space, similar to
-&LaTeX;'s <Q><C>&tilde;</C></Q> character) and
+&LaTeX;'s <Q><C>~</C></Q> character) and
 <Q>&ndash;</Q> (an en dash, used instead of &LaTeX;'s double
 <C>--</C>).
 <P/>
@@ -290,45 +290,45 @@ get these characters in the output text of the document.<P/>
 <Table Align="|l|l|" Label="charsInCDATA"> 
  <Caption>What to type for special characters in character data</Caption>
  <HorLine/> <Row> 
-  <Item><C>&tamp;</C></Item><Item><C>&tamp;tamp;</C></Item>
+  <Item><C>&amp;</C></Item><Item><C>&amp;tamp;</C></Item>
  </Row> <HorLine/> <Row>
-  <Item><C>&tlt;</C></Item>  <Item><C>&tamp;tlt;</C></Item>
+  <Item><C>&lt;</C></Item>  <Item><C>&amp;tlt;</C></Item>
  </Row> <HorLine/> <Row>
-  <Item><C>&tgt;</C></Item>  <Item><C>&tamp;tgt;</C></Item>
+  <Item><C>></C></Item>  <Item><C>&amp;tgt;</C></Item>
  </Row> <HorLine/> <Row>
-  <Item><C>&hash;</C></Item>    <Item><C>&tamp;hash;</C></Item>
+  <Item><C>#</C></Item>    <Item><C>&amp;hash;</C></Item>
  </Row> <HorLine/> <Row>
-  <Item><C>&dollar;</C></Item>    <Item><C>&tamp;dollar;</C></Item>
+  <Item><C>$</C></Item>    <Item><C>&amp;dollar;</C></Item>
  </Row> <HorLine/> <Row>
-  <Item><C>&percent;</C></Item>    <Item><C>&tamp;percent;</C></Item>
+  <Item><C>%</C></Item>    <Item><C>&amp;percent;</C></Item>
  </Row> <HorLine/> <Row>
-  <Item><C>&tilde;</C></Item> <Item><C>&tamp;tilde;</C></Item>
+  <Item><C>~</C></Item> <Item><C>&amp;tilde;</C></Item>
  </Row> <HorLine/> <Row>
-  <Item><C>&bslash;</C></Item>   <Item><C>&tamp;bslash;</C></Item>
+  <Item><C>\</C></Item>   <Item><C>&amp;bslash;</C></Item>
  </Row> <HorLine/> <Row>
-  <Item><C>&obrace;</C></Item>    <Item><C>&tamp;obrace;</C></Item>
+  <Item><C>{</C></Item>    <Item><C>&amp;obrace;</C></Item>
  </Row> <HorLine/> <Row>
-  <Item><C>&cbrace;</C></Item>    <Item><C>&tamp;cbrace;</C></Item>
+  <Item><C>}</C></Item>    <Item><C>&amp;cbrace;</C></Item>
  </Row> <HorLine/> <Row>
-  <Item><C>&uscore;</C></Item>    <Item><C>&tamp;uscore;</C></Item>
+  <Item><C>_</C></Item>    <Item><C>&amp;uscore;</C></Item>
  </Row> <HorLine/> <Row>
-  <Item><C>&circum;</C></Item>    <Item><C>&tamp;circum;</C></Item>
+  <Item><C>^</C></Item>    <Item><C>&amp;circum;</C></Item>
  </Row> <HorLine/> <Row>
-  <Item><C>&nbsp;</C></Item>      <Item><C>&tamp;nbsp;</C></Item>
+  <Item><C>&nbsp;</C></Item>      <Item><C>&amp;nbsp;</C></Item>
  </Row> <HorLine/>
 </Table><P/>
 
 Note  that  the  first  three  have  an  extra  <Q>t</Q>  at  the  beginning
 in  comparison with  the  standard entities  of  XML described  in&nbsp;<Ref
 Subsect="XMLspchar"/>.  The  difference  is necessary  because  for  example
-<Q><C>&tamp;tamp;</C></Q> produces  <Q><C>&bslash;&tamp;</C></Q> for &LaTeX;
+<Q><C>&amp;tamp;</C></Q> produces  <Q><C>\&amp;</C></Q> for &LaTeX;
 to  actually  get  an  ampersand  character  in  the  printed  version.  Use
-<Q><C>&tamp;amp;</C></Q> if you want to  pass an ampersand character without
+<Q><C>&amp;amp;</C></Q> if you want to  pass an ampersand character without
 a backslash in front directly to &LaTeX;.<P/>
 
 Inside attribute  values you should  <E>not</E> use these  entities. Instead
-use <Q><C>&tamp;lt;</C></Q> for <Q>&tlt;</Q>, <Q><C>&tamp;amp;</C></Q> for
-<Q>&tamp;</Q>, and the other   characters directly.  
+use <Q><C>&amp;lt;</C></Q> for <Q>&lt;</Q>, <Q><C>&amp;amp;</C></Q> for
+<Q>&amp;</Q>, and the other   characters directly.  
 A program which uses attribute values as printable text has to make sure
 that special characters are appropriately escaped.
 <P/>
@@ -353,7 +353,7 @@ processed in a well defined way for text terminal or HTML output.<P/>
 
 The remarks  about special  characters in&nbsp;<Ref  Subsect="GDspchar"/> do
 not  apply to  the content  of these  elements. But  the special  characters
-<Q><C>&tlt;</C></Q>  and <Q><C>&tamp;</C></Q>  for XML  must be  entered via
+<Q><C>&lt;</C></Q>  and <Q><C>&amp;</C></Q>  for XML  must be  entered via
 the  entities described  in&nbsp;<Ref  Subsect="XMLspchar"/> or  by using  a
 <C>CDATA</C> statement, see&nbsp;<Ref Subsect="XMLcdata"/>.<P/>
 
@@ -367,21 +367,21 @@ In &GAPDoc; there are some more predefined  entities:
 <Table Align="|l|l|">
 <Caption>Predefined Entities in the &GAPDoc; system</Caption>
 <HorLine/>
-<Row> <Item><C>&tamp;GAP;</C></Item>       <Item>&GAP;</Item> </Row>
+<Row> <Item><C>&amp;GAP;</C></Item>       <Item>&GAP;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;GAPDoc;</C></Item>    <Item>&GAPDoc;</Item> </Row>
+<Row> <Item><C>&amp;GAPDoc;</C></Item>    <Item>&GAPDoc;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;TeX;</C></Item>       <Item>&TeX;</Item> </Row>
+<Row> <Item><C>&amp;TeX;</C></Item>       <Item>&TeX;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;LaTeX;</C></Item>     <Item>&LaTeX;</Item> </Row>
+<Row> <Item><C>&amp;LaTeX;</C></Item>     <Item>&LaTeX;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;BibTeX;</C></Item>    <Item>&BibTeX;</Item> </Row>
+<Row> <Item><C>&amp;BibTeX;</C></Item>    <Item>&BibTeX;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;MeatAxe;</C></Item>   <Item>&MeatAxe;</Item> </Row>
+<Row> <Item><C>&amp;MeatAxe;</C></Item>   <Item>&MeatAxe;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;XGAP;</C></Item>      <Item>&XGAP;</Item> </Row>
+<Row> <Item><C>&amp;XGAP;</C></Item>      <Item>&XGAP;</Item> </Row>
 <HorLine/>
-<Row> <Item><C>&tamp;copyright;</C></Item> <Item>&copyright;</Item> </Row>
+<Row> <Item><C>&amp;copyright;</C></Item> <Item>&copyright;</Item> </Row>
 <HorLine/>
 </Table>
 
@@ -396,8 +396,8 @@ Subsect="XMLhead"/>) of a &GAPDoc; XML document as in the following example.
   ]>]]>
 </Listing>
 
-These additional definitions go into  the <C>&tlt;!DOCTYPE</C> tag in square
-brackets. Such new entities are used like this: <C>&tamp;MyEntity;</C> <P/>
+These additional definitions go into  the <C>&lt;!DOCTYPE</C> tag in square
+brackets. Such new entities are used like this: <C>&amp;MyEntity;</C> <P/>
 
 </Subsection>
 
