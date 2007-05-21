@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.24 2007-05-18 13:35:47 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.25 2007-05-21 22:02:40 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -424,8 +424,25 @@ end);
 
 ##  recursion through the tree and formatting paragraphs
 BindGlobal("GAPDoc2TextContent", function(r, l)
-  local   par,  cont,  count,  s,  a;
+  local tmp, par, cont, count, s, a;
   
+  # inline needed Alt elements
+  if IsList(r.content) and 
+                 ForAny(r.content, a-> IsRecord(a) and a.name = "Alt") then
+    tmp := r.content;
+    r := ShallowCopy(r);
+    r.content := [];
+    for a in tmp do
+      if IsRecord(a) and a.name = "Alt" then
+        if GAPDoc2TextProcs.AltYes(a) then
+          Append(r.content, a.content);
+        fi;
+      else
+        Add(r.content, a);
+      fi;
+    od;
+  fi;
+
   # utility: append counter and formatted paragraph to l
   par := function(s, name)
     local sn, ss, pos;
@@ -569,7 +586,6 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
       Append(text, StringBibAsText(a, GAPDoc2TextProcs.TextAttr));
     od;
     r.bibtext := text;
-##  Error("Text, see r.bibtext   \n");
   fi;
   
   # second run
