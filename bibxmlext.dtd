@@ -351,7 +351,7 @@
 <!ELEMENT   M               (#PCDATA | Alt)* > <!-- math with simple text
                                              representation, in LaTeX -->
 <!ELEMENT   Math            (#PCDATA | Alt)* > <!-- other math in LaTeX -->
-<!ELEMENT   URL             (#PCDATA | Alt)* > <!-- an URL -->
+<!ELEMENT   URL             (#PCDATA | Alt | Link | LinkText)* > <!-- an URL -->
 <!ATTLIST   URL Text CDATA #IMPLIED>    <!-- text to be printed 
                                              (default is content) -->
 <!ELEMENT   value             EMPTY   > <!-- placeholder for value given .. -->
@@ -482,39 +482,11 @@
 <!ENTITY apos   "&#39;">
 <!ENTITY quot   "&#34;">
 
-<!-- The following are necessary because these characters have special
-     meanings in either XML or LaTeX: -->
-     
-<!ENTITY tamp 
-  "<Alt Only='BibTeX'>\&amp;</Alt><Alt Not='BibTeX'><Alt 
-        Only='HTML'>&amp;amp;</Alt><Alt Not='HTML'>&amp;</Alt></Alt>">
-<!ENTITY tlt 
-  "<Alt Only='BibTeX'>{\textless}</Alt><Alt Not='BibTeX'><Alt 
-        Only='HTML'>&amp;lt;</Alt><Alt Not='HTML'>&lt;</Alt></Alt>">
-<!ENTITY tgt 
-  "<Alt Only='BibTeX'>{\textgreater}</Alt><Alt Not='BibTeX'><Alt 
-        Only='HTML'>&amp;gt;</Alt><Alt Not='HTML'>&gt;</Alt></Alt>">
-<!ENTITY hash "<Alt Only='BibTeX'>\#</Alt><Alt Not='BibTeX'>#</Alt>">
-<!ENTITY dollar "<Alt Only='BibTeX'>\$</Alt><Alt Not='BibTeX'>$</Alt>">
-<!ENTITY percent 
-  "<Alt Only='BibTeX'>\&#37;</Alt><Alt Not='BibTeX'>&#37;</Alt>">
-<!ENTITY tilde 
-  "<Alt Only='BibTeX'>{\textasciitilde}</Alt><Alt Not='BibTeX'>~</Alt>">
-<!ENTITY bslash 
-  "<Alt Only='BibTeX'>{\textbackslash}</Alt><Alt Not='BibTeX'>\</Alt>">
-<!ENTITY obrace "<Alt Only='BibTeX'>\{</Alt><Alt Not='BibTeX'>{</Alt>">
-<!ENTITY cbrace "<Alt Only='BibTeX'>\}</Alt><Alt Not='BibTeX'>}</Alt>">
-<!ENTITY uscore 
-  "<Alt Only='BibTeX'>{\textunderscore}</Alt><Alt Not='BibTeX'>_</Alt>">
-<!ENTITY circum 
-  "<Alt Only='BibTeX'>{\textasciicircum}</Alt><Alt Not='BibTeX'>^</Alt>">
-<!ENTITY nbsp "<Alt Only='BibTeX'>~</Alt><Alt Not='BibTeX'>&#160;</Alt>">
 
 <!-- Some more generally useful entities -->
-<!ENTITY copyright "<Alt Only='BibTeX'>{\\copyright}</Alt><Alt 
-  Not='BibTeX'>(C)</Alt>">
-<!ENTITY ndash "<Alt Only='BibTeX'>--</Alt><Alt 
-  Not='BibTeX'>&#x2013;</Alt>">
+<!ENTITY nbsp "&#160;">
+<!ENTITY copyright "&#169;">
+<!ENTITY ndash "&#x2013;">
  
 
 <!-- ..................................................................... -->
