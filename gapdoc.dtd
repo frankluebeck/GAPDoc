@@ -4,7 +4,7 @@
      By Frank Lübeck and Max Neunhöffer
      ================================================================== -->
 
-<!-- $Id: gapdoc.dtd,v 1.14 2007-05-16 16:03:12 gap Exp $ -->
+<!-- $Id: gapdoc.dtd,v 1.15 2007-05-21 22:07:18 gap Exp $ -->
 
 <!-- Note that this definition goes "bottom-up" because entities can only
      be used after their definition in the file. -->
@@ -56,8 +56,7 @@
   "<Alt Only='LaTeX'>{Bib\TeX}</Alt><Alt Not='LaTeX'>BibTeX</Alt>">
 <!ENTITY MeatAxe "<Package>MeatAxe</Package>">
 <!ENTITY XGAP   "<Package>XGAP</Package>">
-<!ENTITY copyright 
-  "<Alt Only='LaTeX'>{\copyright}</Alt><Alt Not='LaTeX'>(C)</Alt>">
+<!ENTITY copyright "&#169;">
 
 
 <!-- ==================================================================

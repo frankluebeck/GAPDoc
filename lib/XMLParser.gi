@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.24 2007-05-18 14:37:09 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.25 2007-05-21 22:07:18 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -174,8 +174,9 @@ BindGlobal("ENTITYDICT_GAPDoc", rec(
  uscore := "_",
  circum := "^",
  
- nbsp := "<Alt Only='LaTeX'>~</Alt><Alt Not='LaTeX'>&#160;</Alt>",
- ndash := "<Alt Only='LaTeX'>--</Alt><Alt Not='LaTeX'>&#x2013;</Alt>",
+ nbsp := "&#160;",
+ copyright := "&#169;",
+ ndash := "&#x2013;",
  GAP := "<Package>GAP</Package>",
  GAPDoc := "<Package>GAPDoc</Package>",
  TeX    := "<Alt Only='LaTeX'>{\\TeX}</Alt><Alt Not='LaTeX'>TeX</Alt>",
@@ -183,7 +184,6 @@ BindGlobal("ENTITYDICT_GAPDoc", rec(
  BibTeX := "<Alt Only='LaTeX'>Bib{\\TeX}</Alt><Alt Not='LaTeX'>BibTeX</Alt>",
  MeatAxe := "<Package>MeatAxe</Package>",
  XGAP   := "<Package>XGAP</Package>",
- copyright := "<Alt Only='LaTeX'>{\\copyright}</Alt><Alt Not='LaTeX'>(C)</Alt>"
                   )
 );
 

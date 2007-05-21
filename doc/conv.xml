@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.21 2007-05-18 16:01:31 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.22 2007-05-21 22:07:18 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters and an XML Parser</Heading>
@@ -372,7 +372,7 @@ The first motivation for this development was the handling of
 bibliographical data in &GAPDoc;, but the format and the tools are certainly 
 useful for other purposes as well.<P/>
 
-We start from a DTD <F>bibxml.dtd</F> which is publicly available, say
+We started from a DTD <F>bibxml.dtd</F> which is publicly available, say
 from <URL>http://bibtexml.sf.net/</URL>. This is essentially a
 reformulation of the definition of the &BibTeX; format, including
 several of some widely used further fields. This has already the
@@ -399,7 +399,7 @@ given in <C>&lt;M></C>-elements.</Item>
 <Item>Note that in XML files we can use the full range of unicode
 characters, see <URL>http://www.unicode.org/</URL>. All non-ASCII
 characters should be specified as unicode characters. This makes dealing
-with special characters easy for plain text or HTML, but for use with 
+with special characters easy for plain text or HTML, only for use with 
 &LaTeX; some sort of translation is necessary.</Item>
 <Mark><C>&lt;URL></C></Mark>
 <Item>These elements are allowed everywhere in the text and should be
@@ -419,7 +419,7 @@ title fields).</Item>
 <Mark><C>&lt;string key="..." value="..."/></C> and 
 <C>&lt;value key="..."/></C></Mark>
 <Item>The <C>&lt;string></C>-element defines key-value pairs which can
-be use in any field via the <C>&lt;value></C>-element (not only for
+be used in any field via the <C>&lt;value></C>-element (not only for
 whole fields but also parts of the text).</Item>
 <Mark><C>&lt;other type="..."></C></Mark>
 <Item>This is a generic element for fields which are otherwise not
@@ -432,8 +432,9 @@ it can be a useful hook for introducing arbitrary further markup
 (and our tools can easily be extended to handle it).</Item>
 <Mark>Extra entities</Mark>
 <Item>The DTD defines the standard XML entities (<Ref
-Subsect="XMLspchar"/> and the entities <C>&amp;ndash;</C> and
-<C>&amp;copyright;</C>. Use <C>&amp;ndash;</C> in page ranges.
+Subsect="XMLspchar"/> and the entities <C>&amp;nbsp;</C> (non-breakable
+space), <C>&amp;ndash;</C> and <C>&amp;copyright;</C>. 
+Use <C>&amp;ndash;</C> in page ranges.
 </Item>
 </List>
 

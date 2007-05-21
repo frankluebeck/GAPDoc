@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.15 2007-05-15 21:04:16 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.16 2007-05-21 22:07:18 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -440,7 +440,7 @@ end);
 # shared utility for the converters to read data for bibliography 
 BindGlobal("GAPDocAddBibData", function(r) 
   local dat, datbt, bib, bibbt, b, keys, need, labels, tmp, pos, diff, a, j;
-  if IsBound(r.bibentries) then
+  if IsBound(r.bibentries) and IsBound(r.biblabels) then
     return;
   fi;
   Info(InfoGAPDoc, 1, "#I Reading bibliography data files . . . \n");
