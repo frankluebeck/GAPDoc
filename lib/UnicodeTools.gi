@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gi                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gi,v 1.11 2007-05-18 14:37:09 gap Exp $
+#H  @(#)$Id: UnicodeTools.gi,v 1.12 2007-05-21 22:05:47 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -470,7 +470,14 @@ end);
 ##  See the operation <Ref Oper="Encode"/> for mapping  a unicode string 
 ##  to a &GAP; string.<P/>
 ##  <Example>
-##  ???
+##  gap> ustr := Unicode("a and \366", "latin1");
+##  Unicode("a and ö")
+##  gap> ustr = Unicode("a and &#246;", "XML");  
+##  true
+##  gap> IntListUnicodeString(ustr);
+##  [ 97, 32, 97, 110, 100, 32, 246 ]
+##  gap> ustr[7];
+##  'ö'
 ##  </Example>
 ##  </Description>
 ##  </ManSection>
@@ -631,7 +638,8 @@ end);
 ##  encoding are substituted by '?' characters.<P/>
 ##  
 ##  The encoding <C>"LaTeX"</C>  substitutes 
-##  non-ASCII characters by &LaTeX; code as given in an ordered list 
+##  non-ASCII characters and &LaTeX; special characters by &LaTeX; code 
+##  as given in an ordered list 
 ##  <C>LaTeXUnicodeTable</C> of pairs [codepoint, string]. If you have a
 ##  unicode character for which no substitution is contained in that list,
 ##  you will get a warning. In this case find a substitution and add a 
@@ -641,6 +649,10 @@ end);
 ##  addition, such that we can extend the list <C>LaTeXUnicodeTable</C>.
 ##  (Most of the initial entries were generated from lists in the
 ##  &TeX; projects enc&TeX; and <C>ucs</C>.)<P/>
+##  
+##  There is also the  variant encoding <C>"LaTeXleavemarkup"</C>, which does
+##  the same translations for non-ASCII characters but leaves the &LaTeX;
+##  special characters (e.g., any &LaTeX; commands) as they are.<P/>
 ##  
 ##  Note that the <C>"LaTeX"</C> encoding can only be used with <Ref
 ##  Oper="Encode"/> but not for the opposite translation with <Ref
@@ -675,7 +687,15 @@ end);
 ##  translation to uppercase characters.
 ##  
 ##  <Example>
-##  ???
+##  gap> ustr := Unicode("a and &amp;#246;", "XML");
+##  Unicode("a and ö")
+##  gap> SimplifiedUnicodeString(ustr, "ASCII");
+##  Unicode("a and oe")
+##  gap> SimplifiedUnicodeString(ustr, "ASCII", "single");
+##  Unicode("a and o")
+##  gap> ustr2 := UppercaseUnicodeString(ustr);;
+##  gap> Print(Encode(ustr2, GAPInfo.TermEncoding), "\n");
+##  A UND Ö
 ##  </Example>
 ##  </Description>
 ##  </ManSection>
@@ -744,13 +764,19 @@ UNICODE_RECODE.Encoder.("XML") := function(ustr)
   return res;
 end;
 # non-ASCII characters to LaTeX code, if known from LaTeXUnicodeTable
-UNICODE_RECODE.Encoder.("LaTeX") := function(ustr)
-  local tt, res, pos, n, s;
+UNICODE_RECODE.Encoder.("LaTeX") := function(arg)
+  local ustr, leavemarkup, tt, res, pos, s, n;
+  ustr := arg[1];
+  if Length(arg) > 1 then
+    leavemarkup := arg[2];
+  else
+    leavemarkup := false;
+  fi;
   tt := LaTeXUnicodeTable;
   res := "";
   for n in IntListUnicodeString(ustr) do
     pos := Position([ 35, 36, 37, 38, 60, 62, 92, 94, 95, 123, 125, 126], n);
-    if pos <> fail then
+    if pos <> fail and not leavemarkup then
       Append(res, tt[pos][2]);
     elif n < 128 then
       Add(res, CHAR_INT(n));
@@ -773,6 +799,12 @@ UNICODE_RECODE.NormalizedEncodings.LaTeX := "LaTeX";
 UNICODE_RECODE.NormalizedEncodings.latex := "LaTeX";
 UNICODE_RECODE.NormalizedEncodings.BibTeX := "LaTeX";
 
+UNICODE_RECODE.Encoder.("LaTeXleavemarkup") := function(ustr)
+  return UNICODE_RECODE.Encoder.("LaTeX")(ustr, true);
+end;
+UNICODE_RECODE.NormalizedEncodings.LaTeXleavemarkup := "LaTeXleavemarkup";
+UNICODE_RECODE.NormalizedEncodings.latexleavemarkup := "LaTeXleavemarkup";
+UNICODE_RECODE.NormalizedEncodings.BibTeXleavemarkup := "LaTeXleavemarkup";
 
 InstallGlobalFunction(SimplifiedUnicodeString, function(arg)
   local ustr, single, max, tt, res, pos, a, f, n;

@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTabs.g                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTabs.g,v 1.2 2007-05-18 13:35:47 gap Exp $
+#H  @(#)$Id: UnicodeTabs.g,v 1.3 2007-05-21 22:05:47 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -17,9 +17,7 @@
 # ("ucs" package, "enctex")
 InstallValue(LaTeXUnicodeTable,
  [
- ### ??? add data from /usr/share/texmf-tetex/tex/generic/enctex/utf*
-
- # we actually start with some ASCII characters which are special characters
+ # we actually start with the ASCII characters which are special characters
  # in  LaTeX
  [ 35, "\\#" ],
  [ 36, "\\$" ],
@@ -2066,7 +2064,8 @@ InstallValue(SimplifiedUnicodeTable, [
 [65279,[]],
 [65533,63]
 ]);
-# map to lower case, for the moment only latin1 range
+# map to lower case, extracted from UnicodeData.txt field 14
+# [get uppercase map by Set(List(lcmap, Reverse));  ]
 InstallValue(LowercaseUnicodeTable, [
 [65,97],[66,98],[67,99],[68,100],[69,101],[70,102],
 [71,103],[72,104],[73,105],[74,106],[75,107],
@@ -2286,6 +2285,8 @@ InstallValue(LowercaseUnicodeTable, [
 [66592,66632],[66593,66633],[66594,66634],[66595,66635],
 [66596,66636],[66597,66637],[66598,66638],[66599,66639]
 ]);
+MakeImmutable(LowercaseUnicodeTable);
+IsSet(LowercaseUnicodeTable);
 
 # map to character width on terminals
 # got from glibc wcwidth in UTF-8 locale, but ignoring the ranges where
