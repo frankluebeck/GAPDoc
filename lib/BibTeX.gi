@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.20 2007-05-07 16:01:20 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.21 2007-05-22 16:25:27 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -661,79 +661,79 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
   fi;
   if IsBound(r.mrnumber) then
     Append(res, Concatenation(
-      "<p>\n[<a href=\"http://www.ams.org/mathscinet-getitem?mr=",
-      r.mrnumber{[1..9]}, "\">", key, "</a>]   "));
+      "<p class='Bib_entry'>\n[<span class='Bib_keyLink'><a href=\"http://www.ams.org/mathscinet-getitem?mr=",
+      r.mrnumber{[1..9]}, "\">", key, "</a></span>]   "));
   else
-    Append(res, Concatenation("<p>\n[<span style=\"color: #8e0000;\">", 
+    Append(res, Concatenation("<p class='Bib_entry'>\n[<span class='Bib_key' style=\"color: #8e0000;\">", 
                     key, "</span>]   "));
   fi;
   # we assume with the "," delimiters that at least one of .author,
   # .editor or .title exist
   if IsBound(r.author) then
-    Append(res, Concatenation("<b>", AndToCommaNames(r.author),"</b> "));
+    Append(res, Concatenation("<b class='Bib_author'>", AndToCommaNames(r.author),"</b> "));
   fi;
   if IsBound(r.editor) then
-    Append(res, Concatenation("(", AndToCommaNames(r.editor), ", Ed.)"));
+    Append(res, Concatenation("(<span class='Bib_editor'>", AndToCommaNames(r.editor), "</span>, Ed.)"));
   fi;
   if IsBound(r.title) then
 #      if IsBound(r.author) or IsBound(r.editor) then
 #        Append(str, ",\n ");
 #      fi;
-    Append(res, Concatenation("<i>", r.title, "</i>"));
+    Append(res, Concatenation("<i class='Bib_title'>", r.title, "</i>"));
   fi;
   if IsBound(r.booktitle) then
     if r.Type in ["inproceedings", "incollection"] then
       Append(res, " in ");
     fi;
-    Append(res, Concatenation(",\n <i>", r.booktitle, "</i>"));
+    Append(res, Concatenation(",\n <i class='Bib_booktitle'>", r.booktitle, "</i>"));
   fi;
   if IsBound(r.subtitle) then
-    Append(res, Concatenation(",\n <i> -- ", r.subtitle, "</i>"));
+    Append(res, Concatenation(",\n <i class='Bib_subtitle'>&ndash;", r.subtitle, "</i>"));
   fi;
   if IsBound(r.journal) then
-    Append(res, Concatenation(",\n ", r.journal));
+    Append(res, Concatenation(",\n <span class='Bib_journal'>", r.journal, "</span>"));
   fi;
   if IsBound(r.organization) then
-    Append(res, Concatenation(",\n ", r.organization));
+    Append(res, Concatenation(",\n <span class='Bib_organization'>", r.organization, "</span>"));
   fi;
   if IsBound(r.publisher) then
-    Append(res, Concatenation(",\n ", r.publisher));
+    Append(res, Concatenation(",\n <span class='Bib_publisher'>", r.publisher, "</span>"));
   fi;
   if IsBound(r.school) then
-    Append(res, Concatenation(",\n ", r.school));
+    Append(res, Concatenation(",\n <span class='Bib_school'>", r.school, "</span>"));
   fi;
   if IsBound(r.edition) then
-    Append(res, Concatenation(",\n ", r.edition, "edition"));
+    Append(res, Concatenation(",\n <span class='Bib_edition'>", r.edition, "edition", "</span>"));
   fi;
   if IsBound(r.series) then
-    Append(res, Concatenation(",\n ", r.series));
+    Append(res, Concatenation(",\n <span class='Bib_series'>", r.series, "</span>"));
   fi;
   if IsBound(r.volume) then
-    Append(res, Concatenation(",\n <em>", r.volume, "</em>"));
+    Append(res, Concatenation(",\n <em class='Bib_volume'>", r.volume, "</em>", "</span>"));
   fi;
   if IsBound(r.number) then
-    Append(res, Concatenation(" (", r.number, ")"));
+    Append(res, Concatenation(" (<span class='Bib_number'>", r.number, ")", "</span>"));
   fi;
   if IsBound(r.address) then
-    Append(res, Concatenation(",\n ", r.address));
+    Append(res, Concatenation(",\n <span class='Bib_address'>", r.address, "</span>"));
   fi;
   if IsBound(r.year) then
-    Append(res, Concatenation(",\n (", r.year, ")"));
+    Append(res, Concatenation(",\n (<span class='Bib_year'>", r.year, ")", "</span>"));
   fi;
   if IsBound(r.pages) then
-    Append(res, Concatenation(",\n p. ", r.pages));
+    Append(res, Concatenation(",\n <span class='Bib_pages'>p. ", r.pages, "</span>"));
   fi;
   if IsBound(r.chapter) then
-    Append(res, Concatenation(",\n Chapter ", r.chapter));
+    Append(res, Concatenation(",\n <span class='Bib_chapter'>Chapter ", r.chapter, "</span>"));
   fi;
   if IsBound(r.note) then
-    Append(res, Concatenation("<br />\n(", r.note, ")<br />\n"));
+    Append(res, Concatenation("<br />\n(<span class='Bib_note'>", r.note, "</span>", ")<br />\n"));
   fi;
   if IsBound(r.notes) then
-    Append(res, Concatenation("<br />\n(", r.notes, ")<br />\n"));
+    Append(res, Concatenation("<br />\n(<span class='Bib_notes'>", r.notes, "</span>", ")<br />\n"));
   fi;
   if IsBound(r.howpublished) then
-    Append(res, Concatenation(",\n", r.howpublished, "\n"));
+    Append(res, Concatenation(",\n<span class='Bib_howpublished'>", r.howpublished, "</span>", "\n"));
   fi;
  
   if IsBound(r.BUCHSTABE) then
@@ -757,15 +757,21 @@ end);
 
 ##  arg: r[, ansi]  (for link to BibTeX)
 InstallGlobalFunction(StringBibAsText, function(arg)
-  local r, ansi, str, f;
+  local r, ansi, str, txt, s, f, field;
   r := arg[1];
   ansi := rec(
-    BibReset := TextAttr.reset,
-    BibAuthor := Concatenation(TextAttr.bold, TextAttr.1),
-    BibTitle := TextAttr.4,
-    BibJournal := "",
-    BibVolume := TextAttr.4,
-    BibLabel := TextAttr.3
+    Bib_reset := TextAttr.reset,
+    Bib_author := Concatenation(TextAttr.bold, TextAttr.1),
+    Bib_editor := ~.Bib_author,
+    Bib_title := TextAttr.4,
+    Bib_subtitle := ~.Bib_title,
+    Bib_journal := "",
+    Bib_volume := TextAttr.4,
+    Bib_Label := TextAttr.3,
+    Bib_edition := ["", " edition"],
+    Bib_year := ["(", ")"],
+    Bib_note := ["(", ")"],
+    Bib_chapter := ["Chapter ", ""],
   );
   if Length(arg) = 2  and arg[2] <> true then
     for f in RecFields(arg[2]) do
@@ -788,95 +794,84 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     Info(InfoBibTools, 1, "\n");
     return;
   fi;
-  
   str := "";
-  Append(str, ansi.BibLabel);
-  Add(str, '[');
+  # helper adds markup
+  txt := function(arg)
+    local field, s, pp, pre, post;
+    field := arg[1];
+    if Length(arg) > 1 then
+      s := arg[2];
+    elif IsBound(r.(field)) then
+      s := r.(field);
+    else
+      return;
+    fi;
+    if not IsBound(ansi.(Concatenation("Bib_", field))) then
+      Append(str, s);
+    else
+      pp := ansi.(Concatenation("Bib_", field));
+      if not IsString(pp) then
+        pre := pp[1];
+        post := pp[2];
+      else
+        pre := pp;
+        post := ansi.Bib_reset;
+      fi;
+      Append(str, pre);
+      Append(str, s);
+      Append(str, post);
+    fi;
+  end;
   if IsBound(r.key) then
-    Append(str, r.key);
+    s := r.key;
   elif IsBound(r.printedkey) then
-    Append(str, r.printedkey);
+    s := r.printedkey;
   else
-    Append(str, r.Label);
+    s := r.Label;
   fi;
-  Append(str, "] ");
-  Append(str, TextAttr.reset);
+  Add(str, '['); txt("Label", s); Append(str, "] ");
+
   # we assume with the "," delimiters that at least one of .author,
   # .editor or .title exist
-  if IsBound(r.author) then
-    Append(str, Concatenation(ansi.BibAuthor ,AndToCommaNames(r.author), 
-                  ansi.BibReset));
-  fi;
+  txt("author");
   if IsBound(r.editor) then
-    Append(str, Concatenation(" (", AndToCommaNames(r.editor), ", Ed.)"));
+    Append(str, " ("); txt("editor"); Append(str, ", Ed.)");
   fi;
   if IsBound(r.title) then
     if IsBound(r.author) or IsBound(r.editor) then
       Append(str, ", ");
     fi;
-    Append(str, Concatenation(ansi.BibTitle, r.title, ansi.BibReset));
+    txt("title");
   fi;
   if IsBound(r.booktitle) then
     Append(str, ", ");
     if r.Type in ["inproceedings", "incollection"] then
       Append(str, " in ");
     fi;
-    Append(str, Concatenation(ansi.BibTitle, r.booktitle, ansi.BibReset));
+    txt("booktitle");
   fi;
   if IsBound(r.subtitle) then
-    Append(str, Concatenation(" -- ", ansi.BibTitle, r.subtitle,
-            ansi.BibReset, " "));
+    Append(str, "--"); txt("subtitle");
   fi;
-  if IsBound(r.journal) then
-    Append(str, Concatenation(", ", ansi.BibJournal, r.journal, ansi.BibReset));
-  fi;
-  if IsBound(r.organization) then
-    Append(str, Concatenation(", ", r.organization));
-  fi;
-  if IsBound(r.publisher) then
-    Append(str, Concatenation(", ", r.publisher));
-  fi;
-  if IsBound(r.school) then
-    Append(str, Concatenation(", ", r.school));
-  fi;
-  if IsBound(r.edition) then
-    Append(str, Concatenation(", ", r.edition, " edition"));
-  fi;
-  if IsBound(r.series) then
-    Append(str, Concatenation(", ", r.series));
-  fi;
-  if IsBound(r.volume) then
-    Append(str, Concatenation(", ", ansi.BibVolume, r.volume, ansi.BibReset));
-  fi;
-  if IsBound(r.number) then
-    Append(str, Concatenation(" (", r.number, ")"));
-  fi;
-  if IsBound(r.address) then
-    Append(str, Concatenation(", ", r.address));
-  fi;
-  if IsBound(r.year) then
-    Append(str, Concatenation(" (", r.year, ")"));
-  fi;
-  if IsBound(r.pages) then
-    Append(str, Concatenation(", ", r.pages));
-  fi;
-  if IsBound(r.chapter) then
-    Append(str, Concatenation(", Chapter ", r.chapter));
-  fi;
-  if IsBound(r.note) then
-    Append(str, Concatenation(", (", r.note, ")"));
-  fi;
-  if IsBound(r.howpublished) then
-    Append(str, Concatenation(", ", r.howpublished));
-  fi;
+
+  for field in [ "journal", "organization", "publisher", "school",
+                 "edition", "series", "volume", "number", "address",
+                 "year", "pages", "chapter", "note", "howpublished" ] do
+    if IsBound(r.(field)) then
+      Append(str, ", "); txt(field);
+    fi;
+  od;
   
+  # some LDFM specific
   if IsBound(r.BUCHSTABE) then
     Append(str, Concatenation(", Einsortiert unter ", r.BUCHSTABE));
   fi;
   if IsBound(r.LDFM) then
     Append(str, Concatenation(", Signatur ", r.LDFM));
   fi;
-  str := FormatParagraph(Filtered(str, x-> not x in "{}"), 72);
+
+##    str := FormatParagraph(Filtered(str, x-> not x in "{}"), 72);
+  str := FormatParagraph(str, 72);
   Add(str, '\n');
   return str;
 end);

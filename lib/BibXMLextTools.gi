@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.17 2007-05-21 22:07:18 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.18 2007-05-22 16:25:27 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -649,7 +649,10 @@ end);
 ##  
 ##  If <C>options.fullname</C> is bound and set to <K>true</K> then the full
 ##  given first names  for authors and editors will be  used, the default is
-##  to use the initials of the first names. <P/>
+##  to use the initials of the first names. Also, if
+##  <C>options.namefirstlast</C> is bound and set to <K>true</K> then the
+##  names are written in the form <Q>first-name(s) last-name</Q>, the
+##  default is the form <Q>last-name, first-name(s)</Q>. <P/>
 ##  
 ##  If   <C>options.href</C>  is   bound   and  set to <K>false</K> then the
 ##  <C>"BibTeX"</C> type  result will not use  <C>\href</C> commands.
@@ -973,26 +976,50 @@ function(entry, elt, namesaslists, strings, opts)
   elt.AsList := res;
   return res;
 end);
+# a helper
+RECBIBXMLHNDLR.namstringlist := function(l, opts)
+  local res, f, a;
+  res := [];
+  for a in l do
+    if Length(a) = 1 then
+      Add(res, a[1]);
+    else 
+      if IsBound(opts.fullname) and opts.fullname = true then
+        f := a[3];
+      else
+        f := a[2];
+      fi;
+      if IsBound(opts.namefirstlast) and opts.namefirstlast = true then
+        Add(res, Concatenation(f, " ", a[1]));
+      else
+        Add(res, Concatenation(a[1], ", ", f));
+      fi;
+    fi;
+  od;
+  return res;
+end;
 # now the default (BibTeX) version
 AddHandlerBuildRecBibXMLEntry(["author", "editor"], "default", 
 function(entry, elt, default, strings, opts)
   local res, a;
-  res := [];
-  for a in elt.AsList do
-    if Length(a) = 1 then
-      Add(res, a[1]);
-    elif IsBound(opts.fullname) and opts.fullname = true then
-      Add(res, Concatenation(a[1], ", ", a[3]));
-    else
-      Add(res, Concatenation(a[1], ", ", a[2]));
-    fi;
-  od;
+  res := RECBIBXMLHNDLR.namstringlist(elt.AsList, opts);
   res := JoinStringsWithSeparator(res, " and ");
   if IsBound(opts.hasLaTeXmarkup) and opts.hasLaTeXmarkup = true then
     return Encode(Unicode(res), "LaTeXleavemarkup");
   else
     return Encode(Unicode(res), "LaTeX");
   fi;
+end);
+# and Text and HTML with only one 'and'
+AddHandlerBuildRecBibXMLEntry(["author", "editor"], ["Text", "HTML"], 
+function(entry, elt, default, strings, opts)
+  local res, f, a;
+  res := RECBIBXMLHNDLR.namstringlist(elt.AsList, opts);
+  if Length(res) > 2 then
+    res := [JoinStringsWithSeparator(res{[1..Length(res)-1]}, ", "),
+            res[Length(res)]];
+  fi;
+  return JoinStringsWithSeparator(res, " and ");
 end);
 
 # now the special markup elements
@@ -1254,6 +1281,44 @@ InstallGlobalFunction(RecBibXMLEntry, function(arg)
   return res;
 end);
 
+##  <#GAPDoc Label="StringBibXMLEntry">
+##  <ManSection >
+##  <Func Arg="entry[, restype][, strings][, options]" 
+##        Name="StringBibXMLEntry" />
+##  <Returns>a  string</Returns>
+##  <Description>
+##  The  arguments of this function  have the same meaning as in <Ref
+##  Func="RecBibXMLEntry" /> but the return value is a string representing the
+##  bibliography entry in a format specified by <A>restype</A> (default is
+##  <C>"BibTeX"</C>). 
+##  <P/>
+##  
+##  Currently, the following cases for <A>restype</A> are supported:
+##  <List>
+##  <Mark><C>"BibTeX"</C></Mark><Item>A string with &BibTeX; source code
+##  is generated.</Item>
+##  <Mark><C>"Text"</C></Mark>
+##  <Item>A text representation of the text is returned. If 
+##  <C>options.ansi</C> is bound it must be a record. The components must have
+##  names <C>Bib_Label</C>, <C>Bib_author</C>, and so on for all fieldnames.
+##  The value of each component is a pair of strings which will enclose the
+##  content of the field in the result or the first of these strings in which 
+##  case the default for the second is <C>TextAttr.reset</C> (see <Ref
+##  Var="TextAttr"/>). If you give an empty record here, some default ANSI color
+##  markup will be used. </Item>
+##  <Mark><C>"HTML"</C></Mark>
+##  <Item>An HTML representation of the bibliography entry is returned. The text
+##  from each field is enclosed in markup (mostly <C>&lt;span></C>-elements)
+##  with the <C>class</C> attribute set to the field name. This allows a
+##  detailed layout of the code via a style sheet file.</Item>
+##  </List>
+##  
+##  <Example>
+##  ???
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
 InstallGlobalFunction(StringBibXMLEntry, function(arg)
   local r, type, opts;
   r := CallFuncList(RecBibXMLEntry, arg);
