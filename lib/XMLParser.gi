@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.25 2007-05-21 22:07:18 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.26 2007-05-24 16:06:36 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -691,6 +691,9 @@ InstallGlobalFunction(ParseTreeXMLString, function(arg)
   fi;
   res := GetElement(str, 1);
   res.input := ShallowCopy(arg[1]);
+  if XMLPARSEORIGINS <> false then
+    res.inputorigins := XMLPARSEORIGINS;
+  fi;
   return res;
 end);
 InstallGlobalFunction(ParseTreeXMLFile, function(arg)
@@ -1019,8 +1022,59 @@ EntitySubstitution := function(xmlstr, entities)
   return xmlstr;
 end;
 
+##  <#GAPDoc Label="GetTextXMLTree">
+##  <ManSection >
+##  <Func Arg="tree" Name="GetTextXMLTree" />
+##  <Returns>a string</Returns>
+##  <Description>
+##  The  argument   <A>tree</A>  must   be  a  node of a parse tree of some
+##  XML document, see <Ref Func="ParseTreeXMLFile"/>. 
+##  This function collects the content of this and all included elements 
+##  recursively into a string.
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+# extract and collect text in elements recursively
+InstallGlobalFunction(GetTextXMLTree, function(r)
+  local res, fun;
+  res := "";
+  fun := function(r)
+    if IsString(r.content) then
+      Append(res, r.content);
+    fi;
+  end;
+  ApplyToNodesParseTree(r, fun);
+  return res;
+end);
 
 
-        
-
-  
+##  <#GAPDoc Label="XMLElements">
+##  <ManSection >
+##  <Func Arg="tree, eltnames" Name="XMLElements" />
+##  <Returns>a list of nodes</Returns>
+##  <Description>
+##  The  argument   <A>tree</A>  must   be  a  node of a parse tree of some
+##  XML document, see <Ref Func="ParseTreeXMLFile"/>. 
+##  This function returns a list of all subnodes of <A>tree</A> (possibly 
+##  including <A>tree</A>) of elements with name given in the list of strings
+##  <A>eltnames</A>. Use <C>"PCDATA"</C> as name for leave nodes which contain 
+##  the actual text of the document. As an abbreviation <A>eltnames</A> can also
+##  be a string which is then put in a one element list.
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+# return list of nodes of elements with name in 'eltnames' from XML tree r
+InstallGlobalFunction(XMLElements, function(r, eltnames)
+  local res, fun;
+  if IsString(eltnames) then
+    eltnames := [eltnames];
+  fi;
+  res := [];
+  fun := function(r)
+    if r.name in eltnames then
+      Add(res, r);
+    fi;
+  end;
+  ApplyToNodesParseTree(r, fun);
+  return res;
+end);

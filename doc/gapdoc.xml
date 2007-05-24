@@ -2,7 +2,7 @@
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd">
 
-<!-- $Id: gapdoc.xml,v 1.8 2007-05-15 21:04:16 gap Exp $ -->
+<!-- $Id: gapdoc.xml,v 1.9 2007-05-24 16:06:36 gap Exp $ -->
 
 <!-- The documentation to the GAPDoc system. 
      Copyright 2000 by Frank Lübeck and Max Neunhöffer
@@ -32,6 +32,12 @@
 <TableOfContents/>
 
 <Body>
+
+<Ignore Remark="set SizeScreen for Example's">
+<Example>
+gap> SizeScreen([72,40]);;
+</Example>
+</Ignore>
 
 <#Include SYSTEM "intro.xml">
 

@@ -1,8 +1,8 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.12 2007-05-21 22:07:18 gap Exp $
-
+         $Id: TODO,v 1.13 2007-05-24 16:06:35 gap Exp $
+- doc NormalizedNameAndKey, test functions for examples
 
 - document StringBibAs..., change doc for <Bibliography>
 

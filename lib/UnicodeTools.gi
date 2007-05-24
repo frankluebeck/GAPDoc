@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gi                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gi,v 1.12 2007-05-21 22:05:47 gap Exp $
+#H  @(#)$Id: UnicodeTools.gi,v 1.13 2007-05-24 16:06:36 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -472,7 +472,7 @@ end);
 ##  <Example>
 ##  gap> ustr := Unicode("a and \366", "latin1");
 ##  Unicode("a and ö")
-##  gap> ustr = Unicode("a and &#246;", "XML");  
+##  gap> ustr = Unicode("a and &amp;#246;", "XML");  
 ##  true
 ##  gap> IntListUnicodeString(ustr);
 ##  [ 97, 32, 97, 110, 100, 32, 246 ]
@@ -695,7 +695,7 @@ end);
 ##  Unicode("a and o")
 ##  gap> ustr2 := UppercaseUnicodeString(ustr);;
 ##  gap> Print(Encode(ustr2, GAPInfo.TermEncoding), "\n");
-##  A UND Ö
+##  A AND Ö
 ##  </Example>
 ##  </Description>
 ##  </ManSection>

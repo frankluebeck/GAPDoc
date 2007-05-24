@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.18 2007-05-22 16:25:27 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.19 2007-05-24 16:06:36 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -61,9 +61,10 @@ BibXMLextStructure.fill();
 ##  
 ##  <Example><![CDATA[
 ##  gap> TemplateBibXML();
-##  [ "article", "book", "booklet", "manual", "techreport", "mastersthesis", 
-##    "phdthesis", "inbook", "incollection", "proceedings", "inproceedings", 
-##    "conference", "unpublished", "misc" ]
+##  [ "article", "book", "booklet", "manual", "techreport", 
+##    "mastersthesis", "phdthesis", "inbook", "incollection", 
+##    "proceedings", "inproceedings", "conference", "unpublished", "misc" 
+##   ]
 ##  gap> Print(TemplateBibXML("inbook"));
 ##  <entry id="X"><inbook>
 ##    <author>
@@ -295,7 +296,7 @@ end);
 ##  <#GAPDoc Label="StringBibAsXMLext">
 ##  <ManSection >
 ##  <Func Arg="bibentry[, abbrvs, vals][, encoding]" Name="StringBibAsXMLext" />
-##  <Returns>a string with XML code</Returns>
+##  <Returns>a string with XML code, or <K>fail</K></Returns>
 ##  <Description>
 ##  The argument <A>bibentry</A> is a record representing an entry from a 
 ##  &BibTeX; file, as returned in the first list of the result of <Ref
@@ -316,7 +317,9 @@ end);
 ##  some heuristic translations, like splitting name lists, finding places for
 ##  <C>&lt;C></C>-elements, putting formulae in <C>&lt;M></C>-elements,
 ##  substituting some characters. The result should always be checked and
-##  maybe improved by hand.<P/>
+##  maybe improved by hand. Some validity checks are applied to the given data,
+##  for example if all non-optional fields
+##  are given. If  this check fails the function returns <K>fail</K>. <P/>
 ##  
 ##  As an example we consider again the short &BibTeX; file <F>my.bib</F> 
 ##  shown in the example for <Ref Func="ParseBibFiles"/>.
@@ -453,7 +456,7 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
   if r.Type = "inbook" then
     if not "pages" in f then
       if not "chapter" in f then
-        Info(InfoBibTools, "#W WARNING: Must have 'chapter' and/or 'pages' ",
+        Info(InfoBibTools, 1,"#W WARNING: Must have 'chapter' and/or 'pages' ",
                             "in inbook-entry\n");
         Info(InfoBibTools, 2, r, "\n");
         return fail;
@@ -691,18 +694,18 @@ end);
 ##             ) ),
 ##    Label := "AB2000",
 ##    Type := "article",
-##    authorAsList :=
-##     [ [ "First", "F. A.", "Fritz A." ], [ "Sec\305\221nd", "X. Y.",
+##    authorAsList := 
+##     [ [ "First", "F. A.", "Fritz A." ], [ "Sec\305\221nd", "X. Y.", 
 ##            "X. Y." ] ],
 ##    author := "First, F. A. and Sec{\\H o}nd, X. Y.",
-##    title :=
-##     "The  {F}ritz package for the \n         formula $x^y - l_{{i+1}} \
-##  \\rightarrow \\mathbb{R}$",
+##    title := 
+##     "The \\textsf{ {F}ritz} package for the \n         formula $x^y - l\
+##  _{{i+1}} \\rightarrow \\mathbb{R}$",
 ##    journal := "Important Journal",
 ##    year := "2000",
 ##    number := "13",
 ##    pages := "13{\\textendash}25",
-##    note :=
+##    note := 
 ##     "Online data at \\href {http://www.publish.com/~ImpJ/123#data} {Bla\
 ##   Bla Publisher}",
 ##    mycomment := "very useful",
@@ -1312,9 +1315,35 @@ end);
 ##  with the <C>class</C> attribute set to the field name. This allows a
 ##  detailed layout of the code via a style sheet file.</Item>
 ##  </List>
-##  
+## 
+##  We use again the file shown in the example for <Ref
+##  Func="ParseBibXMLextFiles"/>.
 ##  <Example>
-##  ???
+##  gap> bib := ParseBibXMLextFiles("doc/mybib.xml");;
+##  gap> e := bib.entries[1];; strs := bib.strings;;
+##  gap> ebib := StringBibXMLEntry(e, "BibTeX", strs);;
+##  gap> PrintFormattedString(ebib);
+##  @article{ AB2000,
+##    author =           {First, F. A. and Sec{\H o}nd, X. Y.},
+##    title =            {The  \textsf{  {F}ritz} package for the formula $x^y -
+##                        l_{{i+1}} \rightarrow \mathbb{R}$},
+##    journal =          {Important Journal},
+##    number =           {13},
+##    year =             {2000},
+##    pages =            {13{\textendash}25},
+##    note =             {Online             data            at            \href
+##                        {http://www.publish.com/~ImpJ/123#data}    {Bla    Bla
+##                        Publisher}},
+##    mycomment =        {very useful},
+##    printedkey =       {FS00}
+##  }
+##  gap> etxt := StringBibXMLEntry(e, "Text", strs);;      
+##  gap> etxt := SimplifiedUnicodeString(Unicode(etxt), "latin1", "single");;
+##  gap> etxt := Encode(etxt, GAPInfo.TermEncoding);;                        
+##  gap> PrintFormattedString(etxt);
+##  [FS00]  First,  F.  A.  and  Second,  X.  Y., The Fritz package for the
+##  formula  x^y  - l_{i+1} -> R, Important Journal, 132000, 13-25, Online
+##  data at Bla Bla Publisher (http://www.publish.com/~ImpJ/123#data)
 ##  </Example>
 ##  </Description>
 ##  </ManSection>

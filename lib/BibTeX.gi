@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.21 2007-05-22 16:25:27 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.22 2007-05-24 16:06:36 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -199,10 +199,9 @@ end);
 ##  <Example>
 ##  gap> bib := ParseBibFiles("my.bib");
 ##  [ [ rec( From := rec( BibTeX := true ), Type := "article", 
-##            Label := "AB2000", 
-##            author := "Fritz A. First and Sec, X. Y.", title := "Short", 
-##            journal := "Important Journal", year := "2000" ) ], [ "j" ], 
-##    [ "Important Journal" ] ]
+##            Label := "AB2000", author := "Fritz A. First and Sec, X. Y."
+##              , title := "Short", journal := "Important Journal", 
+##            year := "2000" ) ], [ "j" ], [ "Important Journal" ] ]
 ##  </Example>
 ##  </Description>
 ##  </ManSection>
@@ -332,12 +331,13 @@ end);
 ##  We continue the example from <Ref  Func="ParseBibFiles"  />.
 ##  
 ##  <Example>
+##  gap> bib := ParseBibFiles("my.bib");;
 ##  gap> NormalizeNameAndKey(bib[1][1]);
 ##  gap> bib[1][1];
-##  rec( From := rec( BibTeX := true ), Type := "article", Label := "AB2000", 
-##    author := "First, F. A. and Sec, X. Y.", title := "Short", 
-##    journal := "Important Journal", year := "2000", 
-##    authororig := "Fritz A. First and Sec, X. Y.", printedkey := "FS00", 
+##  rec( From := rec( BibTeX := true ), Type := "article", 
+##    Label := "AB2000", author := "First, F. A. and Sec, X. Y.", 
+##    title := "Short", journal := "Important Journal", year := "2000", 
+##    authororig := "Fritz A. First and Sec, X. Y.", printedkey := "FS00",
 ##    keylong := "firstsec2000" )
 ##  </Example>
 ##  </Description>
@@ -709,7 +709,7 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
     Append(res, Concatenation(",\n <span class='Bib_series'>", r.series, "</span>"));
   fi;
   if IsBound(r.volume) then
-    Append(res, Concatenation(",\n <em class='Bib_volume'>", r.volume, "</em>", "</span>"));
+    Append(res, Concatenation(",\n <em class='Bib_volume'>", r.volume, "</em>"));
   fi;
   if IsBound(r.number) then
     Append(res, Concatenation(" (<span class='Bib_number'>", r.number, ")", "</span>"));
@@ -769,7 +769,7 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     Bib_volume := TextAttr.4,
     Bib_Label := TextAttr.3,
     Bib_edition := ["", " edition"],
-    Bib_year := ["(", ")"],
+    Bib_year := [" (", ")"],
     Bib_note := ["(", ")"],
     Bib_chapter := ["Chapter ", ""],
   );
@@ -858,7 +858,10 @@ InstallGlobalFunction(StringBibAsText, function(arg)
                  "edition", "series", "volume", "number", "address",
                  "year", "pages", "chapter", "note", "howpublished" ] do
     if IsBound(r.(field)) then
-      Append(str, ", "); txt(field);
+      if field <> "year" then
+        Append(str, ", "); 
+      fi;
+      txt(field);
     fi;
   od;
   

@@ -2,7 +2,7 @@
 ##
 #W  PrintUtil.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: PrintUtil.gi,v 1.4 2007-04-19 22:34:45 gap Exp $
+#H  @(#)$Id: PrintUtil.gi,v 1.5 2007-05-24 16:06:36 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -37,7 +37,7 @@ end);
 ##  
 ##  <Example>
 ##  gap> f := function() local i; 
-##  >   for i in [1..100000] do Print(i, "\n"); od; end; 
+##  >   for i in [1..100000] do Print(i, "\n"); od; end;; 
 ##  gap> PrintTo1("nonsense", f); # now check the local file `nonsense'
 ##  </Example>
 ##  </Description>
