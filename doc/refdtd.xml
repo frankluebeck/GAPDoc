@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.20 2007-05-21 22:07:18 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.21 2007-05-25 14:37:36 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -352,17 +352,26 @@ to denote this empty element.
 This  element  may   occur  in  the  <C>Book</C>  element   after  the  last
 <C>Appendix</C>  element.  If  it  is present,  a  bibliography  section  is
 generated  and inserted  into the  document. The  attribute <C>Databases</C>
-must be  specified and refers to  &BibTeX; databases. The databases  must be
-separated  by commas  and must  <E>not</E> have  a <F>.bib</F>  extension. A
-bibliography style  may be  specified with  the <C>Style</C>  attribute. The
+must be  specified, the names of several data files can be specified,
+separated by commas.<P/>
+
+Two kinds of files can be specified in <C>Databases</C>: The first are
+&BibTeX; files as defined in&nbsp;<Cite Key="La85" Where="Appendix B"/>.
+Such files must have a name with extension <F>.bib</F>, and in
+<C>Databases</C> the name must be given <E>without</E> this extension.
+The second are files in BibXMLext format as defined in Section&nbsp;<Ref 
+Sect="BibXMLformat"/>. These files must have an extension <F>.xml</F>
+and in <C>Databases</C> the <E>full</E> name  must be specified.<P/>
+
+We suggest to use the BibXMLext format because it allows to produce
+potentially nicer bibliography entries in text and HTML documents.<P/>
+
+A bibliography style  may be  specified with  the <C>Style</C>  attribute. The
 optional <C>Style</C>  attribute (for &LaTeX;  output of the  document) must
 also  be  specified  without  the  <F>.bst</F>  extension  (the  default  is
 <C>alpha</C>). See also  section <Ref Subsect="Cite"/> for  a description of
 the <C>Cite</C>  element which  is used  to include  bibliography references
 into the text. <P/>
-
-The  reference  for the  format  of  &BibTeX; database  files  is&nbsp;<Cite
-Key="La85" Where="Appendix B"/>.
 
 </Subsection>
 

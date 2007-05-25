@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.20 2007-05-25 00:03:57 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.21 2007-05-25 14:37:36 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -201,11 +201,11 @@ end);
 ##  on the content of all files given by filenames <A>fname1</A> and so on.
 ##  It collects the results in a single record.<P/>
 ##  
-##  As an example we parse the file <F>mybib.xml</F>  shown in
+##  As an example we parse the file <F>testbib.xml</F>  shown in
 ##  <Ref Sect="BibXMLformat"/>.
 ##  
 ##  <Example>
-##  gap> bib := ParseBibXMLextFiles("doc/mybib.xml");;
+##  gap> bib := ParseBibXMLextFiles("doc/testbib.xml");;
 ##  gap> RecFields(bib);
 ##  [ "entries", "strings", "entities" ]
 ##  gap> bib.entries;
@@ -321,11 +321,11 @@ end);
 ##  for example if all non-optional fields
 ##  are given. If  this check fails the function returns <K>fail</K>. <P/>
 ##  
-##  As an example we consider again the short &BibTeX; file <F>my.bib</F> 
+##  As an example we consider again the short &BibTeX; file <F>doc/test.bib</F> 
 ##  shown in the example for <Ref Func="ParseBibFiles"/>.
 ##  
 ##  <Example><![CDATA[
-##  gap> bib := ParseBibFiles("my.bib");;
+##  gap> bib := ParseBibFiles("doc/test.bib");;
 ##  gap> str := StringBibAsXMLext(bib[1][1], bib[2], bib[3]);;
 ##  gap> Print(str, "\n");
 ##  <entry id="AB2000"><article>
@@ -563,7 +563,7 @@ end);
 ##  <Ref Func="ParseBibXMLextFiles"/> to an equivalent XML file.
 ##  
 ##  <Example>
-##  gap> bib := ParseBibXMLextFiles("doc/mybib.xml");;
+##  gap> bib := ParseBibXMLextFiles("doc/testbib.xml");;
 ##  gap> WriteBibXMLextFile("test.xml", bib);
 ##  </Example>
 ##  </Description>
@@ -683,7 +683,7 @@ end);
 ##  We use again the file shown in the example for <Ref
 ##  Func="ParseBibXMLextFiles"/>.
 ##  <Example>
-##  gap> bib := ParseBibXMLextFiles("doc/mybib.xml");;
+##  gap> bib := ParseBibXMLextFiles("doc/testbib.xml");;
 ##  gap> e := bib.entries[1];; strs := bib.strings;;
 ##  gap> Print(RecBibXMLEntry(e, "BibTeX", strs), "\n");
 ##  rec(
@@ -1319,7 +1319,7 @@ end);
 ##  We use again the file shown in the example for <Ref
 ##  Func="ParseBibXMLextFiles"/>.
 ##  <Example>
-##  gap> bib := ParseBibXMLextFiles("doc/mybib.xml");;
+##  gap> bib := ParseBibXMLextFiles("doc/testbib.xml");;
 ##  gap> e := bib.entries[1];; strs := bib.strings;;
 ##  gap> ebib := StringBibXMLEntry(e, "BibTeX", strs);;
 ##  gap> PrintFormattedString(ebib);

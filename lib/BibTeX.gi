@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.23 2007-05-25 00:03:57 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.24 2007-05-25 14:37:36 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -190,14 +190,14 @@ end);
 ##  
 ##  As an example consider the following &BibTeX; file.
 ##  
-##  <Listing Type="my.bib">
+##  <Listing Type="doc/test.bib">
 ##  @string{ j  = "Important Journal" }
 ##  @article{ AB2000, Author=  "Fritz A. First and Sec, X. Y.", 
 ##  TITLE="Short", journal = j, year = 2000 }
 ##  </Listing> 
 ##  
 ##  <Example>
-##  gap> bib := ParseBibFiles("my.bib");
+##  gap> bib := ParseBibFiles("doc/test.bib");
 ##  [ [ rec( From := rec( BibTeX := true ), Type := "article", 
 ##            Label := "AB2000", author := "Fritz A. First and Sec, X. Y."
 ##              , title := "Short", journal := "Important Journal", 
@@ -349,7 +349,7 @@ end);
 ##  We continue the example from <Ref  Func="ParseBibFiles"  />.
 ##  
 ##  <Example>
-##  gap> bib := ParseBibFiles("my.bib");;
+##  gap> bib := ParseBibFiles("doc/test.bib");;
 ##  gap> NormalizedNameAndKey(bib[1][1].author);
 ##  [ "First, F. A. and Sec, X. Y.", "FS", "firstsec", 
 ##    [ [ "First", "F. A.", "Fritz A." ], [ "Sec", "X. Y.", "X. Y." ] ] ]

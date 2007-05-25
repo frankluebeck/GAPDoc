@@ -1,17 +1,11 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.13 2007-05-24 16:06:35 gap Exp $
-- doc NormalizedNameAndKey, test functions for examples
-
-- document StringBibAs..., change doc for <Bibliography>
+         $Id: TODO,v 1.14 2007-05-25 14:37:35 gap Exp $
 
 - should the bibliography and the index appear in the table of contents?
   (if yes, in all output versions) 
   [use: \addcontentsline{toc}{section}{References}   ?]
-
-- finalize lib/Examples.g for builtin manual example tester and include and
-  document it.
 
 - allow the distribution of different output documents (html, text, pdf,...)
   into different directories (needs to change the handler for GAPDoc books).
