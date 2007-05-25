@@ -101,6 +101,9 @@
   substituted by 'ComposedDocument' because the preprocessing step can be used
   for completely different types of documents as well.
 
+- New functions for extracting and checking the code in all <Example>
+  elements, see 'ManualExamples', 'TestManualExamples'.
+
 - Improved the documentation which markup is allowed in attribute values
   (recursively substituted entities). Improved the code to handle all
   special XML or LaTeX characters in attribute values, they must be escaped

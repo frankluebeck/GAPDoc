@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.19 2007-05-24 16:06:36 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.20 2007-05-25 00:03:57 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -205,7 +205,7 @@ end);
 ##  <Ref Sect="BibXMLformat"/>.
 ##  
 ##  <Example>
-##  gap> bib := ParseBibXMLextFiles("mybib.xml");;
+##  gap> bib := ParseBibXMLextFiles("doc/mybib.xml");;
 ##  gap> RecFields(bib);
 ##  [ "entries", "strings", "entities" ]
 ##  gap> bib.entries;

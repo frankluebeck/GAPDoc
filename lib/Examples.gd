@@ -2,7 +2,7 @@
 ##
 #W  Examples.gd                  GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Examples.gd,v 1.2 2007-05-24 16:06:36 gap Exp $
+#H  @(#)$Id: Examples.gd,v 1.3 2007-05-25 00:03:57 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -13,5 +13,7 @@
 
 DeclareGlobalFunction("ManualExamplesXMLTree");
 DeclareGlobalFunction("ManualExamples");
+DeclareGlobalFunction("ReadTestExamplesString");
 DeclareGlobalFunction("TestExamplesString");
+DeclareGlobalFunction("TestManualExamples");
 

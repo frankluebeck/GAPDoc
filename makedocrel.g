@@ -2,7 +2,7 @@
 ##
 #A  makedocrel.g                          GAPDoc                 Frank Lübeck
 ##  
-#H  @(#)$Id: makedocrel.g,v 1.8 2007-05-04 15:56:50 gap Exp $
+#H  @(#)$Id: makedocrel.g,v 1.9 2007-05-25 00:03:55 gap Exp $
 ##  
 ##  Rebuild the  whole documentation, provided sufficiently  good (pdf)LaTeX
 ##  is  available.   This  version  produces  relative   paths  to  external
@@ -16,7 +16,8 @@ maintree := MakeGAPDocDoc("doc", "gapdoc", ["../lib/BibTeX.gi",
 "../lib/BibTeX.gd", "../lib/BibXMLextTools.gi", "../lib/UnicodeTools.gi", 
 "../lib/ComposeXML.gi", "../lib/GAPDoc2HTML.gi", "../lib/GAPDoc.gd",
 "../lib/GAPDoc.gi", "../lib/GAPDoc2LaTeX.gi", "../lib/GAPDoc2Text.gi", 
-"../lib/PrintUtil.gi", "../lib/Text.gi", "../lib/XMLParser.gi",
+"../lib/PrintUtil.gi", "../lib/Text.gi", "../lib/XMLParser.gi", 
+"../lib/Examples.gi",
 "../lib/XMLParser.gd", "../lib/Make.g" ], "GAPDoc", "../../..");
 
 # now load it (for cross reference in example)

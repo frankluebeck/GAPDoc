@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.22 2007-05-24 16:06:36 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.23 2007-05-25 00:03:57 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -315,14 +315,32 @@ end);
 
 ##  <#GAPDoc Label="NormalizeNameAndKey">
 ##  <ManSection >
+##  <Func Arg="namestr" Name="NormalizedNameAndKey" />
+##  <Returns>list of strings and names as lists</Returns>
 ##  <Func Arg="r" Name="NormalizeNameAndKey" />
 ##  <Returns>nothing</Returns>
 ##  <Description>
-##  This  function  normalizes  in  a record  describing  a  &BibTeX;
-##  reference  (see <Ref  Func="ParseBibFiles" />) the  <C>author</C>
-##  and  editor  fields using  the  description  in <Cite  Key="La85"
-##  Where="Appendix  B 1.2"/>.  The  original entries  are stored  in
-##  <C>.authororig</C> and <C>.editororig</C>.<P/>
+##  The argument <A>namestr</A> must be a string describing an author or a list
+##  of authors as described in the &BibTeX; documentation in <Cite  Key="La85"
+##  Where="Appendix  B 1.2"/>. The function <Ref Func="NormalizedNameAndKey"
+##  /> returns a list of the form [ normalized name string, short key, long
+##  key, names as lists]. The first entry is a normalized form
+##  of the input where names are written as <Q>lastname, first name
+##  initials</Q>. The second and third entry are the name parts of a short and
+##  long key for the bibliography entry, formed from the (initials of) last
+##  names. The fourth entry is a list of lists, one for each name, where a 
+##  name is described by three strings for the last name, the first name
+##  initials and the first name(s) as given in the input. <P/>
+##  
+##  Note that the determination of the initials is limited to names where the
+##  first letter is described by a single character (and does not contain some
+##  markup, say for accents).<P/>
+##  
+##  The function <Ref Func="NormalizeNameAndKey"/> gets as argument <A>r</A> 
+##  a record for a bibliography entry as returned by <Ref  Func="ParseBibFiles"
+##  />. It substitutes  <C>.author</C> and <C>.editor</C> fields of <A>r</A> by
+##  their normalized form, the original versions are stored in  fields
+##  <C>.authororig</C> and <C>.editororig</C>.<P/> 
 ##  
 ##  Furthermore a short and a long citation key is generated and stored
 ##  in components <C>.printedkey</C> (only if no <C>.key</C> is already
@@ -332,6 +350,9 @@ end);
 ##  
 ##  <Example>
 ##  gap> bib := ParseBibFiles("my.bib");;
+##  gap> NormalizedNameAndKey(bib[1][1].author);
+##  [ "First, F. A. and Sec, X. Y.", "FS", "firstsec", 
+##    [ [ "First", "F. A.", "Fritz A." ], [ "Sec", "X. Y.", "X. Y." ] ] ]
 ##  gap> NormalizeNameAndKey(bib[1][1]);
 ##  gap> bib[1][1];
 ##  rec( From := rec( BibTeX := true ), Type := "article", 

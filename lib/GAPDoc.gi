@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.16 2007-05-21 22:07:18 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.17 2007-05-25 00:03:57 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -392,6 +392,8 @@ BindGlobal("NormalizedArgList", function(argl)
   local f, tr, g;
   # remove ',' and split into tree
   argl := NormalizedWhitespace(SubstitutionSublist(argl, ",", ""));
+  argl := SubstitutionSublist(argl, "[]", "");
+  argl := SubstitutionSublist(argl, "[ ]", "");
   f := function(argl) 
     local tr, pos, pos2;
     tr := [];

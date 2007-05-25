@@ -2,7 +2,7 @@
 ##
 #W  Examples.gi                  GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Examples.gi,v 1.2 2007-05-24 16:06:36 gap Exp $
+#H  @(#)$Id: Examples.gi,v 1.3 2007-05-25 00:03:57 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -11,6 +11,33 @@
 ##  GAP examples in GAPDoc manuals.
 ##  
 
+
+##  <#GAPDoc Label="ManualExamples">
+##  <ManSection >
+##  <Func Arg="path, main, files, units" Name="ManualExamples" />
+##  <Returns>a list of strings</Returns>
+##  <Func Arg="tree, units" Name="ManualExamplesXMLTree" />
+##  <Returns>a list of strings</Returns>
+##  <Description>
+##  The  argument   <A>tree</A>  must   be  a   parse tree of a
+##  &GAPDoc; document, see <Ref Func="ParseTreeXMLFile"/>. 
+##  The function <Ref Func="ManualExamplesXMLTree"/> returns a list of strings
+##  containing the content of <C>&lt;Example></C> elements. For each example
+##  there is a comment line showing the paragraph number and (if available) the
+##  original location  of this example with file and line number. Depending 
+##  on the argument <A>units</A> several examples are colleected in one string.
+##  Recognized values for <A>units</A> are <C>"Chapter"</C>, <C>"Section"</C>,
+##  <C>"Subsection"</C> or <C>"Single"</C>. The latter means that each example
+##  is in a separate string. For all other value of <A>units</A> just one string
+##  with all examples is returned.<P/>
+##  
+##  The arguments <A>path</A>, <A>main</A> and <A>files</A> of <Ref
+##  Func="ManualExamples"/> are the same as for <Ref Func="ComposedDocument"/>.
+##  This function first contructs and parses the &GAPDoc; document and then
+##  applies <Ref Func="ManualExamplesXMLTree"/>.
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
 # Extract examples units-wise from a GAPDoc document as XML tree, 
 # 'units' can either be: "Chapter" or "Section" or "Subsection" or "Single"
 #     then a list of strings is returned
@@ -73,8 +100,54 @@ InstallGlobalFunction(ManualExamples, function( path, main, files, units )
   return ManualExamplesXMLTree(xmltree, units);
 end);
 
+##  <#GAPDoc Label="TestExamples">
+##  <ManSection >
+##  <Func Arg="str" Name="ReadTestExamplesString" />
+##  <Returns><K>true</K> or <K>false</K></Returns>
+##  <Func Arg="str[, print]" Name="TestExamplesString" />
+##  <Returns><K>true</K> or a list of records</Returns>
+##  <Func Arg="[tree][,][path, main, files]" Name="TestManualExamples" />
+##  <Returns><K>true</K> or a list of records</Returns>
+##  <Description>
+##  The argument <A>str</A> must be a string containing lines for the test mode
+##  of &GAP;. The function <Ref Func="ReadTestExamplesString"/> just runs 
+##  <Ref BookName="Reference" Oper="ReadTest"/> on this code. <P/>
+##  
+##  The function <Ref Func="TestExamplesString"/> returns <K>true</K> if <Ref
+##  BookName="Reference" Oper="ReadTest"/> does not find differences. In the
+##  other case it returns a list of record, where each record describes one
+##  difference. The record have fields <C>.line</C> with the line number of the
+##  relevant input line of <A>str</A>, <C>.input</C> with the input line and
+##  <C>.diff</C> with the differences as displayed by <Ref BookName="Reference"
+##  Oper="ReadTest"/>. If the optional argument <A>print</A> is given and set 
+##  to <K>true</K> then the differences are also printed before the function
+##  returns.<P/>
+##  
+##  The arguments of the function <Ref Func="TestManualExamples"/> is either
+##  a parse tree of a &GAPDoc; document or the information to build and parse
+##  such a document. The function extracts all examples in <C>"Single"</C>
+##  units and applies <Ref Func="TestExamplesString"/> to them.<P/>
+##  
+##  <Example>
+##  gap> TestExamplesString("gap> 1+1;\n2\n");
+##  true
+##  gap> TestExamplesString("gap> 1+1;\n2\ngap> 2+3;\n4\n");
+##  [ rec( line := 3, input := "gap> 2+3;", diff := "+ 5\n- 4\n" ) ]
+##  gap> TestExamplesString("gap> 1+1;\n2\ngap> 2+3;\n4\n", true);
+##  -----------  bad example --------
+##  line: 3
+##  input: gap> 2+3;
+##  differences:
+##  + 5
+##  - 4
+##  [ rec( line := 3, input := "gap> 2+3;", diff := "+ 5\n- 4\n" ) ]
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+
 # test a string with examples 
-InstallGlobalFunction(TestExamplesString, function(str)
+InstallGlobalFunction(ReadTestExamplesString, function(str)
   local file;
   file := InputTextString(str);
   ReadTest(file);
@@ -82,7 +155,7 @@ InstallGlobalFunction(TestExamplesString, function(str)
 end);
 
 # args:  str, print
-guck := function(arg)
+InstallGlobalFunction(TestExamplesString, function(arg)
   local l, s, z, inp, out, f, lout, pos, bad, i, n, diffs, str;
   str := arg[1];
   l := SplitString(str, "\n", "");
@@ -147,16 +220,22 @@ guck := function(arg)
     od;
   fi;
   return bad;
-end;
+end);
 
-ggg := function(tree)
-  local ex, bad, a, attedStrin;
-  ex := ManualExamplesXMLTree(tree,"Single");
-  bad := Filtered(ex, a-> guck(a) <> true);
+InstallGlobalFunction(TestManualExamples, function(arg)
+  local ex, bad, res, a;
+  if IsRecord(arg[1]) then
+    ex := ManualExamplesXMLTree(arg[1], "Single");
+  else
+    ex := ManualExamples(arg[1], arg[2], arg[3], "Single");
+  fi;
+  bad := Filtered(ex, a-> TestExamplesString(a) <> true);
+  res := [];
   for a in bad do 
     Print("===========================\n");
     PrintFormattedString(a); 
-    guck(a, true);
+    Add(res, TestExamplesString(a, true));
   od; 
-end;
+  return res;
+end);
 

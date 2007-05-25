@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.23 2007-05-24 16:06:36 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.24 2007-05-25 00:03:57 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters and an XML Parser</Heading>
@@ -239,6 +239,17 @@ documents.
 <#Include Label="GAPDoc2HTMLPrintHTMLFiles">
 
 <#Include Label="InfoGAPDoc">
+
+</Section>
+
+<Section Label="Sec:TestExample">
+<Heading>Testing Manual Examples</Heading>
+We also provide some tools to check the examples given in
+<C>&lt;Example></C>-elements. 
+
+<#Include Label="ManualExamples">
+
+<#Include Label="TestExamples">
 
 </Section>
 
