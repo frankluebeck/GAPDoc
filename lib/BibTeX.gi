@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.24 2007-05-25 14:37:36 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.25 2007-05-29 11:03:49 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -895,7 +895,11 @@ InstallGlobalFunction(StringBibAsText, function(arg)
   fi;
 
 ##    str := FormatParagraph(Filtered(str, x-> not x in "{}"), 72);
-  str := FormatParagraph(str, 72);
+  if Unicode(str, "UTF-8") <> fail then
+    str := FormatParagraph(str, 72, WidthUTF8String);
+  else
+    str := FormatParagraph(str, 72);
+  fi;
   Add(str, '\n');
   return str;
 end);
