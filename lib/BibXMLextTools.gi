@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.21 2007-05-25 14:37:36 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.22 2007-05-29 11:05:48 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1219,7 +1219,6 @@ RECBIBXMLHNDLR.Finish := rec();
 # Finish functions
 AddHandlerBuildRecBibXMLEntry("Finish", ["BibTeX", "LaTeX"],
 function(entry, res, type, strings, opts)
-  local f;
   if IsBound(res.printedkey) then
     res.printedkey := Encode(Unicode(res.printedkey), "LaTeX");
   fi;

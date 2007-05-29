@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTabs.g                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTabs.g,v 1.3 2007-05-21 22:05:47 gap Exp $
+#H  @(#)$Id: UnicodeTabs.g,v 1.4 2007-05-29 11:05:48 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -477,6 +477,7 @@ InstallValue(LaTeXUnicodeTable,
  [ 8194, "{\\enskip}" ],
  [ 8195, "{\\quad}" ],
  [ 8201, "{\\thinspace}" ],
+ [ 8203, "" ],
  [ 8208, "{-}" ],
  [ 8211, "{\\textendash}" ],
  [ 8212, "{\\textemdash}" ],

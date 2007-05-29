@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.17 2007-05-25 00:03:57 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.18 2007-05-29 11:05:48 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -479,7 +479,7 @@ BindGlobal("GAPDocAddBibData", function(r)
       Add(need, a);
     fi;
   od;
-  need := List(need, a-> [a, RecBibXMLEntry(a)]);
+  need := List(need, a-> [a, RecBibXMLEntry(a, "Text")]);
   SortParallel(List(need, a-> SortKeyRecBib(a[2])), need);
   keys := List(need, a-> a[2].Label);
   labels := List(need, function(a) if IsBound(a[2].key) then return
