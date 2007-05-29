@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.25 2007-05-21 22:02:40 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.26 2007-05-29 14:58:45 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -311,7 +311,8 @@ end;
 ##  version of  the document  which can be  used with  &GAP;'s online
 ##  help (with  the <C>"screen"</C>  viewer, see  <Ref BookName="Ref"
 ##  Func="SetHelpViewer"  />). It  includes title  page, bibliography
-##  and  index. The  bibliography  is made  from &BibTeX;  databases.
+##  and  index. The  bibliography  is made  from BibXMLext or &BibTeX;  
+##  databases, see <Ref Chap="ch:bibutil"/>.
 ##  Their location must be given with the argument <A>bibpath</A> (as
 ##  string or directory object).<P/>
 ##  
@@ -414,6 +415,12 @@ InstallGlobalFunction(GAPDoc2Text, function(arg)
   fi;
   
   if r.name = "WHOLEDOCUMENT" then
+    # generate sorted list of counts from .six entries, makes LaTeX and HTML
+    # converter much faster on large documents
+    r.sixcount := List(r.six, a-> a[3]);
+    r.sixindex := [1..Length(r.six)];
+    SortParallel(r.sixcount, r.sixindex);
+
     # put final record together and return it, also add line numbers to
     # .six entries
     return GAPDoc2TextProcs.PutFilesTogether(str, r.six);  
@@ -503,7 +510,7 @@ end);
 ##  write head and foot of Txt file.
 GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   local i, pi, t, el, str, dat, datbt, bib, b, keys, need, labels, 
-        tmp, pos, j, diff, text, stream, a;
+        tmp, pos, j, diff, text, stream, a, ansi;
   
   ##  add paragraph numbers to all nodes of the document
   AddParagraphNumbersGapDocTree(r);
@@ -582,8 +589,15 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
       need[a].printedkey := r.biblabels[a];
     od;
     text := "";
+    ansi := rec(
+               Bib_author := GAPDoc2TextProcs.TextAttr.BibAuthor,
+               Bib_title := GAPDoc2TextProcs.TextAttr.BibTitle,
+               Bib_journal := GAPDoc2TextProcs.TextAttr.BibJournal,
+               Bib_volume := GAPDoc2TextProcs.TextAttr.BibVolume,
+               Bib_Label := GAPDoc2TextProcs.TextAttr.BibLabel,
+               Bib_reset := GAPDoc2TextProcs.TextAttr.BibReset);
     for a in need do
-      Append(text, StringBibAsText(a, GAPDoc2TextProcs.TextAttr));
+      Append(text, StringBibAsText(a, ansi));
     od;
     r.bibtext := text;
   fi;

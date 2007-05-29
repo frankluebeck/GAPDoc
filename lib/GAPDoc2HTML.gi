@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.43 2007-05-18 14:37:09 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.44 2007-05-29 14:58:45 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -879,7 +879,11 @@ GAPDoc2HTMLProcs.SectionLabel := function(r, count, sect)
     Append(res[2], Concatenation("ss", String(count[3])));
     return res;
   else
-    a := First(r.root.six, a-> a[3] = count{[1..3]});
+##      a := First(r.root.six, a-> a[3] = count{[1..3]});
+    a := PositionSet(r.root.sixcount, count{[1..3]});
+    if a <> fail then
+      a := r.root.six[r.root.sixindex[a]];
+    fi;
     if a = fail or not IsBound(a[7]) then
       return GAPDoc2HTMLProcs.SectionLabel(rec(root:=rec()), count, sect);
     else

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.28 2007-05-29 11:02:42 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.29 2007-05-29 14:58:45 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -318,6 +318,14 @@ SetGapDocLaTeXOptions := function(arg)
   GAPDoc2LaTeXProcs.INPUTENCENC := "latin1";
 end;
 
+GAPDoc2LaTeXProcs.firstsix := function(r, count)
+  local a;
+  a := PositionSet(r.root.sixcount, count{[1..3]});
+  if a <> fail then
+    a := r.root.six[r.root.sixindex[a]];
+  fi;
+  return a;
+end;
 ##  write head and foot of LaTeX file.
 GAPDoc2LaTeXProcs.WHOLEDOCUMENT := function(r, str)
   local   i,  pi,  t,  el,  a;
@@ -678,7 +686,8 @@ GAPDoc2LaTeXProcs.ChapSect := function(r, str, sect)
     Append(str, Concatenation("\\logpage{", 
             GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}\n"));
     if IsBound(r.root.six) then
-      a := First(r.root.six, x-> x[3] = r.count{[1..3]});
+##        a := First(r.root.six, x-> x[3] = r.count{[1..3]});
+      a := GAPDoc2LaTeXProcs.firstsix(r, r.count);
       if a <> fail and IsBound(a[7]) then
         Append(str, Concatenation("\\hyperdef{L}{", a[7], "}{}\n"));
       fi;
@@ -750,7 +759,8 @@ GAPDoc2LaTeXProcs.Bibliography := function(r, str)
   Append(str, Concatenation("\\def\\bibname{References\\logpage{", 
           GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}\n"));
   if IsBound(r.root.six) then
-    a := First(r.root.six, x-> x[3] = r.count{[1..3]});
+##      a := First(r.root.six, x-> x[3] = r.count{[1..3]});
+    a := GAPDoc2LaTeXProcs.firstsix(r, r.count);
     if a <> fail and IsBound(a[7]) then
       Append(str, Concatenation("\\hyperdef{L}{", a[7], "}{}\n"));
     fi;
@@ -1244,7 +1254,8 @@ GAPDoc2LaTeXProcs.ManSection := function(r, str)
   Append(str, Concatenation("\\logpage{", 
           GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}\\nobreak\n"));
   if IsBound(r.root.six) then
-    a := First(r.root.six, x-> x[3] = r.count{[1..3]});
+##      a := First(r.root.six, x-> x[3] = r.count{[1..3]});
+    a := GAPDoc2LaTeXProcs.firstsix(r, r.count);
     if a <> fail and IsBound(a[7]) then
       Append(str, Concatenation("\\hyperdef{L}{", a[7], "}{}\n"));
     fi;
@@ -1301,7 +1312,8 @@ GAPDoc2LaTeXProcs.TheIndex := function(r, str)
   Append(str, Concatenation("\\def\\indexname{Index\\logpage{", 
             GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}\n"));
   if IsBound(r.root.six) then
-    a := First(r.root.six, x-> x[3] = r.count{[1..3]});
+##      a := First(r.root.six, x-> x[3] = r.count{[1..3]});
+    a := GAPDoc2LaTeXProcs.firstsix(r, r.count);
     if a <> fail and IsBound(a[7]) then
       Append(str, Concatenation("\\hyperdef{L}{", a[7], "}{}\n"));
     fi;
