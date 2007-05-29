@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.27 2007-05-16 16:03:12 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.28 2007-05-29 11:02:42 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -46,7 +46,8 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  most  &TeX;   packages  of  current  Linux   distributions);  see
 ##  <URL>http://www.tug.org/tetex/</URL>. <P/>
 ##  
-##  In  particular, the  resulting  <C>dvi</C>- or  <C>pdf</C>-output
+##  In  particular, the  resulting  <C>pdf</C>-output (and 
+##  <C>dvi</C>-output)  
 ##  contains  (internal and  external) hyperlinks  which can  be very
 ##  useful for online browsing of the document.<P/>
 ##  
@@ -66,6 +67,12 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  \newcommand{\bla}{blabla}
 ##  "?>
 ##  ]]></Listing>
+##  
+##  Non-ASCII characters in the &GAPDoc; document are translated to 
+##  &LaTeX; input in ASCII-encoding with the help of <Ref Oper="Encode"/>
+##  and the option <C>"LaTeX"</C>. See the documentation of 
+##  <Ref Oper="Encode"/> for how to proceed if you have a character which 
+##  is not handled (yet).<P/>
 ##  
 ##  A hint for  large documents: In many &TeX;  installations one can
 ##  easily reach some memory limitations with documents which contain
@@ -91,13 +98,6 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  argument  list then  colors are  used or  not used,  respectively. The
 ##  default is  to use  colors but  <C>"nocolor"</C> can  be useful  for a
 ##  printable version of a manual (but  who wants to print such manuals?).
-##  Finally, the  string <C>"UTF-8"</C> is  recognized as an  argument. If
-##  given, &LaTeX;  will use the  <C>ucs</C> package and set  the encoding
-##  for the <C>inputenc</C> package to  <C>"utf8x"</C>. This allows to use
-##  many unicode characters (in UTF-8 encoding) in your document directly.
-##  (In  some cases  you may  also need  to load  some additional  &LaTeX;
-##  packages,  see  the  <C><![CDATA[<?LaTeX  ExtraPreamble=  ...?>]]></C>
-##  processing instruction mentioned above.)
 ##  <P/>
 ##  </Description>
 ##  </ManSection>
@@ -126,11 +126,6 @@ InstallGlobalFunction(GAPDoc2LaTeX, function(arg)
     GAPDoc2LaTeXProcs.(r.name)(r, str);
   fi;
   if Length(arg)=1 then
-    # if not using the ucs-package we translate the UTF-8 string to latin1
-    if Length(GAPDoc2LaTeXProcs.USEUCS) = 0 then
-      Info(InfoGAPDoc, 1, "#I Recoding LaTeX input to latin1 ...\n");
-      str := Encode(Unicode(str, "UTF-8"), "latin1");
-    fi;
     return str;
   fi;
 end);
@@ -217,7 +212,6 @@ GAPDoc2LaTeXProcs.Head1xcolor := Concatenation([
 "\\sloppy\n",
 "\\pagestyle{myheadings}\n",
 "\\usepackage{amssymb}\n",
-"USEUCS\n",
 "\\usepackage[INPUTENCENC]{inputenc}\n",
 "\\usepackage{makeidx}\n",
 "\\makeindex\n",
@@ -243,7 +237,6 @@ GAPDoc2LaTeXProcs.Head1xblack := Concatenation([
 "\\sloppy\n",
 "\\pagestyle{myheadings}\n",
 "\\usepackage{amssymb}\n",
-"USEUCS\n",
 "\\usepackage[INPUTENCENC]{inputenc}\n",
 "\\usepackage{makeidx}\n",
 "\\makeindex\n",
@@ -265,7 +258,6 @@ GAPDoc2LaTeXProcs.Head1xblack := Concatenation([
 "\n"]);
 ##  default is with color, and latin1 encoding 
 GAPDoc2LaTeXProcs.Head1x := GAPDoc2LaTeXProcs.Head1xcolor;
-GAPDoc2LaTeXProcs.USEUCS := "";
 GAPDoc2LaTeXProcs.INPUTENCENC := "latin1";
 
 ##  head - part 2 for dvi, ps and pdf output  (default is "pdf")
@@ -323,13 +315,7 @@ SetGapDocLaTeXOptions := function(arg)
   elif "nocolor" in arg then
     GAPDoc2LaTeXProcs.Head1x := GAPDoc2LaTeXProcs.Head1xblack;
   fi;
-  if "UTF-8" in arg then
-    GAPDoc2LaTeXProcs.USEUCS := "\\usepackage{ucs}";
-    GAPDoc2LaTeXProcs.INPUTENCENC := "utf8x";
-  else
-    GAPDoc2LaTeXProcs.USEUCS := "";
-    GAPDoc2LaTeXProcs.INPUTENCENC := "latin1";
-  fi;
+  GAPDoc2LaTeXProcs.INPUTENCENC := "latin1";
 end;
 
 ##  write head and foot of LaTeX file.
@@ -403,9 +389,7 @@ GAPDoc2LaTeXProcs.Book := function(r, str, pi)
   else
     Append(str, "a4paper,11pt");
   fi;
-  a := SubstitutionSublist(GAPDoc2LaTeXProcs.Head1x, "USEUCS", 
-                           GAPDoc2LaTeXProcs.USEUCS);
-  a := SubstitutionSublist(a, "INPUTENCENC", 
+  a := SubstitutionSublist(GAPDoc2LaTeXProcs.Head1x, "INPUTENCENC", 
                            GAPDoc2LaTeXProcs.INPUTENCENC);
   Append(str, a);
 
@@ -907,24 +891,26 @@ GAPDoc2LaTeXProcs.B := function(r, str)
   Append(str, "}");
 end;
 
+GAPDoc2LaTeXProcs.verbcontent := function(r, delfirst)
+  local cont;
+  # here we cannot use recoding, fall back to SimplifiedUnicodeString (latin1)
+  # first collect content without recoding or reformatting
+  cont := GetTextXMLTree(r);
+  cont := Encode(SimplifiedUnicodeString(Unicode(cont), "latin1"), "latin1");
+  cont := SplitString(cont, "\n", "");
+  # if first line has white space only, we remove it
+  if delfirst and Length(cont) > 0 and ForAll(cont[1], x-> x in WHITESPACE) then
+    cont := cont{[2..Length(cont)]};
+  fi;
+  cont := Concatenation(List(cont, a-> Concatenation("  ", a, "\n")));
+  return cont;
+end;
+
 ##  verbatim GAP session
 GAPDoc2LaTeXProcs.Verb := function(r, str)
   local   cont,  a,  s;
   Append(str, "\n\\begin{verbatim}");
-  cont := "";
-  for a in r.content do 
-    # here we try to avoid reformatting
-    if IsString(a.content) then
-      Append(cont, a.content); 
-    else
-      s := "";
-      GAPDoc2LaTeX(a, s);
-      Append(cont, s);
-    fi;
-  od;
-  cont := SplitString(cont, "", "\n");
-  cont := Concatenation(List(cont, a-> Concatenation("  ", a, "\n")));
-  Append(str, cont);
+  Append(str, GAPDoc2LaTeXProcs.verbcontent(r, false));
   Append(str, "\\end{verbatim}\n");
 end;
 
@@ -932,24 +918,7 @@ GAPDoc2LaTeXProcs.ExampleLike := function(r, str, label)
   local   cont,  a,  s;
   Append(str, Concatenation("\n\\begin{Verbatim}[fontsize=\\small,",
           "frame=single,label=", label, "]\n"));
-  cont := "";
-  for a in r.content do 
-    # here we try to avoid reformatting
-    if IsString(a.content) then
-      Append(cont, a.content); 
-    else
-      s := "";
-      GAPDoc2LaTeX(a, s);
-      Append(cont, s);
-    fi;
-  od;
-  cont := SplitString(cont, "\n", "");
-  # if first line has white space only, we remove it
-  if Length(cont) > 0 and ForAll(cont[1], x-> x in WHITESPACE) then
-    cont := cont{[2..Length(cont)]};
-  fi;
-  cont := Concatenation(List(cont, a-> Concatenation("  ", a, "\n")));
-  Append(str, cont);
+  Append(str, GAPDoc2LaTeXProcs.verbcontent(r, true));  
   Append(str, "\\end{Verbatim}\n");
 end;
 
