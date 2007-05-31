@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gi                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gi,v 1.13 2007-05-24 16:06:36 gap Exp $
+#H  @(#)$Id: UnicodeTools.gi,v 1.14 2007-05-31 12:25:32 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -41,6 +41,9 @@ UNICODE_RECODE.NormalizedEncodings := rec(
   ASCII := "ANSI_X3.4-1968",
   US\-ASCII := "ANSI_X3.4-1968",
   xml := "XML",
+  url := "URL",
+  URL := "URL",
+  percent := "URL",
 );
 UNICODE_RECODE.f := function()
   local nam, i;
@@ -142,6 +145,22 @@ UNICODE_RECODE.Decoder.("XML") := function(str)
     fi;
   od;
   return res;
+end;
+
+UNICODE_RECODE.Decoder.("URL") := function(str)
+  local res, i;
+  res := "";
+  i := 1;
+  while i <= Length(str) do
+    if str[i] = '%' then
+      Add(res, CHAR_INT(IntHexString(str{[i+1,i+2]})));
+      i := i+3;
+    else
+      Add(res, str[i]);
+      i := i+1;
+    fi;
+  od;
+  return IntListUnicodeString(Unicode(res, "UTF-8"));
 end;
 
 
@@ -465,7 +484,10 @@ end);
 ##  <C>UNICODE_RECODE.NormalizedEncodings</C> (ASCII, 
 ##  ISO-8859-X, UTF-8 and aliases). The encoding <C>"XML"</C> means an ASCII
 ##  encoding in which non-ASCII characters are specified by XML character
-##  entities. The listed encodings <C>"LaTeX"</C> and aliases
+##  entities. The encoding <C>"URL"</C> is for URL-encoded (also called
+##  percent-encoded strings, as specified in RFC3986 
+##  (<URL Text="see here">http://www.ietf.org/rfc/rfc3986.txt</URL>).
+##  The listed encodings <C>"LaTeX"</C> and aliases
 ##  cannot be used with <Ref Oper="Unicode" />.
 ##  See the operation <Ref Oper="Encode"/> for mapping  a unicode string 
 ##  to a &GAP; string.<P/>
@@ -515,13 +537,13 @@ InstallMethod(Unicode, [IsString, IsString], function(str, enc)
   if res = fail then
     return fail;
   fi;
-  return Unicode(UNICODE_RECODE.Decoder.(enc)(str));
+  return Unicode(res);
 end);
 # just a string as argument is assumed to be in UTF-8 encoding
 InstallMethod(Unicode, [IsStringRep], function(str)
   return Unicode(str, "UTF-8");
 end);
-
+  
 # view and print 
 InstallMethod(ViewObj, [IsUnicodeString], function(ustr)
   local l;
@@ -636,6 +658,11 @@ end);
 ##  <C>UNICODE_RECODE.NormalizedEncodings</C>. Except for some cases
 ##  mentioned below characters which are not available in the target
 ##  encoding are substituted by '?' characters.<P/>
+## 
+##  If the <A>encoding</A> is <C>"URL"</C> (see <Ref Oper="Unicode"/>) then
+##  an optional argument <A>encreserved</A> can be given, it must be a list
+##  of reserved characters which should be percent encoded; the default is
+##  to encode only the <C>%</C> character.<P/>
 ##  
 ##  The encoding <C>"LaTeX"</C>  substitutes 
 ##  non-ASCII characters and &LaTeX; special characters by &LaTeX; code 
@@ -763,6 +790,50 @@ UNICODE_RECODE.Encoder.("XML") := function(ustr)
   od;
   return res;
 end;
+
+UNICODE_RECODE.RFC3986Unreserved := Set(List(
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~", 
+  INT_CHAR));
+UNICODE_RECODE.RFC3986Reserved := Set(List("!*'();:@&=+$,/?%#[]", INT_CHAR));
+UNICODE_RECODE.Encoder.("URL") := function(arg)
+  local ustr, encreserved, res, s, i, j;
+  ustr := arg[1];
+  # also allow UTF-8 GAP string
+  if not IsUnicodeString(ustr) then
+    ustr := Unicode(ustr);
+  fi;
+  if Length(arg) > 1 then
+    encreserved := arg[2];
+  else
+    encreserved := "%";
+  fi;
+  if IsString(encreserved) then
+    encreserved := Set(List(encreserved, INT_CHAR));
+  fi;
+  res := "";
+  for i in IntListUnicodeString(ustr) do
+    if i in UNICODE_RECODE.RFC3986Unreserved then
+      Add(res, CHAR_INT(i));
+    elif i in UNICODE_RECODE.RFC3986Reserved and not i in encreserved then
+      Add(res, CHAR_INT(i));
+    elif i < 128 then
+      Add(res, '%');
+      if i < 16 then
+        Add(res, '0');
+      fi;
+      Append(res, HexStringInt(i));
+    else
+      s := Encode(Unicode([i]), "UTF-8");
+      for j in List(s, INT_CHAR) do
+        Add(res, '%');
+        Append(res, HexStringInt(j));
+      od;
+    fi;
+  od;
+  return res;
+end;
+
+
 # non-ASCII characters to LaTeX code, if known from LaTeXUnicodeTable
 UNICODE_RECODE.Encoder.("LaTeX") := function(arg)
   local ustr, leavemarkup, tt, res, pos, s, n;
@@ -927,6 +998,16 @@ InstallMethod(Encode, [IsUnicodeString, IsString], function(ustr, enc)
   fi;
   enc := UNICODE_RECODE.NormalizedEncodings.(enc);
   return UNICODE_RECODE.Encoder.(enc)(ustr);
+end);
+# generic dispatcher for encoding depending on extra data (e.g. used with "URL"
+InstallOtherMethod(Encode, [IsUnicodeString, IsString, IsObject], 
+function(ustr, enc, data)
+  if not IsBound(UNICODE_RECODE.NormalizedEncodings.(enc)) then
+    Error("Sorry, only the following encodings are supported for Encode:\n",
+                    RecFields(UNICODE_RECODE.Encoder), "\n");
+  fi;
+  enc := UNICODE_RECODE.NormalizedEncodings.(enc);
+  return UNICODE_RECODE.Encoder.(enc)(ustr, data);
 end);
 
 # here the default is UTF-8 encoding
