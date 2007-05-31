@@ -1,5 +1,5 @@
 #!/bin/bash
-#  $Id: pack,v 1.4 2007-05-31 12:27:30 gap Exp $
+#  $Id: pack,v 1.5 2007-05-31 12:29:04 gap Exp $
 
 echo "Did you adjust (yN)?: Version, Date, ArchiveURL in ./PackageInfo.g"
 echo "                ./version"
@@ -44,8 +44,9 @@ rm -rf ttttmp
 
 echo new archive in ./$dirnam.tar.bz2
 echo if ok then call
-echo     "~/gap4/dev/DistributionUpdate/maindist/repack.py "$dirnam".tar.bz2"
+echo "      ~/gap4/dev/DistributionUpdate/maindist/repack.py "$dirnam".tar.bz2"
 
 echo "if you are happy with this archive tag the current state before"
-echo "committing further changes, e.g.:    cvs tag REL1_0"
+echo "committing further changes, e.g.: "
+echo "       cvs tag REL1_0"
 
