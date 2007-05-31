@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.25 2007-05-29 11:03:49 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.26 2007-05-31 12:23:43 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -514,8 +514,11 @@ end);
 ##  <Returns>nothing</Returns>
 ##  <Description>
 ##  This  is   the  converse  of  <Ref  Func="ParseBibFiles"/>.  Here
-##  <A>bib</A>  must  have  a  format  as  it  is  returned  by  <Ref
-##  Func="ParseBibFiles"/>. A &BibTeX; file <A>bibfile</A> is written
+##  <A>bib</A>  either must  have  a  format as list of three lists  
+##  as  it  is  returned  by  <Ref
+##  Func="ParseBibFiles"/>. Or <A>bib</A> can be a record as returned
+##  by <Ref Func="ParseBibXMLextFiles"/>. 
+##  A &BibTeX; file <A>bibfile</A> is written
 ##  and  the  entries are  formatted  in  a  uniform way.  All  given
 ##  abbreviations are used while writing this file.<P/>
 ##  
@@ -548,6 +551,14 @@ end);
 InstallGlobalFunction(WriteBibFile, function(file, bib)
   local   p,  b3,  a,  b,  pos,  f;
   
+  if IsRecord(bib) and IsBound(bib.entries) and IsBound(bib.strings) then
+    b := bib;
+    bib := [];
+    bib[1] := List(b.entries, a-> RecBibXMLEntry(a, "BibTeX", b.strings));
+    bib[2] := List(b.strings, a-> a[1]);
+    bib[3] := List(b.strings, a-> a[2]);
+  fi;
+
   # collect abbrevs 
   p := [];
   SortParallel(bib[3], bib[2]);
