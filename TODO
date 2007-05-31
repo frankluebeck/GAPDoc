@@ -1,7 +1,10 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.14 2007-05-25 14:37:35 gap Exp $
+         $Id: TODO,v 1.15 2007-05-31 12:27:30 gap Exp $
+
+- add the utility to access the MathSciNet database for BibTeX records.
+  (mk.g in doc/ref)
 
 - should the bibliography and the index appear in the table of contents?
   (if yes, in all output versions) 

@@ -7,14 +7,14 @@
 
 SetPackageInfo( rec(
 
-CVSVERSION := "$Id: PackageInfo.g,v 1.8 2007-02-20 16:56:27 gap Exp $",
+CVSVERSION := "$Id: PackageInfo.g,v 1.9 2007-05-31 12:27:30 gap Exp $",
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
-Version := "dev.dev",
-Date := "30/01/2006",
+Version := "1.0",
+Date := "31/05/2007",
 ArchiveURL := 
-          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-0.99999",
+          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.0",
 ArchiveFormats := ".tar.bz2",
 Persons := [
   rec(
@@ -40,21 +40,18 @@ Persons := [
   PostalAddress := "Dr. Max Neunhöffer\nLehrstuhl D für Mathematik\nRWTH Aachen\nTemplergraben 64\n52062 Aachen\nGERMANY\n"
   )
 ],
-Status := "deposited",
-
-# CommunicatedBy := "Mike Atkinson (St. Andrews)",
-#CommunicatedBy := "",
-# AcceptDate := "08/1999",
-#AcceptDate := "",
+Status := "accepted",
+CommunicatedBy := "Steve Linton (St Andrews)",
+AcceptDate := "10/2006",
+              
 README_URL := 
-"http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/README",
+"http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/README.txt",
 PackageInfoURL := 
 "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/PackageInfo.g",
-AbstractHTML := "This package contains a definition of a structure for <span class='pkgname'>GAP</span> (package) documentation, based on XML. It also contains  conversion programs for producing text-, DVI-, PDF- or HTML-versions of such documents, with hyperlinks if possible.",
+AbstractHTML := "This package contains a definition of a structure for <span class='pkgname'>GAP</span> (package) documentation, based on XML. It also contains  conversion programs for producing text-, PDF- or HTML-versions of such documents, with hyperlinks if possible.",
 PackageWWWHome := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc",
 PackageDoc := [rec(
   BookName := "GAPDoc",
-#  Archive := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-doc-0r99.tar.bz2",
   ArchiveURLSubset := ["doc", "example"],
   HTMLStart := "doc/chap0.html",
   PDFFile := "doc/manual.pdf",
@@ -64,7 +61,6 @@ PackageDoc := [rec(
   ),
   rec(
   BookName := "GAPDoc Example",
-#  Archive := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/gapdoc-example-0r99.tar.bz2",
   ArchiveURLSubset := ["example", "doc"],
   HTMLStart := "example/chap0.html",
   PDFFile := "example/manual.pdf",
@@ -82,16 +78,22 @@ Dependencies := rec(
 ),
 AvailabilityTest := ReturnTrue,
 Autoload := true,
+SPACES := "                   ",
 BannerString := Concatenation( 
 "    ######################################################################\n",
 "    ##                                                                  ##\n",
-"    ##        GAPDoc ", ~.Version, " (a GAP documentation meta-package)         ##\n",
+"    ##        GAPDoc ", 
+~.Version, 
+" (a GAP documentation meta-package)",
+~.SPACES{[1..16-Length(~.Version)]},
+"##\n",
 "    ##                                                                  ##\n",
 "    ##   Questions and remarks to: Frank.Luebeck@Math.RWTH-Aachen.De    ##\n",
 "    ##                             Max.Neunhoeffer@Math.RWTH-Aachen.De  ##\n",
 "    ##                                                                  ##\n",
 "    ######################################################################\n\n"
 ),
-Keywords := ["GAP documentation", "help system", "XML", "pdf", "hyperlink"]
+Keywords := ["GAP documentation", "help system", "XML", "pdf", "hyperlink",
+            "unicode", "BibTeX", "BibXMLext"]
 ));
 

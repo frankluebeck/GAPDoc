@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id: example.xml,v 1.15 2007-05-18 14:37:09 gap Exp $ -->
+<!-- $Id: example.xml,v 1.16 2007-05-31 12:27:30 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
  [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&gt;</Alt>'>]>
@@ -10,7 +10,7 @@
 <TitlePage>
   <Title>A Complete Example (&see; <Ref Sect="One"/>)</Title>
   <Subtitle>Every element shows up</Subtitle>
-  <Version>Version 1.0</Version>
+  <Version>Version <#Include SYSTEM "../version"></Version>
   <TitleComment>
   If the subtitle ist not sufficient, this &lt;TitleComment> 
   element can be used for a slightly longer text on the front page.
@@ -21,7 +21,7 @@
   <Author>Max Neunhöffer
           <Email>Max.Neunhoeffer@Math.RWTH-Aachen.De</Email>
   </Author>
-  <Date>December 2000</Date>
+  <Date>May 2007</Date>
   <Address>
   Lehrstuhl D für Mathematik<Br/> Templergraben 
   64<Br/> 52062 Aachen<Br/> (Germany)
@@ -33,7 +33,7 @@
             source text. This should enable new users to learn &GAPDoc;
             quickly.
   </Abstract>
-  <Copyright>&copyright; 2000 by Frank Lübeck and Max Neunhöffer
+  <Copyright>&copyright; 2000-2007 by Frank Lübeck and Max Neunhöffer
   </Copyright>
   <Acknowledgements>We thank Lehrstuhl D für Mathematik.
   </Acknowledgements>

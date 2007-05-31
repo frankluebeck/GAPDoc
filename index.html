@@ -44,15 +44,11 @@
 
   <!-- current version, maybe further version info, 
        links to old versions ... -->
-  <strong>Current version: </strong> 0.99999
+  <strong>Current version: </strong> 1.0
   <br />
   
   <!-- status of the package  -->
-  <strong>Status:</strong> This package is distributed with GAP 4.4 as
-  a <em>deposited</em> package. Some other packages now use <span
-  class="pkg">GAPDoc</span> for their documentation. If you want to read
-  such documentation you must install the <span class="pkg">GAPDoc</span>
-  package as well. 
+  <strong>Status:</strong> Accepted (since October 2006)
   <br />
 
   <!-- author/maintainer contact information, probably email 
@@ -67,6 +63,11 @@
   <!-- download location, maybe link to somewhere below -->
   <strong>Download: </strong> See <a href="#ARCHS">below</a> for archives in
   several formats.
+  <br />
+
+  <strong>History: </strong> This text file <a href="CHANGES.txt">CHANGES</a>
+  describes the most important differences to former versions of <span
+  class="pkg">GAPDoc</span>.
   
   </p>
 
@@ -75,9 +76,8 @@
   <h2>Description</h2>
   
   <p>
-  This    package   (together    with   recent    improvements   of    <span
-  class="pkg">GAP</span>'s  help  mechanism)  describes an  alternative  for
-  writing GAP documentation.
+  This    package  describes a document format for writing 
+  <span  class="pkg">GAP</span> documentation.
   </p>
 
   <p>
@@ -92,15 +92,17 @@
   </p> 
  
   <ul>
-  <li>Utilities to <strong>use</strong> the  documentation of other packages
-  which is written  in <span class="pkg">GAPDoc</span> format.  If you don't
-  want to write your own (package)  documentation you can skip the remaining
-  points.
+  <li>Utilities to <strong>use</strong> the  documentation (of <span
+  class="pkg">GAP</span> packages and in  the future the GAP manuals as well)
+  which is written  in <span class="pkg">GAPDoc</span> format with the <span
+  class="pkg">GAP</span> help system.  
+  If you don't want to write your own (package)  documentation you can skip 
+  the remaining points.
   </li>
 
   <li>
-  The description of a markup language for GAP documentation (which is
-  defined using the XML standard).
+  The description of a markup language for <span  class="pkg">GAP</span> 
+  documentation (which is defined using the XML standard).
   </li>
 
   <li>
@@ -117,7 +119,8 @@
   </li>
 
   <li>
-  GAP programs (written by the first named author) which produce from 
+  <span  class="pkg">GAP</span> programs (written by the first named 
+  author) which produce from 
   documentation written in the GAPDoc language several document formats:
   
   <ul>
@@ -125,12 +128,31 @@
        text format with color markup for onscreen browsing.
       </li>
       <li>
-      LaTeX format and from this PDF- and DVI-versions with hyperlinks.
+      LaTeX format and from this PDF- (and DVI)-versions with hyperlinks.
       </li>
       <li>      
-      HTML (4.01 strict) format for reading with a Web-browser.
+      HTML (XHTML 1.0 strict) format for reading with a Web-browser (and
+      many hooks for CSS layout).
       </li>
   </ul>
+  </li>
+  <li>
+  Utility <span  class="pkg">GAP</span> programs which are used for the 
+  above but can be of independent interest as well: 
+    <ul>
+        <li>unicode strings with translations to and from  other encodings
+        </li>
+        <li>further utilities for manipulating strings
+        </li>
+        <li>tools for dealing with BibTeX data
+        </li>
+        <li>another data format BibXMLext for bibliographical data including
+            tools to manipulate/translate them
+        </li>
+        <li>a tool <code>ComposedDocument</code> for composing documents 
+            which are distributed in many files
+        </li>
+    </ul>
   </li>
   </ul>
   
@@ -143,20 +165,9 @@
   </p>
 
   <p>
-  Unpacking generates a subdirectory <code>gapdoc</code>. 
+  Unpacking generates a subdirectory <code>GAPDoc-1.0</code>. 
   </p>
 
-  <p>
-  [This becomes unnecessary from <span class="pkg">GAP</span>&nbsp;4.4 on.]
-  To tell GAP about this package add the following line to the
-  file '<code>ALLPKG</code>'
-  in the <code>pkg</code> directory.
-  </p>
-  
-<pre>
-GAPDoc     # meta package for preparing GAP (package) documentation
-</pre>
-               
   <p>
   That's    it!   (Maybe    you   want    to   read    the   help    section
   '<code>?SetHelpViewer</code>' in the <span class="pkg">GAP</span> reference
@@ -165,14 +176,18 @@ GAPDoc     # meta package for preparing GAP (package) documentation
 
   <p>
   Installation outside the <span class="pkg">GAP</span> main directory: When
-  you  don't have  access to  the directory  of your  main GAP  installation
+  you  don't have  access to  the directory  of your  main <span
+  class="pkg">GAP</span>  installation
   you  can  also  install  the  package  by  unpacking  inside  a  directory
   <code>MYGAPDIR/pkg</code>.  (Don't forget  to  call <code>gap</code>  with
-  the  <code>-l  ";MYGAPDIR"</code> option.)  The  only  drawback with  this
+  the  <code>-l  ";MYGAPDIR"</code> option.)  
+  <!--  no longer true:
+  The  only  drawback with  this
   installation is that in the HTML  version of the package documentation the
   links to the main <span class="pkg">GAP</span> manuals don't work. You can
   correct this  by recompiling  the HTML version  of the  documentation: Say
   <code>cd gapdoc; gap makedoc.g</code>.
+  -->
   </p>
   
   <h2>Online Documentation</h2>
@@ -185,12 +200,11 @@ GAPDoc     # meta package for preparing GAP (package) documentation
   all of these documents from the <span class="pkg">GAP</span> online help.
   </p>
 
-  <h3> Main GAPDoc documentation </h3>
+  <h3> Main <span  class="pkg">GAPDoc</span> documentation </h3>
 
   <ul>
   <li> <a href="doc/chap0.html">HTML-version</a> </li>
   <li> <a href="doc/manual.pdf"><code>pdf</code>-version</a> </li>
-  <li> <a href="doc/manual.dvi"><code>dvi</code>-version</a> </li>
   <li> <a href="doc/manual.ps">postscript-version</a> </li>
   <li> text-version <a href="gapdoc.txt">with</a> and <a
   href="gapdoc-nc.txt">without</a> color markup (you can read the colored 
@@ -206,12 +220,11 @@ GAPDoc     # meta package for preparing GAP (package) documentation
   how it looks like in each format.
   </p>
 
-  <h3> Example GAPDoc document </h3>
+  <h3> Example <span  class="pkg">GAPDoc</span> document </h3>
   
   <ul>
   <li> <a href="example/chap0.html">HTML-version</a> </li>
   <li> <a href="example/manual.pdf"><code>pdf</code>-version</a> </li>
-  <li> <a href="example/manual.dvi"><code>dvi</code>-version</a> </li>
   <li> <a href="example/manual.ps">postscript-version</a> </li>
   <li> text-version <a href="example.txt">with</a> and <a
   href="example-nc.txt">without</a> color markup.  </li>
@@ -226,20 +239,20 @@ GAPDoc     # meta package for preparing GAP (package) documentation
 
   <ul>
   <li>
-  <a href="gapdoc-0.99999.zoo"><code>gapdoc-0.99999.zoo</code></a>  
+  <a href="GAPDoc-1.0.zoo"><code>GAPDoc-1.0.zoo</code></a>  
   (use  the "unzoo"  or  "unzoo.exe" from  the <span  class="pkg">GAP</span>
   homepage)
   </li>
   <li>
-  <a href="gapdoc-0.99999.tar.gz"><code>gapdoc-0.99999.tar.gz</code></a>  
+  <a href="GAPDoc-1.0.tar.gz"><code>GAPDoc-1.0.tar.gz</code></a>  
   (GNU <code>tar</code> archive, <code>gzip</code>'ed)
   </li>
   <li>
-  <a href="gapdoc-0.99999.tar.bz2"><code>gapdoc-0.99999.tar.bz2</code></a>  
+  <a href="GAPDoc-1.0.tar.bz2"><code>GAPDoc-1.0.tar.bz2</code></a>  
   (GNU <code>tar</code> archive, <code>bzip2</code>'ed)
   </li>
   <li>
-  <a href="gapdoc-0.99999-win.zip"><code>gapdoc-0.99999-win.zip</code></a>  
+  <a href="GAPDoc-1.0-win.zip"><code>GAPDoc-1.0-win.zip</code></a>  
   (with DOS/Windows style line breaks in text files)
   </li>
   </ul>
@@ -247,7 +260,7 @@ GAPDoc     # meta package for preparing GAP (package) documentation
   <hr />
   <p class="foot">
   <a href="mailto:Frank.Luebeck@Math.RWTH-Aachen.De">Frank Lübeck</a> / Last modified:
-Mon, 30 Jan 2006 11:20:46 +0100
+Wed, 30 May 2007 18:05:22 +0200
   </p>
   </body>
 </html>

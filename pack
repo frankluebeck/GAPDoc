@@ -1,11 +1,51 @@
-#!/bin/sh
-#  $Id: pack,v 1.3 2006-01-30 10:21:43 gap Exp $
-if let "$# != 2"; then
-  echo "Usage: pack dir version  (like:  pack edim 1.2)"
-  echo "(produces a dir-version.tar.bz2  file)"
-  exit
+#!/bin/bash
+#  $Id: pack,v 1.4 2007-05-31 12:27:30 gap Exp $
+
+echo "Did you adjust (yN)?: Version, Date, ArchiveURL in ./PackageInfo.g"
+echo "                ./version"
+echo "                Date. copyright date, Version in doc/gapdoc.xml"
+echo "                                                 example/example.xml"
+
+read -n 1 start
+echo
+if [ $start'X' != 'yX' ]; then
+  echo Ok, please adjust and try again.
+  exit 2
 fi
 
+dirnam=GAPDoc-`cat ./version`
+rm -rf ttttmp
+echo "Checking out current version into ttttmp/"$dirnam" . . ."
+mkdir -p ttttmp/$dirnam
+cd ttttmp/$dirnam
+cp -a ../../CVS .
+cvs update -d > /dev/null
+echo building documentation
+gap -l ~/gapmore\; < makedocrel.g > /dev/null
+rm -f doc/manual.css example/manual.css 3k+1/manual.css
+cp gapdoc.css doc/manual.css 
+cp gapdoc.css example/manual.css 
+cp gapdoc.css 3k+1/manual.css 
 
-find $1 -regex ".*\(/CVS\|CVS/.*\|~\|/pack\|\.aux\|\.log\|/index.html\|/bla.xml\)" | tar cv $1 --exclude-from - |bzip2 -c -9 > $1-$2.tar.bz2
+echo "removing unwanted files . . ."
+rm -r pack TODO clean index.html pkgreadme.css
+rm -rf `find . -regex ".*/CVS"`
+rm -rf */*.{log,aux,blg,brf,bbl,idx,ilg,ind,pnr} */*.xml.bib
+rm -f ./makedoc.g ./maketxt ./doku toweb
+
+echo "creating archive . . ."
+cd ..
+tar cf $dirnam.tar $dirnam
+bzip2 -9 $dirnam.tar
+echo Cleaning up
+mv  $dirnam.tar.bz2 ..
+cd ..
+rm -rf ttttmp
+
+echo new archive in ./$dirnam.tar.bz2
+echo if ok then call
+echo     "~/gap4/dev/DistributionUpdate/maindist/repack.py "$dirnam".tar.bz2"
+
+echo "if you are happy with this archive tag the current state before"
+echo "committing further changes, e.g.:    cvs tag REL1_0"
 

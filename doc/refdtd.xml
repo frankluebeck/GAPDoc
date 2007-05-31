@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.21 2007-05-25 14:37:36 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.22 2007-05-31 12:27:30 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -1104,11 +1104,11 @@ apply.
 <Subsection Label="Table"><Heading><C>&lt;Table></C></Heading>
 <Index Key="Table"><C>Table</C></Index>
 
-<Index Key="Caption"><C>Caption</C></Index>
-<Index Key="Row"><C>Row</C></Index>
-<Index Key="Align"><C>Align</C></Index>
-<Index Key="HorLine"><C>HorLine</C></Index>
-<Index Key="Item"><C>Item</C></Index>
+<Index Key="Caption"><C>&lt;Caption></C></Index>
+<Index Key="Row"><C>&lt;Row></C></Index>
+<Index Key="Align"><C>&lt;Align></C></Index>
+<Index Key="HorLine"><C>&lt;HorLine></C></Index>
+<Index Key="Item in Table"><C>&lt;Item></C> in <C>&lt;Table></C></Index>
 <Listing Type="From gapdoc.dtd">
 <![CDATA[<!ELEMENT Table ( Caption?, (Row | HorLine)+ )>
 <!ATTLIST Table Label   CDATA #IMPLIED
