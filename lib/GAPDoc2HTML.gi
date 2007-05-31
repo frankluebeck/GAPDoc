@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.44 2007-05-29 14:58:45 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.45 2007-05-31 14:04:11 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -153,6 +153,8 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
   local   files,  n,  tt,  i, chnrs, chlink, prev, next, toplink;
   
   chnrs := Set(List([2,4..Length(l)], i-> l[i-1][1]));
+  chnrs := Concatenation(Filtered(chnrs, a-> not a in ["Bib", "Ind"]),
+                         Filtered(chnrs, a-> a in ["Bib", "Ind"]));
   chlink := 
     "\n<div class=\"chlinktop\"><span class=\"chlink1\">Goto Chapter: </span>";
   for n in chnrs do
