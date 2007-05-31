@@ -13,10 +13,10 @@
 </book></entry>
 <entry id="GAP4"><manual>
   <title><C>GAP</C> -- <C>G</C>roups, <C>A</C>lgorithms, and 
-                  <C>P</C>rogramming, Version 4.3</title>
+                  <C>P</C>rogramming, Version 4.4.9</title>
   <organization>The GAP Group</organization>
   <address>Aachen, St Andrews</address>
-  <year>2002</year>
+  <year>2006</year>
   <note><URL>http://www.gap-system.org</URL></note>
   <key>GAP</key>
   <keywords>groups; *; gap; manual</keywords>

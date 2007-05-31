@@ -4,6 +4,8 @@ WEBDIR=$HOME"/MyWWWHome/web/~Frank.Luebeck/gap/GAPDocX/"
 
 echo "Copying files to this web directory, is that ok (y/N)?"
 echo "       "$WEBDIR
+echo "Assuming that in this directory exist archives "
+echo "       "GAPDoc-`cat version`"{.tar.bz2,,tar.gz,.zoo,-win.zip}"
 
 read -n 1 start
 echo
@@ -73,4 +75,27 @@ cp index.html pkgreadme.css $WEBDIR
 
 echo copying archives . . .
 cp GAPDoc-`cat version`{.tar.bz2,.tar.gz,.zoo,-win.zip} $WEBDIR
+
+echo "creating SERVE files (maybe restart server)"
+cd $WEBDIR
+rm -f SERVE
+ls *.html > SERVE.tmp
+sed -e 's/$/:text\/html;charset=utf-8/' SERVE.tmp > SERVE
+rm SERVE.tmp
+echo "gapdoc.txt:text/plain;charset=utf-8" >> SERVE
+echo "gapdoc-nc.txt:text/plain;charset=utf-8" >> SERVE
+echo "example.txt:text/plain;charset=utf-8" >> SERVE
+echo "example-nc.txt:text/plain;charset=utf-8" >> SERVE
+cd doc
+rm -f SERVE
+ls *.html > SERVE.tmp
+sed -e 's/$/:text\/html;charset=utf-8/' SERVE.tmp > SERVE
+rm SERVE.tmp
+cd ../example
+rm -f SERVE
+ls *.html > SERVE.tmp
+sed -e 's/$/:text\/html;charset=utf-8/' SERVE.tmp > SERVE
+rm SERVE.tmp
+cd $HERE
+
 
