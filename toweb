@@ -2,12 +2,13 @@
 
 WEBDIR=$HOME"/MyWWWHome/web/~Frank.Luebeck/gap/GAPDocX/"
 
-echo "Copying files to this web directory, is that ok (y/N)?"
+echo "Copying files to this web directory, is that ok?"
 echo "       "$WEBDIR
 echo "Assuming that in this directory exist archives "
 echo "       "GAPDoc-`cat version`"{.tar.bz2,,tar.gz,.zoo,-win.zip}"
 
-read -n 1 start
+echo "Shall I start (y/N)?"
+read -n 1 -p "-->" start
 echo
 if [ $start'X' != 'yX' ]; then
   echo Ok, please adjust and try again.
@@ -16,16 +17,17 @@ fi
 
 mkdir -p $WEBDIR
 
-echo making nocolor ps-versions of manual and example
+echo making nocolor ps-versions of manual and example and HTML with external
+echo links to www.gap-system.org . . .
 cd doc
 ./clean
 cd ../example
 ./clean
 cd ..
 rm -f tttttmppre
-echo 'SetGapDocLaTeXOptions("nocolor");' >  tttttmppre
+echo 'SetGapDocLaTeXOptions("nocolor");relpath:="http://www.gap-system.org/Manuals";' >  tttttmppre
 grep -v SetGapDocLaTeXOptions makedocrel.g >> tttttmppre
-gap4curr < tttttmppre > /dev/null
+gap < tttttmppre > /dev/null
 rm -f tttttmppre
 pdftops doc/manual.pdf doc/manual.ps
 pdftops example/manual.pdf example/manual.ps
@@ -67,8 +69,8 @@ cd ../..
 rm -rf ttttmpdir
 
 cd $HERE
-cp doc/manual.ps $WEBDIR/doc/
-cp example/manual.ps $WEBDIR/example/
+cp doc/manual.ps doc/chap*.html $WEBDIR/doc/
+cp example/manual.ps example/chap*.html $WEBDIR/example/
 
 echo copying index.html and pkgreadme.css . . .
 cp index.html pkgreadme.css $WEBDIR

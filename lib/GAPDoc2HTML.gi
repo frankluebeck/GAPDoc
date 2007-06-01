@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.46 2007-06-01 08:32:23 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.47 2007-06-01 10:08:38 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -266,7 +266,7 @@ end;
 ##  be given with the argument <A>bibpath</A> (as string or directory
 ##  object, if not given the current directory is used). If the third
 ##  argument <A>gaproot</A> is given and is a string then this string
-##  is  interpreted  as  relative  path to  &GAP;'s  root  directory.
+##  is  interpreted as relative  path to &GAP;'s main root directory.
 ##  Reference-URLs to external HTML-books  which begin with the &GAP;
 ##  root path  are then  rewritten to start  with the  given relative
 ##  path.  This  makes  the HTML-documentation  portable  provided  a
@@ -414,6 +414,8 @@ InstallGlobalFunction(GAPDoc2HTML, function(arg)
     str := [];
     if Length(arg) > 2 and IsString(arg[3]) then
       GAPDoc2HTMLProcs.RelPath := arg[3];
+      GAPInfo.MainRootPath := Filtered(GAPInfo.RootPaths, a->
+                            Filename([Directory(a)], "lib/init.g")<>fail)[1];
     else
       Unbind(GAPDoc2HTMLProcs.RelPath);
     fi;
@@ -1460,9 +1462,9 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
     ref := GAPDoc2HTMLProcs.ResolveExternalRef(r.attributes.BookName, lab, 1);
     if ref <> fail and ref[6] <> fail then
       if IsBound(GAPDoc2HTMLProcs.RelPath) and 
-         PositionSublist(ref[6], GAPInfo.RootPaths[1]) = 1 then
+         PositionSublist(ref[6], GAPInfo.MainRootPath) = 1 then
          ref[6] := Concatenation(GAPDoc2HTMLProcs.RelPath, "/", 
-                   ref[6]{[Length(GAPInfo.RootPaths[1])+1..Length(ref[6])]});
+                   ref[6]{[Length(GAPInfo.MainRootPath)+1..Length(ref[6])]});
       fi;
       if IsBound(r.attributes.Style) and r.attributes.Style = "Number" then
         ref := Concatenation("<a href=\"", ref[6], "\"><b>",

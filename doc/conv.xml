@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.25 2007-05-25 14:37:36 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.26 2007-06-01 10:08:38 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters and an XML Parser</Heading>
@@ -165,16 +165,16 @@ operating system and installed software. It will probably work on most
 function doesn't work for you look at the source code and adjust it to
 your system. <P/>
 
-Here  <A>path</A> must  be the  directory  (as string  or directory  object)
-containing  the  main  file  <A>main</A>  of the  document  (given  with  or
-without the  <C>.xml</C> extension. The  argument <A>files</A> is a  list of
-(probably source code) files relative to <A>path</A> which contain pieces of
-documentation which must be included  in the document, see Chapter&nbsp;<Ref
-Chap="Distributing"/>. And <A>bookname</A>  is the name of the  book used by
-&GAP;'s online help.  The optional argument <A>gaproot</A> must  be a string
-which gives the relative path from  <A>path</A> to the &GAP; root directory.
-If  this is  given,  the HTML  files  are produced  with  relative paths  to
-external books.<P/>
+Here <A>path</A> must  be the directory (as string  or directory object)
+containing  the main  file <A>main</A>  of the  document (given  with or
+without the <C>.xml</C>  extension. The argument <A>files</A>  is a list
+of (probably  source code) files  relative to <A>path</A>  which contain
+pieces  of documentation  which must  be included  in the  document, see
+Chapter&nbsp;<Ref Chap="Distributing"/>. And <A>bookname</A> is the name
+of  the  book  used  by  &GAP;'s  online  help.  The  optional  argument
+<A>gaproot</A>  must be  a string  which  gives the  relative path  from
+<A>path</A> to the main &GAP; root directory. If this is given, the HTML
+files are produced with relative paths to external books.<P/>
 
 Experimental:  <Ref Func="MakeGAPDocDoc"/>  can  be  called with  additional
 arguments   <C>"Tth"</C>  and/or   <C>"MathML"</C>.  If   these  are   given
