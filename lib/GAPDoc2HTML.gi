@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.45 2007-05-31 14:04:11 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.46 2007-06-01 08:32:23 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -513,7 +513,9 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   r.toc := "";
   r.labels := rec();
   r.labeltexts := rec();
-  r.bibkeys := [];
+  if not IsBound(r.bibkeys) then
+    r.bibkeys := [];
+  fi;
   r.chaptitle := rec();
   r.chapsectlinks := rec();
   
@@ -648,8 +650,7 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   Info(InfoGAPDoc, 1, "#I Second run through document . . .\n");
   GAPDoc2HTMLProcs.Book(r.content[i], par, pi);
   
-  for a in ["MathList", "MathCount", "index", "toc", "bibkeys", 
-            "biblabels"] do
+  for a in ["MathList", "MathCount", "index", "toc"] do
     Unbind(r.(a));
   od;
   ##  remove the links to the root  ???
