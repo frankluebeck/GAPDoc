@@ -62,6 +62,11 @@ the directory of your main GAP installation you can also install the package
 by unpacking inside a directory "MYGAPDIR/pkg". (Don't forget to call "gap"
 with the '-l ";MYGAPDIR"' option.) 
 
+The only drawback with this installation is  that in the HTML version of the
+package  documentation the  links to  the main  GAP
+manuals  don't  work.  You  can  correct  this  by  recompiling  the  GAPDoc
+documentation: Say 'cd GAPDoc*; gap makedocrel.g'.
+
 For questions, suggestions, ... write to
 
    Frank.Luebeck@Math.RWTH-Aachen.De
