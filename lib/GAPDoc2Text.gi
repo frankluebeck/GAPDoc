@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.26 2007-05-29 14:58:45 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.27 2007-06-05 09:55:24 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -206,7 +206,7 @@ end;
 ##  here we collect paragraphs to whole chapters and remember line numbers
 ##  of subsections for the .six information
 GAPDoc2TextProcs.PutFilesTogether := function(l, six)
-  local   countandshift,  concat, files,  n,  i,  p,  a;
+  local   countandshift,  concat, files,  n,  i,  p,  a, tmp;
   
   # count number of lines in txt and add 2 spaces in the beginning of
   # each  line, returns [newtxt, nrlines]
@@ -275,8 +275,10 @@ GAPDoc2TextProcs.PutFilesTogether := function(l, six)
   #   and stays in the same chapter)
   Info(InfoGAPDoc, 1, "#I Producing simplified search strings and labels ",
                       "for hyperlinks . . .\n");
+  tmp := ShallowCopy(six);
+  SortParallel(List([1..Length(tmp)], i-> [tmp[i][3],i]), tmp);
   for i in [1..Length(six)] do
-    a := six[i];
+    a := tmp[i];
     p := Position(files.(a[3][1]).ssnr, a[3]);
     if p = fail then
       Error("don't find subsection ", a[3], " in text documention");
@@ -287,8 +289,8 @@ GAPDoc2TextProcs.PutFilesTogether := function(l, six)
     # the 'X' is to start with a proper letter, since this will be used
     # for ID type attributes; we use the same label for all entries with
     # the same subsection number
-    if i > 1 and a[3] = six[i-1][3] then
-      a[7] := six[i-1][7];
+    if i > 1 and a[3] = tmp[i-1][3] then
+      a[7] := tmp[i-1][7];
     else
       a[7] := Concatenation("X", HexStringInt(CrcText(a[6])+2^31), 
                           HexStringInt(CrcText(Reversed(a[6]))+2^31));

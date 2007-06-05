@@ -1,4 +1,4 @@
-<!-- $Id: enter.xml,v 1.11 2007-05-18 16:01:31 gap Exp $ -->
+<!-- $Id: enter.xml,v 1.12 2007-06-05 09:55:24 gap Exp $ -->
 <Chapter Label="HowEnter">
 <Heading>How To Type a &GAPDoc; Document</Heading>
 
@@ -200,12 +200,12 @@ no XML parsing for evaluating the attribute value, just entity substitutions).
 
 Pieces   of   text   which   contain    many   characters   which   can   be
 misinterpreted  as  markup  can  be  enclosed  by  the  character  sequences
-<Q><C><![CDATA[<![CDATA[]]></C></Q>  and  <Q><C>]]></C></Q>.  Everything
+<Q><C><![CDATA[<![CDATA[]]></C></Q>  and  <Q><C>]]&gt;</C></Q>.  Everything
 between these sequences is considered as  content of the document and is not
 further interpreted  as XML  text. All  the rules explained  so far  in this
 section  do <E>not  apply</E>  to such  a  part of  the  document. The  only
 document  content which  cannot be  entered directly  inside a  <C>CDATA</C>
-statement  is the  sequence <Q><C>]]></C></Q>.  This can  be entered  as
+statement  is the  sequence <Q><C>]]&gt;</C></Q>.  This can  be entered  as
 <Q><C>]]&amp;gt;</C></Q> outside the <C>CDATA</C> statement.
 
 <Listing Type="Example">

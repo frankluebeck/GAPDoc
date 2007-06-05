@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.22 2007-05-31 12:27:30 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.23 2007-06-05 09:55:24 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -554,7 +554,7 @@ Another type of subsection is a <C>ManSection</C>, explained now:
 </Section>
 
 <Section Label="sec:mansect">
-<Heading>ManSection</Heading>
+<Heading>ManSection&ndash;a special kind of subsection</Heading>
 
 <C>ManSection</C>s are intended to describe a function, operation, method,
 variable, or some other technical instance. It is analogous to a manpage
@@ -1373,7 +1373,7 @@ The formulae  are typed in  as in  &LaTeX;, <E>except</E> that  the standard
 XML  entities,   see&nbsp;<Ref  Subsect="XMLent"   />  (in   particular  the
 characters  <C>&lt;</C> and  <C>&amp;</C>), must  be escaped  - either  by
 using  the  corresponding  entities  or by  enclosing  the  formula  between
-<Q><C>&lt;![CDATA[</C></Q> and  <Q><C>]]></C></Q>. (The  main reference
+<Q><C>&lt;![CDATA[</C></Q> and  <Q><C>]]&gt;</C></Q>. (The  main reference
 for &LaTeX; is <Cite Key="La85" />.)<P/>
 
 The only  element type that  is allowed within  the formula elements  is the

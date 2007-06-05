@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.47 2007-06-01 10:08:38 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.48 2007-06-05 09:55:24 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1341,8 +1341,8 @@ end;
 GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
   local   attr,  s,  name,  lab, url;
   attr := GAPDoc2HTMLProcs.TextAttr.Func;
-  s := Concatenation(attr[1], "&gt; ", 
-         GAPDoc2HTMLProcs.EscapeAttrVal(r.attributes.Name), attr[2]);
+  name := GAPDoc2HTMLProcs.EscapeAttrVal(r.attributes.Name);
+  s := Concatenation(attr[1], "&gt; ", name, attr[2]);
   if IsBound(r.attributes.Arg) then
     attr := GAPDoc2HTMLProcs.TextAttr.Arg;
     Append(s, Concatenation("( ", attr[1],
@@ -1350,7 +1350,6 @@ GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
             attr[2], " )"));
   fi;
   # index entry
-  name := r.attributes.Name;
   attr := GAPDoc2HTMLProcs.TextAttr.Func;
   url := GAPDoc2HTMLProcs.SectionLabel(r, r.count, "Subsection");
   url := Concatenation(url[1],"#",url[2]);
