@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WEBDIR=$HOME"/MyWWWHome/web/~Frank.Luebeck/gap/GAPDocX/"
+WEBDIR=$HOME"/MyWWWHome/web/~Frank.Luebeck/gap/GAPDoc/"
 
 echo "Copying files to this web directory, is that ok?"
 echo "       "$WEBDIR

@@ -2,7 +2,7 @@
 ##
 #A  init.g                  GAPDoc              Frank Lübeck / Max Neunhöffer
 ##
-#H  @(#)$Id: init.g,v 1.15 2007-05-14 20:10:57 gap Exp $
+#H  @(#)$Id: init.g,v 1.16 2007-06-13 16:02:50 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck and Max Neunhöffer,  
 #Y  Lehrstuhl D für Mathematik,  RWTH Aachen
@@ -61,4 +61,5 @@ GAPInfo.tmpfunc := function()
   fi;
 end;
 GAPInfo.tmpfunc();
+Add(POST_RESTORE_FUNCS, GAPInfo.tmpfunc);
 Unbind(GAPInfo.tmpfunc);
