@@ -1,7 +1,10 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.15 2007-05-31 12:27:30 gap Exp $
+         $Id: TODO,v 1.16 2007-07-18 10:30:27 gap Exp $
+
+
+- further improve NormalizedArgList:  "[KG,] x" is better than "[KG][,]x"
 
 - add the utility to access the MathSciNet database for BibTeX records.
   (mk.g in doc/ref)
