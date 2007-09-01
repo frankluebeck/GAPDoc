@@ -1,5 +1,11 @@
                        CHANGES of the GAPDoc package
 
+1.0 -> 1.1
+
+- Introduced 'WrapTextAttribute' which takes care of existing escape
+  sequences in the text to wrap. Use it for the text converter to handle
+  elements with markup which  are contained in each other correctly.
+
 0.99999 -> 1.0
 
 - Changed the status of the package from "deposited" to "accepted".
