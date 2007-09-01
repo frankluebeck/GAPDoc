@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.12 2007-05-18 14:37:09 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.13 2007-09-01 00:26:27 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -398,6 +398,38 @@ end);
 ##    NormalizeWhitespace(res);
 ##    return res;
 ##  end);
+
+
+
+##  <#GAPDoc Label="WrapTextAttribute">
+##  <ManSection >
+##  <Func Arg="str, attr" Name="WrapTextAttribute" />
+##  <Returns>a string with markup</Returns>
+##  <Description>
+##  The argument <A>str</A> must be a text as &GAP; string, possibly with 
+##  markup by escape sequences as in <Ref Var="TextAttr" />. This function
+##  returns a string which is wrapped by the escape sequences <A>attr</A>
+##  and <C>TextAttr.reset</C>. It takes care of markup in the given string
+##  by appending <A>attr</A> also after each given <C>TextAttr.reset</C> in
+##  <A>str</A>.
+##  <Example>
+##  gap> str := Concatenation("XXX",TextAttr.2, "BLUB", TextAttr.reset,"YYY");
+##  "XXX\033[32mBLUB\033[0mYYY"
+##  gap> str2 := WrapTextAttribute(str, TextAttr.1);
+##  "\033[31mXXX\033[32mBLUB\033[0m\033[31mYYY\033[0m"
+##  gap> str3 := WrapTextAttribute(str, TextAttr.underscore);
+##  "\033[4mXXX\033[32mBLUB\033[0m\033[4mYYY\033[0m"
+##  gap> # use Print(str); and so on to see how it looks like.
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  
+##  <#/GAPDoc>
+InstallGlobalFunction(WrapTextAttribute, function(str, attr)
+  str := SubstitutionSublist(str, TextAttr.reset, Concatenation(
+            TextAttr.reset, attr));
+  return Concatenation(attr, str, TextAttr.reset);
+end);
 
 ##  <#GAPDoc Label="FormatParagraph">
 ##  <ManSection >

@@ -18,6 +18,8 @@ useful strings and  go on with functions for parsing  and reformatting text.
 
 <#Include Label="TextAttr">
 
+<#Include Label="WrapTextAttribute">
+
 <#Include Label="FormatParagraph">
 
 <#Include Label="SubstitutionSublist">

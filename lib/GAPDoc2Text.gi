@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.27 2007-06-05 09:55:24 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.28 2007-09-01 00:26:27 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -658,9 +658,8 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
   l := Filtered(r.content, a-> a.name = "Title");
   s := "";
   GAPDoc2TextContent(l[1], s);
-  s := FormatParagraph(s, r.root.linelength, "center",
-               [GAPDoc2TextProcs.TextAttr.Heading, 
-               GAPDoc2TextProcs.TextAttr.reset], WidthUTF8String); 
+  s := FormatParagraph(WrapTextAttribute(s, GAPDoc2TextProcs.TextAttr.Heading),
+                       r.root.linelength, "center", WidthUTF8String);
   Append(strn, s);
   Append(strn, "\n\n");
   
@@ -669,9 +668,8 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
   if Length(l)>0 then
     s := "";
     GAPDoc2TextContent(l[1], s);
-    s := FormatParagraph(s, r.root.linelength, "center",
-                 [GAPDoc2TextProcs.TextAttr.Heading, 
-                 GAPDoc2TextProcs.TextAttr.reset], WidthUTF8String); 
+    s := FormatParagraph(WrapTextAttribute(s,GAPDoc2TextProcs.TextAttr.Heading),
+                     r.root.linelength, "center", WidthUTF8String);
     Append(strn, s);
     Append(strn, "\n\n");
   fi;
@@ -791,8 +789,8 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
               GAPDoc2TextProcs.SectionNumber(l[1].count, "Subsection"),
               l[1].count{[1..3]}]);
       Add(par, l[1].count);
-      Add(par, Concatenation(GAPDoc2TextProcs.TextAttr.Heading, ss,
-            GAPDoc2TextProcs.TextAttr.reset, "\n"));
+      Add(par, Concatenation(WrapTextAttribute(ss,
+                 GAPDoc2TextProcs.TextAttr.Heading), "\n"));
       GAPDoc2TextContent(l[1], par);
       Append(par[Length(par)], 
              "\n-------------------------------------------------------\n");
@@ -836,12 +834,12 @@ GAPDoc2TextProcs.URL := function(arg)
   fi;
   NormalizeWhitespace(s);
   NormalizeWhitespace(txt);
+  pre := WrapTextAttribute(Concatenation(pre, s),
+                             GAPDoc2TextProcs.TextAttr.URL);
   if txt=s then
-    Append(str, Concatenation(GAPDoc2TextProcs.TextAttr.URL, pre, s,
-                 GAPDoc2TextProcs.TextAttr.reset));
+    Append(str, pre);
   else
-    Append(str, Concatenation(txt, " (", GAPDoc2TextProcs.TextAttr.URL,
-                 pre, s, GAPDoc2TextProcs.TextAttr.reset, ")"));
+    Append(str, Concatenation(txt, " (", pre, ")"));
   fi;
 end;
 
@@ -1047,8 +1045,7 @@ GAPDoc2TextProcs.WrapAttr := function(r, str, a)
   local   s;
   s := "";
   GAPDoc2TextContent(r, s);
-  Append(str, Concatenation(GAPDoc2TextProcs.TextAttr.(a), s, 
-              GAPDoc2TextProcs.TextAttr.reset));
+  Append(str, WrapTextAttribute(s, GAPDoc2TextProcs.TextAttr.(a)));
 end;
 
 ##  GAP keywords 
@@ -1403,14 +1400,12 @@ GAPDoc2TextProcs.Ref := function(r, str)
         ref := Concatenation("???", lab, "???");
       fi;
     fi;
-    Append(str, Concatenation(GAPDoc2TextProcs.TextAttr.Func, txt,
-                                      GAPDoc2TextProcs.TextAttr.reset));
+    Append(str, WrapTextAttribute(txt, GAPDoc2TextProcs.TextAttr.Func));
     # add reference by subsection number or text if external, 
     # but only if it does not point to current subsection
     if GAPDoc2TextProcs.SectionNumber(r.count, "Subsection") <> ref then
-      Append(str, Concatenation(" (", 
-                   GAPDoc2TextProcs.TextAttr.Ref, ref, 
-                   GAPDoc2TextProcs.TextAttr.reset, ")"));
+      Append(str, Concatenation(" (", WrapTextAttribute(ref, 
+                   GAPDoc2TextProcs.TextAttr.Ref), ")"));
     fi;
     return;
   fi;
@@ -1456,8 +1451,7 @@ GAPDoc2TextProcs.Ref := function(r, str)
         ref := Concatenation("???", lab, "???");
       fi;
     fi;
-    Append(str, Concatenation(GAPDoc2TextProcs.TextAttr.Ref, ref,
-            GAPDoc2TextProcs.TextAttr.reset)); 
+    Append(str, WrapTextAttribute(ref, GAPDoc2TextProcs.TextAttr.Ref));
     return;
   fi;
   
@@ -1478,8 +1472,7 @@ GAPDoc2TextProcs.Ref := function(r, str)
       ref := Concatenation("???", lab, "???");
     fi;
   fi;
-  Append(str, Concatenation(GAPDoc2TextProcs.TextAttr.Ref, ref,
-          GAPDoc2TextProcs.TextAttr.reset)); 
+  Append(str, WrapTextAttribute(ref, GAPDoc2TextProcs.TextAttr.Ref));
   return;
 end;
 
@@ -1538,8 +1531,8 @@ GAPDoc2TextProcs.ManSection := function(r, par)
   num := GAPDoc2TextProcs.SectionNumber(r.count, "Subsection");
   s := Concatenation(num, " ", r.content[i].attributes.Name);
   Add(par, r.count);
-  Add(par, Concatenation(GAPDoc2TextProcs.TextAttr.Heading, s,
-          GAPDoc2TextProcs.TextAttr.reset, "\n\n"));
+  Add(par, Concatenation(WrapTextAttribute(s, 
+            GAPDoc2TextProcs.TextAttr.Heading), "\n\n"));
   # append to TOC as subsection
   Append(r.root.toc, Concatenation("    ", s, "\n"));
   GAPDoc2TextContent(r, par);
