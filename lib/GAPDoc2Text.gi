@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.28 2007-09-01 00:26:27 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.29 2007-09-25 09:30:36 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -645,12 +645,12 @@ GAPDoc2TextProcs.Body := GAPDoc2TextContent;
 
 ##  the title page,  the most complicated looking function
 GAPDoc2TextProcs.TitlePage := function(r, par)
-  local   strn,  l,  s,  a,  aa,  cont,  ss, st, stmp, ind;
+  local   strn,  l,  s,  a,  aa,  cont,  ss, st, stmp, ind, len;
   
   strn := "\n\n";
   
   # the .six entry 
-  Add(r.root.six, ["Title page", 
+  Add(r.root.six, [GAPDocTexts.d.Titlepage, 
           GAPDoc2TextProcs.SectionNumber(r.count, "Subsection"),
           r.count{[1..3]}]);
   
@@ -740,22 +740,24 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
       Append(strn, s);
       
       if "Email" in cont then
-        Append(strn, "\n    Email:    ");
+        Append(strn, Concatenation("\n    ", GAPDocTexts.d.Email, ":    "));
         GAPDoc2Text(a.content[Position(cont, "Email")], strn);
       fi;
       if "Homepage" in cont then
         Append(strn, "\n");
-        Append(strn, "    Homepage: ");
+        Append(strn, Concatenation("    ", GAPDocTexts.d.Homepage, ": "));
         GAPDoc2Text(a.content[Position(cont, "Homepage")], strn);
       fi;
       if "Address" in cont then
         Append(strn, "\n");
         stmp := "";
         ind := a.root.indent;
-        a.root.indent := Concatenation(ind, "              ");
+        len := Length(GAPDocTexts.d.Address);
+        a.root.indent := Concatenation(ind, RepeatedString(' ', len+7));
         GAPDoc2TextContent(a.content[Position(cont, "Address")], stmp);
         a.root.indent := ind;
-        stmp[2]{Length(ind)+[1..14]} := "    Address:  ";
+        stmp[2]{Length(ind)+[1..len+7]} := Concatenation("    ", 
+                                         GAPDocTexts.d.Address, ":  ");
         Append(strn, stmp);
       fi;
       Append(strn, "\n");
@@ -768,10 +770,12 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
     Append(strn, "\n\n");
     stmp := "";
     ind := r.root.indent;
-    r.root.indent := Concatenation(ind, "         ");
+    len := Length(GAPDocTexts.d.Address);
+    r.root.indent := Concatenation(ind, RepeatedString(' ', len+2));
     GAPDoc2TextContent(l[1], stmp);
     r.root.indent := ind;
-    stmp[2]{Length(ind)+[1..9]} := "Address: ";
+    stmp[2]{Length(ind)+[1..len+2]} := Concatenation(GAPDocTexts.d.Address, 
+                                                     ": ");
     Append(strn, stmp);
   fi; 
   
@@ -785,11 +789,11 @@ GAPDoc2TextProcs.TitlePage := function(r, par)
     l := Filtered(r.content, a-> a.name = ss);
     if Length(l)>0 then
       # the .six entry 
-      Add(r.root.six, [ss, 
+      Add(r.root.six, [GAPDocTexts.d.(ss), 
               GAPDoc2TextProcs.SectionNumber(l[1].count, "Subsection"),
               l[1].count{[1..3]}]);
       Add(par, l[1].count);
-      Add(par, Concatenation(WrapTextAttribute(ss,
+      Add(par, Concatenation(WrapTextAttribute(GAPDocTexts.d.(ss),
                  GAPDoc2TextProcs.TextAttr.Heading), "\n"));
       GAPDoc2TextContent(l[1], par);
       Append(par[Length(par)], 
@@ -969,15 +973,15 @@ end;
 ##  table of contents, just puts "TOC" in first run
 GAPDoc2TextProcs.TableOfContents := function(r, par)
   # the .six entry 
-  Add(r.root.six, ["Table of contents", 
+  Add(r.root.six, [GAPDocTexts.d.TableofContents, 
           GAPDoc2TextProcs.SectionNumber(r.count, "Subsection"),
           r.count{[1..3]}]);
 
   Add(par, r.count);
   if IsBound(r.root.toctext) then
     Add(par, Concatenation("\n\n", GAPDoc2TextProcs.TextAttr.Heading,
-        "Content (", r.root.Name, ")", GAPDoc2TextProcs.TextAttr.reset, 
-        "\n\n", r.root.toctext,
+        GAPDocTexts.d.Content," (", r.root.Name, ")", 
+        GAPDoc2TextProcs.TextAttr.reset, "\n\n", r.root.toctext,
         "\n\n-------------------------------------------------------\n"));
   else
     Add(par,"TOC\n-----------\n");
@@ -989,14 +993,17 @@ GAPDoc2TextProcs.Bibliography := function(r, par)
   local   s;
   # .six entries
   s := GAPDoc2TextProcs.SectionNumber(r.count, "Chapter");
-  Add(r.root.six, ["Bibliography", s, r.count{[1..3]}]);
-  Add(r.root.six, ["References", s, r.count{[1..3]}]);  
+  Add(r.root.six, [GAPDocTexts.d.Bibliography, s, r.count{[1..3]}]);
+  if GAPDocTexts.d.Bibliography <> GAPDocTexts.d.References then
+    Add(r.root.six, [GAPDocTexts.d.References, s, r.count{[1..3]}]);  
+  fi;
   
   r.root.bibdata := r.attributes.Databases;
   Add(par, r.count);
   if IsBound(r.root.bibtext) then
     Add(par, Concatenation("\n\n", GAPDoc2TextProcs.TextAttr.Heading,
-          "References", GAPDoc2TextProcs.TextAttr.reset, "\n\n", r.root.bibtext,
+          GAPDocTexts.d.References, GAPDoc2TextProcs.TextAttr.reset, 
+          "\n\n", r.root.bibtext,
           "\n\n-------------------------------------------------------\n"));
   else
     Add(par,"BIB\n-----------\n");
@@ -1174,10 +1181,10 @@ end;
 
 ##  log of session and GAP code is typeset the same way as <Example>
 GAPDoc2TextProcs.Example := function(r, par)
-  GAPDoc2TextProcs.ExampleLike(r, par, "Example");
+  GAPDoc2TextProcs.ExampleLike(r, par, GAPDocTexts.d.Example);
 end;
 GAPDoc2TextProcs.Log := function(r, par)
-  GAPDoc2TextProcs.ExampleLike(r, par, "Log");
+  GAPDoc2TextProcs.ExampleLike(r, par, GAPDocTexts.d.Log);
 end;
 GAPDoc2TextProcs.Listing := function(r, par)
   if IsBound(r.attributes.Type) then
@@ -1309,15 +1316,15 @@ GAPDoc2TextProcs.LikeFunc := function(r, par, typ)
 end;
 
 GAPDoc2TextProcs.Func := function(r, str)
-  GAPDoc2TextProcs.LikeFunc(r, str, "function");
+  GAPDoc2TextProcs.LikeFunc(r, str, GAPDocTexts.d.Func);
 end;
 
 GAPDoc2TextProcs.Oper := function(r, str)
-  GAPDoc2TextProcs.LikeFunc(r, str, "operation");
+  GAPDoc2TextProcs.LikeFunc(r, str, GAPDocTexts.d.Oper);
 end;
 
 GAPDoc2TextProcs.Meth := function(r, str)
-  GAPDoc2TextProcs.LikeFunc(r, str, "method");
+  GAPDoc2TextProcs.LikeFunc(r, str, GAPDocTexts.d.Meth);
 end;
 
 GAPDoc2TextProcs.Filt := function(r, str)
@@ -1325,28 +1332,28 @@ GAPDoc2TextProcs.Filt := function(r, str)
   if IsBound(r.attributes.Type) then
     GAPDoc2TextProcs.LikeFunc(r, str, r.attributes.Type);
   else
-    GAPDoc2TextProcs.LikeFunc(r, str, "filter");
+    GAPDoc2TextProcs.LikeFunc(r, str, GAPDocTexts.d.Filt);
   fi;
 end;
 
 GAPDoc2TextProcs.Prop := function(r, str)
-  GAPDoc2TextProcs.LikeFunc(r, str, "property");
+  GAPDoc2TextProcs.LikeFunc(r, str, GAPDocTexts.d.Prop);
 end;
 
 GAPDoc2TextProcs.Attr := function(r, str)
-  GAPDoc2TextProcs.LikeFunc(r, str, "attribute");
+  GAPDoc2TextProcs.LikeFunc(r, str, GAPDocTexts.d.Attr);
 end;
 
 GAPDoc2TextProcs.Var := function(r, str)
-  GAPDoc2TextProcs.LikeFunc(r, str, "global variable");
+  GAPDoc2TextProcs.LikeFunc(r, str, GAPDocTexts.d.Var);
 end;
 
 GAPDoc2TextProcs.Fam := function(r, str)
-  GAPDoc2TextProcs.LikeFunc(r, str, "family");
+  GAPDoc2TextProcs.LikeFunc(r, str, GAPDocTexts.d.Fam);
 end;
 
 GAPDoc2TextProcs.InfoClass := function(r, str)
-  GAPDoc2TextProcs.LikeFunc(r, str, "info class");
+  GAPDoc2TextProcs.LikeFunc(r, str, GAPDocTexts.d.InfoClass);
 end;
 
 ##  using the HelpData(.., .., "ref") interface
@@ -1500,7 +1507,7 @@ GAPDoc2TextProcs.Returns := function(r, par)
   GAPDoc2TextContent(r, l);
   if Length(l) > 0 then
     l[2] := Concatenation(l[2]{[1..Length(r.root.indent) - 10]},
-              GAPDoc2TextProcs.TextAttr.Returns, "Returns:", 
+              GAPDoc2TextProcs.TextAttr.Returns, GAPDocTexts.d.Returns,":", 
               GAPDoc2TextProcs.TextAttr.reset,
               l[2]{[Length(r.root.indent)-1..Length(l[2])]});
     Append(par, l);
@@ -1594,13 +1601,14 @@ GAPDoc2TextProcs.TheIndex := function(r, par)
   local   s;
   # .six entry
   s := GAPDoc2TextProcs.SectionNumber(r.count, "Chapter");
-  Add(r.root.six, ["Index", s, r.count{[1..3]}]);
+  Add(r.root.six, [GAPDocTexts.d.Index, s, r.count{[1..3]}]);
   
   # the text, if available
   Add(par, r.count);
   if IsBound(r.root.indextext) then
     Add(par, Concatenation("\n\n", GAPDoc2TextProcs.TextAttr.Heading,
-          "Index", GAPDoc2TextProcs.TextAttr.reset, "\n\n", r.root.indextext,
+          GAPDocTexts.d.Index, GAPDoc2TextProcs.TextAttr.reset, 
+          "\n\n", r.root.indextext,
           "\n\n-------------------------------------------------------\n"));
   else
     Add(par,"INDEX\n-----------\n");
@@ -1763,7 +1771,8 @@ end;
 GAPDoc2TextProcs.Caption1 := function(r, str)
   local s;
   s := "";
-  Append(s, Concatenation(GAPDoc2TextProcs.TextAttr.Heading, "Table:",
+  Append(s, Concatenation(GAPDoc2TextProcs.TextAttr.Heading, 
+              GAPDocTexts.d.Table,":",
               GAPDoc2TextProcs.TextAttr.reset, " "));
   GAPDoc2TextContent(r, s);
   Append(str, FormatParagraph(s, r.root.linelength - 10, 

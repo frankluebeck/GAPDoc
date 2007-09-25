@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.26 2007-06-01 10:08:38 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.27 2007-09-25 09:30:35 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters and an XML Parser</Heading>
@@ -179,8 +179,10 @@ files are produced with relative paths to external books.<P/>
 Experimental:  <Ref Func="MakeGAPDocDoc"/>  can  be  called with  additional
 arguments   <C>"Tth"</C>  and/or   <C>"MathML"</C>.  If   these  are   given
 additional  variants   of  the   HTML  conversion   are  called,   see  <Ref
-Func="GAPDoc2HTML"/> for details.
+Func="GAPDoc2HTML"/> for details.<P/>
 
+It is possible to use &GAPDoc; with other languages than English, see
+<Ref Func="SetGapDocLanguage"/> for more details.<P/>
 </Description>
 </ManSection>
 </Section>
@@ -239,6 +241,8 @@ documents.
 <#Include Label="GAPDoc2HTMLPrintHTMLFiles">
 
 <#Include Label="InfoGAPDoc">
+
+<#Include Label="SetGapDocLanguage">
 
 </Section>
 

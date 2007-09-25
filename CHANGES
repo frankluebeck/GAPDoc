@@ -2,6 +2,15 @@
 
 1.0 -> 1.1
 
+- GAPDoc can now be used with other languages than English, see
+  'SetGapDocLanguage' for details.
+
+- New options "utf8" and "nopslatex" for LaTeX converter, see
+  'SetGapDocLaTeXOptions'.
+
+- Removed support of '\N, \Z, ...' for '{\mathbb N}, {\mathbb Z}, ...
+  (was not documented before).
+
 - Introduced 'WrapTextAttribute' which takes care of existing escape
   sequences in the text to wrap. Use it for the text converter to handle
   elements with markup which  are contained in each other correctly.

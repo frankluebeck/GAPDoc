@@ -1,4 +1,4 @@
-<!-- $Id: intro.xml,v 1.10 2007-05-18 16:01:31 gap Exp $ -->
+<!-- $Id: intro.xml,v 1.11 2007-09-25 09:30:35 gap Exp $ -->
 <Chapter Label="ch:intro"><Heading>Introduction and Example</Heading>
 
 The main  purpose of  the &GAPDoc; package  is to define  a file  format for
@@ -67,7 +67,7 @@ character set (other common encodings are ASCII or ISO-8895-X encodings).
 
 <Listing Type="from 3k+1.xml">
 <![CDATA[<!--   A complete "fake package" documentation   
-   $Id: intro.xml,v 1.10 2007-05-18 16:01:31 gap Exp $
+   $Id: intro.xml,v 1.11 2007-09-25 09:30:35 gap Exp $
 -->
 ]]></Listing>
 
@@ -203,8 +203,9 @@ The text of the first section starts  as follows. The whitespace in the text
 is unimportant and the indenting is not necessary.
 
 <Listing Type="from 3k+1.xml">
-<![CDATA[      Let <M>k \in \N</M> be a natural number. We consider the sequence
-      <M>n(i,  k), i  \in  \N,</M> with  <M>n(1, k)  =  k</M> and  else
+<![CDATA[      Let <M>k  \in {\mathbb N}</M>  be a natural number.  We consider
+      the sequence <M>n(i, k), i  \in {\mathbb N},</M> with <M>n(1, k)
+      =  k</M> and  else 
 ]]></Listing>
 
 Here we come  to the interesting question how to  type mathematical formulae

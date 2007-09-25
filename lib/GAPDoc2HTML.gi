@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.48 2007-06-05 09:55:24 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.49 2007-09-25 09:30:35 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -155,13 +155,13 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
   chnrs := Set(List([2,4..Length(l)], i-> l[i-1][1]));
   chnrs := Concatenation(Filtered(chnrs, a-> not a in ["Bib", "Ind"]),
                          Filtered(chnrs, a-> a in ["Bib", "Ind"]));
-  chlink := 
-    "\n<div class=\"chlinktop\"><span class=\"chlink1\">Goto Chapter: </span>";
+  chlink := Concatenation("\n<div class=\"chlinktop\"><span class=\"chlink1\">",
+            GAPDocTexts.d.GotoChapter, ": </span>");
   for n in chnrs do
     Append(chlink, Concatenation("<a href=\"chap", String(n), 
            GAPDoc2HTMLProcs.ext, "\">"));
     if n = 0 then
-      Append(chlink, "Top");
+      Append(chlink, GAPDocTexts.d.Top);
     else
       Append(chlink, String(n));
     fi;
@@ -170,19 +170,21 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
   Append(chlink, "</div>\n");
   
   toplink := Concatenation( "&nbsp;<a href=\"chap0", GAPDoc2HTMLProcs.ext, 
-             "\">Top of Book</a>&nbsp;  " );
+             "\">", GAPDocTexts.d.TopofBook, "</a>&nbsp;  " );
   prev := [];
   next := [];
   for i in [1..Length(chnrs)] do
     if i > 1 then
       Add(prev, Concatenation("&nbsp;<a href=\"chap", String(chnrs[i-1]),
-                  GAPDoc2HTMLProcs.ext, "\">Previous Chapter</a>&nbsp;  "));
+                  GAPDoc2HTMLProcs.ext, "\">", GAPDocTexts.d.PreviousChapter,
+                  "</a>&nbsp;  "));
     else
       Add(prev, "");
     fi;
     if i < Length(chnrs) then
       Add(next, Concatenation("&nbsp;<a href=\"chap", String(chnrs[i+1]),
-                        GAPDoc2HTMLProcs.ext, "\">Next Chapter</a>&nbsp;  "));
+                        GAPDoc2HTMLProcs.ext, "\">", GAPDocTexts.d.NextChapter,
+                        "</a>&nbsp;  "));
     else
       Add(next, "");
     fi;
@@ -202,16 +204,16 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     fi;
     tt := Concatenation(r.bookname, ") - ");
     if n=0 then
-      Append(tt, "Contents");
+      Append(tt, GAPDocTexts.d.Content);
     elif IsInt(n) then
-      Append(tt, Concatenation("Chapter ", String(n), ": ", 
+      Append(tt, Concatenation(GAPDocTexts.d.Chapter, " ", String(n), ": ", 
              FilterSGMLMarkup(r.chaptitle.(n))));
     elif n="Bib" then
-      Append(tt, "References");
+      Append(tt, GAPDocTexts.d.References);
     elif n="Ind" then
-      Append(tt, "Index");
+      Append(tt, GAPDocTexts.d.Index);
     else
-      Append(tt, Concatenation("Appendix ", n, ": ", 
+      Append(tt, Concatenation(GAPDocTexts.d.Appendix, " ", n, ": ", 
              FilterSGMLMarkup(r.chaptitle.(n))));
     fi;
     Append(files.(n).text, tt);
@@ -757,19 +759,21 @@ GAPDoc2HTMLProcs.TitlePage := function(r, par)
       s := "";
       GAPDoc2HTML(a.content[Position(cont, "Email")], s);
       s := NormalizedWhitespace(s);
-      Append(strn, Concatenation("<br />e-mail: ", s, "\n"));
+      Append(strn, Concatenation("<br />", GAPDocTexts.d.Email, ": ", s, "\n"));
     fi;
     if "Homepage" in cont then
       s := "";
       GAPDoc2HTML(a.content[Position(cont, "Homepage")], s);
       s := NormalizedWhitespace(s);
-      Append(strn, Concatenation("<br />WWW: ", s, "\n"));
+      Append(strn, Concatenation("<br />", GAPDocTexts.d.Homepage, 
+                                 ": ", s, "\n"));
     fi;
     if "Address" in cont then
       s := "";
       GAPDoc2HTMLContent(a.content[Position(cont, "Address")], s);
       s := NormalizedWhitespace(s);
-      Append(strn, Concatenation("<br />Address: <br />", s, "\n"));
+      Append(strn, Concatenation("<br />", GAPDocTexts.d.Address, 
+                                 ": <br />", s, "\n"));
     fi;
     Append(strn, "</p>");
   od;
@@ -784,7 +788,8 @@ GAPDoc2HTMLProcs.TitlePage := function(r, par)
     s := "";
     GAPDoc2HTMLContent(l[1], s);
     s := NormalizedWhitespace(s);
-    Append(strn, Concatenation("<p><b>Address:</b><br />\n", s, "</p>\n"));
+    Append(strn, Concatenation("<p><b>", GAPDocTexts.d.Address, 
+                               ":</b><br />\n", s, "</p>\n"));
   fi;
   
   # abstract, copyright page, acknowledgements, colophon
@@ -792,7 +797,7 @@ GAPDoc2HTMLProcs.TitlePage := function(r, par)
     l := Filtered(r.content, a-> a.name = ss);
     if Length(l)>0 then
       Add(par, l[1].count);
-      Add(par, Concatenation("<h3>", ss, "</h3>\n"));
+      Add(par, Concatenation("<h3>", GAPDocTexts.d.(ss), "</h3>\n"));
       GAPDoc2HTMLContent(l[1], par);
     fi;
   od;
@@ -1016,7 +1021,8 @@ end;
 GAPDoc2HTMLProcs.TableOfContents := function(r, par)
   Add(par, r.count);
   if IsBound(r.root.toctext) then
-    Add(par, Concatenation("\n<div class=\"contents\">\n<h3>Contents</h3>\n\n",
+    Add(par, Concatenation("\n<div class=\"contents\">\n<h3>",
+          GAPDocTexts.d.Content, "</h3>\n\n",
           r.root.toctext, "<br />\n</div>\n"));
   else
     Add(par,"<p>TOC\n-----------</p>\n\n");
@@ -1029,7 +1035,7 @@ GAPDoc2HTMLProcs.Bibliography := function(r, par)
   r.root.bibdata := r.attributes.Databases;
   Add(par, r.count);
   if IsBound(r.root.bibtext) then
-    Add(par, Concatenation("\n<h3>References</h3>\n\n", 
+    Add(par, Concatenation("\n<h3>", GAPDocTexts.d.References, "</h3>\n\n", 
             r.root.bibtext, "<p> </p>\n\n"));
   else
     Add(par,"<p>BIB\n-----------</p>\n");
@@ -1385,15 +1391,15 @@ GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
 end;
 
 GAPDoc2HTMLProcs.Func := function(r, str)
-  GAPDoc2HTMLProcs.LikeFunc(r, str, "function");
+  GAPDoc2HTMLProcs.LikeFunc(r, str, GAPDocTexts.d.Func);
 end;
 
 GAPDoc2HTMLProcs.Oper := function(r, str)
-  GAPDoc2HTMLProcs.LikeFunc(r, str, "operation");
+  GAPDoc2HTMLProcs.LikeFunc(r, str, GAPDocTexts.d.Oper);
 end;
 
 GAPDoc2HTMLProcs.Meth := function(r, str)
-  GAPDoc2HTMLProcs.LikeFunc(r, str, "method");
+  GAPDoc2HTMLProcs.LikeFunc(r, str, GAPDocTexts.d.Meth);
 end;
 
 GAPDoc2HTMLProcs.Filt := function(r, str)
@@ -1401,28 +1407,28 @@ GAPDoc2HTMLProcs.Filt := function(r, str)
   if IsBound(r.attributes.Type) then
     GAPDoc2HTMLProcs.LikeFunc(r, str, LowercaseString(r.attributes.Type));
   else
-    GAPDoc2HTMLProcs.LikeFunc(r, str, "filter");
+    GAPDoc2HTMLProcs.LikeFunc(r, str, GAPDocTexts.d.Filt);
   fi;
 end;
 
 GAPDoc2HTMLProcs.Prop := function(r, str)
-  GAPDoc2HTMLProcs.LikeFunc(r, str, "property");
+  GAPDoc2HTMLProcs.LikeFunc(r, str, GAPDocTexts.d.Prop);
 end;
 
 GAPDoc2HTMLProcs.Attr := function(r, str)
-  GAPDoc2HTMLProcs.LikeFunc(r, str, "attribute");
+  GAPDoc2HTMLProcs.LikeFunc(r, str, GAPDocTexts.d.Attr);
 end;
 
 GAPDoc2HTMLProcs.Var := function(r, str)
-  GAPDoc2HTMLProcs.LikeFunc(r, str, "global variable");
+  GAPDoc2HTMLProcs.LikeFunc(r, str, GAPDocTexts.d.Var);
 end;
 
 GAPDoc2HTMLProcs.Fam := function(r, str)
-  GAPDoc2HTMLProcs.LikeFunc(r, str, "family");
+  GAPDoc2HTMLProcs.LikeFunc(r, str, GAPDocTexts.d.Fam);
 end;
 
 GAPDoc2HTMLProcs.InfoClass := function(r, str)
-  GAPDoc2HTMLProcs.LikeFunc(r, str, "info class");
+  GAPDoc2HTMLProcs.LikeFunc(r, str, GAPDocTexts.d.InfoClass);
 end;
 
 ##  using the HelpData(.., .., "ref") interface
@@ -1538,7 +1544,8 @@ GAPDoc2HTMLProcs.Returns := function(r, par)
   l := [];
   GAPDoc2HTMLContent(r, l);
   if Length(l) > 0 then
-    l[2] := Concatenation("<p><b>Returns: </b>", l[2]{[4..Length(l[2])]});
+    l[2] := Concatenation("<p><b>", GAPDocTexts.d.Returns, 
+                          ": </b>", l[2]{[4..Length(l[2])]});
   fi;
   Append(par, l);
 end;
@@ -1650,7 +1657,8 @@ GAPDoc2HTMLProcs.TheIndex := function(r, par)
   # the text, if available
   Add(par, r.count);
   if IsBound(r.root.indextext) then
-    Add(par, Concatenation("\n<div class=\"index\">\n<h3>Index</h3>\n\n",
+    Add(par, Concatenation("\n<div class=\"index\">\n<h3>",
+                           GAPDocTexts.d.Index, "</h3>\n\n",
           r.root.indextext, "<p> </p>\n</div>\n"));
   else
     Add(par,"<p>INDEX\n-----------</p>\n\n");
@@ -1757,7 +1765,8 @@ end;
 
 # here the caption text is produced
 GAPDoc2HTMLProcs.Caption1 := function(r, str)
-  Append(str, "<caption class=\"GAPDocTable\"><b>Table: </b>");
+  Append(str, Concatenation("<caption class=\"GAPDocTable\"><b>", 
+                                  GAPDocTexts.d.Table, ": </b>"));
   GAPDoc2HTMLContent(r, str);
   Append(str, "</caption>\n");
 end;

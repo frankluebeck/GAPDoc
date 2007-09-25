@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.18 2007-05-29 11:05:48 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.19 2007-09-25 09:30:35 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -506,3 +506,138 @@ BindGlobal("GAPDocAddBibData", function(r)
     r.bibstrings := [[0,0]];
   fi;
 end);
+
+##  <#GAPDoc Label="SetGapDocLanguage">
+##  <ManSection >
+##  <Index>Using &GAPDoc; with other languages</Index>
+##  <Func Arg="[lang]" Name="SetGapDocLanguage" />
+##  <Returns>nothing</Returns>
+##  <Description>
+##  The  &GAPDoc;  converter  programs   sometimes  produce  text  which  is
+##  not  explicit  in  the  document, e.g.,  headers  like  <Q>Abstract</Q>,
+##  <Q>Appendix</Q>,   links   to   <Q>Next  Chapter</Q>,   variable   types
+##  <Q>function</Q> and so on. <P/>
+##  With <Ref Func="SetGapDocLanguage"/> the language for these texts can be
+##  changed.  The argument  <A>lang</A> must  be a  string. Calling  without
+##  argument or with a language name for which no translations are available
+##  is the same as using the default <C>"english"</C>. <P/>
+##  If your  language <A>lang</A> is not  yet available, look at  the record
+##  <C>GAPDocTexts.english</C> and translate all the strings to <A>lang</A>.
+##  Then  assign this  record to  <C>GAPDocTexts.(<A>lang</A>)</C> and  send
+##  it  to  the  &GAPDoc;  authors  for  inclusion  in  future  versions  of
+##  &GAPDoc;.<P/>
+##  <Emph>Further  hints:</Emph>   To  get   strings  produced   by  &LaTeX;
+##  right  you  will  probably  use the  <C>babel</C>  package  with  option
+##  <A>lang</A>,  see  the  information   on  <C>ExtraPreamble</C>  in  <Ref
+##  Func="GAPDoc2LaTeX"/>. If <A>lang</A> cannot be encoded in <C>latin1</C>
+##  encoding  you   can  consider  the   use  of  <C>"utf8"</C>   with  <Ref
+##  Func="SetGapDocLaTeXOptions"/>.
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+
+# language dependent string used in converted documents
+InstallValue(GAPDocTexts, rec());
+# default is english
+GAPDocTexts.english := rec(
+  # for title page
+  Titlepage := "Title page",
+  Abstract := "Abstract",
+  Copyright := "Copyright",
+  Content := "Content",
+  Email := "Email",
+  Homepage := "Homepage",
+  Address := "Address",
+  Acknowledgements := "Acknowledgements",
+  Colophon := "Colophon",
+  # HTML navigation
+  GotoChapter := "Goto Chapter",
+  TopofBook := "Top of Book",
+  PreviousChapter := "Previous Chapter",
+  NextChapter := "Next Chapter",
+  Top := "Top",
+  # sectioning
+  Chapter := "Chapter",
+  Appendix := "Appendix",
+  Index := "Index",
+  References := "References",
+  Bibliography := "Bibliography",
+  TableofContents := "Table of Contents",
+  # Other
+  Returns := "Returns",
+  Example := "Example",
+  Log := "Example",
+  Table := "Table",
+  # variable types, should these be translated?
+  Func := "function",
+  Oper := "operation",
+  Meth := "method",
+  Filt := "filter",
+  Prop := "property",
+  Attr := "attribute",
+  Var := "global variable",
+  Fam := "family",
+  InfoClass := "info class",
+             );
+InstallGlobalFunction(SetGapDocLanguage, function(arg)
+  local lang;
+  if Length(arg) > 0 then
+    lang := arg[1];
+  else
+    lang := "english";
+  fi;
+  lang := LowercaseString(lang);
+  if not IsBound(GAPDocTexts.(lang)) then
+    Info(InfoGAPDoc, 1, "#W No texts in language ", lang, " available - ",
+                         "using English.\n");
+    Info(InfoGAPDoc, 1, "#W Please, provide translation of GAPDocTexts.",
+                          "english in GAPDocTexts.", lang, ".\n");
+    lang := "english";
+  fi;
+  GAPDocTexts.d := GAPDocTexts.(lang);
+end);
+# default
+SetGapDocLanguage();
+
+# translation to Russian, provided by Alexander Konovalov
+GAPDocTexts.russian := rec(
+  # for title page
+  Titlepage := "Title page",
+  Abstract := "Abstract",
+  Copyright := "Copyright",
+  Content := "Content",
+  Email := "Email",
+  Homepage := "Homepage",
+  Address := "Address",
+  Acknowledgements := "Acknowledgements",
+  Colophon := "Colophon",
+  # HTML navigation
+  GotoChapter := "Goto Chapter",
+  TopofBook := "Top of Book",
+  PreviousChapter := "Previous Chapter",
+  NextChapter := "Next Chapter",
+  Top := "Top",
+  # sectioning
+  Chapter := "Chapter",
+  Appendix := "Appendix",
+  Index := "Index",
+  References := "References",
+  Bibliography := "Bibliography",
+  TableofContents := "Table of Contents",
+  # Other
+  Returns := "Returns",
+  Example := "Example",
+  Log := "Example",
+  Table := "Table",
+  # variable types, should these be translated?
+  Func := "function",
+  Oper := "operation",
+  Meth := "method",
+  Filt := "filter",
+  Prop := "property",
+  Attr := "attribute",
+  Var := "global variable",
+  Fam := "family",
+  InfoClass := "info class",
+             );
+

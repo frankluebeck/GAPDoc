@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gi                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gi,v 1.14 2007-05-31 12:25:32 gap Exp $
+#H  @(#)$Id: UnicodeTools.gi,v 1.15 2007-09-25 09:30:36 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -669,17 +669,23 @@ end);
 ##  as given in an ordered list 
 ##  <C>LaTeXUnicodeTable</C> of pairs [codepoint, string]. If you have a
 ##  unicode character for which no substitution is contained in that list,
-##  you will get a warning. In this case find a substitution and add a 
+##  you will get a warning and the translation is <C>Unicode(nr)</C>. 
+##  In this case find a substitution and add a 
 ##  corresponding [codepoint, string] 
 ##  pair to  <C>LaTeXUnicodeTable</C> using <Ref BookName="reference"
 ##  Oper="AddSet"/>. Also, please, tell the &GAPDoc; authors about your 
 ##  addition, such that we can extend the list <C>LaTeXUnicodeTable</C>.
 ##  (Most of the initial entries were generated from lists in the
-##  &TeX; projects enc&TeX; and <C>ucs</C>.)<P/>
-##  
-##  There is also the  variant encoding <C>"LaTeXleavemarkup"</C>, which does
+##  &TeX; projects enc&TeX; and <C>ucs</C>.)
+##  There are some variants of this encoding:<P/>
+##  <C>"LaTeXleavemarkup"</C> does
 ##  the same translations for non-ASCII characters but leaves the &LaTeX;
 ##  special characters (e.g., any &LaTeX; commands) as they are.<P/>
+##  <C>"LaTeXUTF8"</C> does not give a warning about unicode characters
+##  without explicit translation, instead it translates the character
+##  to its <C>UTF-8</C> encoding. Make sure to setup your &LaTeX; document such
+##  that all these characters are understood.<P/>
+##  <C>"LaTeXUTF8leavemarkup"</C> is a combination of the last two variants.<P/>
 ##  
 ##  Note that the <C>"LaTeX"</C> encoding can only be used with <Ref
 ##  Oper="Encode"/> but not for the opposite translation with <Ref
@@ -835,13 +841,19 @@ end;
 
 
 # non-ASCII characters to LaTeX code, if known from LaTeXUnicodeTable
+# args: unicodestring[, leavemarkup[, leaveutf8]]
 UNICODE_RECODE.Encoder.("LaTeX") := function(arg)
-  local ustr, leavemarkup, tt, res, pos, s, n;
+  local ustr, leavemarkup, tt, res, pos, s, n, leaveutf8;
   ustr := arg[1];
   if Length(arg) > 1 then
     leavemarkup := arg[2];
   else
     leavemarkup := false;
+  fi;
+  if Length(arg) > 2 then
+    leaveutf8 := arg[3];
+  else
+    leaveutf8 := false;
   fi;
   tt := LaTeXUnicodeTable;
   res := "";
@@ -855,6 +867,8 @@ UNICODE_RECODE.Encoder.("LaTeX") := function(arg)
       pos := POSITION_FIRST_COMPONENT_SORTED(tt, n);
       if IsBound(tt[pos]) and tt[pos][1] = n then
         Append(res, tt[pos][2]);
+      elif leaveutf8 = true then
+        Append(res, UNICODE_RECODE.UTF8UnicodeChar(n));
       else
         s := Encode(Unicode([n]), GAPInfo.TermEncoding);
         Info(InfoWarning, 1, 
@@ -876,6 +890,16 @@ end;
 UNICODE_RECODE.NormalizedEncodings.LaTeXleavemarkup := "LaTeXleavemarkup";
 UNICODE_RECODE.NormalizedEncodings.latexleavemarkup := "LaTeXleavemarkup";
 UNICODE_RECODE.NormalizedEncodings.BibTeXleavemarkup := "LaTeXleavemarkup";
+UNICODE_RECODE.Encoder.("LaTeXUTF8leavemarkup") := function(ustr)
+  return UNICODE_RECODE.Encoder.("LaTeX")(ustr, true, true);
+end;
+UNICODE_RECODE.NormalizedEncodings.LaTeXUTF8leavemarkup := "LaTeXUTF8leavemarkup";
+UNICODE_RECODE.NormalizedEncodings.BibTeXUTF8leavemarkup := "LaTeXUTF8leavemarkup";
+UNICODE_RECODE.Encoder.("LaTeXUTF8") := function(ustr)
+  return UNICODE_RECODE.Encoder.("LaTeX")(ustr, false, true);
+end;
+UNICODE_RECODE.NormalizedEncodings.LaTeXUTF8 := "LaTeXUTF8";
+UNICODE_RECODE.NormalizedEncodings.BibTeXUTF8:= "LaTeXUTF8";
 
 InstallGlobalFunction(SimplifiedUnicodeString, function(arg)
   local ustr, single, max, tt, res, pos, a, f, n;
