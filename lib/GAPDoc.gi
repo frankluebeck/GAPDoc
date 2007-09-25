@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.19 2007-09-25 09:30:35 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.20 2007-09-25 16:06:29 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -509,10 +509,10 @@ end);
 
 ##  <#GAPDoc Label="SetGapDocLanguage">
 ##  <ManSection >
-##  <Index>Using &GAPDoc; with other languages</Index>
 ##  <Func Arg="[lang]" Name="SetGapDocLanguage" />
 ##  <Returns>nothing</Returns>
 ##  <Description>
+##  <Index>Using &GAPDoc; with other languages</Index>
 ##  The  &GAPDoc;  converter  programs   sometimes  produce  text  which  is
 ##  not  explicit  in  the  document, e.g.,  headers  like  <Q>Abstract</Q>,
 ##  <Q>Appendix</Q>,   links   to   <Q>Next  Chapter</Q>,   variable   types
