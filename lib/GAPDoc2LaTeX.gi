@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.30 2007-09-25 09:30:35 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.31 2007-09-25 13:56:43 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1246,7 +1246,7 @@ GAPDoc2LaTeXProcs.Description := function(r, str)
 end;
 
 GAPDoc2LaTeXProcs.Returns := function(r, str)
-  Append(str, Concatenation("\\textbf{\\indent ", GAPDocTexts.Returns, 
+  Append(str, Concatenation("\\textbf{\\indent ", GAPDocTexts.d.Returns, 
                             ":\\ }\n"));
   GAPDoc2LaTeXContent(r, str); 
   Append(str,"\n\n");

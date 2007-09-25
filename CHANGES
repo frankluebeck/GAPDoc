@@ -8,6 +8,9 @@
 - New options "utf8" and "nopslatex" for LaTeX converter, see
   'SetGapDocLaTeXOptions'.
 
+- Introduced "LaTeXUTF8" encoding (uses known translations but leaves
+  other characters as they are).
+
 - Removed support of '\N, \Z, ...' for '{\mathbb N}, {\mathbb Z}, ...
   (was not documented before).
 
