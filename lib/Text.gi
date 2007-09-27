@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.13 2007-09-01 00:26:27 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.14 2007-09-27 16:40:03 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -24,14 +24,16 @@
 ##  These variables contain sets of characters which are useful for
 ##  text processing. They are defined as follows.<P/>
 ##  <List >
-##  <Mark>WHITESPACE</Mark>
+##  <Mark><C>WHITESPACE</C></Mark>
 ##  <Item><C>" \n\t\r"</C></Item>
-##  <Mark>CAPITALLETTERS</Mark><Item><C>"ABCDEFGHIJKLMNOPQRSTUVWXYZ"</C></Item>
-##  <Mark>SMALLLETTERS</Mark><Item><C>"abcdefghijklmnopqrstuvwxyz"</C></Item>
-##  <Mark>LETTERS</Mark>
-##  <Item>concatenation of CAPITALLETTERS and SMALLLETTERS</Item>
-##  <Mark>DIGITS</Mark><Item><C>"0123456789"</C></Item>
-##  <Mark>HEXDIGITS</Mark><Item><C>"0123456789ABCDEFabcdef"</C></Item>
+##  <Mark><C>CAPITALLETTERS</C></Mark>
+##  <Item><C>"ABCDEFGHIJKLMNOPQRSTUVWXYZ"</C></Item>
+##  <Mark><C>SMALLLETTERS</C></Mark>
+##  <Item><C>"abcdefghijklmnopqrstuvwxyz"</C></Item>
+##  <Mark><C>LETTERS</C></Mark>
+##  <Item>concatenation of <C>CAPITALLETTERS</C> and <C>SMALLLETTERS</C></Item>
+##  <Mark><C>DIGITS</C></Mark><Item><C>"0123456789"</C></Item>
+##  <Mark><C>HEXDIGITS</C></Mark><Item><C>"0123456789ABCDEFabcdef"</C></Item>
 ##  </List>
 ##  </Description>
 ##  </ManSection>
@@ -146,11 +148,13 @@ TextAttr.home := Concatenation(TextAttr.CSI, "1G");
 InstallGlobalFunction(RepeatedString, function(c, len)
   local s;
   s := "";
-  if IsChar(c) then
+  if len = 0 then
+    return "";
+  elif IsChar(c) then
     while Length(s) < len do
       Add(s, c);
     od;
-  elif IsString(c) then
+  elif IsString(c) and Length(c) > 0 then
     while Length(s) < len do
       Append(s, c);
     od;
@@ -158,7 +162,7 @@ InstallGlobalFunction(RepeatedString, function(c, len)
       Unbind(s[Length(s)]);
     od;
   else
-    Error("First argument must be character or string");
+    Error("First argument must be character or non-empty string");
   fi;
   return s;
 end);

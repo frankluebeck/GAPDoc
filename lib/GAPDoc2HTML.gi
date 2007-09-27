@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.49 2007-09-25 09:30:35 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.50 2007-09-27 16:40:03 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -204,7 +204,7 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     fi;
     tt := Concatenation(r.bookname, ") - ");
     if n=0 then
-      Append(tt, GAPDocTexts.d.Content);
+      Append(tt, GAPDocTexts.d.Contents);
     elif IsInt(n) then
       Append(tt, Concatenation(GAPDocTexts.d.Chapter, " ", String(n), ": ", 
              FilterSGMLMarkup(r.chaptitle.(n))));
@@ -858,6 +858,10 @@ GAPDoc2HTMLProcs.SectionNumber := function(count, sect)
     res := "";
   fi;
   if sect="Chapter" then
+    # trailing . is ugly before another . in text
+    if Length(res) > 0 then
+      Unbind(res[Length(res)]);
+    fi;
     return res;
   fi;
   if count[2]>0 then
@@ -1022,7 +1026,7 @@ GAPDoc2HTMLProcs.TableOfContents := function(r, par)
   Add(par, r.count);
   if IsBound(r.root.toctext) then
     Add(par, Concatenation("\n<div class=\"contents\">\n<h3>",
-          GAPDocTexts.d.Content, "</h3>\n\n",
+          GAPDocTexts.d.Contents, "</h3>\n\n",
           r.root.toctext, "<br />\n</div>\n"));
   else
     Add(par,"<p>TOC\n-----------</p>\n\n");

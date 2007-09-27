@@ -1,4 +1,4 @@
-<!-- $Id: intro.xml,v 1.11 2007-09-25 09:30:35 gap Exp $ -->
+<!-- $Id: intro.xml,v 1.12 2007-09-27 16:40:03 gap Exp $ -->
 <Chapter Label="ch:intro"><Heading>Introduction and Example</Heading>
 
 The main  purpose of  the &GAPDoc; package  is to define  a file  format for
@@ -67,7 +67,7 @@ character set (other common encodings are ASCII or ISO-8895-X encodings).
 
 <Listing Type="from 3k+1.xml">
 <![CDATA[<!--   A complete "fake package" documentation   
-   $Id: intro.xml,v 1.11 2007-09-25 09:30:35 gap Exp $
+   $Id: intro.xml,v 1.12 2007-09-27 16:40:03 gap Exp $
 -->
 ]]></Listing>
 
@@ -150,7 +150,7 @@ XML markup. The <C>&lt;P/></C> is a  complete element. It is a combined
 start and end  tag. This shortcut is allowed for  elements which are defined
 to be  always <Q>empty</Q>, i.e., to  have no content. You  may have already
 guessed that <C>&lt;P/></C> is used as a paragraph separator. Note that
-empty lines do not separate paragraphs (as in &LaTeX;). <P/>
+empty lines do not separate paragraphs (contrary to &LaTeX;). <P/>
 
 The  other construct  we see  here  is <C>&amp;copyright;</C>.  This is  an
 example of  an <Q>entity</Q>  in XML  and is a  macro for  some substitution
@@ -252,7 +252,7 @@ give  the name(s)  of the  database  (<F>.bib</F>) files  which contain  the
 references.
 <P/>
 
-Putting  a  Web-address  into  an  <Q>URL</Q>-element  allows  to  create  a
+Putting  a  Web-address  into an  <Q>URL</Q>-element allows one to create  a
 hyperlink in output formats which allow this. 
 <P/>
 

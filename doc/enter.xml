@@ -1,4 +1,4 @@
-<!-- $Id: enter.xml,v 1.12 2007-06-05 09:55:24 gap Exp $ -->
+<!-- $Id: enter.xml,v 1.13 2007-09-27 16:40:03 gap Exp $ -->
 <Chapter Label="HowEnter">
 <Heading>How To Type a &GAPDoc; Document</Heading>
 
@@ -173,13 +173,14 @@ and <Ref Subsect="GDent"/>.<P/>
 <Subsection Label="XMLspchar">
 <Heading>Special Characters in XML</Heading>
 
-We   have  seen   that  the   less-than-character  <Q><C>&lt;</C></Q>   and
-the  ampersand   character  <Q><C>&amp;</C></Q>  start  a   tag  or  entity
-reference  in  XML.   To  get  these  characters  into   the  document  text
-one   has  to   use   entity   references,  namely   <Q><C>&amp;lt;</C></Q>
-to   get    <Q><C>&lt;</C></Q>   and   <Q><C>&amp;amp;</C></Q>    to   get
-<Q><C>&amp;</C></Q>.  Furthermore <Q><C>&amp;gt;</C></Q>  should sometimes
-be used to get <Q><C>></C></Q>.<P/>
+We  have  seen  that  the  less-than-character  <Q><C>&lt;</C></Q>  and  the
+ampersand character <Q><C>&amp;</C></Q>  start a tag or  entity reference in
+XML.  To  get  these characters  into  the  document  text  one has  to  use
+entity references,  namely <Q><C>&amp;lt;</C></Q> to  get <Q><C>&lt;</C></Q>
+and   <Q><C>&amp;amp;</C></Q>   to  get   <Q><C>&amp;</C></Q>.   Furthermore
+<Q><C>&amp;gt;</C></Q> must be  used to get <Q><C>></C></Q>  when the string
+<Q><C>]]&gt;</C></Q> appears in  element content (and not as  delimiter of a
+<C>CDATA</C> section explained below).<P/>
 
 Another   possibility  is   to  use   a  <C>CDATA</C>   statement  explained
 in&nbsp;<Ref Subsect="XMLcdata"/>.

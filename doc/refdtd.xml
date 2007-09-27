@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.23 2007-06-05 09:55:24 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.24 2007-09-27 16:40:03 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -229,7 +229,7 @@ Subsect="elAbstract"/>) for longer explanations.
 </Listing>
 
 As noted  in the comment there  may be more  than one element of  this type.
-This  elements  should  contain  the  name of  an  author  and  probably  an
+This  element   should  contain  the  name of  an  author  and  probably  an
 <C>Email</C>-address  and/or WWW-<C>Homepage</C>  element  for this  author,
 see&nbsp;<Ref Subsect="elEmail" /> and&nbsp;<Ref Subsect="elHomepage" />.
 You can also specify an individual postal address here, instead of using
@@ -384,7 +384,7 @@ This   element   may   occur   in  the   <C>Book</C>   element   after   the
 <C>Bibliography</C> element.  If it  is present, an  index is  generated and
 inserted into the document. There  are elements in &GAPDoc; which implicitly
 generate  index entries  (e.g.,  <C>Func</C> (<Ref  Subsect="Func" />))  and
-there  is an  element <C>Index</C>  (<Ref Subsect="Index"  />)for explicitly
+there  is an  element <C>Index</C> (<Ref Subsect="Index"  />) for explicitly
 adding index entries.
 
 </Subsection>
@@ -646,8 +646,9 @@ should be a kind of short explanation.
 <![CDATA[<Func Arg="x[, y]" Name="LibFunc" Label="for my objects"/>]]>
 </Listing>
 
-The optional <C>Comm</C> attribute should be a short description of the
-function, usually at most one line long.<P/>
+The  optional <C>Comm</C>  attribute should  be a  short description  of the
+function,  usually  at  most  one  line  long  (this  is  currently  nowhere
+used).<P/>
 
 This element  automatically produces  an index  entry with  the name  of the
 function and, if present, the text of the <C>Label</C> attribute as subentry
@@ -1092,11 +1093,10 @@ elements to specify the items. See sections <Ref Subsect="List"/>,
                Not  CDATA #IMPLIED>]]>
 </Listing>
 
-This element is used identically to the <C>List</C> element (see 
-<Ref Subsect="List"/>) except that the items may not have marks attached
-to them. Instead, the items are numbered automatically. The same
-comments about the <C>Only</C> and <C>Not</C> attributes as above
-apply.
+This   element   is   used   like  the   <C>List</C>   element   (see   <Ref
+Subsect="List"/>)  except that  the items  must not  have marks  attached to
+them. Instead, the items are numbered automatically. The same comments about
+the <C>Only</C> and <C>Not</C> attributes as above apply.
 
 </Subsection>
 
@@ -1331,7 +1331,7 @@ correctness of the &GAP; manual whereas <C>Log</C> is not touched by this.
 
 </Subsection>
 
-<Subsection Label="Verb"><Heading>&lt;Verb></Heading>
+<Subsection Label="Verb"><Heading><C>&lt;Verb></C></Heading>
 
 There is one further type of verbatim-like element. 
 
@@ -1415,6 +1415,8 @@ guaranteed to be translated accordingly by text (and HTML) converters:
  <Caption>&LaTeX; macros with special text translation</Caption>
  <HorLine/>
   <Row><Item>\ast</Item>           <Item><C>*</C></Item></Row>
+ <HorLine/>
+  <Row><Item>\bmod</Item>           <Item><C>mod</C></Item></Row>
  <HorLine/>
   <Row><Item>\cdot</Item>           <Item><C>*</C></Item></Row>
  <HorLine/>

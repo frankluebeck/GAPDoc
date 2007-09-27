@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.31 2007-09-25 13:56:43 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.32 2007-09-27 16:40:03 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -59,7 +59,7 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  for  all (sub)sections  of  the  document. This  can  be used  by
 ##  &GAP;'s online help; see <Ref Func="AddPageNumbersToSix" />.
 ##  
-##  There is  support for  two types  or XML  processing instructions
+##  There is  support for  two types  of XML  processing instructions
 ##  which allow to change the options  used for the document class or
 ##  to add some extra lines to  the preamble of the &LaTeX; document.
 ##  They can be specified as in the following examples:
@@ -755,7 +755,7 @@ end;
 ##  table of contents, the job is completely delegated to LaTeX
 GAPDoc2LaTeXProcs.TableOfContents := function(r, str)
   # page number info for online help
-  Append(str, Concatenation("\\def\\contentsname{", GAPDocTexts.d.Content, 
+  Append(str, Concatenation("\\def\\contentsname{", GAPDocTexts.d.Contents, 
           "\\logpage{", GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}}\n"));
   Append(str, "\n\\tableofcontents\n\\newpage\n\n");
 end;
@@ -1152,7 +1152,9 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
       if ref = fail then
         Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
-        ref := Concatenation(" (", lab, "???)");
+        ref := Concatenation(" (", Encode(Unicode(lab),
+               GAPDoc2LaTeXProcs.Encoder)
+               , "???)");
       else
         # the search text for online help including book name
         ref := Concatenation(" (\\textbf{", 

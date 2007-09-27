@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.20 2007-09-25 16:06:29 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.21 2007-09-27 16:40:03 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -324,6 +324,7 @@ BindGlobal("TEXTMTRANSLATIONS",
      leq := "<=",
      neq := "<>",
      pmod := "mod ",
+     bmod := "mod ",
      equiv := "=",
      rightarrow := "->",
      hookrightarrow := "->",
@@ -525,7 +526,9 @@ end);
 ##  <C>GAPDocTexts.english</C> and translate all the strings to <A>lang</A>.
 ##  Then  assign this  record to  <C>GAPDocTexts.(<A>lang</A>)</C> and  send
 ##  it  to  the  &GAPDoc;  authors  for  inclusion  in  future  versions  of
-##  &GAPDoc;.<P/>
+##  &GAPDoc;. (Currently, there are translations for <C>english</C>, 
+##  <C>german</C>, <C>russian</C> and <C>ukrainian</C>.)<P/>
+##  
 ##  <Emph>Further  hints:</Emph>   To  get   strings  produced   by  &LaTeX;
 ##  right  you  will  probably  use the  <C>babel</C>  package  with  option
 ##  <A>lang</A>,  see  the  information   on  <C>ExtraPreamble</C>  in  <Ref
@@ -544,7 +547,7 @@ GAPDocTexts.english := rec(
   Titlepage := "Title page",
   Abstract := "Abstract",
   Copyright := "Copyright",
-  Content := "Content",
+  Contents := "Contents",
   Email := "Email",
   Homepage := "Homepage",
   Address := "Address",
@@ -599,45 +602,132 @@ end);
 # default
 SetGapDocLanguage();
 
-# translation to Russian, provided by Alexander Konovalov
+# translation to Russian and Ukrainian, provided by Alexander Konovalov
 GAPDocTexts.russian := rec(
   # for title page
-  Titlepage := "Title page",
-  Abstract := "Abstract",
-  Copyright := "Copyright",
-  Content := "Content",
-  Email := "Email",
-  Homepage := "Homepage",
-  Address := "Address",
-  Acknowledgements := "Acknowledgements",
-  Colophon := "Colophon",
+  Titlepage := "Титульная страница",
+  Abstract := "Реферат",
+  Copyright := "Copyright", # internationally recognized
+  Contents := "Содержание",  
+  Email := "Email",         # internationally recognized
+  Homepage := "WWW",        # internationally recognized
+  Address := "Адрес",
+  Acknowledgements := "Благодарности",
+  Colophon := "Выходные данные",
   # HTML navigation
-  GotoChapter := "Goto Chapter",
-  TopofBook := "Top of Book",
-  PreviousChapter := "Previous Chapter",
-  NextChapter := "Next Chapter",
-  Top := "Top",
+  GotoChapter := "Перейти к главе",
+  TopofBook := "Начало книги",
+  PreviousChapter := "Предыдущая глава",
+  NextChapter := "Следующая глава",
+  Top := "Наверх",
   # sectioning
-  Chapter := "Chapter",
-  Appendix := "Appendix",
-  Index := "Index",
-  References := "References",
-  Bibliography := "Bibliography",
-  TableofContents := "Table of Contents",
+  Chapter := "Глава",
+  Appendix := "Приложение",
+  Index := "Индекс",
+  References := "Ссылки",
+  Bibliography := "Библиография",
+  TableofContents := "Содержание",
   # Other
-  Returns := "Returns",
-  Example := "Example",
-  Log := "Example",
-  Table := "Table",
+  Returns := "Результат", 
+  # The Russian word for "Returns" is actually the translation of "Result",
+  # hope this does not make any harm in the context.
+  Example := "Пример",
+  Log := "Пример",
+  Table := "Таблица",
   # variable types, should these be translated?
-  Func := "function",
-  Oper := "operation",
-  Meth := "method",
-  Filt := "filter",
-  Prop := "property",
-  Attr := "attribute",
-  Var := "global variable",
-  Fam := "family",
-  InfoClass := "info class",
+  Func := "функция",
+  Oper := "операция",
+  Meth := "метод",
+  Filt := "фильтр",
+  Prop := "свойство",
+  Attr := "атрибут",
+  Var := "глобальная переменная",
+  Fam := "семейство",
+  InfoClass := "инфокласс",
+             );
+
+
+GAPDocTexts.ukrainian := rec(
+  # for title page
+  Titlepage := "Титульна сторінка",
+  Abstract := "Реферат",
+  Copyright := "Copyright", # internationally recognized
+  Contents := "Зміст",
+  Email := "Email",         # internationally recognized
+  Homepage := "WWW",        # internationally recognized
+  Address := "Адреса",
+  Acknowledgements := "Подяки",
+  Colophon := "Вихідні дані",
+  # HTML navigation
+  GotoChapter := "Перейти до розділу",
+  TopofBook := "Початок книги",
+  PreviousChapter := "Попередній розділ",
+  NextChapter := "Наступний розділ",
+  Top := "На початок",
+  # sectioning
+  Chapter := "Розділ",
+  Appendix := "Додаток",
+  Index := "Індекс",
+  References := "Посилання",
+  Bibliography := "Бібліографія",
+  TableofContents := "Зміст",
+  # Other
+  Returns := "Результат", 
+  # The Ukrainian word for "Returns" is actually the translation of "Result",
+  # hope this does not make any harm in the context.
+  Example := "Приклад",
+  Log := "Приклад",
+  Table := "Таблиця",
+  # variable types, should these be translated?
+  Func := "функція",
+  Oper := "операція",
+  Meth := "метод",
+  Filt := "фільтр",
+  Prop := "властивість",
+  Attr := "атрибут",
+  Var := "глобальна змінна",
+  Fam := "родина",
+  InfoClass := "інфоклас",
+             );
+# ok, I can do this one
+GAPDocTexts.german := rec(
+  # for title page
+  Titlepage := "Titelseite",
+  Abstract := "Zusammenfassung",
+  Copyright := "Copyright",
+  Contents := "Inhalt",
+  Email := "Email",
+  Homepage := "WWW",
+  Address := "Adresse",
+  Acknowledgements := "Danksagungen",
+  Colophon := "Kolofon",
+  # HTML navigation
+  GotoChapter := "Zum Kapitel",
+  TopofBook := "Buchanfang",
+  PreviousChapter := "Voriges Kapitel",
+  NextChapter := "Nächstes Kapitel",
+  Top := "Nach oben",
+  # sectioning
+  Chapter := "Kapitel",
+  Appendix := "Anhang",
+  Index := "Stichwortverzeichnis",
+  References := "Literatur",
+  Bibliography := "Literatur",
+  TableofContents := "Inhaltsverzeichnis",
+  # Other
+  Returns := "Gibt zurück",
+  Example := "Beispiel",
+  Log := "Beispiel",
+  Table := "Tabelle",
+  # variable types, should these be translated?
+  Func := "Funktion",
+  Oper := "Operation",
+  Meth := "Methode",
+  Filt := "Filter",
+  Prop := "Eigenschaft",
+  Attr := "Attribut",
+  Var := "globale Variable",
+  Fam := "Familie",
+  InfoClass := "Info-Klasse",
              );
 

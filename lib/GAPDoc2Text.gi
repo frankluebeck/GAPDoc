@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.29 2007-09-25 09:30:36 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.30 2007-09-27 16:40:03 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -868,6 +868,10 @@ GAPDoc2TextProcs.SectionNumber := function(count, sect)
     res := "";
   fi;
   if sect="Chapter" then
+    # trailing . is ugly before another . in text
+    if Length(res) > 0 then
+      Unbind(res[Length(res)]);
+    fi;
     return res;
   fi;
   if count[2]>0 then
@@ -980,7 +984,7 @@ GAPDoc2TextProcs.TableOfContents := function(r, par)
   Add(par, r.count);
   if IsBound(r.root.toctext) then
     Add(par, Concatenation("\n\n", GAPDoc2TextProcs.TextAttr.Heading,
-        GAPDocTexts.d.Content," (", r.root.Name, ")", 
+        GAPDocTexts.d.Contents," (", r.root.Name, ")", 
         GAPDoc2TextProcs.TextAttr.reset, "\n\n", r.root.toctext,
         "\n\n-------------------------------------------------------\n"));
   else
@@ -1211,8 +1215,10 @@ GAPDoc2TextProcs.Verb := function(r, par)
   # delete first line if it contains only whitespace
   pos := Position(cont, '\n');
   if pos <> fail and ForAll(cont{[1..pos]}, x-> x in WHITESPACE) then
-    cont := cont{[pos..Length(cont)]};
+    cont := cont{[pos+1..Length(cont)]};
   fi;
+  # adjust trailing newlines
+  GAPDoc2TextProcs.P(0, cont);
   Append(par, [r.count, cont]);
 end;
 
