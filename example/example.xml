@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id: example.xml,v 1.17 2007-10-04 22:02:12 gap Exp $ -->
+<!-- $Id: example.xml,v 1.18 2007-10-04 22:30:48 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
  [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&gt;</Alt>'>
@@ -22,7 +22,7 @@
   <Author>Max Neunhöffer
           <Email>Max.Neunhoeffer@Math.RWTH-Aachen.De</Email>
   </Author>
-  <Date>May 2007</Date>
+  <Date>October 2007</Date>
   <Address>
   Lehrstuhl D für Mathematik<Br/> Templergraben 
   64<Br/> 52062 Aachen<Br/> (Germany)
