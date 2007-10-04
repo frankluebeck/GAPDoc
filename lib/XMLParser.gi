@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.26 2007-05-24 16:06:36 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.27 2007-10-04 22:02:12 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -184,6 +184,13 @@ BindGlobal("ENTITYDICT_GAPDoc", rec(
  BibTeX := "<Alt Only='LaTeX'>Bib{\\TeX}</Alt><Alt Not='LaTeX'>BibTeX</Alt>",
  MeatAxe := "<Package>MeatAxe</Package>",
  XGAP   := "<Package>XGAP</Package>",
+ CC := "&#x2102;",
+ ZZ := "&#x2124;",
+ NN := "&#x2115;",
+ PP := "&#x2119;",
+ QQ := "&#x211a;",
+ HH := "&#x210D;",
+ RR := "&#x211D;",
                   )
 );
 

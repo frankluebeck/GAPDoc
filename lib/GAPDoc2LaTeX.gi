@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.32 2007-09-27 16:40:03 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.33 2007-10-04 22:02:12 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -285,12 +285,7 @@ GAPDoc2LaTeXProcs.Head3 := Concatenation([
 "\\immediate\\write\\pagenrlog{PAGENRS := [}\n",
 "\\newcommand{\\logpage}[1]{\\protect\\write\\pagenrlog{#1, \\thepage,}}\n",
 "%% were never documented, give conflicts with some additional packages\n",
-"%\\newcommand{\\Q}{\\mathbb{Q}}\n",
-"%\\newcommand{\\R}{\\mathbb{R}}\n",
-"%\\newcommand{\\C}{\\mathbb{C}}\n",
-"%\\newcommand{\\Z}{\\mathbb{Z}}\n",
-"%\\newcommand{\\N}{\\mathbb{N}}\n",
-"%\\newcommand{\\F}{\\mathbb{F}}\n",
+"MATHBBABBREVS\n",
 "\n",
 "\\newcommand{\\GAP}{\\textsf{GAP}}\n",
 "\n",
@@ -331,6 +326,18 @@ SetGapDocLaTeXOptions := function(arg)
   GAPDoc2LaTeXProcs.pslatex := "\\usepackage{pslatex}";
   if "nopslatex" in arg then
     GAPDoc2LaTeXProcs.pslatex := Concatenation("%",GAPDoc2LaTeXProcs.pslatex);
+  fi;
+  if "usemathbbabbrevs" in arg then
+    GAPDoc2LaTeXProcs.MATHBBABBREVS := Concatenation(
+        "\\newcommand{\\Q}{\\mathbb{Q}}\n",
+        "\\newcommand{\\R}{\\mathbb{R}}\n",
+        "\\newcommand{\\C}{\\mathbb{C}}\n",
+        "\\newcommand{\\Z}{\\mathbb{Z}}\n",
+        "\\newcommand{\\N}{\\mathbb{N}}\n",
+        "\\newcommand{\\F}{\\mathbb{F}}\n"
+        );
+  else
+    GAPDoc2LaTeXProcs.MATHBBABBREVS := "";
   fi;
 end;
 # set defaults
@@ -425,7 +432,8 @@ GAPDoc2LaTeXProcs.Book := function(r, str, pi)
     Append(str, pi.ExtraPreamble);
   fi;
   Append(str, GAPDoc2LaTeXProcs.Head2);
-  Append(str, GAPDoc2LaTeXProcs.Head3);
+  Append(str, SubstitutionSublist(GAPDoc2LaTeXProcs.Head3, "MATHBBABBREVS",
+                                  GAPDoc2LaTeXProcs.MATHBBABBREVS));
   
   # and now the text of the document
   GAPDoc2LaTeXContent(r, str);
@@ -870,12 +878,13 @@ end;
 
 ##  simple maths
 GAPDoc2LaTeXProcs.M := function(r, str)
-  local   a;
+  local saveenc;
   Append(str, "$");
   # here the input is already coded in LaTeX
-  GAPDoc2LaTeXProcs.recode := false;
+  saveenc := GAPDoc2LaTeXProcs.Encoder;
+  GAPDoc2LaTeXProcs.Encoder := "LaTeXleavemarkup";
   GAPDoc2LaTeXContent(r, str);
-  GAPDoc2LaTeXProcs.recode := true;
+  GAPDoc2LaTeXProcs.Encoder := saveenc;
   Append(str, "$");
 end;
 
@@ -884,14 +893,15 @@ GAPDoc2LaTeXProcs.Math := GAPDoc2LaTeXProcs.M;
 
 ##  displayed maths
 GAPDoc2LaTeXProcs.Display := function(r, str)
-  local   a;
+  local saveenc;
   if Length(str)>0 and str[Length(str)] <> '\n' then
     Add(str, '\n');
   fi;
   Append(str, "\\[");
-  GAPDoc2LaTeXProcs.recode := false;
+  saveenc := GAPDoc2LaTeXProcs.Encoder;
+  GAPDoc2LaTeXProcs.Encoder := "LaTeXleavemarkup";
   GAPDoc2LaTeXContent(r, str);
-  GAPDoc2LaTeXProcs.recode := true;
+  GAPDoc2LaTeXProcs.Encoder := saveenc;
   Append(str, "\\]\n");
 end;
 

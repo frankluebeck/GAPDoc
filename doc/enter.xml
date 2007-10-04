@@ -1,4 +1,4 @@
-<!-- $Id: enter.xml,v 1.13 2007-09-27 16:40:03 gap Exp $ -->
+<!-- $Id: enter.xml,v 1.14 2007-10-04 22:02:12 gap Exp $ -->
 <Chapter Label="HowEnter">
 <Heading>How To Type a &GAPDoc; Document</Heading>
 
@@ -360,7 +360,10 @@ In &GAPDoc; there are some more predefined  entities:
 Here <C>&amp;nbsp;</C> is a non-breakable space character.
 <P/>
 
-One can define  further local entities right inside  the head (see&nbsp;<Ref
+Additional entities are defined for some mathematical symbols, see <Ref
+Sect="MathForm"/> for more details.
+<P/>
+One can define  further  local entities right inside  the head (see&nbsp;<Ref
 Subsect="XMLhead"/>) of a &GAPDoc; XML document as in the following example.
 
 <Listing Type="Example">

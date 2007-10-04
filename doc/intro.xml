@@ -1,4 +1,4 @@
-<!-- $Id: intro.xml,v 1.12 2007-09-27 16:40:03 gap Exp $ -->
+<!-- $Id: intro.xml,v 1.13 2007-10-04 22:02:12 gap Exp $ -->
 <Chapter Label="ch:intro"><Heading>Introduction and Example</Heading>
 
 The main  purpose of  the &GAPDoc; package  is to define  a file  format for
@@ -67,7 +67,7 @@ character set (other common encodings are ASCII or ISO-8895-X encodings).
 
 <Listing Type="from 3k+1.xml">
 <![CDATA[<!--   A complete "fake package" documentation   
-   $Id: intro.xml,v 1.12 2007-09-27 16:40:03 gap Exp $
+   $Id: intro.xml,v 1.13 2007-10-04 22:02:12 gap Exp $
 -->
 ]]></Listing>
 
@@ -203,31 +203,34 @@ The text of the first section starts  as follows. The whitespace in the text
 is unimportant and the indenting is not necessary.
 
 <Listing Type="from 3k+1.xml">
-<![CDATA[      Let <M>k  \in {\mathbb N}</M>  be a natural number.  We consider
-      the sequence <M>n(i, k), i  \in {\mathbb N},</M> with <M>n(1, k)
-      =  k</M> and  else 
+
+<![CDATA[      Let  <M>k \in  &NN;</M> be  a  natural number.  We consider  the
+      sequence <M>n(i, k), i \in &NN;,</M> with <M>n(1, k) = k</M> and
+      else 
 ]]></Listing>
 
 Here we come  to the interesting question how to  type mathematical formulae
 in a &GAPDoc; document. We did not find any alternative for writing formulae
-in &TeX; syntax. (There is MATHML, but even simple formulae contain a lot of
-markup,  become quite  unreadable and they are cumbersome  to type.  Furthermore
-there seem to be no tools available  which translate such formulae in a nice
-way into &TeX;  and text.) So, formulae  are typed as in  &LaTeX;. There are
-three  types  of elements  containing  formulae:  <Q>M</Q>, <Q>Math</Q>  and
-<Q>Display</Q>. The  first two  are for  in-text formulae  and the  third is
-for  displayed  formulae.  Here  <Q>M</Q> and  <Q>Math</Q>  are  equivalent,
-when  translating a  &GAPDoc; document  into &LaTeX;.  But they  are handled
-differently  for terminal  text (and  HTML) output.  For the  content of  an
-<Q>M</Q>-element  there  are  defined  rules for  a  translation  into  well
-readable  terminal text.  More complicated  formulae are  in <Q>Math</Q>  or
-<Q>Display</Q> elements and they are just  printed as they are typed in text
-output. So,  to make a  section well readable  inside a terminal  window you
-should  try to  put as  many  formulae as  possible into  <Q>M</Q>-elements.
-In  our  example  text  we  used the  notation  <C>n(i,  k)</C>  instead  of
-<C>n_i(k)</C>  because  it  is  easier  to read  in  text  mode.  See
+in &TeX;  syntax. (There is MATHML,  but even simple formulae  contain a lot
+of  markup,  become  quite  unreadable  and they  are  cumbersome  to  type.
+Furthermore  there  seem to  be  no  tools  available which  translate  such
+formulae in  a nice way into  &TeX; and text.) So,  formulae are essentially
+typed  as  in &LaTeX;.  (Actually,  it  is  also  possible to  type  unicode
+characters of some mathematical symbols directly,  or via an entity like the
+<C>&amp;NN;</C>  above.)  There  are  three  types  of  elements  containing
+formulae: <Q>M</Q>,  <Q>Math</Q> and <Q>Display</Q>.  The first two  are for
+in-text formulae and the third is  for displayed formulae. Here <Q>M</Q> and
+<Q>Math</Q>  are  equivalent,  when  translating a  &GAPDoc;  document  into
+&LaTeX;.  But they  are handled  differently  for terminal  text (and  HTML)
+output. For the content of an <Q>M</Q>-element there are defined rules for a
+translation into well readable terminal  text. More complicated formulae are
+in <Q>Math</Q> or <Q>Display</Q> elements and  they are just printed as they
+are typed  in text  output. So,  to make  a section  well readable  inside a
+terminal window  you should  try to  put as many  formulae as  possible into
+<Q>M</Q>-elements. In our  example text we used the  notation <C>n(i, k)</C>
+instead of  <C>n_i(k)</C> because  it is  easier to read  in text  mode. See
 Sections&nbsp;<Ref Sect="GDformulae"/> and&nbsp;<Ref  Sect="sec:misc" /> for
-more  details.  <P/>  
+more details. <P/>
 
 A few lines further on we find two non-internal references.
 

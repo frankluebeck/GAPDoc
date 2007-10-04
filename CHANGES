@@ -2,8 +2,20 @@
 
 1.0 -> 1.1
 
+- We allow unicode characters which have useful translations to 
+  LaTeX and as simplified string (with one character, for the moment)
+  in mathematical formulae. Introduced entities &CC;, &ZZ;, &NN;, &PP;,
+  &QQ;, &HH;, &RR; for \mathbb  characters.
+
+- Now chapter numbers in references to chapters are without trailing 
+  dot in text and HTML converters.
+
+- Fixed bug with vertical spacing for <Verb> in text converter.
+
 - GAPDoc can now be used with other languages than English, see
   'SetGapDocLanguage' for details.
+
+- Various documentation improvements.
 
 - New options "utf8" and "nopslatex" for LaTeX converter, see
   'SetGapDocLaTeXOptions'.
@@ -12,7 +24,7 @@
   other characters as they are).
 
 - Removed support of '\N, \Z, ...' for '{\mathbb N}, {\mathbb Z}, ...
-  (was not documented before).
+  (was not documented before). But see &NN; above.
 
 - Introduced 'WrapTextAttribute' which takes care of existing escape
   sequences in the text to wrap. Use it for the text converter to handle

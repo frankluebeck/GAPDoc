@@ -2,7 +2,7 @@
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd">
 
-<!-- $Id: gapdoc.xml,v 1.11 2007-05-31 12:27:30 gap Exp $ -->
+<!-- $Id: gapdoc.xml,v 1.12 2007-10-04 22:02:12 gap Exp $ -->
 
 <!-- The documentation to the GAPDoc system. 
      Copyright 2000-2007 by Frank Lübeck and Max Neunhöffer
@@ -57,7 +57,14 @@ gap> SizeScreen([72,40]);;
 
 </Body>
 
-<#Include SYSTEM "app3k1.xml">
+<Appendix Label="app:3k+1"><Heading>The File <F>3k+1.xml</F></Heading>
+
+Here is the complete source of the example &GAPDoc; document <F>3k+1.xml</F>
+discussed in Section&nbsp;<Ref Sect="sec:3k+1expl" />.
+
+<Listing Type="3k+1.xml">
+<![CDATA[<#Include SYSTEM "../3k+1/3k+1.xml">]]></Listing>
+</Appendix>
 
 <Appendix Label="GAPDocdtd">
 <Heading>The File <F>gapdoc.dtd</F></Heading>

@@ -2,7 +2,7 @@
 ##
 #A  init.g                  GAPDoc              Frank Lübeck / Max Neunhöffer
 ##
-#H  @(#)$Id: init.g,v 1.16 2007-06-13 16:02:50 gap Exp $
+#H  @(#)$Id: init.g,v 1.17 2007-10-04 22:02:12 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck and Max Neunhöffer,  
 #Y  Lehrstuhl D für Mathematik,  RWTH Aachen
@@ -28,7 +28,10 @@ ReadPackage("GAPDoc", "lib/HelpBookHandler.g");
 # try to find terminal encoding
 GAPInfo.tmpfunc := function()
   local env, pos, enc, a;
-  if not IsBound(GAPInfo.TermEncoding) then
+  # we leave the GAPInfo.TermEncodingOverwrite for .gaprc
+  # for a moment, but don't document it - doesn't work with 
+  # loaded workspaces
+  if not IsBound(GAPInfo.TermEncodingOverwrite) then
     if IsList(GAPInfo.SystemEnvironment) then
       # for compatibility with GAP 4.4.
       env := rec();
@@ -58,6 +61,8 @@ GAPInfo.tmpfunc := function()
       # default is latin1
       GAPInfo.TermEncoding := "ISO-8859-1";
     fi;
+  else
+    GAPInfo.TermEncoding := GAPInfo.TermEncodingOverwrite;
   fi;
 end;
 GAPInfo.tmpfunc();

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id: example.xml,v 1.16 2007-05-31 12:27:30 gap Exp $ -->
+<!-- $Id: example.xml,v 1.17 2007-10-04 22:02:12 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
- [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&gt;</Alt>'>]>
+ [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&gt;</Alt>'>
+ ]>
 
 <Book Name="GAPDoc Example">
 
@@ -45,7 +46,6 @@
 
 <Body>
   Text before chapter <Ref Chap="First"/>. (&see; <Ref Sect="Two"/>)
-
 
 <Chapter Label="First"><Heading>Sectioning Elements</Heading>
 
@@ -431,7 +431,10 @@ Here is a <E>table</E>:
 
 [&see; <Ref Sect="Ten"/>]<P/>
 
-Here is the table of special characters:
+Here is a table of special characters, the first two are special for
+XML and must be typed in by entities in &GAPDoc; documents. The other 
+characters are special for &LaTeX; but in &GAPDoc; they can be typed
+directly. 
 
 <Table Align="|c|c|c|c|c|c|c|c|c|c|c|c|c|" Label="charsInCDATA"> 
  <Caption>Special characters in character data</Caption>
@@ -475,6 +478,8 @@ And here are the predefined entities in &GAPDoc;:
 <HorLine/>
 </Table>
 
+And some more for mathematical symbols: 
+&CC;, &ZZ;, &NN;, &PP;, &QQ;, &HH;, &RR;.
 
 </Section>
 
@@ -949,10 +954,16 @@ Here is a <E>table</E>:
 
 <Listing>
 <![CDATA[<Section><Heading>Entities and Special Characters</Heading>
+<Label Name="TenBack"/>
 
-Here is the table of special characters:
+[&see; <Ref Sect="Ten"/>]<P/>
 
-<Table Align="|c|c|c|c|c|c|c|c|c|c|c|c|c|c|" Label="charsInCDATA"> 
+Here is a table of special characters, the first two are special for
+XML and must be typed in by entities in &GAPDoc; documents. The other 
+characters are special for &LaTeX; but in &GAPDoc; they can be typed
+directly. 
+
+<Table Align="|c|c|c|c|c|c|c|c|c|c|c|c|c|" Label="charsInCDATA"> 
  <Caption>Special characters in character data</Caption>
  <HorLine/> <Row> 
   <Item><C>&amp;</C></Item>
@@ -994,6 +1005,8 @@ And here are the predefined entities in &GAPDoc;:
 <HorLine/>
 </Table>
 
+And some more for mathematical symbols: 
+&CC;, &ZZ;, &NN;, &PP;, &QQ;, &HH;, &RR;.
 
 </Section>
 
