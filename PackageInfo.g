@@ -7,7 +7,7 @@
 
 SetPackageInfo( rec(
 
-CVSVERSION := "$Id: PackageInfo.g,v 1.10 2007-10-04 22:30:48 gap Exp $",
+CVSVERSION := "$Id: PackageInfo.g,v 1.11 2007-10-04 23:53:57 gap Exp $",
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
@@ -33,11 +33,10 @@ Persons := [
   FirstNames := "Max",
   IsAuthor := true,
   IsMaintainer := true,
-  Email := "Max.Neunhoeffer@Math.RWTH-Aachen.De",
-  WWWHome := "http://www.math.rwth-aachen.de/~Max.Neunhoeffer",
-  Place := "Aachen",
-  Institution := "Lehrstuhl D für Mathematik, RWTH Aachen",
-  PostalAddress := "Dr. Max Neunhöffer\nLehrstuhl D für Mathematik\nRWTH Aachen\nTemplergraben 64\n52062 Aachen\nGERMANY\n"
+  Email := "neunhoef at mcs.st-and.ac.uk",
+  WWWHome := "http://www-groups.mcs.st-and.ac.uk/~neunhoef/",
+  Place := "St Andrews",
+  Institution := "School of Mathematics and Statistics, St Andrews",
   )
 ],
 Status := "accepted",

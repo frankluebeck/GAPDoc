@@ -1,7 +1,7 @@
 #!/bin/bash
 
 WEBDIR=$HOME"/MyWWWHome/web/~Frank.Luebeck/gap/GAPDoc/"
-
+echo "Is ./index.html updated (Version, subdir, archive names, last updated)?"
 echo "Copying files to this web directory, is that ok?"
 echo "       "$WEBDIR
 echo "Assuming that in this directory exist archives "
