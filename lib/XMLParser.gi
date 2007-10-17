@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.27 2007-10-04 22:02:12 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.28 2007-10-17 22:19:03 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -119,7 +119,7 @@ BindGlobal("ParseError", function(str, pos, comment)
     fi;
     nl := LineNumberStringPosition(str, pos-off);
     if XMLPARSEORIGINS <> false then
-      r := OriginalPositionDocument(XMLPARSEORIGINS, pos);
+      r := OriginalPositionDocument(XMLPARSEORIGINS, pos-off);
     fi;
     Print("XML Parse Error: Line ", nl[1]);
     Print(" Character ", pos-nl[2][1]+1, "\n");
