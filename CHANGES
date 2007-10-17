@@ -1,4 +1,8 @@
                        CHANGES of the GAPDoc package
+                       
+1.1 -> 1.2
+- XML parser: Could show wrong line number for original position of code
+  with error.
 
 1.0 -> 1.1
 
