@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.14 2007-09-27 16:40:03 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.15 2007-10-29 11:18:37 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -145,26 +145,30 @@ TextAttr.home := Concatenation(TextAttr.CSI, "1G");
 ##  </ManSection>
 ##  
 ##  <#/GAPDoc>
-InstallGlobalFunction(RepeatedString, function(c, len)
-  local s;
-  s := "";
-  if len = 0 then
-    return "";
-  elif IsChar(c) then
-    while Length(s) < len do
-      Add(s, c);
-    od;
-  elif IsString(c) and Length(c) > 0 then
-    while Length(s) < len do
-      Append(s, c);
-    od;
-    while Length(s) > len do
-      Unbind(s[Length(s)]);
-    od;
+InstallGlobalFunction(RepeatedString, function(s, n)
+  local res, i;
+  res := EmptyString(n+1);
+  if n = 0 then
+    return res;
+  elif IsString(s) and Length(s) > 0 then
+    if Length(s) > n then
+      for i in [1..n] do
+        res[i] := s[i];
+      od;
+      return s;
+    else
+      Append(res, s);
+    fi;
+  elif IsChar(s) then
+    res[1] := s;
   else
-    Error("First argument must be character or non-empty string");
+    Error("First argument must be character or non-empty string\n");
   fi;
-  return s;
+  while 2*Length(res) <= n do
+    Append(res, res);
+  od;
+  Append(res, res{[1..n-Length(res)]});
+  return res;
 end);
 
 ##  <#GAPDoc Label="PositionMatchingDelimiter">

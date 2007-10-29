@@ -1,6 +1,8 @@
                        CHANGES of the GAPDoc package
                        
 1.1 -> 1.2
+- Apply recoding to <value ...> strings from BibXMLext data.
+- Improved "RepeatedString".
 - XML parser: Could show wrong line number for original position of code
   with error.
 

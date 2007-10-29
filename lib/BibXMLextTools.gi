@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.22 2007-05-29 11:05:48 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.23 2007-10-29 11:18:37 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1065,7 +1065,8 @@ function(entry, elt, default, strings, opts)
   if not IsBound(strings[pos]) or strings[pos][1] <> elt.attributes.key then
     return Concatenation("UNKNOWNVALUE(", elt.attributes.key, ")");
   else
-    return strings[pos][2];
+    return BuildRecBibXMLEntry(entry, rec(name := "PCDATA", 
+                    content := strings[pos][2]), default, strings, opts);
   fi;
 end);
 # <URL>
