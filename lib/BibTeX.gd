@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gd,v 1.4 2007-02-20 16:56:27 gap Exp $
+#H  @(#)$Id: BibTeX.gd,v 1.5 2007-11-02 16:27:36 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -12,6 +12,7 @@
 ##  
 
 DeclareGlobalFunction("ParseBibFiles");
+DeclareGlobalFunction("NormalizedNameAndKey");
 DeclareGlobalFunction("NormalizeNameAndKey");
 DeclareGlobalFunction("WriteBibFile");
 DeclareGlobalFunction("StringBibAsBib");

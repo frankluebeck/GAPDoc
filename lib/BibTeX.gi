@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.26 2007-05-31 12:23:43 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.27 2007-11-02 16:27:36 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -14,7 +14,7 @@
 ##  normalize author/editor name lists: last-name, initial(s) of first
 ##  name(s) and ...
 ##  see Lamport: LaTeX App.B 1.2
-BindGlobal("NormalizedNameAndKey", function(str)
+InstallGlobalFunction(NormalizedNameAndKey, function(str)
   local   nbsp,  new,  pp,  p,  a,  i,  names,  norm,  keyshort,  
           keylong,  res;
   # do almost nothing if already list of strings (e.g., from BibXMLext tools
