@@ -5,6 +5,9 @@
 - Improved "RepeatedString".
 - XML parser: Could show wrong line number for original position of code
   with error.
+- Corrected bug in normalization of argument lists (if "," was used as
+  separator). Also the layout was changed in case of leading optional
+  arguments. [Reported by Laurent Bartholdi]
 
 1.0 -> 1.1
 
