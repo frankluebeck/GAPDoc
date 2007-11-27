@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.21 2007-09-27 16:40:03 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.22 2007-11-27 12:20:28 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -392,7 +392,7 @@ end);
 BindGlobal("NormalizedArgList", function(argl)
   local f, tr, g;
   # remove ',' and split into tree
-  argl := NormalizedWhitespace(SubstitutionSublist(argl, ",", ""));
+  argl := NormalizedWhitespace(SubstitutionSublist(argl, ",", " "));
   argl := SubstitutionSublist(argl, "[]", "");
   argl := SubstitutionSublist(argl, "[ ]", "");
   f := function(argl) 
@@ -416,21 +416,33 @@ BindGlobal("NormalizedArgList", function(argl)
   tr := f(argl);
   # put it back in a string with ','s and '[]'s in the right places
   g := function(tr, ne)
-    local res, r, a;
+    local res, r, a, pos;
     res := "";
     for a in tr do
       if IsString(a) then
         if ne then
           Append(res, ", ");
         elif Length(res) > 0 then
-          Append(res, "[,]");
+##            Append(res, "[,]");
+          pos := Length(res);
+          while pos > 0 and res[pos] in " []," do
+            pos := pos - 1;
+          od;
+          Add(res, ',', pos+1);
+          Add(res, ' ', pos+2);
         fi;
         ne := true;
         Append(res, a);
       else
         r := Concatenation("[", g(a, ne), "]");
         if not ne and Length(res) > 0  then
-          Append(res, "[,]");
+##            Append(res, "[,]");
+          pos := Length(res);
+          while pos > 0 and res[pos] in " []," do
+            pos := pos - 1;
+          od;
+          Add(res, ',', pos+1);
+          Add(res, ' ', pos+2);
         fi;
         Append(res, r);
       fi;
