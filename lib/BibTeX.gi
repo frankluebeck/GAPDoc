@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.27 2007-11-02 16:27:36 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.28 2007-12-11 10:09:30 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -91,7 +91,7 @@ InstallGlobalFunction(NormalizedNameAndKey, function(str)
         # first name initials   -  wrong for UTF-8!
         fnam := "";
         for j in [i+1..Length(n)] do
-          Add(fnam, First(n[j], x-> not x in WHITESPACE and not x in "-."));
+          Add(fnam, First(n[j], x-> not x in WHITESPACE and not x in "-.{}\\"));
           Append(fnam, ". ");
         od;
         fnamfull := JoinStringsWithSeparator(n{[i+1..Length(n)]}, " ");
