@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.28 2007-12-11 10:09:30 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.29 2008-01-11 14:54:23 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -644,7 +644,8 @@ end);
 ##  arg: r[, escape]  (with escape = false it is assumed that entries are
 ##                     already HTML)
 InstallGlobalFunction(StringBibAsHTML, function(arg)
-  local   r,  i, str, res, esc, key;
+  local   r,  i, str, res, esc, key,
+mrnumber;
   r := arg[1];
   if Length(arg)=2 then
     esc := arg[2];
@@ -692,9 +693,15 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
     key := r.Label;
   fi;
   if IsBound(r.mrnumber) then
+#T changed TB: mrnumber may be shorter than expected
+mrnumber:= r.mrnumber;
+if ' ' in mrnumber then
+  mrnumber:= mrnumber{ [ 1 .. Position( mrnumber, ' ' ) - 1 ] };
+fi;
     Append(res, Concatenation(
       "<p class='Bib_entry'>\n[<span class='Bib_keyLink'><a href=\"http://www.ams.org/mathscinet-getitem?mr=",
-      r.mrnumber{[1..9]}, "\">", key, "</a></span>]   "));
+#     r.mrnumber{[1..9]}, "\">", key, "</a></span>]   "));
+      mrnumber, "\">", key, "</a></span>]   "));
   else
     Append(res, Concatenation("<p class='Bib_entry'>\n[<span class='Bib_key' style=\"color: #8e0000;\">", 
                     key, "</span>]   "));
@@ -702,25 +709,39 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
   # we assume with the "," delimiters that at least one of .author,
   # .editor or .title exist
   if IsBound(r.author) then
-    Append(res, Concatenation("<b class='Bib_author'>", AndToCommaNames(r.author),"</b> "));
+#T changed TB (no trailing whitespace)
+#   Append(res, Concatenation("<b class='Bib_author'>", AndToCommaNames(r.author),"</b> "));
+    Append(res, Concatenation("<b class='Bib_author'>", AndToCommaNames(r.author),"</b>"));
   fi;
   if IsBound(r.editor) then
-    Append(res, Concatenation("(<span class='Bib_editor'>", AndToCommaNames(r.editor), "</span>, Ed.)"));
+#T changed TB (distinguish one or more editors, added leading whitespace)
+if PositionSublist( r.editor, " and " ) = fail then
+    Append(res, Concatenation(" (<span class='Bib_editor'>", AndToCommaNames(r.editor), "</span>, Ed.)"));
+else
+    Append(res, Concatenation(" (<span class='Bib_editor'>", AndToCommaNames(r.editor), "</span>, Eds.)"));
+fi;
   fi;
   if IsBound(r.title) then
 #      if IsBound(r.author) or IsBound(r.editor) then
 #        Append(str, ",\n ");
 #      fi;
-    Append(res, Concatenation("<i class='Bib_title'>", r.title, "</i>"));
+#T changed TB, added leading whitespace
+    Append(res, Concatenation(" <i class='Bib_title'>", r.title, "</i>"));
   fi;
   if IsBound(r.booktitle) then
+#T changed TB: add the comma *before* the ``in''
+    Append( res, ",\n " );
     if r.Type in ["inproceedings", "incollection"] then
       Append(res, " in ");
     fi;
-    Append(res, Concatenation(",\n <i class='Bib_booktitle'>", r.booktitle, "</i>"));
+#T changed TB: no comma here
+#   Append(res, Concatenation(",\n <i class='Bib_booktitle'>", r.booktitle, "</i>"));
+    Append(res, Concatenation(" <i class='Bib_booktitle'>", r.booktitle, "</i>"));
   fi;
   if IsBound(r.subtitle) then
-    Append(res, Concatenation(",\n <i class='Bib_subtitle'>&ndash;", r.subtitle, "</i>"));
+#T changed TB: no comma before the &ndash;
+#   Append(res, Concatenation(",\n <i class='Bib_subtitle'>&ndash;", r.subtitle, "</i>"));
+    Append(res, Concatenation("\n <i class='Bib_subtitle'>&ndash;", r.subtitle, "</i>"));
   fi;
   if IsBound(r.journal) then
     Append(res, Concatenation(",\n <span class='Bib_journal'>", r.journal, "</span>"));
@@ -744,28 +765,39 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
     Append(res, Concatenation(",\n <em class='Bib_volume'>", r.volume, "</em>"));
   fi;
   if IsBound(r.number) then
-    Append(res, Concatenation(" (<span class='Bib_number'>", r.number, ")", "</span>"));
+#T changed TB: close the bracket *after* </span>
+#   Append(res, Concatenation(" (<span class='Bib_number'>", r.number, ")", "</span>"));
+    Append(res, Concatenation(" (<span class='Bib_number'>", r.number, "</span>)"));
   fi;
   if IsBound(r.address) then
     Append(res, Concatenation(",\n <span class='Bib_address'>", r.address, "</span>"));
   fi;
   if IsBound(r.year) then
-    Append(res, Concatenation(",\n (<span class='Bib_year'>", r.year, ")", "</span>"));
+#T changed TB: close the bracket *after* </span>
+#   Append(res, Concatenation(",\n (<span class='Bib_year'>", r.year, ")", "</span>"));
+    Append(res, Concatenation(",\n (<span class='Bib_year'>", r.year, "</span>)"));
   fi;
   if IsBound(r.pages) then
+#T TB: to be changed -- distinguish books ``... pp.'' and articles ``p. ...''
     Append(res, Concatenation(",\n <span class='Bib_pages'>p. ", r.pages, "</span>"));
   fi;
   if IsBound(r.chapter) then
     Append(res, Concatenation(",\n <span class='Bib_chapter'>Chapter ", r.chapter, "</span>"));
   fi;
   if IsBound(r.note) then
-    Append(res, Concatenation("<br />\n(<span class='Bib_note'>", r.note, "</span>", ")<br />\n"));
+#T changed TB: no trailing newline
+#   Append(res, Concatenation("<br />\n(<span class='Bib_note'>", r.note, "</span>", ")<br />\n"));
+    Append(res, Concatenation("<br />\n(<span class='Bib_note'>", r.note, "</span>", ")"));
   fi;
   if IsBound(r.notes) then
-    Append(res, Concatenation("<br />\n(<span class='Bib_notes'>", r.notes, "</span>", ")<br />\n"));
+#T changed TB: no trailing newline
+#   Append(res, Concatenation("<br />\n(<span class='Bib_notes'>", r.notes, "</span>", ")<br />\n"));
+    Append(res, Concatenation("<br />\n(<span class='Bib_notes'>", r.notes, "</span>", ")"));
   fi;
   if IsBound(r.howpublished) then
-    Append(res, Concatenation(",\n<span class='Bib_howpublished'>", r.howpublished, "</span>", "\n"));
+#T changed TB: no trailing newline
+#   Append(res, Concatenation(",\n<span class='Bib_howpublished'>", r.howpublished, "</span>", "\n"));
+    Append(res, Concatenation(",\n<span class='Bib_howpublished'>", r.howpublished, "</span>"));
   fi;
  
   if IsBound(r.BUCHSTABE) then
@@ -778,6 +810,9 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
   if IsBound(r.BUCHSTABE) and i>=0 then
     Append(res, Concatenation("<a href=\"HTMLldfm", r.BUCHSTABE, ".html#", i, 
           "\"><span style=\"color: red;\">BibTeX Eintrag</span></a>\n<br />"));
+#T changed TB: a terminating dot should *always* be present.
+  elif not ( IsBound( r.BUCHSTABE ) or IsBound( r.LDFM ) ) then
+    Append( res, ".\n" );
   fi;
   Append(res, "</p>\n\n");
   return res;
