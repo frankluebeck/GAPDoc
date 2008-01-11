@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.29 2008-01-11 14:54:23 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.30 2008-01-11 16:26:37 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -756,7 +756,7 @@ fi;
     Append(res, Concatenation(",\n <span class='Bib_school'>", r.school, "</span>"));
   fi;
   if IsBound(r.edition) then
-    Append(res, Concatenation(",\n <span class='Bib_edition'>", r.edition, "edition", "</span>"));
+    Append(res, Concatenation(",\n <span class='Bib_edition'>", r.edition, " edition", "</span>"));
   fi;
   if IsBound(r.series) then
     Append(res, Concatenation(",\n <span class='Bib_series'>", r.series, "</span>"));
