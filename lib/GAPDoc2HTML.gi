@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.50 2007-09-27 16:40:03 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.51 2008-01-16 12:00:43 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1437,7 +1437,7 @@ end;
 
 ##  using the HelpData(.., .., "ref") interface
 GAPDoc2HTMLProcs.ResolveExternalRef := function(bookname,  label, nr)
-  local info, match;
+  local info, match, res;
   info := HELP_BOOK_INFO(bookname);
   if info = fail then
     return fail;
@@ -1446,7 +1446,9 @@ GAPDoc2HTMLProcs.ResolveExternalRef := function(bookname,  label, nr)
   if Length(match) < nr then
     return fail;
   fi;
-  return HELP_BOOK_HANDLER.(info.handler).HelpData(info, match[nr][2], "ref");
+  res := HELP_BOOK_HANDLER.(info.handler).HelpData(info, match[nr][2], "ref");
+  res[1] := SubstitutionSublist(res[1], " (not loaded): ", ": ", "one");
+  return res;
 end;
 
 ##  a try to make it somewhat shorter than for the Text and LaTeX conversions
