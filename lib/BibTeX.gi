@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.30 2008-01-11 16:26:37 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.31 2008-02-29 12:59:48 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -840,7 +840,7 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     Bib_note := ["(", ")"],
     Bib_chapter := ["Chapter ", ""],
   );
-  if Length(arg) = 2  and arg[2] <> true then
+  if Length(arg) = 2  and not IsBool(arg[2]) then
     for f in RecFields(arg[2]) do
       ansi.(f) := arg[2].(f);
     od;
@@ -849,7 +849,7 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     for f in RecFields(r.From.options.ansi) do
       ansi.(f) := r.From.options.ansi.(f);
     od;
-  else
+  elif Length(arg) = 2 and arg[2] = false then
     for f in RecFields(ansi) do
       ansi.(f) := "";
     od;

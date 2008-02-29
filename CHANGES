@@ -1,6 +1,8 @@
                        CHANGES of the GAPDoc package
                        
 1.1 -> 1.2
+- Use default markup in StringBibAsText (undocumented, internally used by 
+  StringBibXMLEntry) when called with one argument.
 - Added more simplifications and LaTeX translations of unicode characters.
 - Apply recoding to <value ...> strings from BibXMLext data.
 - Improved "RepeatedString".
