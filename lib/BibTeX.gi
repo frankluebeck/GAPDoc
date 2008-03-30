@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.31 2008-02-29 12:59:48 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.32 2008-03-30 19:31:04 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -166,13 +166,14 @@ end);
 
 ##  <#GAPDoc Label="ParseBibFiles">
 ##  <ManSection >
-##  <Func Arg="bibfile" Name="ParseBibFiles" />
+##  <Func Arg="bibfile[, ...]" Name="ParseBibFiles" />
 ##  <Returns>list <C>[list of bib-records, list of abbrevs, list  of 
 ##  expansions]</C></Returns>
 ##  <Description>
-##  This function parses a file <A>bibfile</A> (if this file does not
-##  exist the  extension <C>.bib</C> is appended)  in &BibTeX; format
-##  and returns a list  as follows: <C>[entries, strings, texts]</C>.
+##  This function parses a file <A>bibfile</A>, or several bibfiles in the
+##  given order,  in &BibTeX; format
+##  and returns a list  as follows: <C>[entries, strings, texts]</C>
+##  (if a file does not exist the  extension <C>.bib</C> is appended).
 ##  Here <C>entries</C>  is a  list of records,  one record  for each
 ##  reference  contained in  <A>bibfile</A>.  Then <C>strings</C>  is
 ##  a  list of  abbreviations  defined  by <C>@string</C>-entries  in
@@ -181,7 +182,7 @@ end);
 ##  <P/>
 ##  
 ##  The records in <C>entries</C> store key-value pairs of a &BibTeX;
-##  reference in the  form <C>rec(key1 = value1,  ...)</C>. The names
+##  reference in the  form <C>rec(key1 := value1, ...)</C>. The names
 ##  of  the  keys are  converted  to  lower  case.  The type  of  the
 ##  reference (i.e.,  book, article,  ...) and  the citation  key are
 ##  stored as  components <C>.Type</C> and <C>.Label</C>. The records
