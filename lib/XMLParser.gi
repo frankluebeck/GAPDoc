@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.28 2007-10-17 22:19:03 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.29 2008-04-08 23:41:32 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -16,7 +16,7 @@ BindGlobal("XMLPARSERFLAGS", rec());
 BindGlobal("NAMECHARS",   
               ## here ':' is missing since it will probably  become reserved 
               ## for name space syntax in future XML
-              Set(List(Concatenation([45,46], [48..57], [65..90], 
+              Set(List(Concatenation([45,46], [48..57], [58], [65..90], 
               [95], [97..122]), CHAR_INT))
            );
 

@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.51 2008-01-16 12:00:43 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.52 2008-04-08 23:41:32 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -852,18 +852,14 @@ end;
 ##  utility: generate a chapter or (sub)section-number string 
 GAPDoc2HTMLProcs.SectionNumber := function(count, sect)
   local   res;
+  res := "";
   if IsString(count[1]) or count[1]>0 then
-    res := Concatenation(String(count[1]), ".");
-  else
-    res := "";
+    Append(res, String(count[1]));
   fi;
-  if sect="Chapter" then
-    # trailing . is ugly before another . in text
-    if Length(res) > 0 then
-      Unbind(res[Length(res)]);
-    fi;
+  if sect="Chapter" or sect="Appendix" then
     return res;
   fi;
+  Add(res, '.');
   if count[2]>0 then
     Append(res, String(count[2]));
   fi;

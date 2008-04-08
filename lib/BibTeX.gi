@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.32 2008-03-30 19:31:04 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.33 2008-04-08 23:40:45 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -91,7 +91,8 @@ InstallGlobalFunction(NormalizedNameAndKey, function(str)
         # first name initials   -  wrong for UTF-8!
         fnam := "";
         for j in [i+1..Length(n)] do
-          Add(fnam, First(n[j], x-> not x in WHITESPACE and not x in "-.{}\\"));
+          Add(fnam, First(n[j], x-> not x in WHITESPACE 
+                                    and not x in "-.{}\\\"\'\`"));
           Append(fnam, ". ");
         od;
         fnamfull := JoinStringsWithSeparator(n{[i+1..Length(n)]}, " ");
@@ -166,14 +167,13 @@ end);
 
 ##  <#GAPDoc Label="ParseBibFiles">
 ##  <ManSection >
-##  <Func Arg="bibfile[, ...]" Name="ParseBibFiles" />
+##  <Func Arg="bibfile" Name="ParseBibFiles" />
 ##  <Returns>list <C>[list of bib-records, list of abbrevs, list  of 
 ##  expansions]</C></Returns>
 ##  <Description>
-##  This function parses a file <A>bibfile</A>, or several bibfiles in the
-##  given order,  in &BibTeX; format
-##  and returns a list  as follows: <C>[entries, strings, texts]</C>
-##  (if a file does not exist the  extension <C>.bib</C> is appended).
+##  This function parses a file <A>bibfile</A> (if this file does not
+##  exist the  extension <C>.bib</C> is appended)  in &BibTeX; format
+##  and returns a list  as follows: <C>[entries, strings, texts]</C>.
 ##  Here <C>entries</C>  is a  list of records,  one record  for each
 ##  reference  contained in  <A>bibfile</A>.  Then <C>strings</C>  is
 ##  a  list of  abbreviations  defined  by <C>@string</C>-entries  in
@@ -182,7 +182,7 @@ end);
 ##  <P/>
 ##  
 ##  The records in <C>entries</C> store key-value pairs of a &BibTeX;
-##  reference in the  form <C>rec(key1 := value1, ...)</C>. The names
+##  reference in the  form <C>rec(key1 = value1,  ...)</C>. The names
 ##  of  the  keys are  converted  to  lower  case.  The type  of  the
 ##  reference (i.e.,  book, article,  ...) and  the citation  key are
 ##  stored as  components <C>.Type</C> and <C>.Label</C>. The records
@@ -645,8 +645,7 @@ end);
 ##  arg: r[, escape]  (with escape = false it is assumed that entries are
 ##                     already HTML)
 InstallGlobalFunction(StringBibAsHTML, function(arg)
-  local   r,  i, str, res, esc, key,
-mrnumber;
+  local   r,  i, str, res, esc, key, mrnumber, booklike;
   r := arg[1];
   if Length(arg)=2 then
     esc := arg[2];
@@ -663,6 +662,14 @@ mrnumber;
     Info(InfoBibTools, 2, ":\n", r);
     Info(InfoBibTools, 1, "\n");
     return fail;
+  fi;
+
+  # some details are set differently for book-like references
+  if r.Type in [ "book", "booklet", "manual", "techreport", "mastersthesis", 
+                 "phdthesis", "proceedings" ] then
+    booklike := true;
+  else
+    booklike := false;
   fi;
 
   res := "";
@@ -694,14 +701,12 @@ mrnumber;
     key := r.Label;
   fi;
   if IsBound(r.mrnumber) then
-#T changed TB: mrnumber may be shorter than expected
-mrnumber:= r.mrnumber;
-if ' ' in mrnumber then
-  mrnumber:= mrnumber{ [ 1 .. Position( mrnumber, ' ' ) - 1 ] };
-fi;
+    mrnumber:= r.mrnumber;
+    if ' ' in mrnumber then
+      mrnumber:= mrnumber{ [ 1 .. Position( mrnumber, ' ' ) - 1 ] };
+    fi;
     Append(res, Concatenation(
       "<p class='Bib_entry'>\n[<span class='Bib_keyLink'><a href=\"http://www.ams.org/mathscinet-getitem?mr=",
-#     r.mrnumber{[1..9]}, "\">", key, "</a></span>]   "));
       mrnumber, "\">", key, "</a></span>]   "));
   else
     Append(res, Concatenation("<p class='Bib_entry'>\n[<span class='Bib_key' style=\"color: #8e0000;\">", 
@@ -710,100 +715,101 @@ fi;
   # we assume with the "," delimiters that at least one of .author,
   # .editor or .title exist
   if IsBound(r.author) then
-#T changed TB (no trailing whitespace)
-#   Append(res, Concatenation("<b class='Bib_author'>", AndToCommaNames(r.author),"</b> "));
-    Append(res, Concatenation("<b class='Bib_author'>", AndToCommaNames(r.author),"</b>"));
+    Append(res, Concatenation("<b class='Bib_author'>", 
+                AndToCommaNames(r.author),"</b>"));
   fi;
   if IsBound(r.editor) then
-#T changed TB (distinguish one or more editors, added leading whitespace)
-if PositionSublist( r.editor, " and " ) = fail then
-    Append(res, Concatenation(" (<span class='Bib_editor'>", AndToCommaNames(r.editor), "</span>, Ed.)"));
-else
-    Append(res, Concatenation(" (<span class='Bib_editor'>", AndToCommaNames(r.editor), "</span>, Eds.)"));
-fi;
+  if PositionSublist( r.editor, " and " ) = fail then
+      Append(res, Concatenation(" (<span class='Bib_editor'>", 
+                  AndToCommaNames(r.editor), "</span>, Ed.)"));
+  else
+      Append(res, Concatenation(" (<span class='Bib_editor'>", 
+                  AndToCommaNames(r.editor), "</span>, Eds.)"));
+  fi;
   fi;
   if IsBound(r.title) then
-#      if IsBound(r.author) or IsBound(r.editor) then
-#        Append(str, ",\n ");
-#      fi;
-#T changed TB, added leading whitespace
     Append(res, Concatenation(" <i class='Bib_title'>", r.title, "</i>"));
   fi;
   if IsBound(r.booktitle) then
-#T changed TB: add the comma *before* the ``in''
     Append( res, ",\n " );
     if r.Type in ["inproceedings", "incollection"] then
       Append(res, " in ");
     fi;
-#T changed TB: no comma here
-#   Append(res, Concatenation(",\n <i class='Bib_booktitle'>", r.booktitle, "</i>"));
-    Append(res, Concatenation(" <i class='Bib_booktitle'>", r.booktitle, "</i>"));
+    Append(res, Concatenation(" <i class='Bib_booktitle'>", 
+                r.booktitle, "</i>"));
   fi;
   if IsBound(r.subtitle) then
-#T changed TB: no comma before the &ndash;
-#   Append(res, Concatenation(",\n <i class='Bib_subtitle'>&ndash;", r.subtitle, "</i>"));
-    Append(res, Concatenation("\n <i class='Bib_subtitle'>&ndash;", r.subtitle, "</i>"));
+    Append(res, Concatenation("\n <i class='Bib_subtitle'>&ndash;", 
+                r.subtitle, "</i>"));
   fi;
   if IsBound(r.journal) then
-    Append(res, Concatenation(",\n <span class='Bib_journal'>", r.journal, "</span>"));
+    Append(res, Concatenation(",\n <span class='Bib_journal'>", 
+                r.journal, "</span>"));
   fi;
   if IsBound(r.organization) then
-    Append(res, Concatenation(",\n <span class='Bib_organization'>", r.organization, "</span>"));
+    Append(res, Concatenation(",\n <span class='Bib_organization'>", 
+                r.organization, "</span>"));
   fi;
   if IsBound(r.publisher) then
-    Append(res, Concatenation(",\n <span class='Bib_publisher'>", r.publisher, "</span>"));
+    Append(res, Concatenation(",\n <span class='Bib_publisher'>", 
+                r.publisher, "</span>"));
   fi;
   if IsBound(r.school) then
     Append(res, Concatenation(",\n <span class='Bib_school'>", r.school, "</span>"));
   fi;
   if IsBound(r.edition) then
-    Append(res, Concatenation(",\n <span class='Bib_edition'>", r.edition, " edition", "</span>"));
+    Append(res, Concatenation(",\n <span class='Bib_edition'>", 
+                r.edition, "edition", "</span>"));
   fi;
   if IsBound(r.series) then
-    Append(res, Concatenation(",\n <span class='Bib_series'>", r.series, "</span>"));
+    Append(res, Concatenation(",\n <span class='Bib_series'>", 
+                r.series, "</span>"));
   fi;
   if IsBound(r.volume) then
-    Append(res, Concatenation(",\n <em class='Bib_volume'>", r.volume, "</em>"));
+    Append(res, Concatenation(",\n <em class='Bib_volume'>", 
+                r.volume, "</em>"));
   fi;
   if IsBound(r.number) then
-#T changed TB: close the bracket *after* </span>
-#   Append(res, Concatenation(" (<span class='Bib_number'>", r.number, ")", "</span>"));
-    Append(res, Concatenation(" (<span class='Bib_number'>", r.number, "</span>)"));
+    Append(res, Concatenation(" (<span class='Bib_number'>", 
+                r.number, "</span>)"));
   fi;
   if IsBound(r.address) then
-    Append(res, Concatenation(",\n <span class='Bib_address'>", r.address, "</span>"));
+    Append(res, Concatenation(",\n <span class='Bib_address'>", 
+                r.address, "</span>"));
   fi;
   if IsBound(r.year) then
-#T changed TB: close the bracket *after* </span>
-#   Append(res, Concatenation(",\n (<span class='Bib_year'>", r.year, ")", "</span>"));
-    Append(res, Concatenation(",\n (<span class='Bib_year'>", r.year, "</span>)"));
+    Append(res, Concatenation(",\n (<span class='Bib_year'>", 
+                r.year, "</span>)"));
   fi;
   if IsBound(r.pages) then
-#T TB: to be changed -- distinguish books ``... pp.'' and articles ``p. ...''
-    Append(res, Concatenation(",\n <span class='Bib_pages'>p. ", r.pages, "</span>"));
+    if booklike then
+      Append(res, Concatenation(",\n <span class='Bib_pages'>", 
+                  r.pages, " pp.</span>"));
+    else
+      Append(res, Concatenation(",\n <span class='Bib_pages'>p. ", 
+                  r.pages, "</span>"));
+    fi;
   fi;
   if IsBound(r.chapter) then
-    Append(res, Concatenation(",\n <span class='Bib_chapter'>Chapter ", r.chapter, "</span>"));
+    Append(res, Concatenation(",\n <span class='Bib_chapter'>Chapter ", 
+                r.chapter, "</span>"));
   fi;
   if IsBound(r.note) then
-#T changed TB: no trailing newline
-#   Append(res, Concatenation("<br />\n(<span class='Bib_note'>", r.note, "</span>", ")<br />\n"));
-    Append(res, Concatenation("<br />\n(<span class='Bib_note'>", r.note, "</span>", ")"));
+    Append(res, Concatenation("<br />\n(<span class='Bib_note'>", 
+                r.note, "</span>", ")"));
   fi;
   if IsBound(r.notes) then
-#T changed TB: no trailing newline
-#   Append(res, Concatenation("<br />\n(<span class='Bib_notes'>", r.notes, "</span>", ")<br />\n"));
-    Append(res, Concatenation("<br />\n(<span class='Bib_notes'>", r.notes, "</span>", ")"));
+    Append(res, Concatenation("<br />\n(<span class='Bib_notes'>", 
+                r.notes, "</span>", ")"));
   fi;
   if IsBound(r.howpublished) then
-#T changed TB: no trailing newline
-#   Append(res, Concatenation(",\n<span class='Bib_howpublished'>", r.howpublished, "</span>", "\n"));
-    Append(res, Concatenation(",\n<span class='Bib_howpublished'>", r.howpublished, "</span>"));
+    Append(res, Concatenation(",\n<span class='Bib_howpublished'>", 
+                r.howpublished, "</span>"));
   fi;
  
   if IsBound(r.BUCHSTABE) then
     Append(res, Concatenation("<br />\nEinsortiert unter ", 
-                                r.BUCHSTABE, ".<br />\n"));
+                r.BUCHSTABE, ".<br />\n"));
   fi;
   if IsBound(r.LDFM) then
     Append(res, Concatenation("Signatur ", r.LDFM, ".<br />\n"));
@@ -811,7 +817,6 @@ fi;
   if IsBound(r.BUCHSTABE) and i>=0 then
     Append(res, Concatenation("<a href=\"HTMLldfm", r.BUCHSTABE, ".html#", i, 
           "\"><span style=\"color: red;\">BibTeX Eintrag</span></a>\n<br />"));
-#T changed TB: a terminating dot should *always* be present.
   elif not ( IsBound( r.BUCHSTABE ) or IsBound( r.LDFM ) ) then
     Append( res, ".\n" );
   fi;
@@ -841,7 +846,7 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     Bib_note := ["(", ")"],
     Bib_chapter := ["Chapter ", ""],
   );
-  if Length(arg) = 2  and not IsBool(arg[2]) then
+  if Length(arg) = 2  and arg[2] <> true then
     for f in RecFields(arg[2]) do
       ansi.(f) := arg[2].(f);
     od;
@@ -850,7 +855,7 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     for f in RecFields(r.From.options.ansi) do
       ansi.(f) := r.From.options.ansi.(f);
     od;
-  elif Length(arg) = 2 and arg[2] = false then
+  else
     for f in RecFields(ansi) do
       ansi.(f) := "";
     od;

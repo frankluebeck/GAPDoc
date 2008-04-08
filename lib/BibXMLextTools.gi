@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.24 2008-02-29 12:59:48 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.25 2008-04-08 23:41:32 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -343,9 +343,9 @@ end);
 ##  <#/GAPDoc>
 # args:  bibrec[, abbrevs, strings][, encoding]
 InstallGlobalFunction(StringBibAsXMLext,  function(arg)
-  local r, abbrevs, texts, enc, MandC, struct, f, res, content, 
-        cont, tmp, nams, pos, a, b, i;
-
+  local r, abbrevs, texts, enc, MandC, struct, f, res, content,
+        cont, tmp, nams, pos, a, b, i, lbl;
+    
   r := arg[1];
   if Length( arg ) > 2  then
     abbrevs := arg[2];
@@ -386,7 +386,7 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
     texts := List(texts, a-> Encode(Unicode(a, enc)));
   fi;
 
-  # helper, to change {}'s outside math mode and $'s in 
+  # helper, to change {}'s outside math mode and $'s in
   # (book)title <C> and <M>-elements:
   MandC := function(str)
     local res, math, c;
@@ -417,7 +417,7 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
     return ParseTreeXMLString(res).content;
   end;
   if not (r.Type in RecFields(BibXMLextStructure)) then
-    Info(InfoBibTools, 1, "#W WARNING: invalid .Type in Bib-record: ", 
+    Info(InfoBibTools, 1, "#W WARNING: invalid .Type in Bib-record: ",
                                                           r.Type, "\n");
     Info(InfoBibTools, 2, r, "\n");
     return fail;
@@ -425,30 +425,36 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
   struct := BibXMLextStructure.(r.Type);
   f := RecFields(r);
 
+  if "Label" in f then
+    lbl:= Concatenation( " (", r.Label, ") " );
+  else
+    lbl:= "";
+  fi;
+
   # checking conditions on certain related elements in an entry
   if "isbn" in f and "issn" in f then
     Info(InfoBibTools, 1, "#W WARNING: Cannot have both, ISBN and ISSN ",
-                            "in Bib-record\n");
+                            "in Bib-record", lbl, "\n");
     Info(InfoBibTools, 2, r, "\n");
     return fail;
   fi;
   if r.Type in ["book", "inbook", "incollection", "proceedings",
                 "inproceedings", "conference"] and
      "volume" in f and "number" in f then
-    Info(InfoBibTools, 1, "#W WARNING: Cannot have both in ", 
-                            r.Type, "-entry, 'volume' and 'number'\n");
+    Info(InfoBibTools, 1, "#W WARNING: Cannot have both in ",
+                            r.Type, "-entry, 'volume' and 'number'", lbl, "\n");
     Info(InfoBibTools, 2, r, "\n");
     return fail;
   fi;
   if r.Type in ["book", "inbook"] then
     if "author" in f and "editor" in f then
-      Info(InfoBibTools, 1, "#W WARNING: Cannot have both in ", 
-                            r.Type, "-entry, 'author' and 'editor'\n");
+      Info(InfoBibTools, 1, "#W WARNING: Cannot have both in ",
+                            r.Type, "-entry, 'author' and 'editor'", lbl, "\n");
       Info(InfoBibTools, 2, r, "\n");
       return fail;
     elif not "author" in f and not "editor" in f then
-      Info(InfoBibTools, 1, "#W WARNING: Must have 'author' or 'editor' in ", 
-                                        r.Type, "-entry\n");
+      Info(InfoBibTools, 1, "#W WARNING: Must have 'author' or 'editor' in ",
+                                        r.Type, "-entry", lbl, "\n");
       Info(InfoBibTools, 2, r, "\n");
       return fail;
     fi;
@@ -457,7 +463,7 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
     if not "pages" in f then
       if not "chapter" in f then
         Info(InfoBibTools, 1,"#W WARNING: Must have 'chapter' and/or 'pages' ",
-                            "in inbook-entry\n");
+                            "in inbook-entry", lbl, "\n");
         Info(InfoBibTools, 2, r, "\n");
         return fail;
       fi;
@@ -465,16 +471,16 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
   fi;
   # now we can flatten struct
   struct := Concatenation(List(struct, function(a) if not IsString(a[1]) then
-    return List(Filtered(a[1], x-> x<>"or"), 
+    return List(Filtered(a[1], x-> x<>"or"),
            b-> [b, false]); else return [a]; fi; end));
   # now construct the result, first as XML tree
   res := rec(name := "entry", attributes := rec(id := r.Label),
          content := [rec(name := r.Type, attributes := rec(), content := [])]);
-  cont := res.content[1].content;       
+  cont := res.content[1].content;
   for a in struct do
     if a[2] = true and not a[1] in f then
-      Info(InfoBibTools, 1, "#W WARNING: Must have '", a[1], "' in ", 
-                                    r.Type, "-entry\n");
+      Info(InfoBibTools, 1, "#W WARNING: Must have '", a[1], "' in ",
+                                    r.Type, "-entry", lbl, "\n");
       Info(InfoBibTools, 2, r, "\n");
       return fail;
     fi;
@@ -519,7 +525,7 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
   f := Filtered(f, a-> not a in ["From", "Type", "Label"]);
   for a in f do
     Add(cont, "\n  ");
-    Add(cont, rec(name := "other", attributes := rec( type := a ), 
+    Add(cont, rec(name := "other", attributes := rec( type := a ),
                   content := r.(a)) );
   od;
   Add(cont, "\n");
@@ -535,6 +541,193 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
   od;
   return JoinStringsWithSeparator(res, "\n");
 end);
+
+# Heuristic LaTeX to BibXML markup translations
+HeuristicTranslationsLaTeX2XML := rec(
+CharacterMarkup := [
+      ["\\accent127", "\\\""],
+      ["{\\\"a}", "ä"],
+      ["\\\"a", "ä"],
+      ["{\\\"A}", "Ä",],
+      ["\\\"A", "Ä"],
+      ["{\\'a}", "á"],
+      ["\\'a", "á"],
+      ["{\\'A}", "Á"],
+      ["\\'A", "Á"],
+      ["\\`a", "à"],
+      ["{\\d{a}}", "ạ"],
+      [ "\\=a", "ā" ],         # 257
+      [ "{\\aa}", "å" ],       # 229
+      [ "{\\u{a}}", "ă" ],     # 259
+      [ "{\\c{c}}", "ç" ],     # 231
+      [ "{\\'c}", "ć" ],       # 263
+      [ "{\\v{c}}", "č" ],     # 269
+      [ "{\\Dbar}", "Ð" ],     # 208, defined in preamble
+      ["\\'E", "É"],
+      [ "{\\\"e}", "ë" ],      # 235
+      [ "\\\"e", "ë" ],        # 235
+      [ "{\\^e}", "ê" ],       # 234
+      [ "\\^e", "ê" ],         # 234
+      ["{\\'e}", "é"],   
+      ["{\\`e}", "è"],
+      ["\\'e", "é"],
+      ["\\`e", "è"],
+      ["\\'{e}", "é"],
+      ["\\`{e}", "è"],
+      ["\\'{E}", "É"],
+      ["{\\`E}", "È"],
+      ["\\`{E}", "È"],
+      ["{\\v{e}}", "ě"],
+      [ "{\\u{g}}", "ğ" ],     # 287
+      [ "{\\'{\\i}}", "í" ],   # 237
+      [ "{\\u\\i}", "ĭ" ],     # 301, must come before the next line!
+      ["\\u\\i", "ĭ"],
+      [ "{\\={\\i}}", "ī" ],   # 299
+      [ "{\\i}", "ı" ],        # 305
+      [ "{\\'n}", "ń" ],       # 324
+      [ "{\\~n}", "ñ" ],       # 241
+      ["{\\\"o}", "ö"],
+      ["{\\\"O}", "Ö"],
+      ["\\\"o", "ö"],
+      ["\\\"O", "Ö"],
+      ["{\\'o}", "ó"],
+      ["\\'o", "ó"],
+      [ "\\=o", "ō" ],         # 333
+      [ "{\\H o}", "õ" ],      # 245
+      [ "{\\H{o}}", "õ" ],     # 245
+      [ "\\H o", "õ" ],        # 245
+      [ "\\^o", "ô" ],         # 244
+      [ "{\\o}", "ø" ],        # 248
+      [ "{\\v{s}}", "š" ],     # 353
+      [ "{\\c{S}}", "Ş" ],     # 350
+      [ "{\\v{S}}", "Š" ],     # 352
+      ["{\\\"u}", "ü"],
+      ["{\\\"U}", "Ü"],
+      ["\\\"{U}", "Ü"],
+      ["\\\"u", "ü"],
+      ["\\\"U", "Ü"],
+      ["{\\\"{u}}", "ü"],
+      ["\\\"{u}", "ü"],
+      [ "{\\'u}", "ú" ],       # 250
+      [ "\\'u", "ú" ],         # 250
+      [ "{\\H{u}}", "ũ" ],     # 361
+      [ "\\=u", "ū" ],         # 363
+      ["{\\'y}", "ý"],
+      ["\\v Z", "Ž"],
+      [ "{\\v{Z}}", "Ž" ],     # 381
+      ["{\\ss}", "ß"],
+      [ "\\ss ", "ß" ],
+      [ "\\eta", "η" ],        # 951
+      [ "\\mu", "μ" ],         # 956
+      [ "\\pm", "±" ],         # 177
+
+      ["\\sb ", "_" ],
+      ["\\sb\n", "_" ],
+      ["\\sb{", "_{"],
+      ["\\sp ", "^" ],
+      ["\\sp\n", "^" ],
+      ["\\sp{", "^{"],
+      ["\\#", "#"],
+      ["\\&", "&"],
+      ["\\ ", "  "],
+      ["$'$", "ʹ"],
+      ["{\\cprime}", "ʹ"],
+      [ "\\cprime ", "ʹ" ],
+      [ "\\cprime,", "ʹ," ],
+      ["---", "—"],   # &mdash;
+      ["--", "–"],    # &ndash;
+      #T The following occurs once in the GAP bibliography, 
+      #  inside an authors' name.
+      [ "{-}", "-" ],       #        ???
+      #T The following occurs in Gri87a, in a cross-reference inside the TITLE
+      #T (which is a bad idea ...)
+      [ "[{\\it ", "[{" ],
+      # more heuristics:
+      [ "\\\n", "" ],       # remove \ together with a following line break
+      [ " _", "_" ],
+      [ "_ ", "_" ],
+      [ " ^", "^" ],
+      [ "^ ", "^" ],
+      [ "\\times", " \\times " ],
+      [ "  \\times", " \\times" ],
+      [ "\\times  ", "\\times " ],
+      [ "\\cdot", " \\cdot " ],
+      [ "\\cdot", " \\cdot " ],
+      [ "  \\cdot", " \\cdot" ],
+      [ "\\cdot  ", "\\cdot " ],
+      [ "\\sf\n", "\\sf " ],
+      # delete hyphenation hints, should be done by end user
+      [ "\\-", "" ]
+],
+
+RepeatedTranslations:= [
+      [ "_ ", "_" ],
+      [ "^ ", "^" ],
+      [ "\\sf  ", "\\sf " ],
+],
+
+TranslationsOfPairs := [
+      [ "\\sqrt{", "}", "\\sqrt{{", "}}" ],
+      [ "\\sqrt{{{", "}}}", "\\sqrt{{", "}}" ],
+      [ "^{", "}", "^{{", "}}" ],
+      [ "^{{{", "}}}", "^{{", "}}" ],
+      [ "_{", "}", "_{{", "}}" ],
+      [ "_{{{", "}}}", "_{{", "}}" ],
+],
+
+
+##  replace <start>...<eend> by <rstart>...<rend>
+#T would of course be better to prescribe a MATCHING of brackets ...
+TranslationOfOnePair:= function( str, start, eend, rstart, rend )
+  local pos, pos2;
+
+  pos:= 0;
+  while pos <> fail do
+    pos:= PositionSublist( str, start, pos );
+    if pos <> fail then
+      pos2:= PositionSublist( str, eend, pos );
+      if pos2 = fail then
+        Error( "no match!" );
+      fi;
+      str:= Concatenation( str{ [ 1 .. pos -1 ] }, rstart,
+                           str{ [ pos+Length( start ) .. pos2-1 ] },
+                           rend,
+                           str{ [ pos2+Length( eend ) .. Length( str ) ] } );
+    fi;
+  od;
+  return str;
+end,
+);
+HeuristicTranslationsLaTeX2XML.Apply := function(str)
+  local str2, pair, entry;
+  for pair in HeuristicTranslationsLaTeX2XML.CharacterMarkup do
+    str:= SubstitutionSublist( str, pair[1], pair[2] );
+  od;
+  for pair in HeuristicTranslationsLaTeX2XML.RepeatedTranslations do
+    str2:= SubstitutionSublist( str, pair[1], pair[2] );
+    while str2 <> str do
+      str:= str2;
+      str2:= SubstitutionSublist( str, pair[1], pair[2] );
+    od;
+  od;
+  for entry in HeuristicTranslationsLaTeX2XML.TranslationsOfPairs do
+    str:= HeuristicTranslationsLaTeX2XML.TranslationOfOnePair( str, entry[1], 
+                                       entry[2], entry[3], entry[4] );
+  od;
+  return str;
+end;
+HeuristicTranslationsLaTeX2XML.ApplyToFile := function(arg)
+  local fnam, outnam, str;
+  fnam := arg[1];
+  if Length(arg) > 1 then
+    outnam := arg[2];
+  else
+    outnam := fnam;
+  fi;
+  str := StringFile(fnam);
+  str := HeuristicTranslationsLaTeX2XML.Apply(str);
+  FileString(outnam, str);
+end;
 
 
 ##  <#GAPDoc Label="WriteBibXMLextFile">
@@ -727,7 +920,7 @@ end);
 ##  <Description>
 ##  The  argument <A>elementname</A>  must be  the  name of  an entry  field
 ##  supported  by the  BibXMLext  format, the  name of  one  of the  special
-##  elements (<C>"C"</C>, <C>"M"</C>, <C>"Math"</C>,  <C>"URL"</C> or of the
+##  elements  <C>"C"</C>, <C>"M"</C>, <C>"Math"</C>,  <C>"URL"</C> or of the
 ##  form  <C>"Wrap:myname"</C> or  any  string  <C>"mytype"</C> (which  then
 ##  corresponds to entry fields <C>&lt;other type="mytype"></C>). The string
 ##  <C>"Finish"</C> has an exceptional meaning, see below. <P/>
@@ -1049,8 +1242,8 @@ function(entry, elt, default, strings, opts)
   RECBIBXMLHNDLR.recode := false;
   res := TextM( ContentBuildRecBibXMLEntry(entry, elt, default, strings, opts));
   RECBIBXMLHNDLR.recode := true;
-  res := SubstitutionSublist(res, "<", "&lt;");
   res := SubstitutionSublist(res, "&", "&amp;");
+  res := SubstitutionSublist(res, "<", "&lt;");
   return res;
 end);
 AddHandlerBuildRecBibXMLEntry("M", "Text",
@@ -1260,7 +1453,7 @@ InstallGlobalFunction(RecBibXMLEntry, function(arg)
   RECBIBXMLHNDLR.recode := true;
   type := fail; strings := fail; opts := fail;
   for i in [2..Length(arg)] do
-    if IsString(arg[i]) then
+    if IsString(arg[i]) and Length(arg[i]) > 0 then
       type := arg[i];
     elif IsDenseList(arg[i]) and ForAll(arg[i], IsList) then
       strings := arg[i];
@@ -1369,16 +1562,26 @@ STRINGBIBXMLHDLR.HTML := StringBibAsHTML;
 # If not given we use list of last names of authors/editors (or the title)
 # transformed to lower case.
 InstallGlobalFunction(SortKeyRecBib, function(r)
+  local res;
+  res := [];
   if IsBound(r.sortkey) then
-    return List(SplitString(r.sortkey, "", ","), NormalizedWhitespace);
-  elif IsBound(r.authorAsList) then
-    return List(r.authorAsList, a-> LowercaseString(a[1]));
-  elif IsBound(r.editorAsList) then
-    return List(r.editorAsList, a-> LowercaseString(a[1]));
-  elif IsBound(r.title) then
-    return LowercaseString(NormalizedWhitespace(r.title));
-  else
-    return "zzzzzzzzzz";
+    Append(res, List(SplitString(r.sortkey, "", ","), NormalizedWhitespace));
   fi;
+  if IsBound(r.authorAsList) then
+    Append(res, List(r.authorAsList, a-> LowercaseString(a[1])));
+  fi;
+  if IsBound(r.editorAsList) then
+    Append(res, List(r.editorAsList, a-> LowercaseString(a[1])));
+  fi;
+  if IsBound(r.year) then
+    Add(res, r.year);
+  fi;
+  if IsBound(r.title) then
+    Add(res,  LowercaseString(NormalizedWhitespace(r.title)));
+  fi;
+  if Length(res) = 0 then
+    Add(res, "zzzzzzzzzz");
+  fi;
+  return res;
 end);
         

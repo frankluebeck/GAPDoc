@@ -1,13 +1,35 @@
                        CHANGES of the GAPDoc package
                        
 1.1 -> 1.2
+
+- Now letters counting appendices are also printed without trailing dot in
+  references.
+
+- Slightly changed HorLine's in text-version of output.
+
+- Various changes in tools for bibliography data (many suggested by 
+  Thomas Breuer):
+  - Avoid some syntax errors caused by 'NormalizedNameAndKey' in case
+    of first names starting with non-ASCII character (but still cannot
+    correctly handle these cases, use BibXMLext instead).
+  - Improved sorting of bib-entries in HTML/Text output.
+  - Better heuristic functions for translating characters in LaTeX code in 
+    BibTeX entries to unicode, see 'HeuristicTranslationsLaTeX2XML'.
+  - Handle (rare) short MathReview numbers. 
+  - Better formatted output for HTML version of bib-entries.
+  - Fixed the case of an empty 'strings' list in 'RecBibXMLEntry'.
+  - Apply recoding to <value ...> strings from BibXMLext data.
+
 - Use default markup in StringBibAsText (undocumented, internally used by 
   StringBibXMLEntry) when called with one argument.
+
 - Added more simplifications and LaTeX translations of unicode characters.
-- Apply recoding to <value ...> strings from BibXMLext data.
+
 - Improved "RepeatedString".
+
 - XML parser: Could show wrong line number for original position of code
   with error.
+
 - Corrected bug in normalization of argument lists (if "," was used as
   separator). Also the layout was changed in case of leading optional
   arguments. [Reported by Laurent Bartholdi]
