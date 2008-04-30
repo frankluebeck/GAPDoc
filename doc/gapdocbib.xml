@@ -21,4 +21,17 @@
   <key>GAP</key>
   <keywords>groups; *; gap; manual</keywords>
 </manual></entry>
+
+<entry id="IO"><misc>
+  <author>
+    <name><first>Max</first><last>Neunhöffer</last></name>
+  </author>  
+  <title><Wrap Name="Package">IO</Wrap>,
+         Bindings for low level <C>C</C> library <C>IO</C>,
+         <C>V</C>ersion 2.2</title>
+  <howpublished><URL>http://www-groups.mcs.st-and.ac.uk/~neunhoef/Computer/Software/Gap/io.html</URL></howpublished>
+  <year>2007</year>
+  <note><Wrap Name="Package">GAP</Wrap> package</note>
+</misc></entry>
+
 </file>
