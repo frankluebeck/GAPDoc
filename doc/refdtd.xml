@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.25 2007-10-04 22:02:12 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.26 2008-04-30 16:00:54 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -1424,6 +1424,8 @@ guaranteed to be translated accordingly by text (and HTML) converters:
  <HorLine/>
   <Row><Item>\ast</Item>           <Item><C>*</C></Item></Row>
  <HorLine/>
+  <Row><Item>\bf</Item>     <Item><C></C></Item></Row>
+ <HorLine/>
   <Row><Item>\bmod</Item>           <Item><C>mod</C></Item></Row>
  <HorLine/>
   <Row><Item>\cdot</Item>           <Item><C>*</C></Item></Row>
@@ -1433,6 +1435,8 @@ guaranteed to be translated accordingly by text (and HTML) converters:
   <Row><Item>\equiv</Item>          <Item><C>=</C></Item></Row>
  <HorLine/>
   <Row><Item>\geq</Item>            <Item><C>>=</C></Item></Row>
+ <HorLine/>
+  <Row><Item>\germ</Item>     <Item><C></C></Item></Row>
  <HorLine/>
   <Row><Item>\hookrightarrow</Item>     <Item><C>-></C></Item></Row>
  <HorLine/>
@@ -1474,12 +1478,25 @@ guaranteed to be translated accordingly by text (and HTML) converters:
  <HorLine/>
   <Row><Item>\Rightarrow</Item> <Item><C>=></C></Item></Row>
  <HorLine/>
+  <Row><Item>\rm, \sf, \textrm, \text</Item>     <Item><C></C></Item></Row>
+ <HorLine/>
   <Row><Item>\setminus</Item>     <Item><C>\</C></Item></Row>
+ <HorLine/>
+  <Row><Item>\thinspace</Item>     <Item><C> </C></Item></Row>
  <HorLine/>
   <Row><Item>\times</Item>     <Item><C>x</C></Item></Row>
  <HorLine/>
   <Row><Item>\to</Item>             <Item><C>-></C></Item></Row>
  <HorLine/>
+  <Row><Item>\vert</Item>     <Item><C>|</C></Item></Row>
+ <HorLine/>
+  <Row><Item>\!</Item>     <Item><C></C></Item></Row>
+ <HorLine/>
+  <Row><Item>\,</Item>     <Item><C></C></Item></Row>
+ <HorLine/>
+  <Row><Item>\;</Item>     <Item><C>&nbsp;</C></Item></Row>
+ <HorLine/>
+
 </Table>
 
 In all other macros only the  backslash is removed. Whitespace is normalized
