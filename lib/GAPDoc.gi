@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.23 2008-04-08 23:41:32 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.24 2008-04-30 15:35:55 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -313,6 +313,7 @@ BindGlobal("TEXTMTRANSLATIONS",
   rec(
      ldots := "...",
      mid := "|",
+     vert := "|",
      left := "",
      right := "",
      mathbb := "",
@@ -326,6 +327,7 @@ BindGlobal("TEXTMTRANSLATIONS",
      pmod := "mod ",
      bmod := "mod ",
      equiv := "=",
+     sim := "~",
      rightarrow := "->",
      hookrightarrow := "->",
      to := "->",
@@ -344,6 +346,7 @@ BindGlobal("TEXTMTRANSLATIONS",
      colon := ":",
      bf := "",
      rm := "",
+     textrm := "",
      sf := "",
      germ := "",
      text := "",

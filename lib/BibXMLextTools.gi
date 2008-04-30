@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.25 2008-04-08 23:41:32 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.26 2008-04-30 15:35:55 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -294,6 +294,37 @@ end);
 ##  heuristic translation of BibTeX data to BibXMLext
 ##  
 ##  <#GAPDoc Label="StringBibAsXMLext">
+##  
+##  <ManSection >
+##  <Func Arg="str" Name="HeuristicTranslationsLaTeX2XML.Apply" />
+##  <Returns>a string</Returns>
+##  <Func Arg="fnam[, outnam]" 
+##                        Name="HeuristicTranslationsLaTeX2XML.ApplyFile" />
+##  <Returns>nothing</Returns>
+##  <Description>
+##  These utilities translate some &LaTeX; code into text in UTF-8 encoding.
+##  The input is given as a string <A>str</A>, or a file name <A>fnam</A>,
+##  respectively. The first function returns the translated string. The second
+##  function with one argument overwrites the given file with the translated
+##  text. Optionally, the translated file content can be written to another
+##  file, if its name is given as second argument <A>outnam</A>.<P/>
+##  The record <C>HeuristicTranslationsLaTeX2XML</C> mainly contains
+##  translations of &LaTeX; macros for special characters which were found 
+##  in hundreds of &BibTeX; entries from 
+##  <URL Text="MathSciNet">http://www.ams.org/mathscinet/</URL>. Just look at
+##  this record if you want to know how it works. It is easy to extend, and if
+##  you have improvements which may be of general interest, please send them 
+##  to the &GAPDoc; author.
+##  <Example>
+##  gap> s := "\\\"u\\'{e}\\`e{\\ss}";;
+##  gap> Print(s, "\n");               
+##  \"u\'{e}\`e{\ss}
+##  gap> Print(HeuristicTranslationsLaTeX2XML.Apply(s),"\n");
+##  üéèß
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  
 ##  <ManSection >
 ##  <Func Arg="bibentry[, abbrvs, vals][, encoding]" Name="StringBibAsXMLext" />
 ##  <Returns>a string with XML code, or <K>fail</K></Returns>
@@ -320,6 +351,12 @@ end);
 ##  maybe improved by hand. Some validity checks are applied to the given data,
 ##  for example if all non-optional fields
 ##  are given. If  this check fails the function returns <K>fail</K>. <P/>
+##  
+##  If your &BibTeX; input contains &LaTeX; markup for special characters, 
+##  it can be convenient to translate this input  with <Ref
+##  Func="HeuristicTranslationsLaTeX2XML.Apply"/> or <Ref
+##  Func="HeuristicTranslationsLaTeX2XML.ApplyFile"/> before parsing it as
+##  &BibTeX;.<P/>
 ##  
 ##  As an example we consider again the short &BibTeX; file <F>doc/test.bib</F> 
 ##  shown in the example for <Ref Func="ParseBibFiles"/>.
@@ -543,7 +580,7 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
 end);
 
 # Heuristic LaTeX to BibXML markup translations
-HeuristicTranslationsLaTeX2XML := rec(
+InstallValue(HeuristicTranslationsLaTeX2XML,  rec(
 CharacterMarkup := [
       ["\\accent127", "\\\""],
       ["{\\\"a}", "ä"],
@@ -580,12 +617,17 @@ CharacterMarkup := [
       ["{\\v{e}}", "ě"],
       [ "{\\u{g}}", "ğ" ],     # 287
       [ "{\\'{\\i}}", "í" ],   # 237
+      [ "{\\'{\\i}}", "í" ],   # 237
+      [ "{\\'\\i}", "í" ],     # 237
+      [ "\\'\\i ", "í" ],      # 237
       [ "{\\u\\i}", "ĭ" ],     # 301, must come before the next line!
       ["\\u\\i", "ĭ"],
       [ "{\\={\\i}}", "ī" ],   # 299
       [ "{\\i}", "ı" ],        # 305
       [ "{\\'n}", "ń" ],       # 324
       [ "{\\~n}", "ñ" ],       # 241
+      [ "{\\tilde n}", "ñ" ],       # 241
+      [ "\\tilde n", "ñ" ],       # 241
       ["{\\\"o}", "ö"],
       ["{\\\"O}", "Ö"],
       ["\\\"o", "ö"],
@@ -593,10 +635,12 @@ CharacterMarkup := [
       ["{\\'o}", "ó"],
       ["\\'o", "ó"],
       [ "\\=o", "ō" ],         # 333
-      [ "{\\H o}", "õ" ],      # 245
-      [ "{\\H{o}}", "õ" ],     # 245
-      [ "\\H o", "õ" ],        # 245
+      [ "{\\H{O}}", "Ő" ],     # 336
+      [ "{\\H o}", "ő" ],      # 337
+      [ "{\\H{o}}", "ő" ],     # 337
+      [ "\\H o", "ő" ],        # 337
       [ "\\^o", "ô" ],         # 244
+      [ "\\^u", "û" ],         # 251
       [ "{\\o}", "ø" ],        # 248
       [ "{\\v{s}}", "š" ],     # 353
       [ "{\\c{S}}", "Ş" ],     # 350
@@ -610,7 +654,9 @@ CharacterMarkup := [
       ["\\\"{u}", "ü"],
       [ "{\\'u}", "ú" ],       # 250
       [ "\\'u", "ú" ],         # 250
-      [ "{\\H{u}}", "ũ" ],     # 361
+      [ "{\\H{U}}", "Ű" ],     # 368
+      [ "{\\H{u}}", "ű" ],     # 369
+      [ "\\=u", "ū" ],         # 363
       [ "\\=u", "ū" ],         # 363
       ["{\\'y}", "ý"],
       ["\\v Z", "Ž"],
@@ -697,7 +743,7 @@ TranslationOfOnePair:= function( str, start, eend, rstart, rend )
   od;
   return str;
 end,
-);
+));
 HeuristicTranslationsLaTeX2XML.Apply := function(str)
   local str2, pair, entry;
   for pair in HeuristicTranslationsLaTeX2XML.CharacterMarkup do
@@ -1535,8 +1581,8 @@ end);
 ##  gap> etxt := Encode(etxt, GAPInfo.TermEncoding);;                        
 ##  gap> PrintFormattedString(etxt);
 ##  [FS00] First, F. A. and Second, X. Y., The Fritz package for the formula
-##  x^y - l_{i+1} -> R, Important Journal, 13 (2000), 13-25, (Online data at
-##  Bla Bla Publisher (http://www.publish.com/~ImpJ/123#data))
+##  x^y  - l_{i+1} -> R, Important Journal, 13 (2000), 13-25, Online data at
+##  Bla Bla Publisher (http://www.publish.com/~ImpJ/123#data)
 ##  </Example>
 ##  </Description>
 ##  </ManSection>

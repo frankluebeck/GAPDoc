@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gi                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gi,v 1.15 2007-09-25 09:30:36 gap Exp $
+#H  @(#)$Id: UnicodeTools.gi,v 1.16 2008-04-30 15:35:55 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -480,12 +480,13 @@ end);
 ##  integers or a &GAP; string. In the latter case an <A>encoding</A> can be
 ##  specified as string, its default is <C>"UTF-8"</C>. <P/>
 ##  
+##  <Index>URL encoding</Index><Index>RFC 3986</Index>
 ##  Currently supported encodings can be found in
 ##  <C>UNICODE_RECODE.NormalizedEncodings</C> (ASCII, 
 ##  ISO-8859-X, UTF-8 and aliases). The encoding <C>"XML"</C> means an ASCII
 ##  encoding in which non-ASCII characters are specified by XML character
 ##  entities. The encoding <C>"URL"</C> is for URL-encoded (also called
-##  percent-encoded strings, as specified in RFC3986 
+##  percent-encoded strings, as specified in RFC 3986 
 ##  (<URL Text="see here">http://www.ietf.org/rfc/rfc3986.txt</URL>).
 ##  The listed encodings <C>"LaTeX"</C> and aliases
 ##  cannot be used with <Ref Oper="Unicode" />.

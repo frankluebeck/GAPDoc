@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gd             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gd,v 1.4 2007-05-07 16:02:32 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gd,v 1.5 2008-04-30 15:35:55 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -31,5 +31,7 @@ DeclareGlobalFunction("RecBibXMLEntry");
 BindGlobal("STRINGBIBXMLHDLR", rec());
 DeclareGlobalFunction("StringBibXMLEntry");
 
-# utility
+# utilities
 DeclareGlobalFunction("SortKeyRecBib");
+DeclareGlobalVariable("HeuristicTranslationsLaTeX2XML");
+

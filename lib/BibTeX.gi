@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.33 2008-04-08 23:40:45 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.34 2008-04-30 15:35:55 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -68,7 +68,9 @@ InstallGlobalFunction(NormalizedNameAndKey, function(str)
      
       # first some normalization on the string
       RemoveCharacters(str,"[]");
+      str := SubstitutionSublist(str, "\\~", "BSLTILDE");
       str := SubstitutionSublist(str, "~", " ");
+      str := SubstitutionSublist(str, "BSLTILDE", "\\~");
       str := SubstitutionSublist(str, ".", ". ");
       StripBeginEnd(str, WHITESPACE);
       n := SplitString(str, "", WHITESPACE);
@@ -167,11 +169,13 @@ end);
 
 ##  <#GAPDoc Label="ParseBibFiles">
 ##  <ManSection >
-##  <Func Arg="bibfile" Name="ParseBibFiles" />
+##  <Func Arg="bibfile1[, bibfile2[, ...]]" Name="ParseBibFiles" />
+##  <Func Arg="str1[, str2[, ...]]" Name="ParseBibStrings" />
 ##  <Returns>list <C>[list of bib-records, list of abbrevs, list  of 
 ##  expansions]</C></Returns>
 ##  <Description>
-##  This function parses a file <A>bibfile</A> (if this file does not
+##  The first function parses the files <A>bibfile1</A> and so on (if a file 
+##  does not
 ##  exist the  extension <C>.bib</C> is appended)  in &BibTeX; format
 ##  and returns a list  as follows: <C>[entries, strings, texts]</C>.
 ##  Here <C>entries</C>  is a  list of records,  one record  for each
@@ -180,6 +184,8 @@ end);
 ##  <A>bibfile</A> and <C>texts</C>  is a list which  contains in the
 ##  corresponding position  the full  text for such  an abbreviation.
 ##  <P/>
+##  The second function does the same, but the input is given as &GAP; strings
+##  <A>str1</A> and so on.<P/>
 ##  
 ##  The records in <C>entries</C> store key-value pairs of a &BibTeX;
 ##  reference in the  form <C>rec(key1 = value1,  ...)</C>. The names
@@ -209,12 +215,18 @@ end);
 ##  <#/GAPDoc>
 ##  
 InstallGlobalFunction(ParseBibFiles, function(arg)
-  local   file,  str,  stringlabels,  strings,  entries,  p,  r,  pb,  s,  
-          ende,  comp,  pos;
-  
-  stringlabels := []; 
-  strings := [];
-  entries := [];
+  local s, entries, stringlabels, strings, str, file;
+  s := Filtered(arg, x-> IsList(x) and not IsString(x));
+  if Length(s) > 0 then
+    entries := s[1][1];
+    stringlabels := s[1][2]; 
+    strings := s[1][3];
+    arg := Filtered(arg, IsString);
+  else
+    entries := [];
+    stringlabels := []; 
+    strings := [];
+  fi;
   
   for file in arg do
     str := StringFile(file);
@@ -226,7 +238,26 @@ InstallGlobalFunction(ParseBibFiles, function(arg)
                                                       file, "[.bib]\n");
       return fail;
     fi;
+    ParseBibStrings(str, [entries, stringlabels, strings]);
+  od;
+  return [entries, stringlabels, strings];
+end);
 
+InstallGlobalFunction(ParseBibStrings, function(arg)
+  local s, entries, stringlabels, strings, p, r, pb, Type, ende, comp, pos, str;
+  s := Filtered(arg, x-> IsList(x) and not IsString(x));
+  if Length(s) > 0 then
+    entries := s[1][1];
+    stringlabels := s[1][2]; 
+    strings := s[1][3];
+    arg := Filtered(arg, IsString);
+  else
+    entries := [];
+    stringlabels := []; 
+    strings := [];
+  fi;
+  
+  for str in arg do
     # find entries
     p := Position(str, '@');
     while p<>fail do
@@ -830,7 +861,7 @@ end);
 
 ##  arg: r[, ansi]  (for link to BibTeX)
 InstallGlobalFunction(StringBibAsText, function(arg)
-  local r, ansi, str, txt, s, f, field;
+  local r, ansi, str, txt, s, f, field, booklike;
   r := arg[1];
   ansi := rec(
     Bib_reset := TextAttr.reset,
@@ -859,6 +890,13 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     for f in RecFields(ansi) do
       ansi.(f) := "";
     od;
+  fi;
+  # some details are set differently for book-like references
+  if r.Type in [ "book", "booklet", "manual", "techreport", "mastersthesis",
+                 "phdthesis", "proceedings" ] then
+    booklike := true;
+  else
+    booklike := false;
   fi;
   
   if not IsBound(r.Label) then
@@ -908,7 +946,12 @@ InstallGlobalFunction(StringBibAsText, function(arg)
   # .editor or .title exist
   txt("author");
   if IsBound(r.editor) then
-    Append(str, " ("); txt("editor"); Append(str, ", Ed.)");
+    Append(str, " ("); txt("editor"); 
+    if PositionSublist( r.editor, " and " ) = fail then
+      Append(str, ", Ed.)");
+    else
+      Append(str, ", Eds.)");
+    fi;
   fi;
   if IsBound(r.title) then
     if IsBound(r.author) or IsBound(r.editor) then
@@ -924,14 +967,31 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     txt("booktitle");
   fi;
   if IsBound(r.subtitle) then
-    Append(str, "--"); txt("subtitle");
+    Append(str, "–"); txt("subtitle");
   fi;
 
   for field in [ "journal", "organization", "publisher", "school",
                  "edition", "series", "volume", "number", "address",
-                 "year", "pages", "chapter", "note", "howpublished" ] do
+                 "year", "pages", "chapter", "note", "notes", 
+                 "howpublished" ] do
     if IsBound(r.(field)) then
-      if field <> "year" then
+      if field = "year" then
+        Append(str, " (");
+        txt(field);
+        Append(str, ")");
+        continue;
+      elif field = "pages" then
+        if booklike then
+          Append(str, ", ");
+          txt(field);
+          Append(str, " pp.");
+        else
+##            Append(str, ", p. ");
+          Append(str, ", ");
+          txt(field);
+        fi;
+        continue;
+      else
         Append(str, ", "); 
       fi;
       txt(field);
@@ -960,4 +1020,177 @@ InstallGlobalFunction(PrintBibAsText, function(arg)
   PrintFormattedString(CallFuncList(StringBibAsText, arg));
 end);
 
+##  <#GAPDoc Label="SearchMRSection">
+##  <Section Label="MathSciNet">
+##  <Heading>Getting &BibTeX; entries from 
+##           <Package>MathSciNet</Package></Heading>
+##  We provide utilities to access the <URL
+##  ><Link>http://www.ams.org/mathscinet/</Link><LinkText><Package>
+##  MathSciNet</Package></LinkText></URL> 
+##  data base from within GAP. One condition for this to work is that the 
+##  <Package>IO</Package>-package <Cite Key="IO"/> is available. The other is,
+##  of course, that you use these functions from a computer which has access to
+##  <Package>MathSciNet</Package>.<P/>
+##  
+##  <ManSection >
+##  <Func Arg="qurec" Name="SearchMR" />
+##  <Func Arg="bib" Name="SearchMRBib" />
+##  <Returns>a list of strings, a string or <K>fail</K></Returns>
+##  <Description>
+##  The first function <Ref Func="SearchMR"/> provides the same functionality 
+##  as the Web interface <URL
+##  ><Link>http://www.ams.org/mathscinet/</Link><LinkText><Package>
+##  MathSciNet</Package></LinkText></URL>. The query strings must be given as
+##  a record, and the following components of this record are recognized:
+##  <C>Author</C>, <C>AuthorRelated</C>, <C>Title</C>, <C>ReviewText</C>, 
+##  <C>Journal</C>, <C>InstitutionCode</C>, <C>Series</C>, <C>MSCPrimSec</C>, 
+##  <C>MSCPrimary</C>, <C>MRNumber</C>, <C>Anywhere</C>, <C>References</C>.
+##  <P/>
+##  Furthermore, the component <C>type</C> can be specified. It can be one of 
+##  <C>"bibtex"</C> (the default if not given), <C>"pdf"</C>, <C>"html"</C> and
+##  probably others. In the last  cases the function returns a string with
+##  the correspondig PDF-file or web page from <Package>MathSciNet</Package>.
+##  In the first case the <Package>MathSciNet</Package> interface returns a web
+##  page with  &BibTeX; entries, for convenience this function returns a list
+##  of strings,  each containing the &BibTeX; text for a single result entry.
+##  <P/>
+##  
+##  The function <Ref Func="SearchMRBib"/> gets a record of a parsed &BibTeX;
+##  entry as input as returned by <Ref Func="ParseBibFiles"/> or <Ref
+##  Func="ParseBibStrings"/>. It tries to generate some sensible input from this
+##  information for <Ref Func="SearchMR"/> and calls that function. <P/>
+##  
+##  <Example>
+##  gap> ll := SearchMR(rec(Author:="Gauss", Title:="Disquisitiones"));;
+##  gap> ll2 := List(ll, HeuristicTranslationsLaTeX2XML.Apply);;
+##  gap> bib := ParseBibStrings(Concatenation(ll2));;
+##  gap> bibxml := List(bib[1], StringBibAsXMLext);;
+##  gap> bib2 := ParseBibXMLextString(Concatenation(bibxml));;
+##  gap> for b in bib2.entries do Print(StringBibXMLEntry(b, "Text")); od;     
+##  [Gau95]  Gauss,  C. F., Disquisitiones arithmeticae, Academia Colombiana
+##  de  Ciencias  Exactas  Físicas  y  Naturales,  Colección  Enrique  Pérez
+##  Arbeláez   [Enrique  Pérez  Arbeláez  Collection],  10,  Bogotá  (1995),
+##  xliv+495  pp.,  Translated  from  the  Latin  by  Hugo Barrantes Campos,
+##  Michael Josephy and Ángel Ruiz Zúñiga, With a preface by Ruiz Zúñiga
+##  
+##  [Gau86]  Gauss, C. F., Disquisitiones arithmeticae, Springer-Verlag, New
+##  York  (1986),  xx+472  pp.,  Translated  and with a preface by Arthur A.
+##  Clarke,  Revised  by William C. Waterhouse, Cornelius Greither and A. W.
+##  Grootendorst and with a preface by Waterhouse
+##  
+##  [Gau66]  Gauss,  C.  F.,  Disquisitiones  arithmeticae,  Yale University
+##  Press,  Translated  into  English  by Arthur A. Clarke, S. J, New Haven,
+##  Conn. (1966), xx+472 pp.
+##  </Example>
+##  </Description>
+##  
+##  
+##  </ManSection>
+##  
+##  
+##  </Section>
+##  <#/GAPDoc>
+
+
+if LoadPackage("IO") = true then
+  SEARCHMRHOST := "ams.org";
+  ##  SEARCHMRHOST := "ams.math.uni-bielefeld.de";
+  InstallGlobalFunction(SearchMR, function(r)
+    local trans, uri, i, l, res, extr, a, b;
+    trans := [["Author", "AUCN"], ["AuthorRelated","ICN"], ["Title","TI"],
+              ["ReviewText","RT"],["Journal","JOUR"],["InstitutionCode","IC"],
+              ["Series","SE"],["MSCPrimSec","CC"],["MSCPrimary","PC"],
+              ["MRNumber","MR"],["Anywhere","ALLF"],["References","REFF"]];
+    if not IsBound(r.type) then
+      r.type := "bibtex";
+    fi;
+    uri := Concatenation("/mathscinet/search/publications.html?fmt=", 
+                         r.type);
+    i := 4;
+    for a in trans do
+      if IsBound(r.(a[1])) then
+        if IsString(r.(a[1])) then
+          l := [r.(a[1])];
+        else
+          l := r.(a[1]);
+        fi;
+        for b in l do 
+          Append(uri, Concatenation("&pg", String(i), "=", a[2], "&s",
+                        String(i), "=", Encode(Unicode(b),"URL")));
+          if i = 9 then
+            break;
+          else
+            i := i+1;
+          fi;
+        od;
+      fi;
+      if i = 9 then
+        break;
+      fi;
+    od;
+    # get all entries
+    Append(uri, "&extend=1");
+    res := SingleHTTPRequest(SEARCHMRHOST, 80, "GET", uri, rec(), false, false);
+    while res.statuscode = 302 do
+      res := SingleHTTPRequest(SEARCHMRHOST, 80, "GET", res.header.location, 
+             rec(), false, false);
+    od;
+    if not IsBound(res.body) then
+      Info(InfoBibTools, 1, "Cannot reach MathSciNet service.");
+      return fail;
+    fi;
+    if r.type = "bibtex" then
+      i := PositionSublist(res.body, "<pre>\n@", i);
+      extr := [];
+      while i <> fail do
+        Add(extr, res.body{[i+5..PositionSublist(res.body, "</pre>", i)-1]});
+        i := PositionSublist(res.body, "<pre>\n@", i);
+      od;
+      return extr;
+    else
+      return res.body;
+    fi;
+  end);
+  # args: record[, type]
+  # records like entry from ParseBibStrings/Files, default for type is "bibtex"
+  InstallGlobalFunction(SearchMRBib, function(arg)
+    local nn, tt, r, a, f;
+    a := arg[1];
+    if IsBound(a.mrnumber) then
+      r := rec(MRNumber := a.mrnumber);
+      if ' ' in r.MRNumber then
+        r.MRNumber := r.MRNumber{[1..Position(r.MRNumber, ' ')-1]};
+      fi;
+    else
+      a := ShallowCopy(a);
+      for f in RecFields(a) do
+        if IsString(a.(f)) then
+          a.(f) := HeuristicTranslationsLaTeX2XML.Apply(a.(f));
+        fi;
+      od;
+      if IsBound(a.author) then
+        a.author := SubstitutionSublist(a.author, "~", " ");
+        nn := NormalizedNameAndKey(a.author)[4];
+      elif IsBound(a.editor) then
+        a.editor := SubstitutionSublist(a.editor, "~", " ");
+        nn := NormalizedNameAndKey(a.editor)[4];
+      else
+        nn := [[""]];
+      fi;
+      # up to three longest words from title
+      tt := SubstitutionSublist(a.title, "{", "");
+      tt := SubstitutionSublist(tt, "}", "");
+      tt := NormalizedWhitespace(tt);
+      tt := WordsString(tt);
+      SortParallel(List(tt, w-> 1000-Length(w)), tt);
+      tt := tt{[1..Minimum(3, Length(tt))]};
+      r := rec( Author := List(nn, a->a[1]),
+                                    Title := tt);
+    fi;
+    if Length(arg) > 1 then
+      r.type := arg[2];
+    fi;
+    return SearchMR(r);
+  end);
+fi;
 

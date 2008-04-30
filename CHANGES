@@ -2,6 +2,9 @@
                        
 1.1 -> 1.2
 
+- New utility to access the MathSciNet data base from within GAP (only if
+  your computer has access, of course),  see documentation of 'SearchMR'.
+
 - Now letters counting appendices are also printed without trailing dot in
   references.
 
@@ -27,8 +30,11 @@
 
 - Improved "RepeatedString".
 
-- XML parser: Could show wrong line number for original position of code
-  with error.
+- XML parser: 
+  - Could show wrong line number for original position of code with error.
+  - Now the ":" is allowed in element and attribute names, this allows
+    to implement utilities for dealing with XML name spaces
+    (http://www.w3.org/TR/2006/REC-xml-names-20060816/).
 
 - Corrected bug in normalization of argument lists (if "," was used as
   separator). Also the layout was changed in case of leading optional

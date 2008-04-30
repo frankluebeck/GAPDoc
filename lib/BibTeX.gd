@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gd,v 1.5 2007-11-02 16:27:36 gap Exp $
+#H  @(#)$Id: BibTeX.gd,v 1.6 2008-04-30 15:35:55 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -11,6 +11,7 @@
 ##  functions for printing BibTeX entries in different formats.
 ##  
 
+DeclareGlobalFunction("ParseBibStrings");
 DeclareGlobalFunction("ParseBibFiles");
 DeclareGlobalFunction("NormalizedNameAndKey");
 DeclareGlobalFunction("NormalizeNameAndKey");
@@ -21,6 +22,9 @@ DeclareGlobalFunction("StringBibAsText");
 DeclareGlobalFunction("PrintBibAsText");
 DeclareGlobalFunction("StringBibAsHTML");
 DeclareGlobalFunction("PrintBibAsHTML");
+DeclareGlobalFunction("SearchMR");
+DeclareGlobalFunction("SearchMRBib");
+
 
 ##  <#GAPDoc Label="InfoBibTools">
 ##  <ManSection >
