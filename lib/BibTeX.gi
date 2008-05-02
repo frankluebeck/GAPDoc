@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.34 2008-04-30 15:35:55 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.35 2008-05-02 13:11:55 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1044,7 +1044,8 @@ end);
 ##  a record, and the following components of this record are recognized:
 ##  <C>Author</C>, <C>AuthorRelated</C>, <C>Title</C>, <C>ReviewText</C>, 
 ##  <C>Journal</C>, <C>InstitutionCode</C>, <C>Series</C>, <C>MSCPrimSec</C>, 
-##  <C>MSCPrimary</C>, <C>MRNumber</C>, <C>Anywhere</C>, <C>References</C>.
+##  <C>MSCPrimary</C>, <C>MRNumber</C>, <C>Anywhere</C>, <C>References</C>
+##  and <C>Year</C>.
 ##  <P/>
 ##  Furthermore, the component <C>type</C> can be specified. It can be one of 
 ##  <C>"bibtex"</C> (the default if not given), <C>"pdf"</C>, <C>"html"</C> and
@@ -1054,6 +1055,10 @@ end);
 ##  page with  &BibTeX; entries, for convenience this function returns a list
 ##  of strings,  each containing the &BibTeX; text for a single result entry.
 ##  <P/>
+##  The format of a <C>.Year</C> component can be either a four digit number,
+##  optionally preceded by  one of the characters <C>'&lt;'</C>,
+##  <C>'&gt;'</C> or <C>'='</C>, or it can be two four digit numbers 
+##  separated by a <C>-</C> to specify a year range.<P/>
 ##  
 ##  The function <Ref Func="SearchMRBib"/> gets a record of a parsed &BibTeX;
 ##  entry as input as returned by <Ref Func="ParseBibFiles"/> or <Ref
@@ -1106,6 +1111,25 @@ if LoadPackage("IO") = true then
     fi;
     uri := Concatenation("/mathscinet/search/publications.html?fmt=", 
                          r.type);
+    if IsBound(r.Year) then
+      if '-' in r.Year then
+        extr := SplitString(r.Year,"","- ");
+        Append(uri, "&dr=yearrange&yearRangeFirst=");
+        Append(uri, extr[1]);
+        Append(uri, "&yearRangeSecond=");
+        Append(uri, extr[2]);
+      else 
+        Append(uri, "&dr=pubyear&arg3=");
+        Append(uri, Filtered(r.Year, c-> not c in "<>="));
+        if r.Year[1] = '<' then
+          Append(uri, "&yrop=lt");
+        elif r.Year[1] = '>' then
+          Append(uri, "&yrop=gt");
+        else
+          Append(uri, "&yrop=eq");
+        fi;
+      fi;
+    fi;
     i := 4;
     for a in trans do
       if IsBound(r.(a[1])) then
