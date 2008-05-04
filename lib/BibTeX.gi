@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.35 2008-05-02 13:11:55 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.36 2008-05-04 23:00:34 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -521,7 +521,7 @@ InstallGlobalFunction(StringBibAsBib, function(arg)
                 ["From", "Type", "Label","authorAsList", "editorAsList"]) )) do
     if IsBound(r.(comp)) then
       Append(res, Concatenation(",\n  ", comp, " = ", 
-                                  List([1..16-Length(comp)], i-> ' ')));
+                              ListWithIdenticalEntries(16-Length(comp), ' ')));
       pos := Position(texts, r.(comp));
       if pos <> fail then
         Append(res, abbrevs[pos]);
