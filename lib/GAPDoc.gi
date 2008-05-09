@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.24 2008-04-30 15:35:55 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.25 2008-05-09 13:24:16 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -647,7 +647,7 @@ GAPDocTexts.russian := rec(
   TopofBook := "Начало книги",
   PreviousChapter := "Предыдущая глава",
   NextChapter := "Следующая глава",
-  Top := "Наверх",
+  Top := "Начало",
   # sectioning
   Chapter := "Глава",
   Appendix := "Приложение",
@@ -691,7 +691,7 @@ GAPDocTexts.ukrainian := rec(
   TopofBook := "Початок книги",
   PreviousChapter := "Попередній розділ",
   NextChapter := "Наступний розділ",
-  Top := "На початок",
+  Top := "Початок",
   # sectioning
   Chapter := "Розділ",
   Appendix := "Додаток",
