@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.34 2008-01-16 12:00:43 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.35 2008-05-13 15:57:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -790,7 +790,8 @@ GAPDoc2LaTeXProcs.Bibliography := function(r, str)
   fi;
 
   # page number info for online help
-  Append(str, Concatenation("\\def\\bibname{References\\logpage{", 
+  Append(str, Concatenation("\\def\\bibname{", GAPDocTexts.d.References,
+          "\\logpage{", 
           GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}\n"));
   if IsBound(r.root.six) then
 ##      a := First(r.root.six, x-> x[3] = r.count{[1..3]});
