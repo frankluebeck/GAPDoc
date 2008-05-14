@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.36 2008-05-04 23:00:34 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.37 2008-05-14 15:56:24 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -447,6 +447,9 @@ BindGlobal("AndToCommaNames", function(str)
   for i in [1..n-1] do
     str := SubstitutionSublist(str, " and ", ", ", false);
   od;
+  if n > 1 then
+    str := SubstitutionSublist(str, " and ", ", and ", false);
+  fi;
   return str;
 end);
   
@@ -777,6 +780,10 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
     Append(res, Concatenation(",\n <span class='Bib_journal'>", 
                 r.journal, "</span>"));
   fi;
+  if IsBound(r.type) then
+    Append(res, Concatenation(",\n <span class='Bib_type'>", 
+                r.type, "</span>"));
+  fi;
   if IsBound(r.organization) then
     Append(res, Concatenation(",\n <span class='Bib_organization'>", 
                 r.organization, "</span>"));
@@ -815,7 +822,7 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
   if IsBound(r.pages) then
     if booklike then
       Append(res, Concatenation(",\n <span class='Bib_pages'>", 
-                  r.pages, " pp.</span>"));
+                  r.pages, " pages</span>"));
     else
       Append(res, Concatenation(",\n <span class='Bib_pages'>p. ", 
                   r.pages, "</span>"));
@@ -970,7 +977,7 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     Append(str, "–"); txt("subtitle");
   fi;
 
-  for field in [ "journal", "organization", "publisher", "school",
+  for field in [ "journal", "type", "organization", "publisher", "school",
                  "edition", "series", "volume", "number", "address",
                  "year", "pages", "chapter", "note", "notes", 
                  "howpublished" ] do
@@ -984,7 +991,7 @@ InstallGlobalFunction(StringBibAsText, function(arg)
         if booklike then
           Append(str, ", ");
           txt(field);
-          Append(str, " pp.");
+          Append(str, " pages");
         else
 ##            Append(str, ", p. ");
           Append(str, ", ");
@@ -1007,6 +1014,7 @@ InstallGlobalFunction(StringBibAsText, function(arg)
   fi;
 
 ##    str := FormatParagraph(Filtered(str, x-> not x in "{}"), 72);
+  Add(str, '.');
   if Unicode(str, "UTF-8") <> fail then
     str := FormatParagraph(str, 72, WidthUTF8String);
   else
