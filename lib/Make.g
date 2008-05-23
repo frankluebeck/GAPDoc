@@ -2,7 +2,7 @@
 ##
 #W  Make.g                       GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Make.g,v 1.10 2007-02-20 16:56:27 gap Exp $
+#H  @(#)$Id: Make.g,v 1.11 2008-05-23 16:03:00 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -110,6 +110,17 @@ BindGlobal("MakeGAPDocDoc", function(arg)
       od;
     fi;
   fi;
+  # check for BibTeX warnings
+  log := StringFile(Filename(path, Concatenation(main, ".blg")));
+  if log <> fail then
+    log := SplitString(log, "\n", "");
+    log := Filtered(log, z-> PositionSublist(z, "Warning--") = 1);
+    if Length(log) > 0 then
+      Info(InfoGAPDoc, 1, "\n#W BibTeX had warnings:\n",
+           JoinStringsWithSeparator(log, "\n"));
+    fi;
+  fi;
+
   Exec(Concatenation("sh -c \" cd ", Filename(path,""),
   "; mv ", main, ".pdf manual.pdf; ", 
   "\""));

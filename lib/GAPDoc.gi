@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.25 2008-05-09 13:24:16 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.26 2008-05-23 16:03:00 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -339,6 +339,7 @@ BindGlobal("TEXTMTRANSLATIONS",
      mapsto := "->",            #  "|->"  looks ugly!
      leftarrow := "<-",
      langle := "<",
+     prime := "'",
      rangle := ">",
      vee := "v",
      setminus := "\\",
@@ -353,7 +354,9 @@ BindGlobal("TEXTMTRANSLATIONS",
      thinspace := " ",
      \, := "",
      \! := "",
-     \; := " "
+     \; := " ",
+     \{ := "{",
+     \} := "}",
      )
 );
 
@@ -370,8 +373,8 @@ InstallGlobalFunction(TextM, function(str)
       while j <= Length(str) and str[j] in LETTERS do
         j := j+1;
       od;
-      # some spacing macros
-      if j = i+1 and str[j] in ";,!" then
+      # some spacing macros and braces
+      if j = i+1 and str[j] in ";,!{}" then
         j := j+1;
       fi;
       if str{[i+1..j-1]} in subs then

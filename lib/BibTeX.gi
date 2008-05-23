@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.37 2008-05-14 15:56:24 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.38 2008-05-23 16:03:00 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -489,6 +489,7 @@ InstallGlobalFunction(StringBibAsBib, function(arg)
                 "journal",
                 "month",
                 "organization",
+                "institution",
                 "publisher",
                 "school",
                 "edition",
@@ -746,6 +747,14 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
     Append(res, Concatenation("<p class='Bib_entry'>\n[<span class='Bib_key' style=\"color: #8e0000;\">", 
                     key, "</span>]   "));
   fi;
+  # standard BibTeX-styles typeset a type if not given
+  if r.Type = "phdthesis" and not IsBound(r.type) then
+    r := ShallowCopy(r);
+    r.type := "Ph.D. thesis";
+  elif r.Type = "mastersthesis" and not IsBound(r.type) then
+    r := ShallowCopy(r);
+    r.type := "Master's thesis";
+  fi;
   # we assume with the "," delimiters that at least one of .author,
   # .editor or .title exist
   if IsBound(r.author) then
@@ -762,7 +771,10 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
   fi;
   fi;
   if IsBound(r.title) then
-    Append(res, Concatenation(" <i class='Bib_title'>", r.title, "</i>"));
+    if ForAny(["author", "editor"], a-> IsBound(r.(a))) then
+      Add(res, ',');
+    fi;
+    Append(res, Concatenation("\n <i class='Bib_title'>", r.title, "</i>"));
   fi;
   if IsBound(r.booktitle) then
     Append( res, ",\n " );
@@ -788,6 +800,10 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
     Append(res, Concatenation(",\n <span class='Bib_organization'>", 
                 r.organization, "</span>"));
   fi;
+  if IsBound(r.institution) then
+    Append(res, Concatenation(",\n <span class='Bib_organization'>", 
+                r.institution, "</span>"));
+  fi;
   if IsBound(r.publisher) then
     Append(res, Concatenation(",\n <span class='Bib_publisher'>", 
                 r.publisher, "</span>"));
@@ -797,7 +813,7 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
   fi;
   if IsBound(r.edition) then
     Append(res, Concatenation(",\n <span class='Bib_edition'>", 
-                r.edition, "edition", "</span>"));
+                r.edition, " edition", "</span>"));
   fi;
   if IsBound(r.series) then
     Append(res, Concatenation(",\n <span class='Bib_series'>", 
@@ -816,7 +832,7 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
                 r.address, "</span>"));
   fi;
   if IsBound(r.year) then
-    Append(res, Concatenation(",\n (<span class='Bib_year'>", 
+    Append(res, Concatenation("\n (<span class='Bib_year'>", 
                 r.year, "</span>)"));
   fi;
   if IsBound(r.pages) then
@@ -824,7 +840,7 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
       Append(res, Concatenation(",\n <span class='Bib_pages'>", 
                   r.pages, " pages</span>"));
     else
-      Append(res, Concatenation(",\n <span class='Bib_pages'>p. ", 
+      Append(res, Concatenation(",\n <span class='Bib_pages'>", 
                   r.pages, "</span>"));
     fi;
   fi;
@@ -879,8 +895,8 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     Bib_journal := "",
     Bib_volume := TextAttr.4,
     Bib_Label := TextAttr.3,
-    Bib_edition := ["", " edition"],
-    Bib_year := [" (", ")"],
+    Bib_edition := ["", ""],
+    Bib_year := ["", ""],
     Bib_note := ["(", ")"],
     Bib_chapter := ["Chapter ", ""],
   );
@@ -977,7 +993,16 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     Append(str, "–"); txt("subtitle");
   fi;
 
-  for field in [ "journal", "type", "organization", "publisher", "school",
+  # standard BibTeX-styles typeset a type if not given
+  if r.Type = "phdthesis" and not IsBound(r.type) then
+    r := ShallowCopy(r);
+    r.type := "Ph.D. thesis";
+  elif r.Type = "mastersthesis" and not IsBound(r.type) then
+    r := ShallowCopy(r);
+    r.type := "Master's thesis";
+  fi;
+  for field in [ "journal", "type", "organization", "institution", 
+                 "publisher", "school",
                  "edition", "series", "volume", "number", "address",
                  "year", "pages", "chapter", "note", "notes", 
                  "howpublished" ] do
@@ -998,6 +1023,17 @@ InstallGlobalFunction(StringBibAsText, function(arg)
           txt(field);
         fi;
         continue;
+      elif field = "edition" then
+        Append(str, ", ");
+        txt(field);
+        Append(str, " edition");
+      elif field in ["note", "notes"] then
+        Append(str, ",\n (");
+        txt(field);
+        Append(str, ")");
+      elif field = "chapter" then
+        Append(str, ", Chapter ");
+        txt(field);
       else
         Append(str, ", "); 
       fi;

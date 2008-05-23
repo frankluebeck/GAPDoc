@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.26 2008-04-30 16:00:54 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.27 2008-05-23 16:03:00 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -1470,6 +1470,8 @@ guaranteed to be translated accordingly by text (and HTML) converters:
  <HorLine/>
   <Row><Item>\pmod</Item>           <Item><C>mod</C></Item></Row>
  <HorLine/>
+  <Row><Item>\prime</Item>           <Item><C>'</C></Item></Row>
+ <HorLine/>
   <Row><Item>\rangle</Item>         <Item><C>></C></Item></Row>
  <HorLine/>
   <Row><Item>\right</Item>          <Item><C>&nbsp;</C></Item></Row>
@@ -1495,6 +1497,10 @@ guaranteed to be translated accordingly by text (and HTML) converters:
   <Row><Item>\,</Item>     <Item><C></C></Item></Row>
  <HorLine/>
   <Row><Item>\;</Item>     <Item><C>&nbsp;</C></Item></Row>
+ <HorLine/>
+  <Row><Item>\{</Item>     <Item><C>{</C></Item></Row>
+ <HorLine/>
+  <Row><Item>\}</Item>     <Item><C>}</C></Item></Row>
  <HorLine/>
 
 </Table>
