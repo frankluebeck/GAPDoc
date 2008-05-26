@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.26 2008-04-30 15:35:55 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.27 2008-05-26 16:53:15 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -665,7 +665,7 @@ CharacterMarkup := [
       [ "\\ss ", "ß" ],
       [ "\\eta", "η" ],        # 951
       [ "\\mu", "μ" ],         # 956
-      [ "\\pm", "±" ],         # 177
+      #[ "\\pm", "±" ],         # 177
 
       ["\\sb ", "_" ],
       ["\\sb\n", "_" ],
@@ -1609,21 +1609,22 @@ STRINGBIBXMLHDLR.HTML := StringBibAsHTML;
 # transformed to lower case.
 InstallGlobalFunction(SortKeyRecBib, function(r)
   local res;
+  
   res := [];
   if IsBound(r.sortkey) then
     Append(res, List(SplitString(r.sortkey, "", ","), NormalizedWhitespace));
   fi;
   if IsBound(r.authorAsList) then
-    Append(res, List(r.authorAsList, a-> LowercaseString(a[1])));
+    Append(res, List(r.authorAsList, a-> LowerASCIIString(a[1])));
   fi;
   if IsBound(r.editorAsList) then
-    Append(res, List(r.editorAsList, a-> LowercaseString(a[1])));
+    Append(res, List(r.editorAsList, a-> LowerASCIIString(a[1])));
   fi;
   if IsBound(r.year) then
     Add(res, r.year);
   fi;
   if IsBound(r.title) then
-    Add(res,  LowercaseString(NormalizedWhitespace(r.title)));
+    Add(res,  LowerASCIIString(NormalizedWhitespace(r.title)));
   fi;
   if Length(res) = 0 then
     Add(res, "zzzzzzzzzz");

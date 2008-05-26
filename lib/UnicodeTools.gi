@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gi                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gi,v 1.16 2008-04-30 15:35:55 gap Exp $
+#H  @(#)$Id: UnicodeTools.gi,v 1.17 2008-05-26 16:53:15 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1111,6 +1111,23 @@ InstallGlobalFunction(WidthUTF8String, function(str)
     fi;
   od;
   return res;
+end);
+
+
+# Not (yet?) documented utility to translate a latin1 or UTF-8 encoded
+# GAP string to a string with lowercase ASCII characters. Can be used for 
+# sorting and searching, allowing some freedom for the input of non-ASCII
+# characters.
+InstallGlobalFunction(LowerASCIIString, function(str)
+  local u;
+  # heuristic to distinguish UTF-8 and latin1
+  u := Unicode(str);
+  if u = fail then
+    u := Unicode(str, "latin1");
+  fi;
+  u := SimplifiedUnicodeString(u, "ASCII");
+  u := LowercaseUnicodeString(u);
+  return Encode(u);
 end);
 
 

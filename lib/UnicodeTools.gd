@@ -2,7 +2,7 @@
 ##
 #W  UnicodeTools.gd                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTools.gd,v 1.6 2007-05-18 13:35:47 gap Exp $
+#H  @(#)$Id: UnicodeTools.gd,v 1.7 2008-05-26 16:53:15 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -58,3 +58,5 @@ DeclareGlobalFunction("UppercaseUnicodeString");
 DeclareGlobalFunction("NrCharsUTF8String");
 DeclareGlobalFunction("WidthUTF8String");
 
+###### Simplification for sorting and searching #####
+DeclareGlobalFunction("LowerASCIIString");
