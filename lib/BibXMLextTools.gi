@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.27 2008-05-26 16:53:15 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.28 2008-05-27 14:51:05 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -665,7 +665,7 @@ CharacterMarkup := [
       [ "\\ss ", "ß" ],
       [ "\\eta", "η" ],        # 951
       [ "\\mu", "μ" ],         # 956
-      #[ "\\pm", "±" ],         # 177
+      [ "\\pm", "±" ],         # 177
 
       ["\\sb ", "_" ],
       ["\\sb\n", "_" ],
@@ -744,16 +744,50 @@ TranslationOfOnePair:= function( str, start, eend, rstart, rend )
   return str;
 end,
 ));
+
+# SubstitutionSublist is not good enough when a pure macro must be
+# substituted (don't substitute \pm in \pmod).
+HeuristicTranslationsLaTeX2XML.subsTeXMacro := function(str, old, new)
+  local i, p, nstr, p1, p2;
+  # check if old ends in macro
+  i := Length(old);
+  while i > 0 and old[i] in LETTERS do
+    i := i-1;
+  od;
+  if i < Length(old) and old[i] = '\\' then
+    p := PositionSublist(str, old);
+    if p = fail then return str; fi;
+    nstr := "";
+    p1 := 1;
+    p2 := p;
+    while p2 <> fail do
+      if Length(str)=p2+Length(old)-1 or not str[p2+Length(old)] in LETTERS then
+        Append(nstr, str{[p1..p2-1]});
+        Append(nstr, new);
+        p1 := p2+Length(old);
+      fi;
+      p2 := PositionSublist(str, old, p2);
+    od;
+    Append(nstr, str{[p1..Length(str)]});
+    return nstr;
+  else
+    return SubstitutionSublist(str, old, new);
+  fi;
+end;
+    
+
+
 HeuristicTranslationsLaTeX2XML.Apply := function(str)
-  local str2, pair, entry;
+  local str2, pair, entry, s;
+  s := HeuristicTranslationsLaTeX2XML.subsTeXMacro;
   for pair in HeuristicTranslationsLaTeX2XML.CharacterMarkup do
-    str:= SubstitutionSublist( str, pair[1], pair[2] );
+    str:= s( str, pair[1], pair[2] );
   od;
   for pair in HeuristicTranslationsLaTeX2XML.RepeatedTranslations do
-    str2:= SubstitutionSublist( str, pair[1], pair[2] );
+    str2:= s( str, pair[1], pair[2] );
     while str2 <> str do
       str:= str2;
-      str2:= SubstitutionSublist( str, pair[1], pair[2] );
+      str2:= s( str, pair[1], pair[2] );
     od;
   od;
   for entry in HeuristicTranslationsLaTeX2XML.TranslationsOfPairs do
