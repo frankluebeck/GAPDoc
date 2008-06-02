@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.35 2008-05-13 15:57:10 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.36 2008-06-02 10:29:45 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1219,7 +1219,8 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
     else
       # with sectioning references Label must be given
       lab := r.attributes.(int[1]);
-      ref := Concatenation("\\ref{", GAPDoc2LaTeXProcs.EscapeAttrVal(lab), "}");
+      #ref := Concatenation("\\ref{", GAPDoc2LaTeXProcs.EscapeAttrVal(lab), "}");
+      ref := Concatenation("\\ref{", lab, "}");
     fi;
     Append(str, ref);
     return;
