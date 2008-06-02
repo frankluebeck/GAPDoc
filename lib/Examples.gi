@@ -2,7 +2,7 @@
 ##
 #W  Examples.gi                  GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Examples.gi,v 1.3 2007-05-25 00:03:57 gap Exp $
+#H  @(#)$Id: Examples.gi,v 1.4 2008-06-02 10:28:56 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -148,10 +148,11 @@ end);
 
 # test a string with examples 
 InstallGlobalFunction(ReadTestExamplesString, function(str)
-  local file;
+  local res, file;
   file := InputTextString(str);
-  ReadTest(file);
+  res := ReadTest(file);
   CloseStream(file);
+  return res;
 end);
 
 # args:  str, print
