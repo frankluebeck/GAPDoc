@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.29 2008-04-08 23:41:32 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.30 2008-06-02 10:30:16 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -607,7 +607,7 @@ end);
 ##  <C>.dtd</C>-file (which is not read by this parser). The standard
 ##  XML-entities do not need to be provided, and for &GAPDoc; documents
 ##  the entity definitions from  <C>gapdoc.dtd</C> are automatically
-##  provided. Entities in the documents <C>&lt;!DOCTYPE</C> declaration
+##  provided. Entities in the document's <C>&lt;!DOCTYPE</C> declaration
 ##  are parsed and also need not to be provided here. The argument
 ##  <A>entitydict</A> must be a record where each component name is an entity
 ##  name (without the surrounding &amp; and ;) to which  is assigned its
