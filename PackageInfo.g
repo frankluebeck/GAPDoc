@@ -7,14 +7,14 @@
 
 SetPackageInfo( rec(
 
-CVSVERSION := "$Id: PackageInfo.g,v 1.12 2008-04-08 23:41:32 gap Exp $",
+CVSVERSION := "$Id: PackageInfo.g,v 1.13 2008-06-17 14:22:25 gap Exp $",
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
-Version := "1.dev",
-Date := "04/10/2007",
+Version := "1.2",
+Date := "06/17/2008",
 ArchiveURL := 
-          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.1",
+          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.2",
 ArchiveFormats := ".tar.bz2",
 Persons := [
   rec(
@@ -70,7 +70,7 @@ PackageDoc := [rec(
 Dependencies := rec(
   GAP := "4.4",
   NeededOtherPackages := [],
-  SuggestedOtherPackages := [],
+  SuggestedOtherPackages := [["IO", ">= 2.3"]],
   ExternalConditions := 
             [["(La)TeX installation for converting documents to PDF",
               "http://www.latex-project.org"]]
