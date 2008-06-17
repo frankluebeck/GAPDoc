@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.38 2008-05-23 16:03:00 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.39 2008-06-17 15:47:10 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1027,13 +1027,16 @@ InstallGlobalFunction(StringBibAsText, function(arg)
         Append(str, ", ");
         txt(field);
         Append(str, " edition");
+        continue;
       elif field in ["note", "notes"] then
         Append(str, ",\n (");
         txt(field);
         Append(str, ")");
+        continue;
       elif field = "chapter" then
         Append(str, ", Chapter ");
         txt(field);
+        continue;
       else
         Append(str, ", "); 
       fi;
