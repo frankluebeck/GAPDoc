@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.39 2008-06-17 15:47:10 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.40 2008-06-17 16:01:36 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1118,21 +1118,22 @@ end);
 ##  gap> bib := ParseBibStrings(Concatenation(ll2));;
 ##  gap> bibxml := List(bib[1], StringBibAsXMLext);;
 ##  gap> bib2 := ParseBibXMLextString(Concatenation(bibxml));;
-##  gap> for b in bib2.entries do Print(StringBibXMLEntry(b, "Text")); od;     
+##  gap> for b in bib2.entries do 
+##  gap>          PrintFormattedString(StringBibXMLEntry(b, "Text")); od;     
 ##  [Gau95]  Gauss,  C. F., Disquisitiones arithmeticae, Academia Colombiana
 ##  de  Ciencias  Exactas  Físicas  y  Naturales,  Colección  Enrique  Pérez
 ##  Arbeláez   [Enrique  Pérez  Arbeláez  Collection],  10,  Bogotá  (1995),
-##  xliv+495  pp.,  Translated  from  the  Latin  by  Hugo Barrantes Campos,
-##  Michael Josephy and Ángel Ruiz Zúñiga, With a preface by Ruiz Zúñiga
+##  xliv+495  pages,  (Translated  from  the Latin by Hugo Barrantes Campos,
+##  Michael Josephy and Ángel Ruiz Zúñiga, With a preface by Ruiz Zúñiga).
 ##  
 ##  [Gau86]  Gauss, C. F., Disquisitiones arithmeticae, Springer-Verlag, New
-##  York  (1986),  xx+472  pp.,  Translated  and with a preface by Arthur A.
+##  York  (1986),  xx+472 pages, (Translated and with a preface by Arthur A.
 ##  Clarke,  Revised  by William C. Waterhouse, Cornelius Greither and A. W.
-##  Grootendorst and with a preface by Waterhouse
+##  Grootendorst and with a preface by Waterhouse).
 ##  
 ##  [Gau66]  Gauss,  C.  F.,  Disquisitiones  arithmeticae,  Yale University
 ##  Press,  Translated  into  English  by Arthur A. Clarke, S. J, New Haven,
-##  Conn. (1966), xx+472 pp.
+##  Conn. (1966), xx+472 pages.
 ##  </Example>
 ##  </Description>
 ##  

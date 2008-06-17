@@ -2,7 +2,7 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.28 2008-05-27 14:51:05 gap Exp $
+#H  @(#)$Id: BibXMLextTools.gi,v 1.29 2008-06-17 16:01:36 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1598,8 +1598,8 @@ end);
 ##  gap> PrintFormattedString(ebib);
 ##  @article{ AB2000,
 ##    author =           {First, F. A. and Sec{\H o}nd, X. Y.},
-##    title =            {The  {F}ritz  package for the formula $x^y - l_{{i+1}}
-##                        \rightarrow \mathbb{R}$},
+##    title =            {The  \textsf{  {F}ritz} package for the formula $x^y -
+##                        l_{{i+1}} \rightarrow \mathbb{R}$},
 ##    journal =          {Important Journal},
 ##    number =           {13},
 ##    year =             {2000},
@@ -1615,8 +1615,8 @@ end);
 ##  gap> etxt := Encode(etxt, GAPInfo.TermEncoding);;                        
 ##  gap> PrintFormattedString(etxt);
 ##  [FS00] First, F. A. and Second, X. Y., The Fritz package for the formula
-##  x^y  - l_{i+1} -> R, Important Journal, 13 (2000), 13-25, Online data at
-##  Bla Bla Publisher (http://www.publish.com/~ImpJ/123#data)
+##  x^y - l_{i+1} -> R, Important Journal, 13 (2000), 13-25, (Online data at
+##  Bla Bla Publisher (http://www.publish.com/~ImpJ/123#data)).
 ##  </Example>
 ##  </Description>
 ##  </ManSection>
