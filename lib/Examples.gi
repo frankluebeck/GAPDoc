@@ -2,7 +2,7 @@
 ##
 #W  Examples.gi                  GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Examples.gi,v 1.4 2008-06-02 10:28:56 gap Exp $
+#H  @(#)$Id: Examples.gi,v 1.5 2008-06-17 15:47:23 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -115,8 +115,8 @@ end);
 ##  
 ##  The function <Ref Func="TestExamplesString"/> returns <K>true</K> if <Ref
 ##  BookName="Reference" Oper="ReadTest"/> does not find differences. In the
-##  other case it returns a list of record, where each record describes one
-##  difference. The record have fields <C>.line</C> with the line number of the
+##  other case it returns a list of records, where each record describes one
+##  difference. The records have fields <C>.line</C> with the line number of the
 ##  relevant input line of <A>str</A>, <C>.input</C> with the input line and
 ##  <C>.diff</C> with the differences as displayed by <Ref BookName="Reference"
 ##  Oper="ReadTest"/>. If the optional argument <A>print</A> is given and set 
