@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.52 2008-04-08 23:41:32 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.53 2008-09-03 08:03:20 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1730,8 +1730,14 @@ GAPDoc2HTMLProcs.Table := function(r, s)
     GAPDoc2HTMLProcs.Label(rec(count := r.count, root := r.root, 
               attributes := rec(Name := r.attributes.Label)), str);
   fi;
-  # alignments, have always borders and lines
-  Append(str, "<div class=\"pcenter\"><table class=\"GAPDocTable\">\n");
+  # alignments, table has borders and lines everywhere if any | or HorLine
+  # is specified
+  Append(str, "<div class=\"pcenter\"><table class=\"GAPDocTable");
+  if not '|' in r.attributes.Align and 
+                                  Length(XMLElements(r, "HorLine")) = 0 then
+    Append(str, "noborder");
+  fi;
+  Append(str, "\">\n");
   # the caption, if given
   cap := Filtered(r.content, a-> a.name = "Caption");
   if Length(cap) > 0 then

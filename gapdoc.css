@@ -1,5 +1,5 @@
 /* gapdoc.css        Frank Lübeck */
-/* $Id: gapdoc.css,v 1.11 2007-03-06 07:02:42 gap Exp $  */
+/* $Id: gapdoc.css,v 1.12 2008-09-03 08:03:20 gap Exp $  */
 
 
 /* basic settings */
@@ -201,6 +201,31 @@ table.GAPDocTable  td, table.GAPDocTable  th {
 }
 
 caption.GAPDocTable {
+  caption-side: bottom;
+  width: 70%;
+  margin-top: 1em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+td.tdleft {
+  text-align: left;
+}
+
+table.GAPDocTablenoborder {
+  border-collapse: collapse;
+  border-style: none;
+  border-color: black;
+}
+
+table.GAPDocTablenoborder  td, table.GAPDocTable  th {
+  padding: 3pt;
+  border-width: 0pt;
+  border-style: solid;
+  border-color: #555555;
+}
+
+caption.GAPDocTablenoborder {
   caption-side: bottom;
   width: 70%;
   margin-top: 1em;

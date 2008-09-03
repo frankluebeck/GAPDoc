@@ -1,4 +1,9 @@
                        CHANGES of the GAPDoc package
+
+1.2 -> 1.3
+
+- Tables without | or HorLine are now distinguished in HTML version, such
+  that they can be configured to be displayed without borders.
                        
 1.1 -> 1.2
 
