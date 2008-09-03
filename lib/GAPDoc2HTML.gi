@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.53 2008-09-03 08:03:20 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.54 2008-09-03 09:19:38 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1181,9 +1181,6 @@ GAPDoc2HTMLProcs.Display := function(r, par)
   local   s, a, str;
   if r.root.mathmode in ["MathML", "Tth"] then
     str := "";
-##      GAPDoc2HTMLProcs.MathMLHelper(r, str, "\\[", "\\]\n\n");
-##      Add(par, r.count);
-##      Add(par, Concatenation("<p class=\"formula\">", str, "</p>\n"));
     GAPDoc2HTMLProcs.MathConvHelper(r, str, "\n\\[", "\\]\n\n");
     Add(par, r.count);
     Add(par, Concatenation("<table class=\"display\"><tr>",
@@ -1191,14 +1188,13 @@ GAPDoc2HTMLProcs.Display := function(r, par)
              str, "</td></tr></table>\n"));
     return;
   fi;
-##    s := "\\[";
   s := "";
-##    GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATANOFILTER;
   for a in r.content do
     GAPDoc2HTML(a, s);
   od;
-##    GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATAFILTER;
-##    Append(s, " \\]");
+  if IsBound(r.attributes.Mode) and r.attributes.Mode = "M" then
+    s := TextM(s);
+  fi;
   s := Concatenation("<p class=\"pcenter\">", s, "</p>\n\n");
   Add(par, r.count);
   Add(par, s);

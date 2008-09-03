@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.27 2008-05-23 16:03:00 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.28 2008-09-03 09:19:38 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -1362,7 +1362,9 @@ formulae or <C>Table</C>s.
 <!-- Normal TeX math mode formula -->
 <!ELEMENT Math (#PCDATA|A|Arg|Alt)*>   
 <!-- TeX displayed math mode formula -->
-<!ELEMENT Display (#PCDATA|A|Arg|Alt)*>]]>
+<!ELEMENT Display (#PCDATA|A|Arg|Alt)*>
+<!-- Mode="M" causes <M>-style formatting -->
+<!ATTLIST Display Mode CDATA #IMPLIED>]]>
 </Listing>
 
 These elements are  used for mathematical formulae. As  described in section
@@ -1388,14 +1390,19 @@ The only  element type that  is allowed within  the formula elements  is the
 <C>Arg</C> or <C>A</C> element (see  <Ref Subsect="Arg"/>), which is used to
 typeset identifiers that are arguments to &GAP; functions or operations.<P/>
 
-In text and HTML output these formulae are shown as &LaTeX; source code. For
-simple  formulae (and  you should  try to  make all  your formulae  simple!)
-there  is the  element  <C>M</C> (see&nbsp;<Ref  Subsect="M"  />) for  which
-there  is a  well  defined translation  into  text, which  can  be used  for
-text  and HTML  output versions  of  the document.  So, if  possible try  to
-avoid the  <C>Math</C> and  <C>Display</C> elements  or provide  useful text
-substitutes for complicated formulae  via <C>Alt</C> elements (see&nbsp;<Ref
-Subsect="Alt" /> and&nbsp;<Ref Subsect="Verb" />).
+If  a <C>Display</C>  element has  an attribute  <C>Mode</C> with  value
+<C>"M"</C>,  then  the formula  is  formatted  as in  <C>M</C>  elements
+(see&nbsp;<Ref Subsect="M"  />). Otherwise in  text and HTML  output the
+formula is shown as &LaTeX; source code.<P/>
+
+For  simple formulae  (and  you should  try to  make  all your  formulae
+simple!)  attempt to  use the  <C>M</C> element  or the  <C>Mode="M"</C>
+attribute  in  <C>Display</C>   for  which  there  is   a  well  defined
+translation  into text,  which  can be  used for  text  and HTML  output
+versions of the  document. So, if possible try to  avoid the <C>Math</C>
+elements and <C>Display</C> elements without attribute or provide useful
+text  substitutes  for  complicated  formulae  via  <C>Alt</C>  elements
+(see&nbsp;<Ref Subsect="Alt" /> and&nbsp;<Ref Subsect="Verb" />).
 
 </Subsection>
 

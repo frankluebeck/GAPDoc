@@ -4,6 +4,9 @@
 
 - Tables without | or HorLine are now distinguished in HTML version, such
   that they can be configured to be displayed without borders.
+
+- There is a new attribute Mode="M" for <Display> elements, if this is given
+  the formula is processed as in <M> elements.
                        
 1.1 -> 1.2
 

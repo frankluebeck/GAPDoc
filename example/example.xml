@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id: example.xml,v 1.20 2008-06-17 14:22:25 gap Exp $ -->
+<!-- $Id: example.xml,v 1.21 2008-09-03 09:19:38 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
  [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&gt;</Alt>'>
@@ -303,7 +303,12 @@ matters for text (or HTML) output.<P/>
 Here are two formulae containing less than characters which are special 
 characters for XML: 
 <M><![CDATA[a < b < c < d]]></M> and  <M>e &lt; f</M>.
+<P/>
 
+Using the <C>Mode</C> attribute of a <C>Display</C> element formulae 
+like
+<Display Mode="M">a \longrightarrow a \bmod m\prime</Display>
+can also be displayed nicely in text and HTML output.
 </Section>
 
 
