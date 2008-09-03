@@ -2,7 +2,7 @@
 ##
 #W  ComposeXML.gi                GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: ComposeXML.gi,v 1.9 2007-05-18 14:37:09 gap Exp $
+#H  @(#)$Id: ComposeXML.gi,v 1.10 2008-09-03 07:59:36 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -132,6 +132,7 @@ InstallGlobalFunction(ComposedDocument, function(arg)
       for a in piece do 
         Add(a, '\n'); 
       od;
+      Info(InfoGAPDoc, 3, "Found piece ", name, "\n");
       pieces.(name) := Concatenation(piece);
       # for each found piece store the filename and number of the first
       # line of the piece in that file
