@@ -2,7 +2,7 @@
 ##
 #W  BibTeX.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: BibTeX.gi,v 1.40 2008-06-17 16:01:36 gap Exp $
+#H  @(#)$Id: BibTeX.gi,v 1.41 2009-03-18 11:14:35 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -889,9 +889,9 @@ InstallGlobalFunction(StringBibAsText, function(arg)
   ansi := rec(
     Bib_reset := TextAttr.reset,
     Bib_author := Concatenation(TextAttr.bold, TextAttr.1),
-    Bib_editor := ~.Bib_author,
+##      Bib_editor := ~.Bib_author,
     Bib_title := TextAttr.4,
-    Bib_subtitle := ~.Bib_title,
+##      Bib_subtitle := ~.Bib_title,
     Bib_journal := "",
     Bib_volume := TextAttr.4,
     Bib_Label := TextAttr.3,
@@ -900,6 +900,8 @@ InstallGlobalFunction(StringBibAsText, function(arg)
     Bib_note := ["(", ")"],
     Bib_chapter := ["Chapter ", ""],
   );
+  ansi.Bib_editor := ansi.Bib_author;
+  ansi.Bib_subtitle := ansi.Bib_title;
   if Length(arg) = 2  and arg[2] <> true then
     for f in RecFields(arg[2]) do
       ansi.(f) := arg[2].(f);
