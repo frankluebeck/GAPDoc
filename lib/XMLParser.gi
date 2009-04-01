@@ -2,7 +2,7 @@
 ##
 #W  XMLParser.gi                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gi,v 1.30 2008-06-02 10:30:16 gap Exp $
+#H  @(#)$Id: XMLParser.gi,v 1.31 2009-04-01 14:18:57 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -117,8 +117,10 @@ BindGlobal("ParseError", function(str, pos, comment)
     else
       off := 0;
     fi;
-    nl := LineNumberStringPosition(str, pos-off);
+    # this is in UTF-8 document
+    nl := LineNumberStringPosition(str, pos);
     if XMLPARSEORIGINS <> false then
+      # need offset since in original encoding
       r := OriginalPositionDocument(XMLPARSEORIGINS, pos-off);
     fi;
     Print("XML Parse Error: Line ", nl[1]);
@@ -127,6 +129,7 @@ BindGlobal("ParseError", function(str, pos, comment)
       Print("Original file: ", r[1], ", line number ", r[2],".\n");
     fi;
     badline := str{nl[2]}; 
+    # to be perfect, consider current TERM encoding, ignore for now
     Print("-----------\n", badline, "\n");
     # this uses the same non-' ' whitespace to get the '^' at the right position
     for i in [1..pos-nl[2][1]] do
