@@ -2,7 +2,7 @@
 ##
 #W  Make.g                       GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Make.g,v 1.11 2008-05-23 16:03:00 gap Exp $
+#H  @(#)$Id: Make.g,v 1.12 2010-02-05 12:41:04 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -65,7 +65,7 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   null := " > /dev/null 2>&1 ";
   Info(InfoGAPDoc, 1, "3 x pdflatex with bibtex and makeindex, \c");
   Exec(Concatenation("sh -c \" cd ", Filename(path,""),
-  "; rm -f ", main, ".aux ",
+  "; rm -f ", main, ".aux ", main, ".pdf ", main, ".log ",
   "; pdf", latex, main, null,
   "; bibtex ", main, null,
   "; pdf", latex, main, null,
@@ -120,18 +120,22 @@ BindGlobal("MakeGAPDocDoc", function(arg)
            JoinStringsWithSeparator(log, "\n"));
     fi;
   fi;
-
-  Exec(Concatenation("sh -c \" cd ", Filename(path,""),
-  "; mv ", main, ".pdf manual.pdf; ", 
-  "\""));
-  Info(InfoGAPDoc, 1, "\n");
-  # read page number information for .six file
-  Info(InfoGAPDoc, 1, "#I Writing manual.six file ... \c");
-  Info(InfoGAPDoc, 2, Filename(path, "manual.six"), "\n");
-  Info(InfoGAPDoc, 1, "\n");
-  AddPageNumbersToSix(r, Filename(path, Concatenation(main, ".pnr")));
-  # print manual.six file
-  PrintSixFile(Filename(path, "manual.six"), r, bookname);
+  
+  if not IsExistingFile(Filename(path, Concatenation(main, ".pdf"))) then
+    Info(InfoGAPDoc, 1, "\n#I ERROR: no .pdf file produced (and no .six file)");
+  else
+    Exec(Concatenation("sh -c \" cd ", Filename(path,""),
+    "; mv ", main, ".pdf manual.pdf; ", 
+    "\""));
+    Info(InfoGAPDoc, 1, "\n");
+    # read page number information for .six file
+    Info(InfoGAPDoc, 1, "#I Writing manual.six file ... \c");
+    Info(InfoGAPDoc, 2, Filename(path, "manual.six"), "\n");
+    Info(InfoGAPDoc, 1, "\n");
+    AddPageNumbersToSix(r, Filename(path, Concatenation(main, ".pnr")));
+    # print manual.six file
+    PrintSixFile(Filename(path, "manual.six"), r, bookname);
+  fi;
   # produce html version
   Info(InfoGAPDoc, 1, "#I Finally the HTML version . . .\n");
   h := GAPDoc2HTML(r, path, gaproot);
