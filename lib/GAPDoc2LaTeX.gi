@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.36 2008-06-02 10:29:45 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.37 2010-04-26 15:07:16 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -144,6 +144,9 @@ BindGlobal("GAPDoc2LaTeXContent", function(r, str)
     GAPDoc2LaTeX(a, str);
   od;
 end);
+
+# width of index entries, we use a trick to split longer command names
+GAPDoc2LaTeXProcs.MaxIndexEntryWidth := 35;
 
 # a flag for recoding to LaTeX
 GAPDoc2LaTeXProcs.recode := true;
@@ -1057,7 +1060,7 @@ GAPDoc2LaTeXProcs.LikeFunc := function(r, str, typ)
   fi;
   # index entry
   # handle extremely long names
-  if Length(nam) > 40 then
+  if Length(nam) > GAPDoc2LaTeXProcs.MaxIndexEntryWidth then
     inam := nam{[1..3]};
     for i in [4..Length(nam)-3] do
       if nam[i] in CAPITALLETTERS then
