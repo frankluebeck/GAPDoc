@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.38 2010-04-28 12:06:51 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.39 2010-04-28 13:51:26 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -294,8 +294,8 @@ GAPDoc2LaTeXProcs.Head3 := Concatenation([
 "\\newcommand{\\GAP}{\\textsf{GAP}}\n",
 "\n",
 "%% nicer description environments, allows long labels\n",
-"\usepackage{enumitem}\n",
-"\setdescription{style=nextline}\n",
+"\\usepackage{enumitem}\n",
+"\\setdescription{style=nextline}\n",
 "\n",
 "\\begin{document}\n",
 "\n"]);
