@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.37 2010-04-26 15:07:16 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.38 2010-04-28 12:06:51 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -42,7 +42,8 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  The   output   uses   the  <C>report</C>   document   class   and
 ##  needs    the   following    &LaTeX;   packages:    <C>a4wide</C>,
 ##  <C>amssymb</C>,  <C>inputenc</C>, <C>makeidx</C>,  <C>color</C>,
-##  <C>fancyvrb</C>,   <C>pslatex</C>   and  <C>hyperref</C>.   These
+##  <C>fancyvrb</C>,   <C>pslatex</C>, <C>enumitem</C>  
+##  and  <C>hyperref</C>.   These
 ##  are  for  example  provided by  the  <Package>teTeX-1.0</Package>
 ##  or <Package>texlive</Package> 
 ##  distributions  of   &TeX;   (which    in   turn  are   used   for
@@ -291,6 +292,10 @@ GAPDoc2LaTeXProcs.Head3 := Concatenation([
 "MATHBBABBREVS\n",
 "\n",
 "\\newcommand{\\GAP}{\\textsf{GAP}}\n",
+"\n",
+"%% nicer description environments, allows long labels\n",
+"\usepackage{enumitem}\n",
+"\setdescription{style=nextline}\n",
 "\n",
 "\\begin{document}\n",
 "\n"]);
