@@ -2,6 +2,15 @@
 
 1.2 -> 1.3
 
+- Better bound for long index entries to be hyphenated (can now also
+  be changed by setting GAPDoc2LaTeXProcs.MaxIndexEntryWidth).
+
+- Improved the \description environment in LaTeX output using the
+  enumitem LaTeX packages. Now works with very long labels.
+
+- Now a warning is given if ComposedDocument finds several pieces of
+  documentation with the same label.
+
 - Fixed a problem which caused ParseError in rare cases to display the
   wrong line (reported by Laurent Bartholdi).
 
