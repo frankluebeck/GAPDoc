@@ -2,7 +2,7 @@
 ##
 #W  ComposeXML.gi                GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: ComposeXML.gi,v 1.10 2008-09-03 07:59:36 gap Exp $
+#H  @(#)$Id: ComposeXML.gi,v 1.11 2010-05-25 13:44:05 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -133,6 +133,13 @@ InstallGlobalFunction(ComposedDocument, function(arg)
         Add(a, '\n'); 
       od;
       Info(InfoGAPDoc, 3, "Found piece ", name, "\n");
+      if IsBound(pieces.(name)) then
+        Info(InfoGAPDoc, 1, "#W WARNING: overwriting piece with label \"",
+             name,"\"\n#W   Previous occurrence: ",origin.(name)[1],
+             " line ", origin.(name)[2],"\n",
+             "#W   New occurrence: ",fname," line ",PositionSorted(posnl,
+             i+1),"\n");
+      fi;
       pieces.(name) := Concatenation(piece);
       # for each found piece store the filename and number of the first
       # line of the piece in that file
