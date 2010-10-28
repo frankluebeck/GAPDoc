@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.54 2008-09-03 09:19:38 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.55 2010-10-28 13:31:55 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -111,6 +111,17 @@ GAPDoc2HTMLProcs.Head1 := "\
 <head>\n\
 <title>GAP (";
 
+GAPDoc2HTMLProcs.Head1MathJax := "\
+<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+\n\
+<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n\
+         \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n\
+\n\
+<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
+<head>\n\
+<script type=\"text/javascript\" src=\"/MathJax/MathJax.js\"></script>
+<title>GAP (";
+
 GAPDoc2HTMLProcs.Head1Trans := "\
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 \n\
@@ -199,6 +210,9 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     elif r.root.mathmode = "Tth" then
       files.(n) := rec(text :=
                    ShallowCopy(GAPDoc2HTMLProcs.Head1Trans), ssnr := []);
+    elif r.root.mathmode = "MathJax" then
+      files.(n) := rec(text :=
+                   ShallowCopy(GAPDoc2HTMLProcs.Head1MathJax), ssnr := []);
     else
       files.(n) := rec(text := ShallowCopy(GAPDoc2HTMLProcs.Head1), ssnr := []);
     fi;
@@ -383,7 +397,7 @@ InstallGlobalFunction(GAPDoc2HTML, function(arg)
   local   r,  str,  linelength,  name;
   r := arg[1];
   # first check for the mode
-  if arg[Length(arg)] in ["MathML", "Tth"] then
+  if arg[Length(arg)] in ["MathML", "Tth", "MathJax"] then
     r.mathmode := arg[Length(arg)];
     arg := arg{[1..Length(arg)-1]};
   else
@@ -402,6 +416,8 @@ InstallGlobalFunction(GAPDoc2HTML, function(arg)
       GAPDoc2HTMLProcs.ext := "_mml.xml";
     elif r.mathmode = "Tth" then
       GAPDoc2HTMLProcs.ext := "_sym.html";
+    elif r.mathmode = "MathJax" then
+      GAPDoc2HTMLProcs.ext := "_mj.html";
     else
       GAPDoc2HTMLProcs.ext := ".html";
     fi;
@@ -1155,18 +1171,32 @@ GAPDoc2HTMLProcs.M := function(r, str)
   GAPDoc2HTMLContent(r, s);
   GAPDoc2HTMLProcs.TextAttr.Arg := save;
   GAPDoc2HTMLProcs.PCDATA := GAPDoc2HTMLProcs.PCDATAFILTER;
-  s := TextM(s);
   ss := "";
-  GAPDoc2HTMLProcs.PCDATAFILTER(rec(content := s), ss);
-  ss := SubstitutionSublist(ss, "TEXTaTTRvARBEGIN", save[1]);
-  ss := SubstitutionSublist(ss, "TEXTaTTRvAREND", save[2]);
+  if r.root.mathmode = "MathJax" then
+    s := Concatenation("\\(",s,"\\)");
+    GAPDoc2HTMLProcs.PCDATAFILTER(rec(content := s), ss);
+    ss := SubstitutionSublist(ss, "TEXTaTTRvARBEGIN", "\\textit{");
+    ss := SubstitutionSublist(ss, "TEXTaTTRvAREND", "}");
+  else
+    s := TextM(s);
+    GAPDoc2HTMLProcs.PCDATAFILTER(rec(content := s), ss);
+    ss := SubstitutionSublist(ss, "TEXTaTTRvARBEGIN", save[1]);
+    ss := SubstitutionSublist(ss, "TEXTaTTRvAREND", save[2]);
+  fi;
   Append(str, ss);
 end;
 
 ##  in HTML this is shown in TeX format
 GAPDoc2HTMLProcs.Math := function(r, str)
+  local s;
   if r.root.mathmode in ["MathML", "Tth"] then
     GAPDoc2HTMLProcs.MathConvHelper(r, str, "$", "$");
+    return;
+  fi;
+  if r.root.mathmode = "MathJax" then
+    s := "";
+    GAPDoc2HTMLProcs.M(r, s);
+    Append(str, s);
     return;
   fi;
   Add(str, '$');
@@ -1192,6 +1222,12 @@ GAPDoc2HTMLProcs.Display := function(r, par)
   for a in r.content do
     GAPDoc2HTML(a, s);
   od;
+  if r.root.mathmode = "MathJax" then
+    Add(par, r.count);
+    Add(par, Concatenation("<p class=\"center\">\\[", 
+                            s, "\\]</p>\n\n"));
+    return;
+  fi;
   if IsBound(r.attributes.Mode) and r.attributes.Mode = "M" then
     s := TextM(s);
   fi;

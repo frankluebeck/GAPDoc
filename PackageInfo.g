@@ -7,11 +7,11 @@
 
 SetPackageInfo( rec(
 
-CVSVERSION := "$Id: PackageInfo.g,v 1.14 2008-11-17 12:45:14 gap Exp $",
+CVSVERSION := "$Id: PackageInfo.g,v 1.15 2010-10-28 13:31:55 gap Exp $",
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
-Version := "1.2",
+Version := "1.dev",#"1.2",
 ##  DD/MM/YYYY format:
 Date := "17/06/2008",
 ArchiveURL := 
