@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.55 2010-10-28 13:31:55 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.56 2010-10-28 14:18:11 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -339,21 +339,32 @@ end;
 ##  <Label Name="mtransarg"/>
 ##  <Emph>Output format with</Emph> <A>mtrans</A> argument <P/>
 ##  
-##  Currently, there are two  experimental variants of this converter
-##  available  which  handle mathematical formulae  differently. They
-##  are accessed via the optional last <A>mtrans</A> argument.<P/>
+##  Currently, there  are three variants of  this converter available
+##  which handle mathematical formulae differently. They are accessed
+##  via the optional last <A>mtrans</A> argument.<P/>
 ##  
-##  If  this argument  is  set  to <C>"Tth"</C>  it  is assumed  that
-##  you  have  installed  the  &LaTeX; to  HTML  translation  program
-##  <C>tth</C>.  This  is  used  to translate  the  contents  of  the
+##  If  <A>mtrans</A>   is  set  to  <C>"MathJax"</C>   the  formulae
+##  are  essentially  translated  as  for  &LaTeX;  documents  (there
+##  is  no  processing  of   <C>&lt;M&gt;</C>  elements  as  decribed
+##  in  <Ref   Subsect="M"/>).  Inline  formulae  are   delimited  by
+##  <C>\(</C>  and  <C>\)</C>  and displayed  formulae  by  <C>\[</C>
+##  and  <C>\]</C>.  The   resulting  files  can  be   viewed  via  a
+##  webserver  with a  <C>MathJax</C> installation  and then  contain
+##  nicely  formatted  scalable  and searchable  formulae.  See  <URL
+##  Text="http://www.mathjax.org/">http://www.mathjax.org/</URL>  for
+##  more details and how to set this up.<P/>
+##  
+##  If  the  argument <A>mtrans</A>  is  set  to <C>"Tth"</C>  it  is
+##  assumed that you  have installed the &LaTeX;  to HTML translation
+##  program <C>tth</C>. This is used to translate the contents of the
 ##  <C>M</C>,  <C>Math</C>  and  <C>Display</C>  elements  into  HTML
 ##  code.  Note that  the resulting  code is  not compliant  with any
 ##  standard.  Formally  it  is  <Q>XHTML  1.0  Transitional</Q>,  it
 ##  contains  explicit  font  specifications and  the  characters  of
 ##  mathematical  symbols  are  included  via  their  position  in  a
-##  <Q>Symbol</Q> font. Some graphical  browsers can be configured to
-##  display  this  in  a  useful manner,  check  <URL  Text="the  Tth
-##  homepage">http://hutchinson.belmont.ma.us/tth/</URL>   for   more
+##  <Q>Symbol</Q>  font. Some  graphical browsers  can be  configured
+##  to  display  this  in  a  useful  manner,  check  <URL  Text="the
+##  Tth homepage">http://hutchinson.belmont.ma.us/tth/</URL> for more
 ##  details.<P/>
 ##  
 ##  If  the   <A>mtrans</A>  argument   is  set   to  <C>"MathML"</C>
@@ -372,7 +383,7 @@ end;
 ##  the directory  containing the output files.  The translation with
 ##  <C>ttm</C> is  still experimental.  The output of  this converter
 ##  variant is garbage for browsers which don't support MathML.<P/>
-## 
+##  
 ##  This  function works  by  running recursively  through the  document
 ##  tree   and   calling   a   handler  function   for   each   &GAPDoc;
 ##  XML   element.  Many   of  these   handler  functions   (usually  in

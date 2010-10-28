@@ -2,7 +2,7 @@
 ##
 #W  Make.g                       GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Make.g,v 1.12 2010-02-05 12:41:04 gap Exp $
+#H  @(#)$Id: Make.g,v 1.13 2010-10-28 14:18:11 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -12,13 +12,14 @@
 ##  GAPDoc package.
 ##  
 
-##  args: path, main, files, bookname[, gaproot][, "MathML"][, "Tth"]
+##  args: 
+##     path, main, files, bookname[, gaproot][, "MathML"][, "Tth"][, "MathJax"]
 BindGlobal("MakeGAPDocDoc", function(arg)
   local htmlspecial, path, main, files, bookname, gaproot, str, 
         r, t, l, latex, null, log, pos, h, i, j;
-  htmlspecial := Filtered(arg, a-> a in ["MathML", "Tth"]);
+  htmlspecial := Filtered(arg, a-> a in ["MathML", "Tth", "MathJax"]);
   if Length(htmlspecial) > 0 then
-    arg := Filtered(arg, a-> not a in ["MathML", "Tth"]);
+    arg := Filtered(arg, a-> not a in ["MathML", "Tth", "MathJax"]);
   fi;
   path := arg[1];
   main := arg[2];
@@ -149,6 +150,11 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   if "MathML" in htmlspecial then
     Info(InfoGAPDoc, 1, "#I - also HTML + MathML version with 'ttm' . . .\n");
     h := GAPDoc2HTML(r, path, gaproot, "MathML");
+    GAPDoc2HTMLPrintHTMLFiles(h, path);
+  fi;
+  if "MathJax" in htmlspecial then
+    Info(InfoGAPDoc, 1, "#I - also HTML version for MathJax . . .\n");
+    h := GAPDoc2HTML(r, path, gaproot, "MathJax");
     GAPDoc2HTMLPrintHTMLFiles(h, path);
   fi;
 

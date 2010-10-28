@@ -2,6 +2,10 @@
 
 1.2 -> 1.3
 
+- Added support for HTML output using MathJax (http://www.mathjax.org/).
+  MakeGAPDocDoc and GAPDoc2HTML now allow an optional argument
+  "MathJax".
+
 - Better bound for long index entries to be hyphenated (can now also
   be changed by setting GAPDoc2LaTeXProcs.MaxIndexEntryWidth).
 
