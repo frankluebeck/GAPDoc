@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id: example.xml,v 1.21 2008-09-03 09:19:38 gap Exp $ -->
+<!-- $Id: example.xml,v 1.22 2010-10-28 13:55:07 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
  [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&gt;</Alt>'>
@@ -289,10 +289,10 @@ version of such a formula as in the following example:<P/>
          d                d                 d   
        -----            -----             -----  -----                 
         \                \                 \      \                    
- ==> (   )  x_i b_i )(    )  y_i b_i ) =    )  (   )  x_i y_j h_ijk ) b_k
+ ==> (   )  x_i b_i )(    )  y_j b_j ) =    )  (   )  x_i y_j h_ijk ) b_k
         /                /                 /      /                    
        -----            -----             -----  -----                
-       i = 1            i = 1             k = 1   i,j                
+       i = 1            j = 1             k = 1   i,j                
 </Verb><P/></Alt>
 
 For small formulae without <Q>difficult</Q> parts use the <C>M</C>
