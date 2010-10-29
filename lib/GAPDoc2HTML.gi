@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.56 2010-10-28 14:18:11 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.57 2010-10-29 08:09:30 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -996,6 +996,9 @@ GAPDoc2HTMLProcs.ChapSect := function(r, par, sect)
     fi;
     Append(r.root.toc, Concatenation(ind, "<a href=\"", 
                                         lab, "\">", s, "</a>\n"));
+    if sect="Section" then
+      Append(r.root.toc, "<div class=\"ContSSBlock\">\n");
+    fi;
   fi;
   
   # the actual content
@@ -1003,8 +1006,10 @@ GAPDoc2HTMLProcs.ChapSect := function(r, par, sect)
 
   # possibly close <div> or <span> in content
   if posh <> fail then      
-    if sect in ["Chapter", "Appendix", "Section" ] then
+    if sect in ["Chapter", "Appendix" ] then
       Append(r.root.toc, "</div>\n");
+    elif sect="Section" then
+      Append(r.root.toc, "</div></div>\n");
     elif sect="Subsection" then
       Append(r.root.toc, "</span>\n");
     fi;
