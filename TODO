@@ -1,7 +1,7 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.17 2008-04-30 15:35:55 gap Exp $
+         $Id: TODO,v 1.18 2010-10-29 10:11:43 gap Exp $
 
 
 - should the bibliography and the index appear in the table of contents?
@@ -15,4 +15,6 @@
   (e.g., a function with several types of arguments, where the entries are
   only distinguished by the 'Label' attribute and are explained in the same
   man section).
+
+- add colors to "Example"s as with ColorPrompt("true");
 
