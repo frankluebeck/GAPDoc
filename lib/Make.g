@@ -2,7 +2,7 @@
 ##
 #W  Make.g                       GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Make.g,v 1.13 2010-10-28 14:18:11 gap Exp $
+#H  @(#)$Id: Make.g,v 1.14 2010-11-03 00:13:17 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -139,8 +139,13 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   fi;
   # produce html version
   Info(InfoGAPDoc, 1, "#I Finally the HTML version . . .\n");
+  # if MathJax version is also produced we include links to them
+  if "MathJax"  in htmlspecial then
+    r.LinkToMathJax := true;
+  fi;
   h := GAPDoc2HTML(r, path, gaproot);
   GAPDoc2HTMLPrintHTMLFiles(h, path);
+  Unbind(r.LinkToMathJax);
   if "Tth" in htmlspecial then
     Info(InfoGAPDoc, 1, 
             "#I - also HTML version with 'tth' translated formulae . . .\n");

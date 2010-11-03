@@ -1,4 +1,4 @@
-<!-- $Id: conv.xml,v 1.28 2010-10-28 14:18:09 gap Exp $ -->
+<!-- $Id: conv.xml,v 1.29 2010-11-03 00:13:17 gap Exp $ -->
 
 <Chapter Label="ch:conv">
 <Heading>The Converters and an XML Parser</Heading>
@@ -176,6 +176,8 @@ of  the  book  used  by  &GAP;'s  online  help.  The  optional  argument
 <A>path</A> to the main &GAP; root directory. If this is given, the HTML
 files are produced with relative paths to external books.<P/>
 
+<Index Key="MathJax" Subkey="in MakeGAPDocDoc"><Package>MathJax</Package> 
+<Subkey>in <C>MakeGAPDocDoc</C></Subkey></Index>
 <Ref  Func="MakeGAPDocDoc"/> can  be  called  with additional  arguments
 <C>"MathJax"</C>,  <C>"Tth"</C>  and/or  <C>"MathML"</C>. If  these  are
 given additional  variants of the  HTML conversion are called,  see <Ref

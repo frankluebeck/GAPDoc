@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.57 2010-10-29 08:09:30 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.58 2010-11-03 00:13:17 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -236,6 +236,17 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     Append(files.(n).text, Concatenation(
            "\n<div class=\"chlinkprevnexttop\">",
            toplink, prev[i], next[i], "</div>\n\n"));
+    if IsBound(r.root.LinkToMathJax) then
+      # cross link to same chapter with MathJax enabled
+      Append(files.(n).text,
+                Concatenation("<p class=\"pcenter\"><a href=\"chap",
+                String(n), "_mj.html\">[MathJax on]</a></p>\n"));
+    elif r.root.mathmode = "MathJax" then
+      # cross link to non-MathJax version
+      Append(files.(n).text,
+                Concatenation("<p class=\"pcenter\"><a href=\"chap",
+                String(n), ".html\">[MathJax off]</a></p>\n"));
+    fi;
   od;
   for i in [2,4..Length(l)] do
     n := files.(l[i-1][1]);
@@ -270,6 +281,7 @@ end;
 ##  <Returns>record  containing  HTML  files  as  strings  and  other
 ##  information</Returns>
 ##  <Description>
+##  <Index Key="MathJax"><Package>MathJax</Package></Index>
 ##  The   argument  <A>tree</A>   for   this  function   is  a   tree
 ##  describing  a   &GAPDoc;  XML   document  as  returned   by  <Ref
 ##  Func="ParseTreeXMLString"  /> (probably  also  checked with  <Ref
@@ -1020,7 +1032,7 @@ GAPDoc2HTMLProcs.ChapSect := function(r, par, sect)
     pos := PositionSublist(a, Reversed("<div class=\"ContChap\">"));
     a := Reversed(a{[1..pos-1]});
     r.root.chapsectlinks.(r.count[1]) := Concatenation(
-                                             "<div class=\"ChapSects\">", a);
+                                         "<div class=\"ChapSects\">", a);
   fi;
 end;
 
