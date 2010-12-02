@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.58 2010-11-03 00:13:17 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.59 2010-12-02 23:43:29 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -119,7 +119,7 @@ GAPDoc2HTMLProcs.Head1MathJax := "\
 \n\
 <html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
 <head>\n\
-<script type=\"text/javascript\" src=\"/MathJax/MathJax.js\"></script>
+<script type=\"text/javascript\" src=\"/MathJax/MathJax.js\"></script>\n\
 <title>GAP (";
 
 GAPDoc2HTMLProcs.Head1Trans := "\
