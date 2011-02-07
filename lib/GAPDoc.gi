@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.27 2011-02-07 23:03:42 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.28 2011-02-07 23:16:17 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -416,9 +416,10 @@ BindGlobal("NormalizedArgList", function(argl)
     opt := argl{[pos+1..Length(argl)]};
     argl := argl{[1..pos-1]};
     opt := SubstitutionSublist(opt, ":=", " := ");
-    opt := SubstitutionSublist(opt, ",", ", ");
     NormalizeWhitespace(opt);
-    opt := SubstitutionSublist(opt, " ,", ",");
+    opt := SubstitutionSublist(opt, " := ", "OPTIONASSxpty");
+    opt := NormalizedArgList(opt);
+    opt := SubstitutionSublist(opt, "OPTIONASSxpty", " := ");
   else
     opt := "";
   fi;
