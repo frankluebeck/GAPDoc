@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc.gi                    GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc.gi,v 1.28 2011-02-07 23:16:17 gap Exp $
+#H  @(#)$Id: GAPDoc.gi,v 1.29 2011-02-08 00:31:51 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -408,7 +408,7 @@ end);
 
 # non-documented utility
 ##  normalizes the Args attribute in function like elements
-BindGlobal("NormalizedArgList", function(argl)
+InstallGlobalFunction(NormalizedArgList, function(argl)
   local pos, opt, f, tr, g;
   # first optional arguments
   pos := Position(argl, ':');
