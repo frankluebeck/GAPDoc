@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.16 2011-02-18 11:27:36 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.17 2011-02-22 13:24:53 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -502,7 +502,7 @@ end);
 
 ##  <#GAPDoc Label="FormatParagraph">
 ##  <ManSection >
-##  <Func Arg="str[, len][, flush][, attr][, widthfun]]]" 
+##  <Func Arg="str[, len][, flush][, attr][, widthfun]" 
 ##      Name="FormatParagraph" />
 ##  <Returns>the formatted paragraph as string</Returns>
 ##  <Description>
