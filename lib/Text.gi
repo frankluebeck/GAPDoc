@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.17 2011-02-22 13:24:53 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.18 2011-03-03 09:39:59 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -148,9 +148,11 @@ TextAttr.home := Concatenation(TextAttr.CSI, "1G");
 ##  gap> RepeatedString("*=",51);
 ##  "*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*"
 ##  gap> s := "bäh";;
+##  gap> enc := GAPInfo.TermEncoding;;
+##  gap> if enc &lt;&gt; "UTF-8" then s := Encode(Unicode(s, enc), "UTF-8"); fi;
 ##  gap> l := RepeatedUTF8String(s, 8);;
 ##  gap> u := Unicode(l, "UTF-8");;
-##  gap> Print(Encode(u, GAPInfo.TermEncoding), "\n");
+##  gap> Print(Encode(u, enc), "\n");
 ##  bähbähbä
 ##  </Example>
 ##  </Description>
