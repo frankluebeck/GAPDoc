@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.33 2008-09-03 09:19:38 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.34 2011-03-03 09:42:30 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1803,7 +1803,7 @@ end;
 ##  into  a  directory,  together  with  the  file  <F>manual.six</F>,
 ##  see  <Ref Func="PrintSixFile"  />. Then  specify the  path to  the
 ##  <F>manual.six</F> file in  the packages <F>PackageInfo.g</F> file,
-##  see  <Ref  Sect="The PackageInfo.g  File"  BookName="extending"/>.
+##  see  <Ref  Sect="The PackageInfo.g  File"  BookName="reference"/>.
 ##  <P/>
 ##  
 ##  Optionally you can add the <C>dvi</C>- and <C>pdf</C>-versions of
