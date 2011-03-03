@@ -2,6 +2,10 @@
 
 1.2 -> 1.3
 
+- Improved the example ./gapdoc.css file (also used for the GAPDoc manuals):
+  when hovering over a link to a section its subsections are now shown in 
+  a separate block.
+
 - The Arg attribute in <Func > and other elements now allows for GAP 
   options.
 
