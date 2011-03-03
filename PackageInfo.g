@@ -7,15 +7,15 @@
 
 SetPackageInfo( rec(
 
-CVSVERSION := "$Id: PackageInfo.g,v 1.15 2010-10-28 13:31:55 gap Exp $",
+CVSVERSION := "$Id: PackageInfo.g,v 1.16 2011-03-03 09:52:10 gap Exp $",
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
-Version := "1.dev",#"1.2",
+Version := "1.3",
 ##  DD/MM/YYYY format:
-Date := "17/06/2008",
+Date := "02/03/2011",
 ArchiveURL := 
-          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.2",
+          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.3",
 ArchiveFormats := ".tar.bz2",
 Persons := [
   rec(
