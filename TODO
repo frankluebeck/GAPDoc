@@ -1,7 +1,7 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.20 2011-03-18 10:51:01 gap Exp $
+         $Id: TODO,v 1.21 2011-03-18 15:09:22 gap Exp $
 
 
 - should the bibliography and the index appear in the table of contents?
@@ -19,4 +19,7 @@
 - add colors to "Example"s as with ColorPrompt("true"); (use 'commandchars'
   option in Verbatim from fancyvrb for LaTeX version). (use  CSS in XHTML:
   set monospace fonts and colors, see output of TOhtml in vim)
+
+- with GAP 4.5 substitute the 'POST_RESTORE_FUNCS' in init.g by
+  GAPInfo.PostRestoreFuncs.
 
