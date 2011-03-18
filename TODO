@@ -1,7 +1,7 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.18 2010-10-29 10:11:43 gap Exp $
+         $Id: TODO,v 1.19 2011-03-18 10:29:18 gap Exp $
 
 
 - should the bibliography and the index appear in the table of contents?
@@ -16,5 +16,6 @@
   only distinguished by the 'Label' attribute and are explained in the same
   man section).
 
-- add colors to "Example"s as with ColorPrompt("true");
+- add colors to "Example"s as with ColorPrompt("true"); (use 'commandchars'
+  option in Verbatim from fancyvrb for LaTeX version).
 
