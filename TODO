@@ -1,7 +1,7 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.21 2011-03-18 15:09:22 gap Exp $
+         $Id: TODO,v 1.22 2011-05-04 16:21:46 gap Exp $
 
 
 - should the bibliography and the index appear in the table of contents?
@@ -22,4 +22,6 @@
 
 - with GAP 4.5 substitute the 'POST_RESTORE_FUNCS' in init.g by
   GAPInfo.PostRestoreFuncs.
+
+- investigate using xelatex and direct unicode input for the LaTeX version.
 
