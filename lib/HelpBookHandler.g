@@ -2,7 +2,7 @@
 ##
 #W  HelpBookHandler.g                GAPDoc                      Frank Lübeck
 ##
-#H  @(#)$Id: HelpBookHandler.g,v 1.11 2011-02-08 16:48:40 gap Exp $
+#H  @(#)$Id: HelpBookHandler.g,v 1.12 2011-05-16 07:30:13 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -36,7 +36,7 @@ fi;
 HELP_BOOK_HANDLER.GapDocGAP.apptheme := function(res, theme)
   local a;
   if ANSI_COLORS <> true 
-                  and (not IsBound(res.theme) or res.theme <> false) then
+                  or (not IsBound(res.theme) or res.theme <> false) then
     for a in res.entries do
       a[1] := StripEscapeSequences(a[8]);
     od;
