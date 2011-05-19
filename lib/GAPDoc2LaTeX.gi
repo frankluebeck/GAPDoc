@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.39 2010-04-28 13:51:26 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.40 2011-05-19 11:29:59 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -42,7 +42,7 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  The   output   uses   the  <C>report</C>   document   class   and
 ##  needs    the   following    &LaTeX;   packages:    <C>a4wide</C>,
 ##  <C>amssymb</C>,  <C>inputenc</C>, <C>makeidx</C>,  <C>color</C>,
-##  <C>fancyvrb</C>,   <C>pslatex</C>, <C>enumitem</C>  
+##  <C>fancyvrb</C>,  <C>psnfss</C>, <C>pslatex</C>, <C>enumitem</C>  
 ##  and  <C>hyperref</C>.   These
 ##  are  for  example  provided by  the  <Package>teTeX-1.0</Package>
 ##  or <Package>texlive</Package> 
@@ -104,7 +104,7 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  printable version of a manual (but  who wants to print such manuals?).
 ##  If "utf8" is an argument then the package <C>inputenc</C> is used with 
 ##  <C>UTF-8</C> encoding, instead of the default <C>latin1</C>.
-##  If <C>"nopslatex"</C> is an argument then the package <C>pslatex</C> 
+##  If <C>"nopslatex"</C> is an argument then the package <C>psnfss</C>
 ##  is not used, otherwise it is.
 ##  <P/>
 ##  </Description>
@@ -331,7 +331,8 @@ SetGapDocLaTeXOptions := function(arg)
     GAPDoc2LaTeXProcs.INPUTENCENC := "latin1";
     GAPDoc2LaTeXProcs.Encoder := "LaTeX";
   fi;
-  GAPDoc2LaTeXProcs.pslatex := "\\usepackage{pslatex}";
+  GAPDoc2LaTeXProcs.pslatex :=
+              "%\\usepackage{pslatex}\n\\usepackage{mathptmx,helvet,courier}";
   if "nopslatex" in arg then
     GAPDoc2LaTeXProcs.pslatex := Concatenation("%",GAPDoc2LaTeXProcs.pslatex);
   fi;
