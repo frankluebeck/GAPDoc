@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.41 2011-05-19 11:50:42 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.42 2011-05-19 22:26:32 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -94,7 +94,7 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  modifications of the program. <P/>
 ##  
 ##  A    few     settings    can    be    adjusted     by   the   function
-##  <Ref Func="SetGapDocLaTeXOptions"/>. It takes strings as
+##  <Ref Func="SetGapDocLaTeXOptions"/>  which takes strings as
 ##  arguments. If the  arguments contain one of  the strings <C>"pdf"</C>,
 ##  <C>"dvi"</C>  or  <C>"ps"</C>  then &LaTeX;s  <C>hyperref</C>  package
 ##  is  configured  for optimized  output  of  the given  format  (default
@@ -105,7 +105,13 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  If "utf8" is an argument then the package <C>inputenc</C> is used with 
 ##  <C>UTF-8</C> encoding, instead of the default <C>latin1</C>.
 ##  If <C>"nopslatex"</C> is an argument then the package <C>psnfss</C>
-##  is not used, otherwise it is.
+##  is not used, otherwise it is. If the arguments contain
+##  <C>"bookmarks"</C> then navigation bookmarks for the acrobat reader are
+##  generated, by default these are switched off.  If the arguments contain
+##  <C>"customoptions="</C> this must be followed by a further argument
+##  which is then inserted just before the <C>\begin{document}</C> in the
+##  &LaTeX; file; this can be used to change options of the loaded packages,
+##  to change colors and for many other purposes.
 ##  <P/>
 ##  </Description>
 ##  </ManSection>
@@ -277,11 +283,11 @@ GAPDoc2LaTeXProcs.Head2pdf := "\\usepackage[pdftex=true,\n";
 
 ##  head - part 3
 GAPDoc2LaTeXProcs.Head3 := Concatenation([
-"        a4paper=true,bookmarks=false,pdftitle={Written with GAPDoc},\n",
+"        a4paper=true,pdftitle={Written with GAPDoc},\n",
 "        pdfcreator={LaTeX with hyperref package / GAPDoc},\n",
 "        colorlinks=true,backref=page,breaklinks=true,linkcolor=RoyalBlue,\n",
 "        citecolor=RoyalGreen,filecolor=RoyalRed,\n",
-"        urlcolor=RoyalRed,pagecolor=RoyalBlue]{hyperref}\n",
+"        urlcolor=RoyalRed]{hyperref}\n",
 "\n",
 "% write page numbers to a .pnr log file for online help\n",
 "\\newwrite\\pagenrlog\n",
@@ -296,6 +302,7 @@ GAPDoc2LaTeXProcs.Head3 := Concatenation([
 "%% nicer description environments, allows long labels\n",
 "\\usepackage{enumitem}\n",
 "\\setdescription{style=nextline}\n",
+"CUSTOMOPTIONS\n",
 "\n",
 "\\begin{document}\n",
 "\n"]);
@@ -310,7 +317,7 @@ GAPDoc2LaTeXProcs.Tail := Concatenation(
 ##  for now only the output type (one of "dvi", "pdf" or "ps") is used
 # to be enhanced
 SetGapDocLaTeXOptions := function(arg)    
-  local   gdp;
+  local   gdp, pos;
   gdp := GAPDoc2LaTeXProcs;
   if "dvi" in arg then
     gdp.Head2 := gdp.Head2dvi;
@@ -318,6 +325,11 @@ SetGapDocLaTeXOptions := function(arg)
     gdp.Head2 := gdp.Head2ps;
   else
     gdp.Head2 := gdp.Head2pdf;
+  fi;
+  if "bookmarks" in arg then
+    gdp.Head2 := Concatenation(gdp.Head2, ",bookmarks=true,");
+  else
+    gdp.Head2 := Concatenation(gdp.Head2, ",bookmarks=false,");
   fi;
   if "color" in arg then
     GAPDoc2LaTeXProcs.Head1x := GAPDoc2LaTeXProcs.Head1xcolor;
@@ -347,6 +359,12 @@ SetGapDocLaTeXOptions := function(arg)
         );
   else
     GAPDoc2LaTeXProcs.MATHBBABBREVS := "";
+  fi;
+  pos := Position(arg,"customoptions=");
+  if pos <> fail and Length(arg) > pos and IsString(arg[pos+1]) then
+    GAPDoc2LaTeXProcs.CUSTOMOPTIONS := arg[pos+1];
+  else
+    GAPDoc2LaTeXProcs.CUSTOMOPTIONS := "";
   fi;
 end;
 # set defaults
@@ -441,8 +459,10 @@ GAPDoc2LaTeXProcs.Book := function(r, str, pi)
     Append(str, pi.ExtraPreamble);
   fi;
   Append(str, GAPDoc2LaTeXProcs.Head2);
-  Append(str, SubstitutionSublist(GAPDoc2LaTeXProcs.Head3, "MATHBBABBREVS",
-                                  GAPDoc2LaTeXProcs.MATHBBABBREVS));
+  a := SubstitutionSublist(GAPDoc2LaTeXProcs.Head3, "MATHBBABBREVS",
+                                  GAPDoc2LaTeXProcs.MATHBBABBREVS);
+  a := SubstitutionSublist(a, "CUSTOMOPTIONS", GAPDoc2LaTeXProcs.CUSTOMOPTIONS);
+  Append(str, a);
   
   # and now the text of the document
   GAPDoc2LaTeXContent(r, str);
