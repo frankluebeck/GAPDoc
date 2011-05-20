@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.43 2011-05-20 01:44:01 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.44 2011-05-20 21:20:42 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -106,8 +106,9 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  <C>UTF-8</C> encoding, instead of the default <C>latin1</C>.
 ##  If <C>"nopslatex"</C> is an argument then the package <C>psnfss</C>
 ##  is not used, otherwise it is. If the arguments contain
-##  <C>"bookmarks"</C> then navigation bookmarks for the acrobat reader are
-##  generated, by default these are switched off.  If the arguments contain
+##  <C>"nobookmarks"</C> then navigation bookmarks for the pdf-viewer are
+##  not generated, by default these are generated but not opened
+##  in pdf-viewer.  If the arguments contain
 ##  <C>"customoptions="</C> this must be followed by a further argument
 ##  which is then inserted just before the <C>\begin{document}</C> in the
 ##  &LaTeX; file; this can be used to change options of the loaded packages,
@@ -287,7 +288,7 @@ GAPDoc2LaTeXProcs.Head3 := Concatenation([
 "        pdfcreator={LaTeX with hyperref package / GAPDoc},\n",
 "        colorlinks=true,backref=page,breaklinks=true,linkcolor=RoyalBlue,\n",
 "        citecolor=RoyalGreen,filecolor=RoyalRed,\n",
-"        urlcolor=RoyalRed,pdfpagemode=none]{hyperref}\n",
+"        urlcolor=RoyalRed,pdfpagemode={UseNone}]{hyperref}\n",
 "\n",
 "% write page numbers to a .pnr log file for online help\n",
 "\\newwrite\\pagenrlog\n",
@@ -326,10 +327,10 @@ SetGapDocLaTeXOptions := function(arg)
   else
     gdp.Head2 := gdp.Head2pdf;
   fi;
-  if "bookmarks" in arg then
-    gdp.Head2 := Concatenation(gdp.Head2, ",bookmarks=true,");
-  else
+  if "nobookmarks" in arg then
     gdp.Head2 := Concatenation(gdp.Head2, ",bookmarks=false,");
+  else
+    gdp.Head2 := Concatenation(gdp.Head2, ",bookmarks=true,");
   fi;
   if "color" in arg then
     GAPDoc2LaTeXProcs.Head1x := GAPDoc2LaTeXProcs.Head1xcolor;
