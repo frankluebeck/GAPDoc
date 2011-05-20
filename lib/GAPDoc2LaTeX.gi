@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.42 2011-05-19 22:26:32 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.43 2011-05-20 01:44:01 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -287,7 +287,7 @@ GAPDoc2LaTeXProcs.Head3 := Concatenation([
 "        pdfcreator={LaTeX with hyperref package / GAPDoc},\n",
 "        colorlinks=true,backref=page,breaklinks=true,linkcolor=RoyalBlue,\n",
 "        citecolor=RoyalGreen,filecolor=RoyalRed,\n",
-"        urlcolor=RoyalRed]{hyperref}\n",
+"        urlcolor=RoyalRed,pdfpagemode=none]{hyperref}\n",
 "\n",
 "% write page numbers to a .pnr log file for online help\n",
 "\\newwrite\\pagenrlog\n",
