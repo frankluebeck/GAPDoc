@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2LaTeX.gi                GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.44 2011-05-20 21:20:42 gap Exp $
+#H  @(#)$Id: GAPDoc2LaTeX.gi,v 1.45 2011-05-27 12:28:14 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -345,7 +345,7 @@ SetGapDocLaTeXOptions := function(arg)
     GAPDoc2LaTeXProcs.Encoder := "LaTeX";
   fi;
   GAPDoc2LaTeXProcs.pslatex :=
-              "\\usepackage{mathptmx,helvet,courier}\n%\\usepackage{pslatex}";
+              "\\usepackage{mathptmx,helvet}\\usepackage[T1]{fontenc}\\usepackage{textcomp}\n%\\usepackage{pslatex}";
   if "nopslatex" in arg then
     GAPDoc2LaTeXProcs.pslatex := Concatenation("%",GAPDoc2LaTeXProcs.pslatex);
   fi;
