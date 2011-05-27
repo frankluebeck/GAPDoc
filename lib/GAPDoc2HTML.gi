@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.59 2010-12-02 23:43:29 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.60 2011-05-27 14:18:41 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -181,7 +181,9 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
   Append(chlink, "</div>\n");
   
   toplink := Concatenation( "&nbsp;<a href=\"chap0", GAPDoc2HTMLProcs.ext, 
-             "\">", GAPDocTexts.d.TopofBook, "</a>&nbsp;  " );
+             "\">", GAPDocTexts.d.TopofBook, "</a>&nbsp;  ",
+             "<a href=\"chap0", GAPDoc2HTMLProcs.ext, "#contents",
+             "\">", GAPDocTexts.d.Contents, "</a>&nbsp;  " );
   prev := [];
   next := [];
   for i in [1..Length(chnrs)] do
@@ -1066,7 +1068,8 @@ GAPDoc2HTMLProcs.TableOfContents := function(r, par)
   Add(par, r.count);
   if IsBound(r.root.toctext) then
     Add(par, Concatenation("\n<div class=\"contents\">\n<h3>",
-          GAPDocTexts.d.Contents, "</h3>\n\n",
+          GAPDocTexts.d.Contents, 
+          "<a id=\"contents\" name=\"contents\"></a></h3>\n\n",
           r.root.toctext, "<br />\n</div>\n"));
   else
     Add(par,"<p>TOC\n-----------</p>\n\n");
