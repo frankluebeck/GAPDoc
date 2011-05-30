@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.60 2011-05-27 14:18:41 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.61 2011-05-30 15:24:33 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -111,6 +111,8 @@ GAPDoc2HTMLProcs.Head1 := "\
 <head>\n\
 <title>GAP (";
 
+GAPDoc2HTMLProcs.MathJaxURL := "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+
 GAPDoc2HTMLProcs.Head1MathJax := "\
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 \n\
@@ -119,8 +121,12 @@ GAPDoc2HTMLProcs.Head1MathJax := "\
 \n\
 <html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
 <head>\n\
-<script type=\"text/javascript\" src=\"/MathJax/MathJax.js\"></script>\n\
+<script type=\"text/javascript\"\n\
+  src=\"MATHJAXURL\">\n\
+</script>\n\
 <title>GAP (";
+GAPDoc2HTMLProcs.Head1MathJax := SubstitutionSublist(
+  GAPDoc2HTMLProcs.Head1MathJax, "MATHJAXURL", GAPDoc2HTMLProcs.MathJaxURL);
 
 GAPDoc2HTMLProcs.Head1Trans := "\
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
@@ -362,11 +368,18 @@ end;
 ##  is  no  processing  of   <C>&lt;M&gt;</C>  elements  as  decribed
 ##  in  <Ref   Subsect="M"/>).  Inline  formulae  are   delimited  by
 ##  <C>\(</C>  and  <C>\)</C>  and displayed  formulae  by  <C>\[</C>
-##  and  <C>\]</C>.  The   resulting  files  can  be   viewed  via  a
-##  webserver  with a  <C>MathJax</C> installation  and then  contain
-##  nicely  formatted  scalable  and searchable  formulae.  See  <URL
+##  and    <C>\]</C>.   With    <Package>MathJax</Package>   webpages
+##  can   contain   nicely    formatted   scalable   and   searchable
+##  formulae.   The  resulting   files  link   by  default   to  <URL
+##  Text="http://cdn.mathjax.org">http://cdn.mathjax.org</URL> to get
+##  the  <Package>MathJax</Package>  script  and  fonts.  This  means
+##  that  they   can  only  be   used  on  computers   with  internet
+##  access.   An  alternative   URL   can  be   set  by   overwriting
+##  <C>GAPDoc2LaTeXProcs.MathJaxURL</C>  before   building  the  HTML
+##  version   of   a   manual.   This  way   a   local   installation
+##  of   <Package>MathJax</Package>   could   be   used.   See   <URL
 ##  Text="http://www.mathjax.org/">http://www.mathjax.org/</URL>  for
-##  more details and how to set this up.<P/>
+##  more details.<P/>
 ##  
 ##  If  the  argument <A>mtrans</A>  is  set  to <C>"Tth"</C>  it  is
 ##  assumed that you  have installed the &LaTeX;  to HTML translation
