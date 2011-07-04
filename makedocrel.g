@@ -2,13 +2,16 @@
 ##
 #A  makedocrel.g                          GAPDoc                 Frank Lübeck
 ##  
-#H  @(#)$Id: makedocrel.g,v 1.11 2010-10-28 14:18:09 gap Exp $
+#H  @(#)$Id: makedocrel.g,v 1.12 2011-07-04 14:58:17 gap Exp $
 ##  
 ##  Rebuild the  whole documentation, provided sufficiently  good (pdf)LaTeX
 ##  is  available.   This  version  produces  relative   paths  to  external
 ##  documents, which is ok for the package in standard location.
 ##  
-SetGapDocLaTeXOptions("pdf","color", "latin1"); relpath := "../../..";
+
+#SetInfoLevel(InfoGAPDoc,4);
+#SetGapDocLaTeXOptions("pdf","color", "latin1"); 
+relpath := "../../..";
 # main
 Print("\n========== converting main documentation for GAPDoc ==============\n");
 maintree := MakeGAPDocDoc("doc", "gapdoc", ["../lib/BibTeX.gi", 
