@@ -1,0 +1,24 @@
+/* times.css                                              Frank Lübeck */
+/* Change default CSS to use Times fonts, no justified paragraphs, toc on
+   left        */
+
+/* basic settings, fonts, sizes, colors, ... */
+body { 
+  padding-left: 28%;
+  font-family: Times,Times New Roman,serif;
+  text-align: left;
+}
+body.chap0 {
+  padding-left: 2%;
+}
+div.ChapSects div.ContSect:hover div.ContSSBlock {
+  left: 15%;
+} 
+/*div.ContChap div.ContSect:hover div.ContSSBlock {
+  left: 1%;
+  width: 32%;
+}*/
+div.ChapSects {
+  left: 1%;
+  width: 25%;
+}
