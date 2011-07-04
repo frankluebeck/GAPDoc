@@ -2,7 +2,7 @@
 ##
 #W  Text.gi                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gi,v 1.19 2011-07-04 14:19:14 gap Exp $
+#H  @(#)$Id: Text.gi,v 1.20 2011-07-04 15:15:08 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -102,7 +102,7 @@ end);
 ##  ANSI escape sequences.  Try the following example to see  if this is
 ##  the case for the terminal you are  using. It shows the effect of the
 ##  foreground and background color  attributes and of the <C>.bold</C>,
-##  <C>.blink</C>, <C>.normal</C>, <C>.reverse</C> and<C>.underscore</C>
+##  <C>.blink</C>, <C>.normal</C>, <C>.reverse</C> and <C>.underscore</C>
 ##  which can partly be mixed.
 ##  
 ##  <Listing Type="Example">
