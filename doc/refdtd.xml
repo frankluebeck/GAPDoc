@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.29 2011-02-07 23:03:40 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.30 2011-07-04 15:07:30 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -1230,15 +1230,15 @@ of functions. No further markup elements are allowed within this element.
 <Index Key="C"><C>C</C></Index>
 
 <Listing Type="From gapdoc.dtd">
-<![CDATA[<!ELEMENT Code (#PCDATA|Alt)*>     <!-- GAP code -->
-<!ELEMENT C (#PCDATA|Alt)*>        <!-- GAP code (shortcut) -->]]>
+<![CDATA[<!ELEMENT Code (#PCDATA|Arg|Alt)*>     <!-- GAP code -->
+<!ELEMENT C (#PCDATA|Arg|Alt)*>        <!-- GAP code (shortcut) -->]]>
 </Listing>
 
 This element is  used to mark something  as a piece of  <E>code</E> like for
 example a  &GAP; expression.  It is guaranteed  that the  converters typeset
 this  exactly  as  in  the  <C>Listing</C>  element  (compare  section  <Ref
-Subsect="Listing"/>.  No further  markup  elements are  allowed within  this
-element.
+Subsect="Listing"/>).  The only further markup elements  allowed within  this
+element are <C>&lt;Arg></C> elements (see <Ref Subsect="Arg"/>).
 
 </Subsection>
 
