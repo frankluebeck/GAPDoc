@@ -2,7 +2,7 @@
 ##
 #W  HelpBookHandler.g                GAPDoc                      Frank Lübeck
 ##
-#H  @(#)$Id: HelpBookHandler.g,v 1.12 2011-05-16 07:30:13 gap Exp $
+#H  @(#)$Id: HelpBookHandler.g,v 1.13 2011-07-04 14:55:13 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -28,24 +28,29 @@ HELP_BOOK_HANDLER.GapDocGAP := rec();
 ##  
 
 HELPBOOKINFOSIXTMP := 0;
-if not IsBound(ANSI_COLORS) then
-  ANSI_COLORS := false;
-fi;
+
+# helper to set the text theme
+HELP_BOOK_HANDLER.GapDocGAP.setTextTheme := function()
+  if GAPInfo.UserPreferences.TextTheme = "default" then
+    if not IsBound(GAPInfo.UserPreferences.UseColorsInTerminal) or 
+         GAPInfo.UserPreferences.UseColorsInTerminal <> true then
+      SetGAPDocTextTheme("none");
+    else
+      SetGAPDocTextTheme(rec());
+    fi;
+  else
+    SetGAPDocTextTheme(GAPInfo.UserPreferences.TextTheme);
+  fi;
+end;
 
 # helper function for showing matches in current text theme
 HELP_BOOK_HANDLER.GapDocGAP.apptheme := function(res, theme)
   local a;
-  if ANSI_COLORS <> true 
-                  or (not IsBound(res.theme) or res.theme <> false) then
-    for a in res.entries do
-      a[1] := StripEscapeSequences(a[8]);
-    od;
-    res.theme := false;
-  elif not IsBound(res.theme) or res.theme <> theme then
+  if not IsBound(res.theme) or res.theme <> theme then
     for a in res.entries do
       a[1] := SubstituteEscapeSequences(a[8], theme);
     od;
-    res.theme := theme;
+    res.theme := ShallowCopy(theme);
   fi;
 end;
 
@@ -64,6 +69,7 @@ HELP_BOOK_HANDLER.GapDocGAP.ReadSix := function(stream)
   for a in res.entries do
     a[8] := a[1];
   od;
+  HELP_BOOK_HANDLER.GapDocGAP.setTextTheme();
   HELP_BOOK_HANDLER.GapDocGAP.apptheme(res, GAPDocTextTheme);
   
   # in position 6 of each entry we put the corresponding search string
@@ -106,6 +112,11 @@ HELP_BOOK_HANDLER.GapDocGAP.ReadSix := function(stream)
     Add(res.types, "url");
     Add(res.types, "url-mml");
   fi;
+  nam := Concatenation(bname{[1..Length(bname)-6]}, "chap0_mj.html");
+  if IsExistingFile(nam) then
+    Add(res.types, "url");
+    Add(res.types, "url-mj");
+  fi;
   
   return res;
 end;
@@ -146,6 +157,7 @@ HELP_BOOK_HANDLER.GapDocGAP.SearchMatches := function (book, topic, frombegin)
       fi;
     fi;
   od;
+  HELP_BOOK_HANDLER.GapDocGAP.setTextTheme();
   HELP_BOOK_HANDLER.GapDocGAP.apptheme(info, GAPDocTextTheme);
 
   return [exact, match];
@@ -156,7 +168,8 @@ if not IsBound(BROWSER_CAP) then
   BROWSER_CAP := [];
 fi;
 HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
-  local info, a, fname, str, formatted, ext, label, enc, outenc, res;
+  local info, a, fname, str, formatted, enc, outenc, sline, pos, 
+        tmp, ext, label, res;
   
   info := HELP_BOOK_INFO(book);
   # we handle the special type "ref" for cross references first
@@ -185,13 +198,6 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
       return rec(lines := Concatenation("Sorry, file '", fname, "' seems to ",
                  "be corrupted.\n"), formatted := true);
     fi;
-    if not IsBound(ANSI_COLORS) or ANSI_COLORS <> true then
-      # strip escape sequences
-      str := StripEscapeSequences(str);
-    else
-      # substitute pseudo escape sequences via GAPDocTextTheme
-      str := SubstituteEscapeSequences(str, GAPDocTextTheme);
-    fi;
     # maybe change encoding
     if IsBound(info.encoding) then
       enc := info.encoding;
@@ -209,29 +215,56 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
     if enc <> outenc then
       str := Unicode(str, enc);
       if outenc = "ISO-8859-1" then
-        str := SimplifiedUnicodeString(str, "single", "latin1");
+        str := SimplifiedUnicodeString(str, "latin1");
       elif outenc = "ANSI_X3.4-1968" then
-        str := SimplifiedUnicodeString(str, "single", "ascii");
+        str := SimplifiedUnicodeString(str, "ascii");
       fi;
       str := Encode(str, outenc);
     fi;
-    return rec(lines := str, formatted := true, start := a[4]);
+    sline := a[4];
+    # set the text theme
+    HELP_BOOK_HANDLER.GapDocGAP.setTextTheme();
+    # substitute pseudo escape sequences via GAPDocTextTheme
+    # split into two pieces to find new start line
+    pos := PositionLinenumber(str, sline);
+    tmp := SubstituteEscapeSequences(str{[1..pos-1]}, GAPDocTextTheme);
+    str := SubstituteEscapeSequences(str{[pos..Length(str)]}, 
+                                                      GAPDocTextTheme);
+    sline := NumberOfLines(tmp)+1;
+    str := Concatenation(tmp, str);
+    return rec(lines := str, formatted := true, start := sline);
   fi;
   
   if type = "url" and "url" in info.types then
-    # check preferred HTML version/extension
-    if not IsBound(BROWSER_CAP) then
-      BROWSER_CAP := [];
-    fi;
-    if "MathML" in BROWSER_CAP and "url-mml" in info.types then
-      ext := "_mml.xml";
-    elif ("MathML" in BROWSER_CAP or "Symbol" in BROWSER_CAP) and
-          "url-sym" in info.types then
-      ext := "_sym.html";
+##      # check preferred HTML version/extension
+##      if not IsBound(BROWSER_CAP) then
+##        BROWSER_CAP := [];
+##      fi;
+##      if "MathML" in BROWSER_CAP and "url-mml" in info.types then
+##        ext := "_mml.xml";
+##      elif ("MathML" in BROWSER_CAP or "Symbol" in BROWSER_CAP) and
+##            "url-sym" in info.types then
+##        ext := "_sym.html";
+##      elif "url-text" in info.types then
+##        ext := ".html";
+##      else
+##        return fail;
+##      fi;
+    if IsBound(GAPInfo.UserPreferences) and 
+               IsBound(GAPInfo.UserPreferences.UseMathJax) and
+               GAPInfo.UserPreferences.UseMathJax = true and
+               "url-mj" in info.types then
+      ext := "_mj.html";
     elif "url-text" in info.types then
       ext := ".html";
     else
       return fail;
+    fi;
+    if IsBound(GAPInfo.UserPreferences) and 
+               IsBound(GAPInfo.UserPreferences.GAPDocHTMLStyle) and
+               GAPInfo.UserPreferences.GAPDocHTMLStyle <> "default" then
+      ext := Concatenation(ext, "?GAPDocStyle=", 
+                           GAPInfo.UserPreferences.GAPDocHTMLStyle);
     fi;
     fname := Filename(info.directory, Concatenation("chap",
                        String(a[3][1]), ext));
@@ -295,26 +328,6 @@ HELP_BOOK_HANDLER.GapDocGAP.MatchPrevChap := function(book, entrynr)
 end;
 
 HELP_BOOK_HANDLER.GapDocGAP.MatchNextChap := function(book, entrynr)
-##    local   info,  ent,  old,  chnrs,  pos,  cnr,  nr;
-##    info := HELP_BOOK_INFO(book);
-##    HELP_BOOK_HANDLER.GapDocGAP.ChapNumbers(info);
-##    ent := info.entries;
-##    old := ent[entrynr][3];
-##    # this handles appendices as chapters 
-##    chnrs := Set(Difference(List(ent, a-> a[1]), ["Bib", "Ind"]));
-##    pos := Position(chnrs, old[1]);
-##    if pos < Length(chnrs) then
-##      cnr := [chnrs[pos+1], 0, 0];
-##    else
-##      # no next chapter, return the last 
-##      cnr := [old[1], 0, 0];
-##    fi;
-##    nr := First([1..Length(ent)], i-> ent[i][3]=cnr);
-##    if nr = fail then
-##      # return current
-##      nr := entrynr;
-##    fi;
-##    return [info, nr];
   local info, chnums, ent, cnr, new, nr;
   info := HELP_BOOK_INFO(book);
   HELP_BOOK_HANDLER.GapDocGAP.ChapNumbers(info);
