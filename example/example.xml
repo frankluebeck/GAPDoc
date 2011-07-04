@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id: example.xml,v 1.23 2011-03-03 09:52:10 gap Exp $ -->
+<!-- $Id: example.xml,v 1.24 2011-07-04 14:59:18 gap Exp $ -->
 
 <!DOCTYPE Book SYSTEM "gapdoc.dtd"
- [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">--&gt;</Alt>'>
+ [ <!ENTITY see '<Alt Only="LaTeX">$\to$</Alt><Alt Not="LaTeX">&#8594;</Alt>'>
  ]>
 
 <Book Name="GAPDoc Example">
@@ -63,7 +63,7 @@
   </Subsection>
 
   <Subsection Label="Another"><Heading>Another subsection</Heading>
-   
+  
    This is text in the second subsection. This subsection 
    has a label, such that one can reference it.
 
