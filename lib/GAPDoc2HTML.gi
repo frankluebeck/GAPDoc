@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.62 2011-07-04 14:50:44 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.63 2011-07-05 08:39:04 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -446,20 +446,14 @@ end;
 ##  For graphical  browsers the layout  of the generated HTML manuals  can be
 ##  highly  configured  by  cascading stylesheet  (CSS)  and  javascript
 ##  files. Such files are provided in the <F>styles</F> directory of the
-##  &GAPDoc; package.
-##  <Example>
-##  gap> dir := Filename(DirectoriesPackageLibrary("GAPDoc","styles"), "");
-##  "/usr/local/ca/gap4r5/pkg/gapdoc/styles/"
-##  gap> DirectoryContents(dir);
-##  [ "..", "manual.js", "rainbow.js", "manual.css", "times.css", 
-##    "toggless.js", ".", "toggless.css" ]
-##  </Example>
+##  &GAPDoc; package.<P/>
 ##  
 ##  We recommend that these files  are copied into each manual directory
-##  (such that  each of them  is selfcontained). Of course,  these files
-##  may be changed  or new styles may  be added. New styles  may also be
-##  sent  to  the &GAPDoc;  authors  for  possible inclusion  in  future
-##  versions.<P/>
+##  (such  that each  of  them  is selfcontained).  There  is a  utility
+##  function  <Ref  Func="CopyHTMLStyleFiles"  /> which  does  this.  Of
+##  course, these files  may be changed or new styles  may be added. New
+##  styles  may  also be  sent  to  the  &GAPDoc; authors  for  possible
+##  inclusion in future versions.<P/>
 ##  
 ##  The  generated   HTML  files refer to  the   file  <F>manual.css</F>
 ##  which   conforms   to   the   W3C   specification   CSS   2.0,   see
@@ -471,6 +465,16 @@ end;
 ##  overwrite  default settings  and add  new javascript  functions. For
 ##  more details see the comments in <F>manual.js</F>.<P/>
 ##  </Subsection>
+##  <ManSection >
+##  <Func Arg="dir" Name="CopyHTMLStyleFiles" />
+##  <Returns>nothing</Returns>
+##  <Description>
+##  This utility function copies  the <F>*.css</F> and <F>*.js</F> files
+##  from the  <F>styles</F> directory of  the &GAPDoc; package  into the
+##  directory
+##  <A>dir</A>.
+##  </Description>
+##  </ManSection>
 ##  <#/GAPDoc>
 ##  
 ##  the basic call, used recursively with a result r from GetElement 
@@ -2038,6 +2042,32 @@ InstallGlobalFunction(GAPDoc2HTMLPrintHTMLFiles, function(t, path)
   for a in NamesOfComponents(t) do
     if IsRecord(t.(a)) and IsBound(t.(a).text) then
       FileString(Filename(path, Concatenation("chap", a, t.ext)), t.(a).text);
+    fi;
+  od;
+end);
+
+InstallGlobalFunction(CopyHTMLStyleFiles, function(dir)
+  local d, todo, l, s, e, f;
+  d := Filename(DirectoriesPackageLibrary("GAPDoc","styles"),"");
+  todo := [];
+  for f in DirectoryContents(d) do
+    l := Length(f);
+    if l > 3 and f{[l-2..l]} = ".js" then
+      Add(todo, f);
+    elif l > 4 and f{[l-3..l]} = ".css" then
+      Add(todo, f);
+    fi;
+  od;
+  for f in todo do
+    s := StringFile(Filename(Directory(d),f));
+    if s = fail then
+      Info(InfoGAPDoc, 1, "Cannot read file ", Filename(Directory(d),f), "\n");
+    else
+      e := FileString(Filename(Directory(dir),f), s);
+      if e = fail then
+        Info(InfoGAPDoc, 1, "Cannot write file ", 
+                                             Filename(Directory(dir),f), "\n");
+      fi;
     fi;
   od;
 end);
