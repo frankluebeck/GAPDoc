@@ -10,22 +10,29 @@
 
 
 
-closedTOCMarker = "→ ";
-openTOCMarker = "↓ ";
+closedTOCMarker = "▶ ";
+openTOCMarker = "▼ ";
+noTOCMarker = "  ";
 /* merge hooks into side toc for opening/closing subsections
    with openclosetoc   */
 function mergeSideTOCHooks() {
   var hlist = document.getElementsByTagName("div");
   for (var i = 0; i < hlist.length; i++) {
      if (hlist[i].className == "ContSect") {
+       var chlds = hlist[i].childNodes;
        var el = document.createElement("span");
-       var oncl = document.createAttribute("onclick");
-       oncl.nodeValue = "openclosetoc(event)";
-       el.setAttributeNode(oncl);
-       oncl = document.createAttribute("class");
+       var oncl = document.createAttribute("class");
        oncl.nodeValue = "toctoggle";
        el.setAttributeNode(oncl);
-       var cont = document.createTextNode(closedTOCMarker);
+       var cont;
+       if (chlds.length > 2) {
+         var oncl = document.createAttribute("onclick");
+         oncl.nodeValue = "openclosetoc(event)";
+         el.setAttributeNode(oncl);
+         cont = document.createTextNode(closedTOCMarker);
+       } else {
+         cont = document.createTextNode(noTOCMarker);
+       }
        el.appendChild(cont);
        hlist[i].firstChild.insertBefore(el, hlist[i].firstChild.firstChild);
        hlist[i].className = "ContSectClosed";
