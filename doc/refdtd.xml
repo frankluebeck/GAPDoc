@@ -1,4 +1,4 @@
-<!-- $Id: refdtd.xml,v 1.30 2011-07-04 15:07:30 gap Exp $ -->
+<!-- $Id: refdtd.xml,v 1.31 2011-07-08 15:35:48 gap Exp $ -->
 <Chapter Label="DTD">
 <Heading>The Document Type Definition</Heading>
 
@@ -1418,15 +1418,23 @@ text  substitutes  for  complicated  formulae  via  <C>Alt</C>  elements
 </Listing>
 
 The <Q><C>M</C></Q>  element type  is intended for  formulae in  the running
-text for which there is a sensible ASCII version. For the &LaTeX; version of
+text for which there is a sensible text version. For the &LaTeX; version of
 a &GAPDoc;  document the <C>M</C>  and <C>Math</C> elements  are equivalent.
 The  remarks in  <Ref Subsect="Math"  />  about special  characters and  the
 <C>Arg</C> element  apply here as  well. A  document which has  all formulae
 enclosed in <C>M</C>  elements can be well readable in  text terminal output
 and printed output versions.<P/>
 
-The  following &LaTeX;  macros have  a  sensible ASCII  translation and  are
-guaranteed to be translated accordingly by text (and HTML) converters:
+Compared to former versions of &GAPDoc; many more formulae can be put into
+<C>M</C> elements. Most modern terminal emulations support unicode characters
+and many mathematical symbols can now be represented by such characters.
+But even if a terminal can only display ASCII characters, the user will see
+some not too bad representation of a formula.<P/>
+
+As examples, here are some  &LaTeX;  macros which have  a  sensible 
+ASCII  translation and  are
+guaranteed to be translated accordingly by text (and HTML) converters 
+(for a full list of handled Macros see <C>RecFields(TEXTMTRANSLATIONS)</C>):
 
 <Table Align="|l|l|">
  <Caption>&LaTeX; macros with special text translation</Caption>
@@ -1514,7 +1522,8 @@ guaranteed to be translated accordingly by text (and HTML) converters:
 
 </Table>
 
-In all other macros only the  backslash is removed. Whitespace is normalized
+In all other macros only the  backslash is removed (except for some macros
+describing more exotic symbols). Whitespace is normalized
 (to one blank)  but not removed. Note  that whitespace is not  added, so you
 may  want to  add a  few more  spaces than  you usually  do in  your &LaTeX;
 documents.<P/>
