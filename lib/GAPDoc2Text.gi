@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.36 2011-07-04 14:32:45 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.37 2011-07-11 14:14:39 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -1121,7 +1121,7 @@ GAPDoc2TextProcs.Display := function(r, par)
     s := TextM(s);
   fi;
   s := WrapTextAttribute(s, GAPDoc2TextProcs.TextAttr.Display);
-  s := GAPDoc2TextProcs.MarkAndFormat(s, "left", Length(r.root.indent+6),
+  s := GAPDoc2TextProcs.MarkAndFormat(s, "left", Length(r.root.indent)+6,
        r.root.linelength);
   s := Concatenation("\n", s, "\n\n");
   Add(par, r.count);
