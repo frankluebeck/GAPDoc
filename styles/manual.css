@@ -433,9 +433,33 @@ p.BibEntry {
 span.BibKey {
   color: #005522;
 }
+span.BibKeyLink {
+}
 b.BibAuthor {
 }
 i.BibTitle {
+}
+i.BibBookTitle {
+}
+span.BibEditor {
+}
+span.BibJournal {
+}
+span.BibType {
+}
+span.BibPublisher {
+}
+span.BibSchool {
+}
+span.BibEdition {
+}
+span.BibVolume {
+}
+span.BibSeries {
+}
+span.BibNumber {
+}
+span.BibPages {
 }
 span.BibOrganization {
 }
