@@ -2,7 +2,7 @@
 ##
 #W  HelpBookHandler.g                GAPDoc                      Frank Lübeck
 ##
-#H  @(#)$Id: HelpBookHandler.g,v 1.13 2011-07-04 14:55:13 gap Exp $
+#H  @(#)$Id: HelpBookHandler.g,v 1.14 2011-07-13 16:04:38 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -42,6 +42,7 @@ HELP_BOOK_HANDLER.GapDocGAP.setTextTheme := function()
     SetGAPDocTextTheme(GAPInfo.UserPreferences.TextTheme);
   fi;
 end;
+HELP_BOOK_HANDLER.GapDocGAP.setTextTheme();
 
 # helper function for showing matches in current text theme
 HELP_BOOK_HANDLER.GapDocGAP.apptheme := function(res, theme)
@@ -69,7 +70,7 @@ HELP_BOOK_HANDLER.GapDocGAP.ReadSix := function(stream)
   for a in res.entries do
     a[8] := a[1];
   od;
-  HELP_BOOK_HANDLER.GapDocGAP.setTextTheme();
+##    HELP_BOOK_HANDLER.GapDocGAP.setTextTheme();
   HELP_BOOK_HANDLER.GapDocGAP.apptheme(res, GAPDocTextTheme);
   
   # in position 6 of each entry we put the corresponding search string
@@ -157,7 +158,7 @@ HELP_BOOK_HANDLER.GapDocGAP.SearchMatches := function (book, topic, frombegin)
       fi;
     fi;
   od;
-  HELP_BOOK_HANDLER.GapDocGAP.setTextTheme();
+##    HELP_BOOK_HANDLER.GapDocGAP.setTextTheme();
   HELP_BOOK_HANDLER.GapDocGAP.apptheme(info, GAPDocTextTheme);
 
   return [exact, match];
@@ -223,7 +224,7 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
     fi;
     sline := a[4];
     # set the text theme
-    HELP_BOOK_HANDLER.GapDocGAP.setTextTheme();
+##      HELP_BOOK_HANDLER.GapDocGAP.setTextTheme();
     # substitute pseudo escape sequences via GAPDocTextTheme
     # split into two pieces to find new start line
     pos := PositionLinenumber(str, sline);

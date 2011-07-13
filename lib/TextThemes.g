@@ -8,6 +8,7 @@ GAPDoc2TextProcs.OtherThemes := rec();
 # - a string a starting with TextAttr.CSI for [a, TextAttr.reset]
 # - another string a for [a, a]
 GAPDoc2TextProcs.OtherThemes.classic := rec(
+  info := "similar to GAPDoc default until GAP 4.4",
   reset := TextAttr.reset,
   Heading := Concatenation(TextAttr.bold, TextAttr.underscore, TextAttr.1),
   Func := Concatenation(TextAttr.bold, TextAttr.4),
@@ -32,7 +33,7 @@ GAPDoc2TextProcs.OtherThemes.classic := rec(
   Q := ["\"","\""],
   M := ["",""],
   Math := ["$","$"],
-  Display := ["$$","$$"],
+  Display := ["",""],
   Prompt := Concatenation(TextAttr.bold,TextAttr.4),
   BrkPrompt := Concatenation(TextAttr.bold,TextAttr.1),
   GAPInput := TextAttr.1,
@@ -48,8 +49,9 @@ GAPDoc2TextProcs.OtherThemes.classic := rec(
 );
 
 GAPDoc2TextProcs.OtherThemes.default := rec(
+  info := "the default theme",
   reset := TextAttr.reset,
-  Heading := Concatenation(TextAttr.bold, TextAttr.underscore),
+  Heading := Concatenation(TextAttr.normal, TextAttr.underscore),
   Func := Concatenation(TextAttr.normal, TextAttr.4),
   Arg := Concatenation(TextAttr.normal, TextAttr.2),
   Example := Concatenation(TextAttr.normal, TextAttr.0),
@@ -87,7 +89,8 @@ GAPDoc2TextProcs.OtherThemes.default := rec(
   flush := "both",
 );
 
-GAPDoc2TextProcs.OtherThemes.gap3 := rec(
+GAPDoc2TextProcs.OtherThemes.old := rec(
+  info := "similar to old style manuals in GAP 3 and GAP 4.4",
   reset := "", 
   Heading := ["",""],
   Func := ["`","'"],
@@ -126,7 +129,13 @@ GAPDoc2TextProcs.OtherThemes.gap3 := rec(
   format := "",
   flush := "both"
 );
-
+GAPDoc2TextProcs.OtherThemes.equalquotes := rec(
+  info := "(together with \"old\") uses '...' instead of `...'", 
+  C := "'",
+  F := "'",
+  K := "'",
+  Func := "'"
+);
 
 
 GAPDoc2TextProcs.OtherThemes.none := rec();
@@ -140,61 +149,55 @@ GAPDoc2TextProcs.f := function()
   for a in ["Q", "DefLineMarker", "ListBullet", "FillString", "EnumMarks"] do
     GAPDoc2TextProcs.OtherThemes.none.(a) := dt.(a);
   od;
+  GAPDoc2TextProcs.OtherThemes.none.info := "plain text without markup";
 end;
 GAPDoc2TextProcs.f();
 Unbind(GAPDoc2TextProcs.f);
+
+GAPDoc2TextProcs.OtherThemes.ColorPrompt := rec(
+  info := "show examples in ColorPrompt(true) style",
+  Prompt := Concatenation(TextAttr.bold,TextAttr.4),
+  BrkPrompt := Concatenation(TextAttr.bold,TextAttr.1),
+  GAPInput := TextAttr.1,
+  GAPOutput := TextAttr.reset
+);
+
+GAPDoc2TextProcs.OtherThemes.noColorPrompt := rec(
+  info := "show examples in ColorPrompt(false) style",
+  Prompt := "",
+  BrkPrompt := "",
+  GAPInput := "",
+  GAPOutput := ""
+);
 
 InstallValue(GAPDocTextTheme, rec());
 
 # argument doesn't need all component, the missing ones are taken from default
 InstallGlobalFunction(SetGAPDocTextTheme, function(arg)
-  local r, len, res, h, af, v, i, f;
+  local r, res, h, af, v, a, nam, f, i;
   
-  if Length(arg) = 0 then
-    r := rec();
-  else
-    r := arg[1];
-  fi;
-  if IsString(r) then
-    if not IsBound(GAPDoc2TextProcs.OtherThemes.(r)) then
-      Print("Only the following named text themes are available:\n     ",
-            RecFields(GAPDoc2TextProcs.OtherThemes), "\n");
-      return;
-    else
-      r := GAPDoc2TextProcs.OtherThemes.(r);
-    fi;
-  fi;
-  len := function(s) return WidthUTF8String(StripEscapeSequences(s)); end;
-  # normalize ListBullet and EnumMarks
-  if IsBound(r.ListBullet) then
-    if not IsString(r.ListBullet) then
-      r.ListBullet := r.ListBullet[1];
-    fi;
-    while len(r.ListBullet) < 2 do
-      Add(r.ListBullet, ' ');
-    od;
-    if len(r.ListBullet) > 2 then
-      r.ListBullet := r.ListBullet{[1..2]};
-    fi;
-  fi;
-  if IsBound(r.EnumMarks) then
-    if IsString(r.EnumMarks) then
-      r.EnumMarks := [r.EnumMarks, r.EnumMarks];
-    fi;
-    if Sum(r.EnumMarks, len) > 2 then
-      if len(r.EnumMarks[1]) = 0 then
-        r.EnumMarks[2] := r.EnumMarks[2]{[1,2]};
-      elif len(r.EnumMarks[2]) = 0 then
-        r.EnumMarks[1] := r.EnumMarks[1]{[1,2]};
+  r := rec();
+  for a in arg do
+    if IsString(a) then
+      if not IsBound(GAPDoc2TextProcs.OtherThemes.(a)) then
+        Print("Only the following named text themes are available \
+(choose one or several):\n");
+        for nam in RecFields(GAPDoc2TextProcs.OtherThemes) do
+          Print("  ",String(Concatenation("\"",nam,"\""), -25),
+                GAPDoc2TextProcs.OtherThemes.(nam).info, "\n");
+        od;
+        return;
       else
-        r.EnumMarks[1] := r.EnumMarks[1]{[1]};
-        r.EnumMarks[2] := r.EnumMarks[2]{[1]};
+        for f in RecFields(GAPDoc2TextProcs.OtherThemes.(a)) do
+          r.(f) := GAPDoc2TextProcs.OtherThemes.(a).(f);
+        od;
       fi;
+    else
+      for f in RecFields(a) do
+        r.(f) := a.(f);
+      od;
     fi;
-    while Sum(r.EnumMarks, len) < 2 do
-      Add(r.EnumMarks[2], ' ');
-    od;
-  fi;
+  od;
 
   res := rec(hash := [[], []]);
   h := res.hash;

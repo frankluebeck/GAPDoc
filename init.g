@@ -2,7 +2,7 @@
 ##
 #A  init.g                  GAPDoc              Frank Lübeck / Max Neunhöffer
 ##
-#H  @(#)$Id: init.g,v 1.18 2011-07-04 14:56:25 gap Exp $
+#H  @(#)$Id: init.g,v 1.19 2011-07-13 16:04:37 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck and Max Neunhöffer,  
 #Y  Lehrstuhl D für Mathematik,  RWTH Aachen
@@ -22,8 +22,6 @@ ReadPackage("GAPDoc", "lib/GAPDoc2HTML.gd");
 ReadPackage("GAPDoc", "lib/Make.g");
 ReadPackage("GAPDoc", "lib/Examples.gd");
 
-# The handler functions for GAP's help system are read now:
-ReadPackage("GAPDoc", "lib/HelpBookHandler.g");
 
 # try to find terminal encoding
 GAPInfo.tmpfunc := function()

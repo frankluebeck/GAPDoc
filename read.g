@@ -2,7 +2,7 @@
 ##
 #A  read.g                  GAPDoc              Frank Lübeck / Max Neunhöffer
 ##
-#H  @(#)$Id: read.g,v 1.7 2011-07-04 14:58:18 gap Exp $
+#H  @(#)$Id: read.g,v 1.8 2011-07-13 16:04:38 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck and Max Neunhöffer,  
 #Y  Lehrstuhl D für Mathematik,  RWTH Aachen
@@ -24,3 +24,5 @@ ReadPackage("GAPDoc", "lib/TextThemes.g");
 ReadPackage("GAPDoc", "lib/GAPDoc2HTML.gi");
 ReadPackage("GAPDoc", "lib/Examples.gi");
 
+# Finally the handler functions for GAP's help system:
+ReadPackage("GAPDoc", "lib/HelpBookHandler.g");
