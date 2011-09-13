@@ -2,7 +2,6 @@
 ##
 #A  makedocrel.g                          GAPDoc                 Frank Lübeck
 ##  
-#H  @(#)$Id: makedocrel.g,v 1.15 2011-09-13 23:16:21 gap Exp $
 ##  
 ##  Rebuild the  whole documentation, provided sufficiently  good (pdf)LaTeX
 ##  is  available.   This  version  produces  relative   paths  to  external

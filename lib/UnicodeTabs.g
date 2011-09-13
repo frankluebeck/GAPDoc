@@ -2,7 +2,6 @@
 ##
 #W  UnicodeTabs.g                GAPDoc                     Frank Lübeck
 ##
-#H  @(#)$Id: UnicodeTabs.g,v 1.7 2011-07-08 15:35:48 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen

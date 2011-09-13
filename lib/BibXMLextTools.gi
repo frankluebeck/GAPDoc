@@ -2,7 +2,6 @@
 ##
 #W  BibXMLextTools.gi             GAPDoc                         Frank Lübeck
 ##
-#H  @(#)$Id: BibXMLextTools.gi,v 1.29 2008-06-17 16:01:36 gap Exp $
 ##
 #Y  Copyright (C)  2006,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen

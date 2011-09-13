@@ -1,7 +1,6 @@
 
            Some reminders for the authors
 
-         $Id: TODO,v 1.23 2011-07-04 15:18:05 gap Exp $
 
 - allow the distribution of different output documents (html, text, pdf,...)
   into different directories (needs to change the handler for GAPDoc books).

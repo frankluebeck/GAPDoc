@@ -2,7 +2,6 @@
 ##
 #W  XMLParser.gd                 GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: XMLParser.gd,v 1.5 2007-05-24 16:06:36 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen

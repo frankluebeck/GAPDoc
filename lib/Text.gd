@@ -2,7 +2,6 @@
 ##
 #W  Text.gd                      GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Text.gd,v 1.7 2011-07-04 14:19:14 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen

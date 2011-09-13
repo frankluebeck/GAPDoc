@@ -2,7 +2,6 @@
 ##
 #W  Examples.gi                  GAPDoc                          Frank Lübeck
 ##
-#H  @(#)$Id: Examples.gi,v 1.5 2008-06-17 15:47:23 gap Exp $
 ##
 #Y  Copyright (C)  2007,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
