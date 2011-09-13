@@ -11,15 +11,15 @@
      mystyle.js:   Additional javascript code for the style, it is 
                    read in the HTML pages after this current file.
                    The additional code may adjust the preprocessing function 
-                   jscontent() with is called onload of a file.
+                   jscontent() with is called onload of a file. This
+                   is done by appending functions to jscontentfuncs
+                   (jscontentfuncs.push(newfunc);).
                    Make sure, that your style is still usable without
                    javascript.
      mystyle.css:  CSS configuration, read after manual.css (so it can 
                    just reconfigure a few details, or overwrite everything).
-                 
-  For the style chooser, add information to the variable 'availablestyles'
-  below: 
-     +';mystyle=A short description of mystyle.'
+
+  Then adjust chooser.html such that users can switch on and off mystyle.
  
   A user can change the preferred style permanently by using the [Style]
   link and choosing one. Or one can append '?GAPDocStyle=mystyle' to the URL
@@ -27,11 +27,6 @@
   the GAP user preferences). 
 
 */
-
-availablestyles='default=the default style'
-               +';toggless=allow toggling the display of subsections in TOCs'
-               +';times=serif fonts and no justified formatting, toc on left'
-               +';rainbow=you don\'t want to use this!'
 
 /* generic helper function */
 function deleteCookie(nam) {
@@ -73,11 +68,15 @@ function overwriteStyle() {
       path = path+"/"+here[i];
     */
     document.cookie = "GAPDocStyle="+style+";Path="+path;
+    /* split into names of style files */
+    var stlist = style.split(",");
     /* read style's css and js files */
-    document.writeln('<link rel="stylesheet" type="text/css" href="'+
-                                                           style+'.css" />');
-    document.writeln('<script src="'+style+
-                                    '.js" type="text/javascript"></script>');
+    for (var i=0; i < stlist.length; i++) {
+      document.writeln('<link rel="stylesheet" type="text/css" href="'+
+                                                         stlist[i]+'.css" />');
+      document.writeln('<script src="'+stlist[i]+
+                                      '.js" type="text/javascript"></script>');
+    }
   }
 }
 
@@ -86,43 +85,29 @@ function addStyleLink() {
   var line = document.getElementById("mathjaxlink");
   var el = document.createElement("a");
   var oncl = document.createAttribute("href");
-  oncl.nodeValue = "javascript:showstylechooser()";
+  /*oncl.nodeValue = "javascript:showstylechooser()"; */
+  var back = window.location.protocol+"//"
+  if (window.location.protocol == "http") {
+    back = back+window.location.host;
+    if (window.location.port != "") {
+      back = back+":"+window.location.port;
+    }
+  }
+  back = back+window.location.pathname;
+  oncl.nodeValue = "chooser.html?BACK="+back; 
   el.setAttributeNode(oncl);
   var cont = document.createTextNode(" [Style]");
   el.appendChild(cont);
   line.appendChild(el);
 }
 
-/* this displays information about available styles on top of the page
-   and provides links to reload the current file with other styles       */
-function showstylechooser() {
-  var st = availablestyles.split(";");
-  var out = document.createElement("dl");
-  var att = document.createAttribute("id");
-  att.nodeValue = "stylechooserlist";
-  out.setAttributeNode(att);
-  for (var i = 0; i < st.length; i++) {
-    var pos = st[i].indexOf("=");
-    var ch = document.createElement("dt");
-    var lnk = document.createElement("a");
-    att = document.createAttribute("href");
-    att.nodeValue = window.location.pathname+"?GAPDocStyle="+st[i].slice(0,pos);
-    lnk.setAttributeNode(att);
-    var txt = document.createTextNode( st[i].slice(0,pos) );
-    lnk.appendChild(txt);
-    ch.appendChild(lnk);
-    out.appendChild(ch);
-    ch = document.createElement("dd");
-    txt = document.createTextNode( st[i].slice(pos+1) );
-    ch.appendChild(txt);
-    out.appendChild(ch);
-  }
-  lnk = document.getElementById("mathjaxlink").nextSibling;
-  document.getElementsByTagName("body")[0].insertBefore(out, lnk);
-}
+var jscontentfuncs = new Array();
+
+jscontentfuncs.push(addStyleLink);
 
 /* the default jscontent() only adds the [Style] link to the page */
 function jscontent () {
-  addStyleLink();
+  for (var i=0; i < jscontentfuncs.length; i++)
+    jscontentfuncs[i]();
 }
 

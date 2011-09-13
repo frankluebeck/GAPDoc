@@ -1,6 +1,6 @@
 /* toggless.js                                      Frank Lübeck   */
 
-/* this file contain two functions:
+/* this file contains two functions:
    mergeSideTOCHooks:  this changes div.ContSect elements to the class
                        ContSectClosed and includes a hook to toggle between
                        ContSectClosed and ContSectOpen. 
@@ -58,12 +58,8 @@ function openclosetoc (event) {
     par.className = "ContSectOpen";
     evt.target.replaceChild(markOpen, evt.target.firstChild);
   }
-
 }
 
 /* adjust jscontent which is called onload */
-function jscontent () {
-  mergeSideTOCHooks();
-  /* also include the style chooser from manual.js */
-  addStyleLink();
-}
+jscontentfuncs.push(mergeSideTOCHooks);
+
