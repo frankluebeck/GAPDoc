@@ -8,12 +8,13 @@
   their content. The converters were adjusted accordingly.
 
 - Several layout changes in text version: More unicode characters are used,
-  e.g., for fill strings and table borders (see BOXCHARS).
+  e.g., for fill strings and table borders (see BOXCHARS). Also mathematical
+  symbols from unicode are used more often.
   Less colors are used in default text theme.
 
 - Several text themes are available in the distribution (more by others
   are welcome). The preferred theme can be configured by the user via
-  GAPInfo.UserPreferences.TextTheme.
+  GAPInfo.UserPreferences.TextTheme in gap.ini.
 
 - Improved markup of <Arg> elements in function definitions in Text and
   HTML conversion.
@@ -33,18 +34,18 @@
   that this is ok, but was often requested). 
 
 - Preferred style for viewing the HTML manuals can be configured by the user
-  via GAPInfo.UserPreferences.GAPDocHTMLStyle and
+  via GAPInfo.UserPreferences.HTMLStyle and
   GAPInfo.UserPreferences.UseMathJax.
 
 - The HTML manuals support style switching (via URL and cookie) with
-  javascript and cookie enabled browsers. Several styles are offered in the
-  distribtion (more by others are welcome).
+  javascript and cookie enabled browsers. Several styles (and combinations)
+  are offered in the distribution (more by others are welcome).
 
 - The HTML manuals contain now a hook to use javascript and a few more hooks 
   for CSS style sheets.
 
 - All output versions contain now markup for coloring GAP examples as with
-  ColorPrompt(true).
+  ColorPrompt(true). (Easy to switch off for text and HTML in user config.)
 
 - Link from MathJax HTML manuals to central server http://cdn.mathjax.org
   to get scripts and fonts.
