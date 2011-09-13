@@ -7,6 +7,47 @@ GAPDoc2TextProcs.OtherThemes := rec();
 # components must be pairs of strings, but as abbreviations we allow
 # - a string a starting with TextAttr.CSI for [a, TextAttr.reset]
 # - another string a for [a, a]
+GAPDoc2TextProcs.OtherThemes.default := rec(
+  info := "the default theme",
+  reset := TextAttr.reset,
+  Heading := Concatenation(TextAttr.normal, TextAttr.underscore),
+  Func := Concatenation(TextAttr.normal, TextAttr.4),
+  Arg := Concatenation(TextAttr.normal, TextAttr.2),
+  Example := Concatenation(TextAttr.normal, TextAttr.0),
+  Package := TextAttr.bold,
+  Returns := TextAttr.normal,
+  URL := TextAttr.6,
+  Mark := Concatenation(TextAttr.bold, TextAttr.3),
+  K := Concatenation(TextAttr.normal, TextAttr.1),
+  C := Concatenation(TextAttr.normal, TextAttr.1),
+  F := Concatenation(TextAttr.normal, TextAttr.6),
+  B := ["<", ">"],
+  Emph := Concatenation(TextAttr.bold, ""),
+  Ref := TextAttr.6,
+  BibReset := TextAttr.reset,
+  BibAuthor := Concatenation(TextAttr.bold, TextAttr.1),
+  BibTitle := TextAttr.4,
+  BibJournal := ["",""],
+  BibVolume := TextAttr.4,
+  BibLabel := TextAttr.3,
+  Q := ["\"","\""],
+  M := ["",""],
+  Math := ["$","$"],
+  Display := ["",""],
+  Prompt := Concatenation(TextAttr.bold,TextAttr.4),
+  BrkPrompt := Concatenation(TextAttr.bold,TextAttr.1),
+  GAPInput := TextAttr.1,
+  GAPOutput := TextAttr.reset,
+  DefLineMarker := "\342\200\243 ",
+  # must be two visible characters long
+  ListBullet := " \342\200\242",
+  # must be together two visible characters long
+  EnumMarks := [" ","."],
+  FillString := "\342\224\200\342\224\200\342\224\200",
+  format := "",
+  flush := "both",
+);
+
 GAPDoc2TextProcs.OtherThemes.classic := rec(
   info := "similar to GAPDoc default until GAP 4.4",
   reset := TextAttr.reset,
@@ -42,49 +83,8 @@ GAPDoc2TextProcs.OtherThemes.classic := rec(
   # must be two visible characters long
   ListBullet := "--", 
   # must be together two visible characters long
-  EnumMarks := ["(",")"],
+  EnumMarks := [" ","."],
   FillString := "------",
-  format := "",
-  flush := "both",
-);
-
-GAPDoc2TextProcs.OtherThemes.default := rec(
-  info := "the default theme",
-  reset := TextAttr.reset,
-  Heading := Concatenation(TextAttr.normal, TextAttr.underscore),
-  Func := Concatenation(TextAttr.normal, TextAttr.4),
-  Arg := Concatenation(TextAttr.normal, TextAttr.2),
-  Example := Concatenation(TextAttr.normal, TextAttr.0),
-  Package := TextAttr.bold,
-  Returns := TextAttr.normal,
-  URL := TextAttr.6,
-  Mark := Concatenation(TextAttr.bold, TextAttr.3),
-  K := Concatenation(TextAttr.normal, TextAttr.1),
-  C := Concatenation(TextAttr.normal, TextAttr.1),
-  F := Concatenation(TextAttr.normal, TextAttr.6),
-  B := ["<", ">"],
-  Emph := Concatenation(TextAttr.bold, ""),
-  Ref := TextAttr.6,
-  BibReset := TextAttr.reset,
-  BibAuthor := Concatenation(TextAttr.bold, TextAttr.1),
-  BibTitle := TextAttr.4,
-  BibJournal := ["",""],
-  BibVolume := TextAttr.4,
-  BibLabel := TextAttr.3,
-  Q := ["\"","\""],
-  M := ["",""],
-  Math := ["$","$"],
-  Display := ["$$","$$"],
-  Prompt := Concatenation(TextAttr.bold,TextAttr.4),
-  BrkPrompt := Concatenation(TextAttr.bold,TextAttr.1),
-  GAPInput := TextAttr.1,
-  GAPOutput := TextAttr.reset,
-  DefLineMarker := "\342\200\243 ",
-  # must be two visible characters long
-  ListBullet := " \342\200\242",
-  # must be together two visible characters long
-  EnumMarks := ["(",")"],
-  FillString := "\342\224\200\342\224\200\342\224\200",
   format := "",
   flush := "both",
 );
@@ -124,7 +124,7 @@ GAPDoc2TextProcs.OtherThemes.old := rec(
   # must be two visible characters long
   ListBullet := " -",
   # must be together two visible characters long
-  EnumMarks := ["(",")"],
+  EnumMarks := [" ","."],
   FillString := "---",
   format := "",
   flush := "both"
@@ -155,7 +155,7 @@ GAPDoc2TextProcs.f();
 Unbind(GAPDoc2TextProcs.f);
 
 GAPDoc2TextProcs.OtherThemes.ColorPrompt := rec(
-  info := "show examples in ColorPrompt(true) style",
+  info := "show examples in ColorPrompt(true) style (default)",
   Prompt := Concatenation(TextAttr.bold,TextAttr.4),
   BrkPrompt := Concatenation(TextAttr.bold,TextAttr.1),
   GAPInput := TextAttr.1,
@@ -168,6 +168,15 @@ GAPDoc2TextProcs.OtherThemes.noColorPrompt := rec(
   BrkPrompt := "",
   GAPInput := "",
   GAPOutput := ""
+);
+
+GAPDoc2TextProcs.OtherThemes.justify := rec(
+  info := "left-right justify paragraphs (default)",
+  flush := "left",
+);
+GAPDoc2TextProcs.OtherThemes.raggedright := rec(
+  info := "do not left-right justify paragraphs",
+  flush := "left",
 );
 
 InstallValue(GAPDocTextTheme, rec());

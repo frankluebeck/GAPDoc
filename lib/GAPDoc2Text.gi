@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2Text.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2Text.gi,v 1.37 2011-07-11 14:14:39 gap Exp $
+#H  @(#)$Id: GAPDoc2Text.gi,v 1.38 2011-09-13 23:15:26 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -51,7 +51,7 @@ InstallValue(GAPDoc2TextProcs, rec());
 ##  
 ##  <#GAPDoc Label="SetGAPDocTextTheme">
 ##  <ManSection >
-##  <Func Arg="[optrec]" Name="SetGAPDocTextTheme" />
+##  <Func Arg="[optrec1[, optrec2] ...]" Name="SetGAPDocTextTheme" />
 ##  <Returns>nothing</Returns>
 ##  <Description>
 ##  This utility function is for readers  of the screen version of &GAP;
@@ -60,15 +60,13 @@ InstallValue(GAPDoc2TextProcs, rec());
 ##  There  is a  default which  can be  reset by  calling this  function
 ##  without argument. <P/>
 ##  
-##  As an  abbreviation the argument  <A>optrec</A> can be a  string for
-##  the  known  name  of  a  theme.  Currently,  there  are  the  themes
-##  <C>"none"</C> which displays just the plain text without any markup,
-##  <C>"classic"</C> which was the default  layout in former versions of
-##  &GAPDoc;, and  <C>"gap3"</C> which uses character  markup similar to
-##  older &GAP; manuals. <P/>
+##  As an  abbreviation the arguments <A>optrec1</A> and so on can be 
+##  strings for the  known  name  of  a  theme.  Information about valid 
+##  names is shown with <C>GAPDocTextTheme("");</C>. <P/>
 ##  
-##  Otherwise, <A>optrec</A> must be a record. Its entries overwrite the
-##  corresponding entries in the default.  To construct valid markup you
+##  Otherwise, <A>optrec1</A> and so on must be a record. Its entries 
+##  overwrite the corresponding entries in the default and in previous 
+##  arguments.  To construct valid markup you
 ##  can  use <Ref  Var="TextAttr"/>.  Entries must  be  either pairs  of
 ##  strings, which are  put before and after the  corresponding text, or
 ##  as an  abbreviation it can be  a single string. In  the latter case,
@@ -119,9 +117,10 @@ InstallValue(GAPDoc2TextProcs, rec());
 ##  </List>
 ##  
 ##  <Example>
+##  gap> # use no colors for GAP examples and 
 ##  gap> # change display of headings to bold green
-##  gap> SetGAPDocTextTheme(rec(
-##  >              Heading:=Concatenation(TextAttr.bold, TextAttr.2)));
+##  gap> SetGAPDocTextTheme("noColorPrompt", 
+##  >            rec(Heading:=Concatenation(TextAttr.bold, TextAttr.2)));
 ##  </Example>
 ##  </Description>
 ##  </ManSection>

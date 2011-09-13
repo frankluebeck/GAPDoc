@@ -2,7 +2,7 @@
 ##
 #W  GAPDoc2HTML.gi                 GAPDoc                        Frank Lübeck
 ##
-#H  @(#)$Id: GAPDoc2HTML.gi,v 1.63 2011-07-05 08:39:04 gap Exp $
+#H  @(#)$Id: GAPDoc2HTML.gi,v 1.64 2011-09-13 23:15:26 gap Exp $
 ##
 #Y  Copyright (C)  2000,  Frank Lübeck,  Lehrstuhl D für Mathematik,  
 #Y  RWTH Aachen
@@ -438,7 +438,9 @@ end;
 ##  <Package>MathJax</Package> version is preferred.
 ##  </Description>
 ##  </ManSection>
+##  <#/GAPDoc>
 ##  
+##  <#GAPDoc Label="HTMLStyleSheets">
 ##  <Subsection Label="StyleSheets">
 ##  <Heading>Stylesheet files</Heading>
 ##  <Index>CSS stylesheets</Index>
@@ -2051,11 +2053,15 @@ InstallGlobalFunction(CopyHTMLStyleFiles, function(dir)
   d := Filename(DirectoriesPackageLibrary("GAPDoc","styles"),"");
   todo := [];
   for f in DirectoryContents(d) do
-    l := Length(f);
-    if l > 3 and f{[l-2..l]} = ".js" then
+    if f = "chooser.html" then
       Add(todo, f);
-    elif l > 4 and f{[l-3..l]} = ".css" then
-      Add(todo, f);
+    else
+      l := Length(f);
+      if l > 3 and f{[l-2..l]} = ".js" then
+        Add(todo, f);
+      elif l > 4 and f{[l-3..l]} = ".css" then
+        Add(todo, f);
+      fi;
     fi;
   od;
   for f in todo do
