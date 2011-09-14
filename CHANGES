@@ -23,7 +23,7 @@
   escape sequences) for preprocessing before display. Paragraphs are now
   reformatted to current screen width. Unicode to latinX translation is
   now done with multi-character substitution. And markup with visible
-  characters becomes possible, e.g. the "gap3" text theme (tables are not
+  characters becomes possible, e.g. the "old" text theme (tables are not
   reformatted which can lead to some problems). 
 
 - Slightly changed layout of the title page in LaTeX/PDF manuals.
