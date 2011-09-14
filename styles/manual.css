@@ -420,11 +420,11 @@ span.nocss {
 /* colors for ColorPrompt like examples */
 span.GAPprompt {
   color: #000097;
-  font-weight: bold;
+  font-weight: normal;
 }
 span.GAPbrkprompt {
   color: #970000;
-  font-weight: bold;
+  font-weight: normal;
 }
 span.GAPinput {
   color: #970000;
