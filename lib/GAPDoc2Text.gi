@@ -61,7 +61,7 @@ InstallValue(GAPDoc2TextProcs, rec());
 ##  
 ##  As an  abbreviation the arguments <A>optrec1</A> and so on can be 
 ##  strings for the  known  name  of  a  theme.  Information about valid 
-##  names is shown with <C>GAPDocTextTheme("");</C>. <P/>
+##  names is shown with <C>SetGAPDocTextTheme("");</C>. <P/>
 ##  
 ##  Otherwise, <A>optrec1</A> and so on must be a record. Its entries 
 ##  overwrite the corresponding entries in the default and in previous 
