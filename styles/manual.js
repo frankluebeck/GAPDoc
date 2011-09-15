@@ -85,9 +85,8 @@ function addStyleLink() {
   var line = document.getElementById("mathjaxlink");
   var el = document.createElement("a");
   var oncl = document.createAttribute("href");
-  /*oncl.nodeValue = "javascript:showstylechooser()"; */
   var back = window.location.protocol+"//"
-  if (window.location.protocol == "http") {
+  if (window.location.protocol == "http:") {
     back = back+window.location.host;
     if (window.location.port != "") {
       back = back+":"+window.location.port;

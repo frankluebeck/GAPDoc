@@ -46,6 +46,11 @@ function f() {
   addr = addr + "?GAPDocStyle=" + getstyle();
   document.getElementsByName("backLINK")[0].href = addr;
 }
+function resetf() {
+  addr = window.location.search.split("=")[1];
+  addr = addr + "?GAPDocStyle=default";
+  document.getElementsByName("backLINK")[0].href = addr;
+}
 
 <!-- initialize form from GAPDocStyle cookie -->
 function initform() {
@@ -72,7 +77,8 @@ function initform() {
 
 <form name="SetGAPDocHTMLStyle" action="">
 <p>
-<input name="reset" type="reset" value="Reset to defaults" />
+<input name="reset" type="reset" value="Reset to defaults" 
+onclick="javascript:resetf()"/>
 </p>
 <p>
 Unfold subsections in menus only by mouse clicks: 
