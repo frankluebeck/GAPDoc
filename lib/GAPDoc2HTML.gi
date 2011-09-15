@@ -1718,7 +1718,8 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
        IsBound(r.attributes.Style) and
        r.attributes.Style = "Text" then
     if IsBound(r.root.labeltexts.(lab)) then
-      txt := Concatenation(rattr[1], r.root.labeltexts.(lab), rattr[2]);
+      txt := Concatenation("<a href=\"",r.root.labels.(lab)[2],
+             "\">",rattr[1],r.root.labeltexts.(lab),rattr[2],"</a>");
     else
       if GAPDoc2HTMLProcs.FirstRun <> true then
         Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
@@ -1726,7 +1727,6 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
       fi;
       txt := Concatenation(rattr[1], "???", rattr[2]);
     fi;
-    Append(txt, Concatenation(" (", ref, ")"));
   else
     txt := ref;
   fi;

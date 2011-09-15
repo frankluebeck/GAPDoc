@@ -1234,8 +1234,8 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
       fi;
     elif IsBound(r.attributes.Style) and r.attributes.Style = "Text" then
       if IsBound(GAPDoc2LaTeXProcs._labeledSections.(lab)) then
-        ref := Concatenation("`", StripBeginEnd(
-                GAPDoc2LaTeXProcs._labeledSections.(lab), WHITESPACE), "'"); 
+        ref := Concatenation("\\hyperref[",lab,"]{`", StripBeginEnd(
+                GAPDoc2LaTeXProcs._labeledSections.(lab), WHITESPACE), "'}"); 
       else
         Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
