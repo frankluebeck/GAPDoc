@@ -901,8 +901,8 @@ GAPDoc2TextProcs.ChapSect := function(r, par, sect)
                  "Package", "Arg" ] do
         sm := SubstitutionSublist(sm, GAPDoc2TextProcs.TextAttr.(t)[2],
                Concatenation(GAPDoc2TextProcs.TextAttr.(t)[2],
-                             GAPDoc2TextProcs.TextAttr.Heading[2],
-                             GAPDoc2TextProcs.TextAttr.Heading[1]));
+                             GAPDoc2TextProcs.TextAttr.Heading[2],"\027",
+                             GAPDoc2TextProcs.TextAttr.Heading[1],"\027"));
       od;
     fi;
     # in six entry we don't want the extra indent on reformatting
@@ -1070,9 +1070,11 @@ GAPDoc2TextProcs.C := function(r, str)
   s := "";
   GAPDoc2TextContent(r, s);
   # <A> elements are allowed inside <C>, so maybe we need to repeat the markup
+  # (with a char 23 such that it can be ignored in case of visible markup
+  # substitution)
   s := SubstitutionSublist(s, GAPDoc2TextProcs.TextAttr.Arg[2], 
                                Concatenation(GAPDoc2TextProcs.TextAttr.Arg[2],
-                                             GAPDoc2TextProcs.TextAttr.C[1]));
+                                      GAPDoc2TextProcs.TextAttr.C[1],"\027"));
   GAPDoc2TextProcs.WrapAppend(str, s, "C");
 end;
 

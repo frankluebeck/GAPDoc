@@ -538,13 +538,15 @@ end);
 ##  
 ##  <#/GAPDoc>
 InstallGlobalFunction(WrapTextAttribute, function(str, attr)
-  if IsList(attr) and Length(attr[1]) > 1 and attr[1]{[1,2]} = TextAttr.CSI and
+  if IsList(attr) and Length(attr) > 0 and IsString(attr[1]) and
+     Length(attr[1]) > 1 and attr[1]{[1,2]} = TextAttr.CSI and
                             attr[2] = TextAttr.reset then
     attr := attr[1];
   fi;
   if IsString(attr) and Length(attr) > 1 and attr{[1,2]} = TextAttr.CSI then
+    # we mark inner attribute starters by appending a char 23
     str := SubstitutionSublist(str, TextAttr.reset, Concatenation(
-                                                      TextAttr.reset, attr));
+                                              TextAttr.reset, attr, "\027"));
     str := Concatenation(attr, str, TextAttr.reset);
   elif IsString(attr) then
     str := Concatenation(attr,str,attr);
@@ -826,7 +828,7 @@ InstallGlobalFunction(StripEscapeSequences, function(str)
 end);
 InstallGlobalFunction(SubstituteEscapeSequences, function(str, subs)
   local special, hash, esc, res, i, ls, seq, pos, p, b, e, width, 
-        nb, ne, flush, pY, indlen, par, j, row, a, l, n, k;
+        cont, nb, ne, flush, pY, indlen, par, j, row, a, l, n, k;
 
   # maybe we need to simplify some substitution strings because
   # of the current encoding
@@ -862,9 +864,19 @@ InstallGlobalFunction(SubstituteEscapeSequences, function(str, subs)
       od;
       # first letter is last character of escape sequence
       i := i+1; 
+      if IsBound(str[i]) and str[i] = '\027' then
+        cont := true;
+        i := i+1;
+      else
+        cont := false;
+      fi;
       pos := PositionSet(hash[1], seq);
       if pos <> fail and not pos in special then
-        seq := hash[2][pos];
+        if cont and (Length(hash[2][pos]) = 0 or hash[2][pos][1] <> esc) then
+          seq := "";
+        else
+          seq := hash[2][pos];
+        fi;
       else
         Add(res, esc);
         Add(res, '[');

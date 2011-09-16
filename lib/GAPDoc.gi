@@ -232,10 +232,10 @@ end);
 ##  <Description>
 ##  Here   <A>tree</A>  must   be  the   XML  tree   of  a   &GAPDoc;
 ##  document,   returned   by  <Ref   Func="ParseTreeXMLString"   />.
-##  Running <C>latex</C>  on the  result of  <Ref Func="GAPDoc2LaTeX"
-##  /><C>(<A>tree</A>)</C>  produces  a   file  <A>pnrfile</A>  (with
-##  extension  <C>.pnr</C>).  The   command  <Ref  Func="GAPDoc2Text"
-##  /><C>(<A>tree</A>)</C> creates a component <C><A>tree</A>.six</C>
+##  Running <C>latex</C>  on the  result of  <C>GAPDoc2LaTeX(<A>tree</A>)</C>  
+##  produces  a   file  <A>pnrfile</A>  (with
+##  extension  <C>.pnr</C>).  The   command  <C>GAPDoc2Text(<A>tree</A>)</C>
+##  creates a component <C><A>tree</A>.six</C>
 ##  which contains all  information about the document  for the &GAP;
 ##  online  help,  except  the  page numbers  in  the  <C>.dvi,  .ps,
 ##  .pdf</C> versions of the document.  This command adds the missing
