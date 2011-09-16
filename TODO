@@ -1,6 +1,10 @@
 
            Some reminders for the authors
 
+- Can TestManualExamples be changed such that only call of
+  TestExamplesString is necessary. Current version doesn't work when
+  the examples depend on each other, variables may be different on
+  second call of TestExamplesString.
 
 - allow the distribution of different output documents (html, text, pdf,...)
   into different directories (needs to change the handler for GAPDoc books).
