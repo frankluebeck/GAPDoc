@@ -177,7 +177,8 @@ InstallGlobalFunction(TestExamplesString, function(arg)
   out := "";
   f := OutputTextString(out, false);
   PrintTo1(f, function()
-    READ_TEST_STREAM(inp);
+##      READ_TEST_STREAM(inp);
+    ReadTest(inp);
   end);
   if not IsClosedStream(inp) then
     CloseStream(inp);
