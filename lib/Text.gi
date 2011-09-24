@@ -827,20 +827,28 @@ InstallGlobalFunction(StripEscapeSequences, function(str)
   return res;
 end);
 InstallGlobalFunction(SubstituteEscapeSequences, function(str, subs)
-  local special, hash, esc, res, i, ls, seq, pos, p, b, e, width, 
-        cont, nb, ne, flush, pY, indlen, par, j, row, a, l, n, k;
+  local orig, special, hash, esc, res, i, ls, seq, pos, p, b, e, width, 
+        cont, nb, ne, flush, pY, indlen, par, j, row, a, l, n, k, widthfun;
 
   # maybe we need to simplify some substitution strings because
-  # of the current encoding
+  # of the current encoding, we cache the result
   if GAPInfo.TermEncoding <> "UTF-8" then
-    subs := ShallowCopy(subs);
-    for a in RecFields(subs) do
-      subs.(a) := [subs.(a)[1], List(subs.(a)[2], x-> 
+    if IsBound(subs.(GAPInfo.TermEncoding)) then
+      subs := subs.(GAPInfo.TermEncoding);
+    else
+      orig := subs;
+      subs := ShallowCopy(subs);
+      for a in RecFields(subs) do
+        if IsList(subs.(a)) then
+          subs.(a) := [subs.(a)[1], List(subs.(a)[2], x-> 
                                 Encode(
                                 SimplifiedUnicodeString(Unicode(x, "UTF-8"), 
                                 GAPInfo.TermEncoding),
                                 GAPInfo.TermEncoding))];
-    od;
+        fi;
+      od;
+      orig.(GAPInfo.TermEncoding) := subs;
+    fi;
   fi;
   # we need a special handling of tags to reformat paragraphs and to
   # fill lines
@@ -899,6 +907,11 @@ InstallGlobalFunction(SubstituteEscapeSequences, function(str, subs)
     fi;
   od;
   # now we reformat paragraphs
+  if GAPInfo.TermEncoding = "UTF-8" then
+    widthfun := WidthUTF8String;
+  else
+    widthfun := Length;
+  fi;
   str := res;
   res := "";
   pos := 0;
@@ -928,14 +941,14 @@ InstallGlobalFunction(SubstituteEscapeSequences, function(str, subs)
       # the +2 because all help text has additional indentation of 2
       indlen := Int(str{[nb+Length(b)+4..pY-1]}) + 2;
       par := FormatParagraph(str{[pY+1..ne-1]}, width - indlen, flush,
-                          [RepeatedString(" ", indlen), ""], WidthUTF8String);
+                          [RepeatedString(" ", indlen), ""], widthfun);
       # remove leading blanks if there is already something on this line
       # (e.g., initial indentation or a list mark)
       i := Length(res);
       while i > 0 and res[i] <> '\n' do
         i := i-1;
       od;
-      i := WidthUTF8String(StripEscapeSequences(res{[i+1..Length(res)]}));
+      i := widthfun(StripEscapeSequences(res{[i+1..Length(res)]}));
       while i > 0 and par[1] = ' ' do
         Remove(par,1);
         i := i-1;
@@ -975,7 +988,7 @@ InstallGlobalFunction(SubstituteEscapeSequences, function(str, subs)
         nb := PositionSublist(row[Length(row)], b);
       od;
       # lengths of the fillings
-      l := width - Sum(row, a-> WidthUTF8String(StripEscapeSequences(a)));
+      l := width - Sum(row, a-> widthfun(StripEscapeSequences(a)));
       n := Length(row)-1;
       ls := [];
       for k in [1..n] do
