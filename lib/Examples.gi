@@ -24,7 +24,7 @@
 ##  containing the content of <C>&lt;Example></C> elements. For each example
 ##  there is a comment line showing the paragraph number and (if available) the
 ##  original location  of this example with file and line number. Depending 
-##  on the argument <A>units</A> several examples are colleected in one string.
+##  on the argument <A>units</A> several examples are collected in one string.
 ##  Recognized values for <A>units</A> are <C>"Chapter"</C>, <C>"Section"</C>,
 ##  <C>"Subsection"</C> or <C>"Single"</C>. The latter means that each example
 ##  is in a separate string. For all other value of <A>units</A> just one string
