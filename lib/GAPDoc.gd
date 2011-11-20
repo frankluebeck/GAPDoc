@@ -35,9 +35,7 @@ DeclareGlobalFunction("NormalizedArgList");
 BindGlobal("InfoGAPDoc", NewInfoClass("InfoGAPDoc"));
 SetInfoLevel(InfoGAPDoc, 1);
 if CompareVersionNumbers(GAPInfo.Version, "4.dev") then
-  SetInfoHandler(InfoGAPDoc, function(cl, lev, l)
-    CallFuncList(Print, l);
-  end);
+  SetInfoHandler(InfoGAPDoc, PlainInfoHandler);
 fi;
 
 DeclareGlobalVariable("GAPDocTexts");

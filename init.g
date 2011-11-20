@@ -7,6 +7,16 @@
 #Y  Lehrstuhl D für Mathematik,  RWTH Aachen
 ##
 
+# An alternative Info handler which does not print implicit "#I " and "\n"
+BindGlobal("PlainInfoHandler",
+function ( infoclass, level, list )
+    local  out, s;
+    out := InfoData.Output[InfoData.LastClass![1]];
+    for s  in list  do
+        AppendTo( out, s );
+    od;
+end);
+
 ReadPackage("GAPDoc", "lib/UnicodeTools.gd");
 ReadPackage("GAPDoc", "lib/PrintUtil.gd");
 ReadPackage("GAPDoc", "lib/Text.gd");

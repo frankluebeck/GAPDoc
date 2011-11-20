@@ -42,7 +42,5 @@ DeclareGlobalFunction("XMLElements");
 BindGlobal("InfoXMLParser", NewInfoClass("InfoXMLParser"));
 SetInfoLevel(InfoXMLParser, 1);
 if CompareVersionNumbers(GAPInfo.Version, "4.dev") then
-  SetInfoHandler(InfoXMLParser, function(cl, lev, l)
-    CallFuncList(Print, l);
-  end);
+  SetInfoHandler(InfoXMLParser, PlainInfoHandler);
 fi;

@@ -42,7 +42,5 @@ DeclareGlobalFunction("SearchMRBib");
 BindGlobal("InfoBibTools", NewInfoClass("InfoBibTools"));
 SetInfoLevel(InfoBibTools, 1);
 if CompareVersionNumbers(GAPInfo.Version, "4.dev") then
-  SetInfoHandler(InfoBibTools, function(cl, lev, l)
-    CallFuncList(Print, l);
-  end);
+  SetInfoHandler(InfoBibTools, PlainInfoHandler);
 fi;
