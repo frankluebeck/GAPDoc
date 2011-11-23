@@ -10,8 +10,13 @@
 # An alternative Info handler which does not print implicit "#I " and "\n"
 BindGlobal("PlainInfoHandler",
 function ( infoclass, level, list )
-    local  out, s;
-    out := InfoData.Output[InfoData.LastClass![1]];
+    local cl, out, s;
+    cl := InfoData.LastClass![1];
+    if IsBound(InfoData.Output[cl]) then
+      out := InfoData.Output[cl];
+    else
+      out := DefaultInfoOutput;
+    fi;
     for s  in list  do
         AppendTo( out, s );
     od;
