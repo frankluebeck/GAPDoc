@@ -183,7 +183,7 @@ end);
 ##  gap> TestExamplesString("gap> 1+1;\n2\n");
 ##  true
 ##  gap> TestExamplesString("gap> 1+1;\n2\ngap> 2+3;\n4\n");
-##  [ rec( line := 3, input := "gap> 2+3;", diff := "+ 5\n- 4\n" ) ]
+##  [ rec( diff := "+ 5\n- 4\n", input := "gap> 2+3;", line := 3 ) ]
 ##  gap> TestExamplesString("gap> 1+1;\n2\ngap> 2+3;\n4\n", true);
 ##  -----------  bad example --------
 ##  line: 3
@@ -191,7 +191,7 @@ end);
 ##  differences:
 ##  + 5
 ##  - 4
-##  [ rec( line := 3, input := "gap> 2+3;", diff := "+ 5\n- 4\n" ) ]
+##  [ rec( diff := "+ 5\n- 4\n", input := "gap> 2+3;", line := 3 ) ]
 ##  </Example>
 ##  </Description>
 ##  </ManSection>
@@ -386,6 +386,7 @@ InstallGlobalFunction(RunExamples, function(arg)
             for i in [ex[2]+2..ex[3]-1] do
               str[i] := "";
             od;
+            Print("        changed lines ", ex[2]+1, "..", ex[3]-1, "\n");
           od;
           str := Concatenation(str);
           FileString(f, str);

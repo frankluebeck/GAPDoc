@@ -528,9 +528,9 @@ end);
 ##  gap> str := Concatenation("XXX",TextAttr.2, "BLUB", TextAttr.reset,"YYY");
 ##  "XXX\033[32mBLUB\033[0mYYY"
 ##  gap> str2 := WrapTextAttribute(str, TextAttr.1);
-##  "\033[31mXXX\033[32mBLUB\033[0m\033[31mYYY\033[0m"
+##  "\033[31mXXX\033[32mBLUB\033[0m\033[31m\027YYY\033[0m"
 ##  gap> str3 := WrapTextAttribute(str, TextAttr.underscore);
-##  "\033[4mXXX\033[32mBLUB\033[0m\033[4mYYY\033[0m"
+##  "\033[4mXXX\033[32mBLUB\033[0m\033[4m\027YYY\033[0m"
 ##  gap> # use Print(str); and so on to see how it looks like.
 ##  </Example>
 ##  </Description>

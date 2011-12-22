@@ -493,7 +493,7 @@ end);
 ##  to a &GAP; string.<P/>
 ##  <Example>
 ##  gap> ustr := Unicode("a and \366", "latin1");
-##  Unicode("a and ö")
+##  Unicode("a and \303\266")
 ##  gap> ustr = Unicode("a and &amp;#246;", "XML");  
 ##  true
 ##  gap> IntListUnicodeString(ustr);
@@ -721,7 +721,7 @@ end);
 ##  
 ##  <Example>
 ##  gap> ustr := Unicode("a and &amp;#246;", "XML");
-##  Unicode("a and ö")
+##  Unicode("a and \303\266")
 ##  gap> SimplifiedUnicodeString(ustr, "ASCII");
 ##  Unicode("a and oe")
 ##  gap> SimplifiedUnicodeString(ustr, "ASCII", "single");

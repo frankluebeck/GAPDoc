@@ -204,9 +204,9 @@ end);
 ##  
 ##  <Example>
 ##  gap> bib := ParseBibFiles("doc/test.bib");
-##  [ [ rec( From := rec( BibTeX := true ), Type := "article", 
-##            Label := "AB2000", author := "Fritz A. First and Sec, X. Y."
-##              , title := "Short", journal := "Important Journal", 
+##  [ [ rec( From := rec( BibTeX := true ), Label := "AB2000", 
+##            Type := "article", author := "Fritz A. First and Sec, X. Y."
+##              , journal := "Important Journal", title := "Short", 
 ##            year := "2000" ) ], [ "j" ], [ "Important Journal" ] ]
 ##  </Example>
 ##  </Description>
@@ -386,11 +386,11 @@ end);
 ##    [ [ "First", "F. A.", "Fritz A." ], [ "Sec", "X. Y.", "X. Y." ] ] ]
 ##  gap> NormalizeNameAndKey(bib[1][1]);
 ##  gap> bib[1][1];
-##  rec( From := rec( BibTeX := true ), Type := "article", 
-##    Label := "AB2000", author := "First, F. A. and Sec, X. Y.", 
-##    title := "Short", journal := "Important Journal", year := "2000", 
-##    authororig := "Fritz A. First and Sec, X. Y.", printedkey := "FS00",
-##    keylong := "firstsec2000" )
+##  rec( From := rec( BibTeX := true ), Label := "AB2000", 
+##    Type := "article", author := "First, F. A. and Sec, X. Y.", 
+##    authororig := "Fritz A. First and Sec, X. Y.", 
+##    journal := "Important Journal", keylong := "firstsec2000", 
+##    printedkey := "FS00", title := "Short", year := "2000" )
 ##  </Example>
 ##  </Description>
 ##  </ManSection>
@@ -1127,20 +1127,22 @@ end);
 ##  gap> bib2 := ParseBibXMLextString(Concatenation(bibxml));;
 ##  gap> for b in bib2.entries do 
 ##  >          PrintFormattedString(StringBibXMLEntry(b, "Text")); od;     
-##  [Gau95]  Gauss,  C. F., Disquisitiones arithmeticae, Academia Colombiana
-##  de  Ciencias  Exactas  Físicas  y  Naturales,  Colección  Enrique  Pérez
-##  Arbeláez   [Enrique  Pérez  Arbeláez  Collection],  10,  Bogotá  (1995),
-##  xliv+495  pages,  (Translated  from  the Latin by Hugo Barrantes Campos,
-##  Michael Josephy and Ángel Ruiz Zúñiga, With a preface by Ruiz Zúñiga).
+##  [Gau95]   Gauss,   C.   F.,  Disquisitiones  arithmeticae,  Academia
+##  Colombiana  de  Ciencias  Exactas  Físicas  y  Naturales,  Colección
+##  Enrique  Pérez  Arbeláez  [Enrique  Pérez  Arbeláez Collection], 10,
+##  Bogotá  (1995),  xliv+495  pages, (Translated from the Latin by Hugo
+##  Barrantes  Campos,  Michael  Josephy  and  Ángel Ruiz Zúñiga, With a
+##  preface by Ruiz Zúñiga).
 ##  
-##  [Gau86]  Gauss, C. F., Disquisitiones arithmeticae, Springer-Verlag, New
-##  York  (1986),  xx+472 pages, (Translated and with a preface by Arthur A.
-##  Clarke,  Revised  by William C. Waterhouse, Cornelius Greither and A. W.
-##  Grootendorst and with a preface by Waterhouse).
+##  [Gau86]  Gauss, C. F., Disquisitiones arithmeticae, Springer-Verlag,
+##  New  York  (1986),  xx+472  pages, (Translated and with a preface by
+##  Arthur  A.  Clarke,  Revised  by  William  C.  Waterhouse, Cornelius
+##  Greither and A. W. Grootendorst and with a preface by Waterhouse).
 ##  
-##  [Gau66]  Gauss,  C.  F.,  Disquisitiones  arithmeticae,  Yale University
-##  Press,  Translated  into  English  by Arthur A. Clarke, S. J, New Haven,
+##  [Gau66]  Gauss,  C. F., Disquisitiones arithmeticae, Yale University
+##  Press, Translated into English by Arthur A. Clarke, S. J, New Haven,
 ##  Conn. (1966), xx+472 pages.
+##  
 ##  </Example>
 ##  </Description>
 ##  
