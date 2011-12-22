@@ -134,11 +134,12 @@ end);
 ##  difference is that the output is not sent directly to the screen,
 ##  but  is piped  into the  current pager;  see <Ref  BookName="ref"
 ##  Func="Pager" />.
-##  
-##  <Example>
+## 
+##  <!-- cannot be run in automatic test -->
+##  <Log>
 ##  gap> Page([1..1421]+0);
 ##  gap> PageDisplay(CharacterTable("Symmetric", 14));
-##  </Example>
+##  </Log>
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
