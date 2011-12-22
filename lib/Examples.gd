@@ -10,9 +10,15 @@
 ##  GAP examples in GAPDoc manuals.
 ##  
 
+# old, keep for compatibility
 DeclareGlobalFunction("ManualExamplesXMLTree");
 DeclareGlobalFunction("ManualExamples");
 DeclareGlobalFunction("ReadTestExamplesString");
 DeclareGlobalFunction("TestExamplesString");
 DeclareGlobalFunction("TestManualExamples");
+
+# new
+DeclareGlobalFunction("ExtractExamplesXMLTree");
+DeclareGlobalFunction("ExtractExamples");
+DeclareGlobalFunction("RunExamples");
 

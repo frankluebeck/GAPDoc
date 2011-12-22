@@ -91,12 +91,64 @@ InstallGlobalFunction(ManualExamplesXMLTree, function( tree, units )
   return res;
 end);
 
+InstallGlobalFunction(ExtractExamplesXMLTree, function( tree, units )
+  local secelts, sec, exelts, orig, res, l, b, e, a, ex;
+  if units = "Chapter" then
+    secelts := ["Chapter", "Appendix"];
+  elif units = "Section" then
+    secelts := ["Section"];
+  elif units = "Subsection" then
+    secelts := ["Subsection", "ManSection"];
+  elif units = "Single" then
+    secelts := ["Example"];
+  else
+    secelts := 0;
+  fi;
+  if secelts <> 0 then
+    sec := XMLElements(tree, secelts);
+  else
+    sec := [tree];
+  fi;
+  exelts := List(sec, a-> XMLElements(a, ["Example"]));
+  if IsBound(tree.inputorigins) then
+    orig := tree.inputorigins;
+  elif IsBound(tree.root) and IsBound(tree.root.inputorigins) then
+    orig := tree.inputorigins;
+  else
+    orig := fail;
+  fi;
+  res := [];
+  for a in exelts do
+    l := [];
+    for ex in a do
+      if orig <> fail then
+        b := OriginalPositionDocument(orig, ex.start);
+        e := OriginalPositionDocument(orig, ex.stop);
+        Add(b, e[2]);
+      else
+        b := [ex.start, ex.stop];
+      fi;
+      Add(l, [GetTextXMLTree(ex), b]);
+    od;
+    Add(res, l);
+  od;
+  return res;
+end);
+
 # compose and parse document, then extract examples units-wise
 InstallGlobalFunction(ManualExamples, function( path, main, files, units )
   local str, xmltree;
   str:= ComposedDocument( "GAPDoc", path, main, files, true );
   xmltree:= ParseTreeXMLString( str[1], str[2] );
   return ManualExamplesXMLTree(xmltree, units);
+end);
+
+# compose and parse document, then extract examples units-wise
+InstallGlobalFunction(ExtractExamples, function( path, main, files, units )
+  local str, xmltree;
+  str:= ComposedDocument( "GAPDoc", path, main, files, true );
+  xmltree:= ParseTreeXMLString( str[1], str[2] );
+  return ExtractExamplesXMLTree(xmltree, units);
 end);
 
 ##  <#GAPDoc Label="TestExamples">
@@ -239,4 +291,110 @@ InstallGlobalFunction(TestManualExamples, function(arg)
   od; 
   return res;
 end);
+
+# args: exlists[, show, change]
+InstallGlobalFunction(RunExamples, function(arg)
+  local exlists, opts, oldscr, l, pex, ok, new, inp, ch, fnams, str, fch, 
+        pos, pre, a, j, ex, i, f;
+  exlists := arg[1];
+  opts := rec(
+          showDiffs := true,
+          changeSources := false,
+          width := 72,
+  );                 
+  if Length(arg) > 1 and IsRecord(arg[2]) then
+    for a in RecFields(arg[2]) do
+      opts.(a) := arg[2].(a);
+    od;
+  fi;
+  oldscr := SizeScreen();
+  SizeScreen([opts.width, oldscr[2]]);
+  for j in [1..Length(exlists)] do
+    l := exlists[j];
+    Print("# Running list ",j," . . .\n");
+    START_TEST("");
+    for ex in l do
+      pex := ParseTestInput(ex[1], false);
+      RunTests(pex);
+      ok := true;
+      for i in [1..Length(pex[1])] do
+        if pex[2][i] <> pex[4][i] then
+          ok := false;
+          if opts.showDiffs = true then
+            Print("########> Diff in ", ex[2], "\n# Input is:\n");
+            PrintFormattedString(pex[1][i]);
+            Print("# Expected output:\n");
+            PrintFormattedString(pex[2][i]);
+            Print("# But found:\n");
+            PrintFormattedString(pex[4][i]);
+            Print("########\n");
+          fi;
+        fi;
+      od;
+      if not ok then
+        new := "";
+        for i in [1..Length(pex[1])] do
+          inp := Concatenation("gap> ", JoinStringsWithSeparator(
+                    SplitString(pex[1][i], "\n", ""), "\n> "), "\n");
+          Append(new, inp);
+          Append(new, pex[4][i]);
+        od;
+        Add(ex[2], new);
+      fi;
+    od;
+  od;
+  if opts.changeSources = true then
+    ch := [];
+    for l in exlists do
+      for ex in l do
+        if IsString(ex[2][1]) and Length(ex[2]) > 3 then
+          Add(ch, ex[2]);
+        fi;
+      od;
+    od;
+    if Length(ch) > 0 then
+      Print("# Diffs found, changing source files ...\n");
+      fnams := Set(List(ch, a-> a[1]));
+      for f in fnams do
+        Print("# Changing ",f,"\n");
+        str := StringFile(f);
+        if str = fail then
+          Print("# WARNING: Cannot read file ",f,", skipping\n");
+        else
+          str := SplitString(str, "\n", "");
+          for a in str do
+            Add(a, '\n');
+          od;
+          fch := Filtered(ch, a-> a[1] = f);
+          for ex in fch do
+            # change first line to everything new and empty the remaining ones
+            pos := PositionSublist(str[ex[2]], "<Example");
+            pre := str[ex[2]]{[1..pos-1]};
+            l := SplitString(ex[4], "\n", "");
+            new := "";
+            for a in l do
+              Append(new, pre);
+              Append(new, a);
+              Add(new, '\n');
+            od;
+            # maybe escape & and <
+            if PositionSublist(str[ex[2]], "<![CDATA[") = fail then
+              new := SubstitutionSublist(new, "&", "&amp;");
+              new := SubstitutionSublist(new, "<", "&lt;");
+            fi;
+            str[ex[2]+1] := new;
+            for i in [ex[2]+2..ex[3]-1] do
+              str[i] := "";
+            od;
+          od;
+          str := Concatenation(str);
+          FileString(f, str);
+        fi;
+      od;
+    fi;
+  fi;
+  SizeScreen(oldscr);
+end);
+
+
 
