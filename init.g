@@ -17,9 +17,15 @@ function ( infoclass, level, list )
     else
       out := DefaultInfoOutput;
     fi;
-    for s  in list  do
-        AppendTo( out, s );
-    od;
+    if out = "*Print*" then
+      for s in list do
+        Print(s);
+      od;
+    else
+      for s  in list  do
+          AppendTo( out, s );
+      od;
+    fi;
 end);
 
 ReadPackage("GAPDoc", "lib/UnicodeTools.gd");
