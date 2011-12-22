@@ -530,7 +530,8 @@ InstallGlobalFunction(StringBibAsBib, function(arg)
         Append(res, abbrevs[pos]);
       else
         Append(res, "{");
-        lines := FormatParagraph(r.(comp), 54, "both", [ind, ""]);
+        lines := FormatParagraph(r.(comp), SizeScreen()[1]-26, 
+                                 "both", [ind, ""]);
         Append(res, lines{[Length(ind)+1..Length(lines)-1]});
         Append(res, "}");
       fi;
@@ -1056,9 +1057,9 @@ InstallGlobalFunction(StringBibAsText, function(arg)
 ##    str := FormatParagraph(Filtered(str, x-> not x in "{}"), 72);
   Add(str, '.');
   if Unicode(str, "UTF-8") <> fail then
-    str := FormatParagraph(str, 72, WidthUTF8String);
+    str := FormatParagraph(str, SizeScreen()[1]-4, WidthUTF8String);
   else
-    str := FormatParagraph(str, 72);
+    str := FormatParagraph(str, SizeScreen()[1]-4);
   fi;
   Add(str, '\n');
   return str;
@@ -1125,7 +1126,7 @@ end);
 ##  gap> bibxml := List(bib[1], StringBibAsXMLext);;
 ##  gap> bib2 := ParseBibXMLextString(Concatenation(bibxml));;
 ##  gap> for b in bib2.entries do 
-##  gap>          PrintFormattedString(StringBibXMLEntry(b, "Text")); od;     
+##  >          PrintFormattedString(StringBibXMLEntry(b, "Text")); od;     
 ##  [Gau95]  Gauss,  C. F., Disquisitiones arithmeticae, Academia Colombiana
 ##  de  Ciencias  Exactas  Físicas  y  Naturales,  Colección  Enrique  Pérez
 ##  Arbeláez   [Enrique  Pérez  Arbeláez  Collection],  10,  Bogotá  (1995),
