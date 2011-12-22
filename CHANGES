@@ -1,5 +1,14 @@
                        CHANGES of the GAPDoc package
 
+1.4 -> 1.5
+
+- Substituted the TestManual functions by new ones based on the new
+  'Test' functionality in the GAP library: ExtractExamples, RunExamples.
+  (Used this to adjust all manual examples.)
+
+- Added a copy of GPL text.
+
+
 1.3 -> 1.4
 
 - Made license statement more direct.
