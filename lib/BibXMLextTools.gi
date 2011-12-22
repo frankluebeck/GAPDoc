@@ -1051,6 +1051,7 @@ end);
 ##  gap> Print(RecBibXMLEntry(e, "Text", strs).title, "\n");  
 ##  The  Fritz package for the 
 ##           formula x^y - l_{i+1} → R
+##  gap> AddHandlerBuildRecBibXMLEntry("Wrap:Package", "BibTeX", "Ignore");
 ##  </Example>
 ##  </Description>
 ##  </ManSection>
@@ -1596,8 +1597,8 @@ end);
 ##  gap> PrintFormattedString(ebib);
 ##  @article{ AB2000,
 ##    author =           {First, F. A. and Sec{\H o}nd, X. Y.},
-##    title =            {The  \textsf{ {F}ritz} package for the formula
-##                        $x^y - l_{{i+1}} \rightarrow \mathbb{R}$},
+##    title =            {The  {F}ritz  package  for  the formula $x^y -
+##                        l_{{i+1}} \rightarrow \mathbb{R}$},
 ##    journal =          {Important Journal},
 ##    number =           {13},
 ##    year =             {2000},
