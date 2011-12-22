@@ -252,13 +252,18 @@ documents.
 </Section>
 
 <Section Label="Sec:TestExample">
+<Index><C>ManualExamples</C></Index>
+<Index><C>TestManualExamples</C></Index>
 <Heading>Testing Manual Examples</Heading>
-We also provide some tools to check the examples given in
-<C>&lt;Example></C>-elements. 
+We also provide some tools to check and adjust the examples given in
+<C>&lt;Example></C>-elements. <P/>
+Former versions of &GAPDoc; provided functions <C>ManualExamples</C>
+and <C>TestManualExamples</C>. These functions are still available,
+but no longer documented. Their use is deprecated.
 
-<#Include Label="ManualExamples">
+<#Include Label="ExtractExamples">
 
-<#Include Label="TestExamples">
+<#Include Label="RunExamples">
 
 </Section>
 

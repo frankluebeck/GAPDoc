@@ -11,39 +11,41 @@
 ##  
 
 
-##  <#GAPDoc Label="ManualExamples">
+##  <#GAPDoc Label="ExtractExamples">
 ##  <ManSection >
-##  <Func Arg="path, main, files, units" Name="ManualExamples" />
-##  <Returns>a list of strings</Returns>
-##  <Func Arg="tree, units" Name="ManualExamplesXMLTree" />
-##  <Returns>a list of strings</Returns>
+##  <Func Arg="path, main, files, units" Name="ExtractExamples" />
+##  <Returns>a list of lists</Returns>
+##  <Func Arg="tree, units" Name="ExtractExamplesXMLTree" />
+##  <Returns>a list of lists</Returns>
 ##  <Description>
 ##  The  argument   <A>tree</A>  must   be  a   parse tree of a
 ##  &GAPDoc; document, see <Ref Func="ParseTreeXMLFile"/>. 
-##  The function <Ref Func="ManualExamplesXMLTree"/> returns a list of strings
-##  containing the content of <C>&lt;Example></C> elements. For each example
-##  there is a comment line showing the paragraph number and (if available) the
-##  original location  of this example with file and line number. Depending 
-##  on the argument <A>units</A> several examples are collected in one string.
+##  The function <Ref Func="ExtractExamplesXMLTree"/> returns a data
+##  structure representing the <C>&lt;Example></C> elements of the document. 
+##  The return value can be used with <Ref Func="RunExamples"/> to check and
+##  optionally update the examples of the document.<P/> 
+##  Depending 
+##  on the argument <A>units</A> several examples are collected in one list.
 ##  Recognized values for <A>units</A> are <C>"Chapter"</C>, <C>"Section"</C>,
 ##  <C>"Subsection"</C> or <C>"Single"</C>. The latter means that each example
-##  is in a separate string. For all other value of <A>units</A> just one string
+##  is in a separate list. For all other value of <A>units</A> just one list
 ##  with all examples is returned.<P/>
 ##  
 ##  The arguments <A>path</A>, <A>main</A> and <A>files</A> of <Ref
-##  Func="ManualExamples"/> are the same as for <Ref Func="ComposedDocument"/>.
+##  Func="ExtractExamples"/> are the same as for <Ref Func="ComposedDocument"/>.
 ##  This function first contructs and parses the &GAPDoc; document and then
-##  applies <Ref Func="ManualExamplesXMLTree"/>.
+##  applies <Ref Func="ExtractExamplesXMLTree"/>.
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
+
+# obsolete
 # Extract examples units-wise from a GAPDoc document as XML tree, 
 # 'units' can either be: "Chapter" or "Section" or "Subsection" or "Single"
 #     then a list of strings is returned
 # For all other values of 'units' one string with all examples is returned.
 # Before each extracted example there is its paragraph number in a comment:
 #  [ chapter, section, subsection, paragraph ]
-
 InstallGlobalFunction(ManualExamplesXMLTree, function( tree, units )
   local secelts, sec, exelts, res, str, a, ex;
   if units = "Chapter" then
@@ -135,6 +137,7 @@ InstallGlobalFunction(ExtractExamplesXMLTree, function( tree, units )
   return res;
 end);
 
+# obsolete
 # compose and parse document, then extract examples units-wise
 InstallGlobalFunction(ManualExamples, function( path, main, files, units )
   local str, xmltree;
@@ -197,6 +200,7 @@ end);
 ##  </ManSection>
 ##  <#/GAPDoc>
 
+# obsolete
 # test a string with examples 
 InstallGlobalFunction(ReadTestExamplesString, function(str)
   local res, file;
@@ -206,6 +210,7 @@ InstallGlobalFunction(ReadTestExamplesString, function(str)
   return res;
 end);
 
+# obsolete
 # args:  str, print
 InstallGlobalFunction(TestExamplesString, function(arg)
   local l, s, z, inp, out, f, lout, pos, bad, i, n, diffs, str;
@@ -275,6 +280,7 @@ InstallGlobalFunction(TestExamplesString, function(arg)
   return bad;
 end);
 
+# obsolete
 InstallGlobalFunction(TestManualExamples, function(arg)
   local ex, bad, res, a;
   if IsRecord(arg[1]) then
@@ -291,6 +297,55 @@ InstallGlobalFunction(TestManualExamples, function(arg)
   od; 
   return res;
 end);
+
+
+##  <#GAPDoc Label="RunExamples">
+##  <ManSection >
+##  <Func Arg="exmpls[, optrec]" Name="RunExamples" />
+##  <Returns>nothing</Returns>
+##  <Description>
+##  The argument <A>exmpls</A> must be the output of a call to 
+##  <Ref Func="ExtractExamples"/> or <Ref Func="ExtractExamplesXMLTree"/>.
+##  The optional argument <A>optrec</A> must be a record, its components
+##  can change the default behaviour of this function.
+##  <P/>
+##  By default this function runs the &GAP; input of all examples and compares
+##  the actual output with the output given in the examples. If differences
+##  occur these are displayed together with information on the location of the 
+##  source code of that example. Before running the examples in each unit (entry
+##  of <A>exmpls</A>) the function <Ref BookName="Reference" Func="START_TEST"/>
+##  is called and the screen width is set to 72 characters.
+##  <P/>
+##  If the argument <A>optrec</A> is given, the following components are
+##  recognized:
+##  <List>
+##  <Mark><C>showDiffs</C></Mark>
+##  <Item>
+##  The default value is <K>true</K>, if set to something else found differences
+##  in the examples are not displayed. 
+##  </Item>
+##  <Mark><C>width</C></Mark>
+##  <Item>
+##  The value must be a positive integer which is used as screen width when
+##  running the examples. As mentioned above, the default is 72 which is a
+##  sensible value for the text version of the &GAPDoc; document used
+##  in a 80 character wide terminal.
+##  </Item>
+##  <Mark><C>changeSources</C></Mark>
+##  <Item>
+##  If this is set to <K>true</K> then the source code of all manual
+##  examples which show differences is adjusted to the current outputs.
+##  The default is <K>false</K>.<Br/>
+##  Use this feature with care.
+##  Note that sometimes differences can indicate a bug, and in such a case
+##  it is more appropriate to fix the bug instead of changing the example
+##  output. 
+##  </Item>
+##  </List>
+##  
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
 
 # args: exlists[, show, change]
 InstallGlobalFunction(RunExamples, function(arg)
