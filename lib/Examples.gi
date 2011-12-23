@@ -368,6 +368,13 @@ InstallGlobalFunction(RunExamples, function(arg)
       opts.(a) := arg[2].(a);
     od;
   fi;
+  if IsString(opts.compareFunction) then
+    if IsBound(TEST.compareFunctions.(opts.compareFunction)) then
+      opts.compareFunction := TEST.compareFunctions.(opts.compareFunction);
+    else
+      opts.compareFunction := EQ;
+    fi;
+  fi;
   oldscr := SizeScreen();
   SizeScreen([opts.width, oldscr[2]]);
   for j in [1..Length(exlists)] do
