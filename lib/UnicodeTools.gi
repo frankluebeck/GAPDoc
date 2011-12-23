@@ -1129,4 +1129,17 @@ InstallGlobalFunction(LowerASCIIString, function(str)
   return Encode(u);
 end);
 
+# overwrite library method if sensible depending on term encoding and
+# encoding of string
+InstallMethod(ViewObj, "IsString", true, [IsString and IsFinite],0,
+function(s)
+  local u;
+  u := Unicode(s, GAPInfo.TermEncoding);
+  if u <> fail then
+    Print("\"", Encode(u, GAPInfo.TermEncoding), "\"");
+  else
+    PrintObj(s);
+  fi;
+end);
+
 
