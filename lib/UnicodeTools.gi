@@ -110,14 +110,36 @@ UNICODE_RECODE.UnicodeUTF8Char := function(arg)
                               + (i3 mod 64);
   fi;
 end;
+##  UNICODE_RECODE.Decoder.("UTF-8") := function(str)
+##    local res, c, i;
+##    res := [];
+##    for i in [1..Length(str)] do
+##      c := INT_CHAR(str[i]);
+##      if c < 128 or c > 191 then
+##        Add(res, UNICODE_RECODE.UnicodeUTF8Char(str, i));
+##      fi;
+##    od;
+##    if fail in res then return fail; fi;
+##    return res;
+##  end;
 UNICODE_RECODE.Decoder.("UTF-8") := function(str)
-  local res, c, i;
+  local res, i, n;
   res := [];
-  for i in [1..Length(str)] do
-    c := INT_CHAR(str[i]);
-    if c < 128 or c > 191 then
-      Add(res, UNICODE_RECODE.UnicodeUTF8Char(str, i));
+  i := 1;
+  while i <= Length(str) do
+    n := UNICODE_RECODE.UnicodeUTF8Char(str, i);
+    if n = fail then
+      return fail;
+    elif n < 128 then
+      i := i+1;
+    elif n < 2048 then
+      i := i+2;
+    elif n < 65536 then
+      i := i+3;
+    else
+      i := i+4;
     fi;
+    Add(res, n);
   od;
   if fail in res then return fail; fi;
   return res;
@@ -523,9 +545,11 @@ end);
 InstallMethod(Unicode, [IsString, IsString], function(str, enc)
   local res;
   if Length(str) > 0 and not IsStringRep(str) then
-    Info(InfoWarning, 1, "#W Changing argument to IsStringRep");
-    Info(InfoWarning, 2, ":\n ", str);
-    Info(InfoWarning, 1, "\n");
+##      Info(InfoWarning, 1, "#W Changing argument to IsStringRep");
+##      Info(InfoWarning, 2, ":\n ", str);
+##      Info(InfoWarning, 1, "\n");
+##      ConvertToStringRep(str);
+    str := ShallowCopy(str);
     ConvertToStringRep(str);
   fi;
   if not IsBound(UNICODE_RECODE.NormalizedEncodings.(enc)) then
@@ -1133,10 +1157,23 @@ end);
 # encoding of string
 InstallMethod(ViewObj, "IsString", true, [IsString and IsFinite],0,
 function(s)
-  local u;
+  local u, c;
   u := Unicode(s, GAPInfo.TermEncoding);
   if u <> fail then
-    Print("\"", Encode(u, GAPInfo.TermEncoding), "\"");
+    Print("\"");
+    u := IntListUnicodeString(u);
+    for c in u do
+      if c = 34 then
+        Print("\\\"");
+      elif c = 92 then
+        Print("\\\\");
+      elif c < 32 then
+        Print(SPECIAL_CHARS_VIEW_STRING[2][c+1]);
+      else
+        Print(Encode(Unicode([c]), GAPInfo.TermEncoding));
+      fi;
+    od;
+    Print("\"");
   else
     PrintObj(s);
   fi;
