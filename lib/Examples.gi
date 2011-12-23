@@ -341,21 +341,27 @@ end);
 ##  it is more appropriate to fix the bug instead of changing the example
 ##  output. 
 ##  </Item>
+##  <Mark><C>compareFunction</C></Mark>
+##  <Item>
+##  The function used to compare the output shown in the example and the
+##  current output. See <Ref BookName="Reference" Func="Test"/> for more
+##  details.
+##  </Item>
 ##  </List>
 ##  
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
 
-# args: exlists[, show, change]
 InstallGlobalFunction(RunExamples, function(arg)
-  local exlists, opts, oldscr, l, pex, ok, new, inp, ch, fnams, str, fch, 
-        pos, pre, a, j, ex, i, f;
+  local exlists, opts, oldscr, l, s, test, pex, new, inp, ch, fnams, 
+        str, fch, pos, pre, a, j, ex, i, f;
   exlists := arg[1];
   opts := rec(
           showDiffs := true,
           changeSources := false,
           width := 72,
+          compareFunction := EQ,
   );                 
   if Length(arg) > 1 and IsRecord(arg[2]) then
     for a in RecFields(arg[2]) do
@@ -369,24 +375,30 @@ InstallGlobalFunction(RunExamples, function(arg)
     Print("# Running list ",j," . . .\n");
     START_TEST("");
     for ex in l do
-      pex := ParseTestInput(ex[1], false);
-      RunTests(pex);
-      ok := true;
-      for i in [1..Length(pex[1])] do
-        if pex[2][i] <> pex[4][i] then
-          ok := false;
-          if opts.showDiffs = true then
-            Print("########> Diff in ", ex[2], "\n# Input is:\n");
-            PrintFormattedString(pex[1][i]);
-            Print("# Expected output:\n");
-            PrintFormattedString(pex[2][i]);
-            Print("# But found:\n");
-            PrintFormattedString(pex[4][i]);
-            Print("########\n");
+      s := InputTextString(ex[1]);
+      test := Test(s, rec(ignoreComments := false,
+                   width := opts.width,
+                   compareFunction := opts.compareFunction,
+                   reportDiff := Ignore
+                                 ) );
+      CloseStream(s);
+      pex := TEST.lastTestData;
+      if test = false then
+        for i in [1..Length(pex[1])] do
+          if opts.compareFunction(pex[2][i], pex[4][i]) <> true then
+            if opts.showDiffs = true then
+              Print("########> Diff in ", ex[2]{[1..3]}, "\n# Input is:\n");
+              PrintFormattedString(pex[1][i]);
+              Print("# Expected output:\n");
+              PrintFormattedString(pex[2][i]);
+              Print("# But found:\n");
+              PrintFormattedString(pex[4][i]);
+              Print("########\n");
+            fi;
           fi;
-        fi;
-      od;
-      if not ok then
+        od;
+      fi;
+      if test = false then
         new := "";
         for i in [1..Length(pex[1])] do
           inp := Concatenation("gap> ", JoinStringsWithSeparator(
@@ -394,7 +406,7 @@ InstallGlobalFunction(RunExamples, function(arg)
           Append(new, inp);
           Append(new, pex[4][i]);
         od;
-        Add(ex[2], new);
+        ex[2][4] := new;
       fi;
     od;
   od;
@@ -451,6 +463,4 @@ InstallGlobalFunction(RunExamples, function(arg)
   fi;
   SizeScreen(oldscr);
 end);
-
-
 
