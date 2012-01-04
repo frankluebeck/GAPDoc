@@ -1328,8 +1328,13 @@ These two elements behave exactly  like the <C>Listing</C> element (see <Ref
 Subsect="Listing"/>). They are thought for protocols  of &GAP; sessions. The
 only difference between the two is that <C>Example</C> sections are intended
 to be subject  to an automatic manual checking mechanism  used to ensure the
-correctness of the &GAP; manual whereas <C>Log</C> is not touched by this.
-
+correctness of the &GAP; manual whereas <C>Log</C> is not touched by this
+(see section <Ref Sect="Sec:TestExample"/> for checking tools).
+<P/>
+To get a good layout of the examples for display in a standard terminal we
+suggest to use <C>SizeScreen([72]);</C> (see <Ref Func="SizeScreen" 
+BookName="Reference"/>) in your &GAP; session before producing the content
+of <C>Example</C> elements.
 </Subsection>
 
 <Subsection Label="Verb"><Heading><C>&lt;Verb></C></Heading>
