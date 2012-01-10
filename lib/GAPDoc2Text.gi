@@ -1611,6 +1611,13 @@ GAPDoc2TextProcs.ManSection := function(r, par)
             GAPDoc2TextProcs.TextAttr.Heading), "\n\n"));
   # append to TOC as subsection
   Append(r.root.toc, Concatenation("    ", s, "\n"));
+
+  # label entry, if present
+  if IsBound(r.attributes.Label) then
+    r.root.labels.(r.attributes.Label) := num;
+    r.root.labeltexts.(r.attributes.Label) := s;
+  fi;
+
   GAPDoc2TextContent(r, par);
 end;
 
