@@ -131,8 +131,6 @@ GAPDoc2HTMLProcs.Head1MathJax := "\
   src=\"MATHJAXURL\">\n\
 </script>\n\
 <title>GAP (";
-GAPDoc2HTMLProcs.Head1MathJax := SubstitutionSublist(
-  GAPDoc2HTMLProcs.Head1MathJax, "MATHJAXURL", GAPDoc2HTMLProcs.MathJaxURL);
 
 GAPDoc2HTMLProcs.Head1Trans := "\
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
@@ -227,8 +225,9 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
       files.(n) := rec(text :=
                    ShallowCopy(GAPDoc2HTMLProcs.Head1Trans), ssnr := []);
     elif r.root.mathmode = "MathJax" then
-      files.(n) := rec(text :=
-                   ShallowCopy(GAPDoc2HTMLProcs.Head1MathJax), ssnr := []);
+      files.(n) := rec(text := SubstitutionSublist(
+                               GAPDoc2HTMLProcs.Head1MathJax, "MATHJAXURL", 
+                               GAPDoc2HTMLProcs.MathJaxURL), ssnr := []);
     else
       files.(n) := rec(text := ShallowCopy(GAPDoc2HTMLProcs.Head1), ssnr := []);
     fi;
@@ -378,7 +377,7 @@ end;
 ##  the  <Package>MathJax</Package>  script  and  fonts.  This  means
 ##  that  they   can  only  be   used  on  computers   with  internet
 ##  access.   An  alternative   URL   can  be   set  by   overwriting
-##  <C>GAPDoc2LaTeXProcs.MathJaxURL</C>  before   building  the  HTML
+##  <C>GAPDoc2HTMLProcs.MathJaxURL</C>   before   building  the  HTML
 ##  version   of   a   manual.   This  way   a   local   installation
 ##  of   <Package>MathJax</Package>   could   be   used.   See   <URL
 ##  Text="http://www.mathjax.org/">http://www.mathjax.org/</URL>  for
@@ -1305,7 +1304,9 @@ GAPDoc2HTMLProcs.Math := function(r, str)
     Append(str, s);
     return;
   fi;
-  Append(str, WrapTextAttribute(str, GAPDoc2HTMLProcs.TextAttr.Math));
+  s := "";
+  GAPDoc2HTMLContent(r, s);
+  Append(str, WrapTextAttribute(s, GAPDoc2HTMLProcs.TextAttr.Math));
 end;
 
 ##  displayed maths (also in TeX format, but centered paragraph in itself)
@@ -1639,6 +1640,36 @@ GAPDoc2HTMLProcs.ResolveExternalRef := function(bookname,  label, nr)
   return res;
 end;
 
+##  helper for external URLs, remove GAPDocStyle part and maybe add "_mj"
+GAPDoc2HTMLProcs.AdjustExtURL := function(r, url)
+  local pos, pos2, res, fnam, mjnam;
+  pos := PositionSublist(url, "?GAPDocStyle=");
+  if pos <> fail then
+    pos2 := Position(url, '#', pos);
+    if pos2 = fail then
+      pos2 := Length(url)+1;
+    fi;
+    res := url{[1..pos-1]};
+    Append(res, url{[pos2..Length(url)]});
+  fi;
+  if r.root.mathmode = "MathJax" then
+    pos := Position(res, '#');
+    if pos <> fail then
+      fnam := res{[1..pos-1]};
+    else
+      pos := Length(res)+1;
+      fnam := res;
+    fi;
+    if Length(fnam) >= 5 and fnam{[Length(fnam)-4..Length(fnam)]} = ".html" then
+      mjnam := Concatenation(fnam{[1..Length(fnam)-5]}, "_mj.html");
+      if IsExistingFile(mjnam) then
+        res := Concatenation(mjnam, res{[pos..Length(res)]});
+      fi;
+    fi;
+  fi;
+  return res;
+end;
+
 ##  a try to make it somewhat shorter than for the Text and LaTeX conversions
 GAPDoc2HTMLProcs.Ref := function(r, str)
   local int,  txt,  ref,  lab,  attr,  sectlike, rattr;
@@ -1661,6 +1692,7 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
   if IsBound(r.attributes.BookName) then
     ref := GAPDoc2HTMLProcs.ResolveExternalRef(r.attributes.BookName, lab, 1);
     if ref <> fail and ref[6] <> fail then
+      ref[6] := GAPDoc2HTMLProcs.AdjustExtURL(r, ref[6]);
       if IsBound(GAPDoc2HTMLProcs.RelPath) and 
          PositionSublist(ref[6], GAPInfo.MainRootPath) = 1 then
          ref[6] := Concatenation(GAPDoc2HTMLProcs.RelPath, "/", 
@@ -1709,8 +1741,9 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
     txt := Concatenation(attr[1], 
              GAPDoc2HTMLProcs.EscapeAttrVal(r.attributes.(int[1])), attr[2]);
     # avoid reference to current subsection
-    if not IsBound(r.root.labels.(lab)) or GAPDoc2HTMLProcs.SectionNumber(
-                        r.count, "Subsection") <> r.root.labels.(lab)[1] then
+    if IsBound(r.attributes.BookName) or not IsBound(r.root.labels.(lab)) 
+      or GAPDoc2HTMLProcs.SectionNumber(r.count, "Subsection") <> 
+                                                r.root.labels.(lab)[1] then
       Append(txt, Concatenation(" (", ref, ")"));
     fi;
   elif Length(int)>0 and 
@@ -1777,6 +1810,13 @@ GAPDoc2HTMLProcs.ManSection := function(r, par)
   ind := "<span class=\"ContSS\"><br /><span class=\"nocss\">&nbsp;&nbsp;</span>";
   Append(r.root.toc, Concatenation(ind, "<a href=\"", lab, "\">", s, 
           "</a></span>\n"));
+
+  # label entry, if present
+  if IsBound(r.attributes.Label) then
+    r.root.labels.(r.attributes.Label) := [num, lab];
+    r.root.labeltexts.(r.attributes.Label) := s;
+  fi;
+
   GAPDoc2HTMLContent(r, par);
 end;
 
