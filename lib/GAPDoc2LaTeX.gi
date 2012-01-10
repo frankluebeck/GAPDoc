@@ -1202,7 +1202,8 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
       ref := Concatenation(" (\\ref{", GAPDoc2LaTeXProcs.DeleteUsBs(lab), "})");
     fi;
     # delete ref, if pointing to current subsection
-    if IsBound(GAPDoc2LaTeXProcs._currentSubsection) and 
+    if not IsBound(r.attributes.BookName) and 
+                 IsBound(GAPDoc2LaTeXProcs._currentSubsection) and 
                  lab in GAPDoc2LaTeXProcs._currentSubsection then
       ref := "";
     fi;
@@ -1323,6 +1324,15 @@ GAPDoc2LaTeXProcs.ManSection := function(r, str)
   # page number info for online help
   Append(str, Concatenation("\\logpage{", 
           GAPDoc2LaTeXProcs.StringNrs(r.count{[1..3]}), "}\\nobreak\n"));
+  # label for references
+  if IsBound(r.attributes.Label) then
+    Append(str, "\\label{");
+    Append(str, r.attributes.Label);
+    Append(str, "}\n");
+    # save heading for "Text" style references to section
+    GAPDoc2LaTeXProcs._labeledSections.(r.attributes.Label) := Concatenation(
+                       GAPDoc2LaTeXProcs.EscapeAttrVal(f.attributes.Name), lab);
+  fi;
   if IsBound(r.root.six) then
 ##      a := First(r.root.six, x-> x[3] = r.count{[1..3]});
     a := GAPDoc2LaTeXProcs.firstsix(r, r.count);
