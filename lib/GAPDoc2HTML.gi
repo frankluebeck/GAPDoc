@@ -1651,6 +1651,8 @@ GAPDoc2HTMLProcs.AdjustExtURL := function(r, url)
     fi;
     res := url{[1..pos-1]};
     Append(res, url{[pos2..Length(url)]});
+  else
+    res :=url;
   fi;
   if r.root.mathmode = "MathJax" then
     pos := Position(res, '#');
