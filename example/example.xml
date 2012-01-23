@@ -407,6 +407,22 @@ or with marks:
  <Mark>tables:</Mark><Item> two-dimensional</Item>
 </List>
 
+Lists can also be nested:
+<Enum>
+ <Item>
+   <Enum>
+     <Item>first item of inner enumeration </Item>
+     <Item>second item of inner enumeration </Item>
+   </Enum>
+ </Item>
+ <Item>
+   <List>
+     <Item>first item of inner list </Item>
+     <Item>second item of inner list </Item>
+   </List>
+  </Item>
+</Enum>
+
 Here is a <E>table</E>:
 
 <Table Align="|r|c|l|">
@@ -938,6 +954,22 @@ or with marks:
  <Mark>enumerations:</Mark><Item> numbered</Item>
  <Mark>tables:</Mark><Item> two-dimensional</Item>
 </List>
+
+Lists can also be nested:
+<Enum>
+ <Item>
+   <Enum>
+     <Item>first item of inner enumeration </Item>
+     <Item>second item of inner enumeration </Item>
+   </Enum>
+ </Item>
+ <Item>
+   <List>
+     <Item>first item of inner list </Item>
+     <Item>second item of inner list </Item>
+   </List>
+  </Item>
+</Enum>
 
 Here is a <E>table</E>:
 
