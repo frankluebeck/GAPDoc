@@ -21,7 +21,7 @@
   <Author> Max Neunhöffer 
           <Email>neunhoef at mcs.st-and.ac.uk</Email>
   </Author>
-  <Date>September 2011</Date>
+  <Date>January 2012</Date>
   <Address>
   Lehrstuhl D für Mathematik<Br/> Templergraben 
   64<Br/> 52062 Aachen<Br/> (Germany)
@@ -33,7 +33,7 @@
             source text. This should enable new users to learn &GAPDoc;
             quickly.
   </Abstract>
-  <Copyright>&copyright; 2000-2011 by Frank Lübeck and Max Neunhöffer
+  <Copyright>&copyright; 2000-2012 by Frank Lübeck and Max Neunhöffer
   </Copyright>
   <Acknowledgements>We thank Lehrstuhl D für Mathematik.
   </Acknowledgements>

@@ -8,6 +8,12 @@
 
 - Added a copy of GPL text.
 
+- Corrected/improved handling of certain external references, and some other
+  small errors (reported by James Mitchell).
+
+- Improved detection of UTF-8 input.
+
+- Improved/adjusted manual examples.
 
 1.3 -> 1.4
 
@@ -141,7 +147,7 @@
 
 - Corrected bug in normalization of argument lists (if "," was used as
   separator). Also the layout was changed in case of leading optional
-  arguments. [Reported by Laurent Bartholdi]
+  arguments (reported by Laurent Bartholdi).
 
 1.0 -> 1.1
 
