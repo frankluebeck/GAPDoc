@@ -29,7 +29,8 @@
 
 - Several text themes are available in the distribution (more by others
   are welcome). The preferred theme can be configured by the user via
-  GAPInfo.UserPreferences.TextTheme in gap.ini.
+  SetGAPDocTextTheme and  at startup via a user preference
+  SetUserPreference("GAPDoc", "TextTheme", ...).
 
 - Improved markup of <Arg> elements in function definitions in Text and
   HTML conversion.
@@ -49,8 +50,8 @@
   that this is ok, but was often requested). 
 
 - Preferred style for viewing the HTML manuals can be configured by the user
-  via GAPInfo.UserPreferences.HTMLStyle and
-  GAPInfo.UserPreferences.UseMathJax.
+  via user preferences: SetUserPreference("GAPDoc", "HTMLStyle", ...) and
+  SetUserPreference("GAPDoc", "UseMathJax", true/false)
 
 - The HTML manuals support style switching (via URL and cookie) with
   javascript and cookie enabled browsers. Several styles (and combinations)

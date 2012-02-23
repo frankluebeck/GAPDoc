@@ -128,9 +128,8 @@ end);
 ##  
 ##  <Index>UseColorsInTerminal</Index> 
 ##  Whenever  you  use  this  in   some  printing  routines  you  should
-##  make  it optional.  Use  these attributes  only,  when the  entry
-##  <C>GAPInfo.UserPreferences.UseColorsInTerminal</C> is bound and 
-##  has the value <K>true</K>.
+##  make  it optional.  Use  these attributes  only  when 
+##  <C>UserPreference("UseColorsInTerminal");</C> returns <K>true</K>.
 ##  </Description>
 ##  </ManSection>
 ##  
