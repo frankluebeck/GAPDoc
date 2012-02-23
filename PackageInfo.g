@@ -10,11 +10,11 @@ SetPackageInfo( rec(
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
-Version := "1.5",
+Version := "1.5.1",
 ##  DD/MM/YYYY format:
-Date := "23/01/2012",
+Date := "23/02/2012",
 ArchiveURL := 
-          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.5",
+          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.5.1",
 ArchiveFormats := ".tar.bz2",
 Persons := [
   rec(

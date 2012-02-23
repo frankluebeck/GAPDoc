@@ -1,5 +1,9 @@
                        CHANGES of the GAPDoc package
 
+1.5 -> 1.5.1
+
+- Adjustments to GAP's new DeclareUserPreference setup.
+
 1.4 -> 1.5
 
 - Substituted the TestManual functions by new ones based on the new
