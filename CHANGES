@@ -1,5 +1,10 @@
                        CHANGES of the GAPDoc package
 
+1.5.1 -> 1.6
+
+- Corrected HorLine in tables without trailing | column (report and fix by
+  Max Horn).
+
 1.5 -> 1.5.1
 
 - Adjustments to GAP's new DeclareUserPreference setup.

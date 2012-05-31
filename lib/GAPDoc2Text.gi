@@ -1752,7 +1752,9 @@ GAPDoc2TextProcs.Table := function(r, str)
   fi;
   
   # add spaces as separators of colums if no "|" is given
-  a := r.attributes.Align;
+  # first, add a dummy character at the end of the input to 
+  # simplify handling of the last position
+  a := Concatenation(r.attributes.Align, " ");
   align := "";
   for i in [1..Length(a)-1] do
     if a[i] in "crl" then
@@ -1764,7 +1766,6 @@ GAPDoc2TextProcs.Table := function(r, str)
       Add(align, '|');
     fi;
   od;
-  Add(align, a[Length(a)]);
   # make all odd positions separator descriptions
   if not align[1] in " |" then
     align := Concatenation(" ", align);
@@ -1845,6 +1846,7 @@ GAPDoc2TextProcs.Table := function(r, str)
   t := List(t, Concatenation);
   hline := function(t,l,m,r)
     local z, i, j;
+    # Process first column
     z := "    ";
     if align[1] = '|' then
       Append(z, l);
@@ -1852,6 +1854,7 @@ GAPDoc2TextProcs.Table := function(r, str)
     else
       Append(z, "  ");
     fi;
+    # Process all columns excluding the first and last one
     for i in [2..Length(align)-1] do
       if i mod 2 = 0 then
         for j in [1..lens[i]] do
@@ -1865,6 +1868,7 @@ GAPDoc2TextProcs.Table := function(r, str)
         Append(z, "   ");
       fi;
     od;
+    # Process last column
     if align[Length(align)] = '|' then
       Append(z, t);
       Append(z, r);
