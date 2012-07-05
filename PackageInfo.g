@@ -10,7 +10,8 @@ SetPackageInfo( rec(
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
-Version := "1.5.1",
+#Version := "1.5.1",
+Version := "1.dev",
 ##  DD/MM/YYYY format:
 Date := "23/02/2012",
 ArchiveURL := 
