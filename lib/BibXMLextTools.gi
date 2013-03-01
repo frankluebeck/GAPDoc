@@ -404,11 +404,11 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
       enc := "UTF-8";
     fi;
   fi;
-  if not IsBound(UNICODE_RECODE.NormalizedEncodings.(enc)) then
+  if UNICODE_RECODE.NormalizedEncodings(enc) = fail then
     Info(InfoBibTools, 1, "don't know encoding ", enc, " using ISO-8859-1\n");
     enc := "ISO-8859-1";
   else
-    enc := UNICODE_RECODE.NormalizedEncodings.(enc);
+    enc := UNICODE_RECODE.NormalizedEncoding(enc);
   fi;
   if enc <> "UTF-8" then
     r := ShallowCopy(r);

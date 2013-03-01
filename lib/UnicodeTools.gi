@@ -61,7 +61,22 @@ UNICODE_RECODE.f := function()
 
   UNICODE_RECODE.NormalizedEncodings.("UTF-8") := "UTF-8";
   UNICODE_RECODE.NormalizedEncodings.("XML") := "XML";
+  for nam in RecFields(UNICODE_RECODE.NormalizedEncodings) do
+    UNICODE_RECODE.NormalizedEncodings.(LowercaseString(nam)) :=
+              UNICODE_RECODE.NormalizedEncodings.(nam);
+  od;
 end;
+# can be used for case insensitive normalization
+UNICODE_RECODE.NormalizedEncoding := function(str)
+  local lstr;
+  lstr := LowercaseString(str);
+  if not IsBound(UNICODE_RECODE.NormalizedEncodings.(lstr)) then
+    return fail;
+  else
+    return UNICODE_RECODE.NormalizedEncodings.(lstr);
+  fi;
+end;
+
 UNICODE_RECODE.f();
 Unbind(UNICODE_RECODE.f);
 # slightly more efficient for latin1:

@@ -304,8 +304,8 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
     else
       outenc := "ISO-8859-1";
     fi;
-    enc := UNICODE_RECODE.NormalizedEncodings.(enc);
-    outenc := UNICODE_RECODE.NormalizedEncodings.(outenc);
+    enc := UNICODE_RECODE.NormalizedEncoding(enc);
+    outenc := UNICODE_RECODE.NormalizedEncoding(outenc);
     if enc <> outenc then
       str := Unicode(str, enc);
       if outenc = "ISO-8859-1" then

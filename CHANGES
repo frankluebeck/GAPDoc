@@ -5,6 +5,9 @@
 - Corrected HorLine in tables without trailing | column (report and fix by
   Max Horn).
 
+- Recognize document encoding in <?xml tag and in some other places case
+  insensitively (proposed by Max Horn).
+
 1.5 -> 1.5.1
 
 - Adjustments to GAP's new DeclareUserPreference setup.

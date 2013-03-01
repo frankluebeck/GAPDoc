@@ -463,10 +463,10 @@ InstallGlobalFunction(GetElement, function(str, pos)
           tmp := GetElement(tmp, 3);
           if IsBound(tmp.attributes.encoding) then
             tmp := tmp.attributes.encoding;
-            if not IsBound(UNICODE_RECODE.NormalizedEncodings.(tmp)) then
+            if UNICODE_RECODE.NormalizedEncoding(tmp) = fail then
               Error("Cannot parse document in encoding ", tmp, "\n");
             fi;
-            XMLPARSERFLAGS.Encoding := UNICODE_RECODE.NormalizedEncodings.(tmp);
+            XMLPARSERFLAGS.Encoding := UNICODE_RECODE.NormalizedEncoding(tmp);
             # if not in UTF-8 encoding we recode rest of the document now
             if XMLPARSERFLAGS.Encoding <> "UTF-8" then
               Info(InfoGAPDoc, 1, "#I recoding input from ",
