@@ -404,7 +404,7 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
       enc := "UTF-8";
     fi;
   fi;
-  if UNICODE_RECODE.NormalizedEncodings(enc) = fail then
+  if UNICODE_RECODE.NormalizedEncoding(enc) = fail then
     Info(InfoBibTools, 1, "don't know encoding ", enc, " using ISO-8859-1\n");
     enc := "ISO-8859-1";
   else
@@ -640,6 +640,8 @@ CharacterMarkup := [
       [ "\\^o", "ô" ],         # 244
       [ "\\^u", "û" ],         # 251
       [ "{\\o}", "ø" ],        # 248
+      [ "{\\.P}", "Ṗ" ],       # 0x1E56
+      [ "{\\. P}", "Ṗ" ],      # 0x1E56
       [ "{\\v{s}}", "š" ],     # 353
       [ "{\\c{S}}", "Ş" ],     # 350
       [ "{\\v{S}}", "Š" ],     # 352
