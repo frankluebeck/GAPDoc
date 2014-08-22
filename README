@@ -1,5 +1,4 @@
 
-
    GAPDoc  --- A GAP 4 package for preparing documentation of GAP programs
 
                         Frank Lübeck
@@ -51,7 +50,7 @@ installation. The archive is available in several formats:
    GAPDoc-XXX.tar.bz2 (GNU tar archive, bzip2'ed)
    GAPDoc-XXX-win.zip (with DOS/Windows style line breaks in text files)
 
-Unpacking generates a subdirectory "gapdoc". 
+Unpacking generates a subdirectory of form "GAPDoc-x.y.z". 
 
 That's it! (Maybe you want to read the help section "?SetHelpViewer" 
 in the GAP reference manual.)
