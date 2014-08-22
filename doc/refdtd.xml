@@ -358,6 +358,8 @@ Two kinds of files can be specified in <C>Databases</C>: The first are
 &BibTeX; files as defined in&nbsp;<Cite Key="La85" Where="Appendix B"/>.
 Such files must have a name with extension <F>.bib</F>, and in
 <C>Databases</C> the name must be given <E>without</E> this extension.
+Note that such  <F>.bib</F>-files should be in latin1-encoding (or 
+ASCII-encoding). 
 The second are files in BibXMLext format as defined in Section&nbsp;<Ref 
 Sect="BibXMLformat"/>. These files must have an extension <F>.xml</F>
 and in <C>Databases</C> the <E>full</E> name  must be specified.<P/>
