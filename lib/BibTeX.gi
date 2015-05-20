@@ -1154,7 +1154,7 @@ end);
 ##  <#/GAPDoc>
 
 
-SEARCHMRHOST := "ams.org";
+SEARCHMRHOST := "www.ams.org";
 ##  SEARCHMRHOST := "ams.math.uni-bielefeld.de";
 if not IsBound(SingleHTTPRequest) then
   SingleHTTPRequest := 0;
