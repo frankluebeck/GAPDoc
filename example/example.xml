@@ -12,7 +12,7 @@
   <Subtitle>Every element shows up</Subtitle>
   <Version>Version <#Include SYSTEM "../version"></Version>
   <TitleComment>
-  If the subtitle ist not sufficient, this &lt;TitleComment> 
+  If the subtitle is not sufficient, this &lt;TitleComment> 
   element can be used for a slightly longer text on the front page.
   </TitleComment>
   <Author>Frank Lübeck 
