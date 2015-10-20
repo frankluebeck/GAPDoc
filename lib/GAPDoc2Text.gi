@@ -1121,8 +1121,8 @@ GAPDoc2TextProcs.Display := function(r, par)
     s := TextM(s);
   fi;
   s := WrapTextAttribute(s, GAPDoc2TextProcs.TextAttr.Display);
-  s := GAPDoc2TextProcs.MarkAndFormat(s, "left", Length(r.root.indent)+6,
-       r.root.linelength);
+  # change the indentation value in formatting escape sequence
+  s := SubstitutionSublist(s, "\033[0;0Y", "\033[0;6Y", "one");
   s := Concatenation("\n", s, "\n\n");
   Add(par, r.count);
   Add(par, s);
