@@ -297,7 +297,7 @@ end);
 ##  <Func Arg="str" Name="HeuristicTranslationsLaTeX2XML.Apply" />
 ##  <Returns>a string</Returns>
 ##  <Func Arg="fnam[, outnam]" 
-##                        Name="HeuristicTranslationsLaTeX2XML.ApplyFile" />
+##                        Name="HeuristicTranslationsLaTeX2XML.ApplyToFile" />
 ##  <Returns>nothing</Returns>
 ##  <Description>
 ##  These utilities translate some &LaTeX; code into text in UTF-8 encoding.
@@ -353,7 +353,7 @@ end);
 ##  If your &BibTeX; input contains &LaTeX; markup for special characters, 
 ##  it can be convenient to translate this input  with <Ref
 ##  Func="HeuristicTranslationsLaTeX2XML.Apply"/> or <Ref
-##  Func="HeuristicTranslationsLaTeX2XML.ApplyFile"/> before parsing it as
+##  Func="HeuristicTranslationsLaTeX2XML.ApplyToFile"/> before parsing it as
 ##  &BibTeX;.<P/>
 ##  
 ##  As an example we consider again the short &BibTeX; file <F>doc/test.bib</F> 
