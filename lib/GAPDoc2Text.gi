@@ -502,7 +502,7 @@ end);
 ##  write head and foot of Txt file.
 GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   local i, pi, t, el, str, dat, datbt, bib, b, keys, need, labels, 
-        tmp, pos, j, diff, text, stream, a, ansi;
+        tmp, pos, j, diff, text, stream, a, ansi, k, l, ind;
   
   ##  add paragraph numbers to all nodes of the document
   AddParagraphNumbersGapDocTree(r);
@@ -555,20 +555,39 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   # .index has entries of form [sorttext, subsorttext, numbertext, 
   #  entrytext, count[, subtext]]
   Info(InfoGAPDoc, 1, "#I Producing the index . . .\n");
-  Sort(r.index);
+  SortBy(r.index, a-> [a[1],STRING_LOWER(a[2]),
+                       List(SplitString(a[3],".-",""), Int)]);
   str := "";
-  for a in r.index do
-    Append(str, a[4]);
-    if IsBound(a[6]) then
-      Append(str, ", ");
-      Append(str, a[6]);
-    elif Length(a[2])>0 then
-      Append(str, ", ");
-      Append(str, a[2]);
+  ind := r.index;
+  k := 1;
+  while k <= Length(ind) do
+    if k > 1 and ind[k][4] = ind[k-1][4] then
+      Append(str, "    ");
+    else
+      Append(str, ind[k][4]);
     fi;
-    Append(str, "  ");
-    Append(str, a[3]);
-    Add(str, '\n');
+    if IsBound(ind[k][6]) then
+      if k = 1 or ind[k][4] <> ind[k-1][4] then
+        Append(str, ", ");
+      fi;
+      Append(str, ind[k][6]);
+    elif Length(ind[k][2]) > 0 then
+      if k = 1 or ind[k][4] <> ind[k-1][4] then
+        Append(str, ", ");
+      fi;
+      Append(str, ind[k][2]);
+    fi;
+    l := k;
+    while l <= Length(ind) and ind[l][4] = ind[k][4] and
+          ((IsBound(ind[k][6]) and IsBound(ind[l][6])
+            and ind[k][6] = ind[l][6]) or
+           (not IsBound(ind[k][6]) and not IsBound(ind[l][6])
+           and ind[k][2] = ind[l][2]))  do
+      Append(str, Concatenation(" ", ind[l][3], " "));
+      l := l+1;
+    od;
+    Append(str, "\n");
+    k := l;
   od;
   r.indextext := str;
   
