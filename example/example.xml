@@ -373,12 +373,12 @@ archives</LinkText></URL>.
 
 One can generate index entries as follows (look up the words 
 <Q>&TeX;-UserGroup</Q>, <Q>RWTH</Q>, <Q>Aachen, Hauptbahnhof</Q>, and
-<Q>&GAP;, <Package>GAPDoc</Package></Q>).
+<Q><Package>GAPDoc</Package>, for &GAP; programmers</Q>).
 <Index Key="TeX-Usergroup">&TeX;-UserGroup</Index>
-<Index Key="Aachen" Subkey="Hauptbahnhof">Aachen</Index>
-<Index Key="GAP" Subkey="GAPDoc">&GAP;<Subkey>
-<Package>GAPDoc</Package></Subkey></Index>
 <Index>RWTH</Index>
+<Index>Aachen <Subkey>Hauptbahnhof</Subkey></Index>
+<Index Key="GAPDoc" Subkey="for GAP programmers"><Package>GAPDoc</Package> 
+<Subkey>for &GAP; programmers</Subkey></Index>
 
 </Section>
 
@@ -920,8 +920,10 @@ and Homepages another one:
 One can generate index entries as follows (look up the words 
 <Q>&TeX;-UserGroup</Q>, <Q>RWTH</Q>, and <Q>Aachen, Hauptbahnhof</Q>).
 <Index Key="TeX-Usergroup">&TeX;-UserGroup</Index>
-<Index Key="Aachen" Subkey="Hauptbahnhof">Aachen</Index>
 <Index>RWTH</Index>
+<Index>Aachen <Subkey>Hauptbahnhof</Subkey></Index>
+<Index Key="GAPDoc" Subkey="for GAP programmers">&GAPDoc; 
+<Subkey>for &GAP; programmers</Subkey></Index>
 
 </Section>]]>
 </Listing>
