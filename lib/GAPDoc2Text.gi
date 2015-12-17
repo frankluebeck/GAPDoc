@@ -1369,7 +1369,7 @@ end;
 
 ##  this produces an implicit index entry and a label entry
 GAPDoc2TextProcs.LikeFunc := function(r, par, typ)
-  local   str,  s,  name,  lab,  i;
+  local   str,  s,  name,  lab, comma, i, entry;
   s := Concatenation(GAPDoc2TextProcs.TextAttr.DefLineMarker[1],
          WrapTextAttribute(r.attributes.Name, GAPDoc2TextProcs.TextAttr.Func));
   if IsBound(r.attributes.Arg) then
@@ -1379,19 +1379,25 @@ GAPDoc2TextProcs.LikeFunc := function(r, par, typ)
   fi;
   # label (if not given, the default is the Name)
   if IsBound(r.attributes.Label) then
-    lab := Concatenation(" (", r.attributes.Label, ")");
+    lab := r.attributes.Label;
+    comma := ", ";
   else
     lab := "";  
+    comma := "";
   fi;
   GAPDoc2TextProcs.Label(rec(count := r.count, attributes := rec(Name
-              := Concatenation(r.attributes.Name, lab)), root := r.root), par); 
+       := Concatenation(r.attributes.Name, comma, lab)), root := r.root), par);
   # index entry
   name := r.attributes.Name;
-  Add(r.root.index, [STRING_LOWER(name), "", 
-          GAPDoc2TextProcs.SectionNumber(r.count, "Subsection"), 
-          Concatenation(WrapTextAttribute(name, 
-                         GAPDoc2TextProcs.TextAttr.Func), lab),
-          r.count{[1..3]}]);
+  entry := [STRING_LOWER(name), "", 
+            GAPDoc2TextProcs.SectionNumber(r.count, "Subsection"), 
+            WrapTextAttribute(name, GAPDoc2TextProcs.TextAttr.Func),
+            r.count{[1..3]}];
+  if Length(lab) > 0 then
+    entry[2] := STRING_LOWER(StripEscapeSequences(lab));
+    Add(entry, lab);
+  fi;
+  Add(r.root.index, entry);
   # some hint about the type of the variable
   Append(s, GAPDoc2TextProcs.TextAttr.FillString[1]);
   Append(s, Concatenation(" ",typ,"\n"));
@@ -1466,7 +1472,7 @@ GAPDoc2TextProcs.Ref := function(r, str)
   if Length(int)>0 then
     txt := r.attributes.(int[1]);
     if IsBound(r.attributes.Label) then
-      lab := Concatenation(txt, " (", r.attributes.Label, ")");
+      lab := Concatenation(txt, ", ", r.attributes.Label);
     else
       lab := txt;
     fi;
