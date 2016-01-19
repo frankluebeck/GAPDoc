@@ -38,7 +38,7 @@
 ##  Label="..."></C> and  <C>&lt;/#<A>tagname</A>></C> pairs.  
 ##  Then the file <A>main</A> is read and all <C>&lt;#Include  ...
 ##  ></C>-tags are  substituted recursively by other  files or chunks
-##  of documentation found in the first step, respectively.
+##  of documentation found in the first step, respectively.<P/>
 ##  
 ##  If  the  optional  argument  <A>info</A>   is  given  and  set  to
 ##  <K>true</K>  this function  returns a  list <C>[str,  origin]</C>,
@@ -47,9 +47,19 @@
 ##  filename, line]</C>.  Here <C>pos</C>  runs through  all character
 ##  positions of starting lines or text pieces from different files in
 ##  <C>str</C>.  The  <C>filename</C>  and  <C>line</C>  describe  the
-##  origin of this part of the collected document.
+##  origin of this part of the collected document.<P/>
 ##  
 ##  Without the fourth argument only the string <C>str</C> is returned.
+##  <P/>
+##  
+##  By default <Ref Func="ComposedDocument"/> runs  into an error if an
+##  <C>&lt;#Include ...></C>-tag cannot be  substituted (because a file
+##  or  chunk is  missing). This  behaviour can  be changed  by setting
+##  <C>DOCCOMPOSEERROR  :=  false;</C>.  Then  the  missing  parts  are
+##  substituted by a short note about  what is missing. Of course, this
+##  feature is  only useful if  the resulting  document is a  valid XML
+##  document (e.g., when the missing  pieces are complete paragraphs or
+##  sections).<P/>
 ##  
 ##  <Log>
 ##  gap> doc := ComposedDocument("GAPDoc", "/my/dir", "manual.xml", 

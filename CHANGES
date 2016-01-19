@@ -1,6 +1,9 @@
                        CHANGES of the GAPDoc package
 
 1.5.1 -> 1.6
+- Documented 'DOCCOMPOSEERROR' for 'ComposedDocument' to ignore missing
+  chunks.
+
 - Mention that .bib files for <Bibliography> must be in latin1-encoding,
   and corrected 3k+1.bib accordingly (error noticed by Bill Allombert).
 
