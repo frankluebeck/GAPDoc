@@ -1,6 +1,9 @@
                        CHANGES of the GAPDoc package
 
 1.5.1 -> 1.6
+- 'ComposedDocument' now accepts also file names with absolute paths and 
+  relative to GAP roots. (Uses a new function 'FilenameGAP'.)
+
 - Documented 'DOCCOMPOSEERROR' for 'ComposedDocument' to ignore missing
   chunks.
 

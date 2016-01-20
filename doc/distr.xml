@@ -118,6 +118,8 @@ document.
 
 <#Include Label="OriginalPositionDocument">
 
+<#Include Label="FilenameGAP">
+
 </Section>
 
 </Chapter>
