@@ -1283,3 +1283,113 @@ if SingleHTTPRequest = 0 then
   Unbind(SingleHTTPRequest);
 fi;
 
+##  <#GAPDoc Label="LabelsFromBibTeX">
+##  <ManSection >
+##  <Func Arg="path, keys, bibfiles, style" Name="LabelsFromBibTeX" />
+##  <Returns>a list of pairs of strings <C>[key, label]</C></Returns>
+##  <Description>
+##  This function uses  <C>bibtex</C> to determine the ordering  of a list
+##  of  references and  a label  for each  entry which  is typeset  in   a
+##  document citing these references.
+##  <P/>
+##  The  argument  <A>path</A>  is  a directory  specified  as  string  or
+##  directory object. The argument <A>bibfiles</A> must be a list of files
+##  in  &BibTeX;  format,  each  specified  by  a  path  relative  to  the
+##  first  argument, or  an absolute  path (starting  with <C>'/'</C>)  or
+##  relative to the &GAP; roots  (starting with <C>"gap://"</C>). The list
+##  <A>keys</A>  must contain  strings which  occur as  keys in  the given
+##  &BibTeX; files. Finally the string <A>style</A>  must be the name of a
+##  bibliography style (like <C>"alpha"</C>). <P/>
+##  
+##  The list returned by this  function contains pairs <C>[key, label]</C>
+##  where <C>key</C> is one of the entries of <A>keys</A> and <C>label</C>
+##  is  a string  used  for  citations  of the   bibliography  entry  in a
+##  document. These  pairs are ordered  as the reference list  produced by
+##  &BibTeX;.
+##  <Example>
+##  gap> f := Filename(DirectoriesPackageLibrary("gapdoc","doc"), "test.bib");;
+##  gap> LabelsFromBibTeX(".", ["AB2000"], [f], "alpha");
+##  [ [ "AB2000", "FS00" ] ]
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+##  
+InstallGlobalFunction(LabelsFromBibTeX, function(path, keys, bibfiles, style)
+  local aux, flist, poss, d, dstr, auxfile, out, res, lab, pos, k, n, i;
+  aux := "";
+  # keys of citations
+  for k in keys do
+    Append(aux, "\\citation{");
+    Append(aux, k);
+    Append(aux, "}\n");
+  od;
+  if IsString(path) then
+    path := Directory(path);
+  fi;
+
+  # file names of bib-files
+  flist := [];
+  for n in bibfiles do
+    if Length(n) > 0 and n[1] = '/' then
+      Add(flist, n);
+    elif Length(n) > 5 and n{[1..6]} = "gap://" then
+      Add(flist, FilenameGAP(n));
+    else
+      Add(flist, n);
+    fi;
+  od;
+  poss := Positions(flist, fail);
+  if Length(poss) > 0 then
+    Error("Cannot generate path for bibfiles ",bibfiles{poss},".\n");
+    return fail;
+  fi;
+  Append(aux, "\\bibdata{");
+  Append(aux, JoinStringsWithSeparator(flist, ","));
+  Append(aux, "}\n");
+
+  # bibstyle of result
+  Append(aux, "\\bibstyle{");
+  Append(aux, style);
+  Append(aux, "}\n");
+
+  # write out, call bibtex, filter \bibitem lines from result
+  d := DirectoryTemporary();
+  dstr := Filename(d, "");
+  auxfile := Filename(d, "temp.aux");
+  FileString(auxfile, aux);
+  Exec(Concatenation("(export TEXMFOUTPUT=", dstr, "; cd ", Filename(path, ""), 
+                 "; bibtex ", dstr, "/temp > /dev/null 2>&1 ; ",
+                 "grep '^\\\\bibitem' ", dstr, "/temp.bbl > ", dstr, "/out )"));
+  out := StringFile(Filename(d, "out"));
+  if out = fail then
+    Error("Call of 'bibtex' was not successful.\n");
+    return fail;
+  fi;
+  
+  # clean temporary directory
+  for n in DirectoryContents(d) do 
+    if not n in [".", ".."] then
+      RemoveFile(Filename(d, n)); 
+    fi; 
+  od;
+  # ???  RemoveDir(Filename(d,""));
+
+  # parse result
+  out := SplitString(out, "", "\n");
+  res := [];
+  for i in [1..Length(out)] do
+    n := out[i];
+    if n[9] = '[' then
+      pos := Position(n, ']', 9);
+      lab := n{[10..pos-1]};
+      pos := Position(n, '{', pos);
+    else
+      lab := String(i);
+      pos := Position(n, '{', 8);
+    fi;
+    Add(res, [n{[pos+1..PositionMatchingDelimiter(n, "{}", pos)-1]}, lab]);
+  od;
+  return res;
+end);
+

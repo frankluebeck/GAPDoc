@@ -597,7 +597,7 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
     need := List(r.bibentries, a-> RecBibXMLEntry(a, "Text", r.bibstrings));
     # copy the unique labels
     for a in [1..Length(need)] do
-      need[a].printedkey := r.biblabels[a];
+      need[a].key := r.biblabels[a];
     od;
     text := "";
     ansi := rec(
@@ -1019,6 +1019,9 @@ GAPDoc2TextProcs.Bibliography := function(r, par)
   fi;
   
   r.root.bibdata := r.attributes.Databases;
+  if IsBound(r.attributes.Style) then
+    r.root.bibstyle := r.attributes.Style;
+  fi;
   Add(par, r.count);
   if IsBound(r.root.bibtext) then
     Add(par, Concatenation("\n\n", WrapTextAttribute(GAPDocTexts.d.References, 

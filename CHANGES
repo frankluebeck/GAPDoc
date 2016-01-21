@@ -1,6 +1,10 @@
                        CHANGES of the GAPDoc package
 
 1.5.1 -> 1.6
+- New function 'LabelsFromBibTeX'. If BibTeX is available this is used to 
+  unify the labels used for citations and the ordering of the reference list
+  in the LaTeX, text and HTML version of a GAPDoc document. 
+
 - 'ComposedDocument' now accepts also file names with absolute paths and 
   relative to GAP roots. (Uses a new function 'FilenameGAP'.)
 

@@ -535,7 +535,8 @@ end);
 
 # shared utility for the converters to read data for bibliography 
 BindGlobal("GAPDocAddBibData", function(r) 
-  local dat, datbt, bib, bibbt, b, keys, need, labels, tmp, pos, diff, a, j;
+  local dat, datbt, bib, bibbt, b, keys, need, labels, tmp, pos, diff, a,
+        j, p, lab, st;
   if IsBound(r.bibentries) and IsBound(r.biblabels) then
     return;
   fi;
@@ -576,8 +577,33 @@ BindGlobal("GAPDocAddBibData", function(r)
   need := List(need, a-> [a, RecBibXMLEntry(a, "Text")]);
   SortParallel(List(need, a-> SortKeyRecBib(a[2])), need);
   keys := List(need, a-> a[2].Label);
+
+  # here we check if 'bibtex' is available, if yes we adjust the labels and
+  # ordering of the references to those produced by 'bibtex'
+  if Filename(DirectoriesSystemPrograms(), "bibtex") <> fail then
+    tmp := Filename(DirectoryTemporary(), "tmp.bib");
+    WriteBibFile(tmp, bib);
+    if not IsBound(r.bibstyle) then
+      st := "alpha";
+    else
+      st := r.bibstyle;
+    fi;
+    #ids := List(need, a->a[1].attributes.id);
+    lab := LabelsFromBibTeX(".", keys, [tmp], st);
+    RemoveFile(tmp);
+    tmp := [];
+    for p in lab do
+      a := need[Position(keys, p[1])];
+      a[2].key := HeuristicTranslationsLaTeX2XML.Apply(p[2]);
+      Add(tmp, a);
+    od;
+  fi;
+  need := tmp;
+
+  # now we get the labels
   labels := List(need, function(a) if IsBound(a[2].key) then return
                           a[2].key; else return a[2].printedkey; fi; end);
+
   # make labels unique
   tmp := Filtered(Collected(labels), a-> a[2] > 1);
   for a in tmp do

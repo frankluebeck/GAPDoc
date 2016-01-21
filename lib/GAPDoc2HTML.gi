@@ -767,7 +767,7 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
     need := List(r.bibentries, a-> RecBibXMLEntry(a, "HTML", r.bibstrings));
     # copy the unique labels
     for a in [1..Length(need)] do
-      need[a].printedkey := r.biblabels[a];
+      need[a].key := r.biblabels[a];
     od;
     text := "";
     for a in need do
@@ -1180,6 +1180,9 @@ GAPDoc2HTMLProcs.Bibliography := function(r, par)
                         GAPDoc2HTMLProcs.ext, "\"><span class=\"Heading\">", 
                         GAPDocTexts.d.References, "</span></a></div>\n")); 
   r.root.bibdata := r.attributes.Databases;
+  if IsBound(r.attributes.Style) then
+    r.root.bibstyle := r.attributes.Style;
+  fi;
   Add(par, r.count);
   if IsBound(r.root.bibtext) then
     Add(par, Concatenation("\n<h3>", GAPDocTexts.d.References, "</h3>\n\n", 

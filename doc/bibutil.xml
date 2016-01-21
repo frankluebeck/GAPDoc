@@ -34,6 +34,8 @@ Key="La85" Where="Appendix B"/>.
 
 <#Include Label="WriteBibFile">
 
+<#Include Label="LabelsFromBibTeX">
+
 <#Include Label="InfoBibTools">
 
 </Section>
