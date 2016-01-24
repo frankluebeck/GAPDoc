@@ -251,7 +251,12 @@ InstallGlobalFunction(AddPageNumbersToSix, function(r, pnrfile)
   six := r.six;
   for a in six do
     pos := Position(PAGENRS, a[3]);
-    a[5] := PAGENRS[pos+1];
+    # can fail, e.g. because LaTeX/makeindex do not produce an empty index
+    if pos = fail then
+      a[5] := PAGENRS[Length(PAGENRS)];
+    else
+      a[5] := PAGENRS[pos+1];
+    fi;
   od;
   Unbind(PAGENRS);
 end);
