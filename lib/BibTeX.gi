@@ -93,7 +93,7 @@ InstallGlobalFunction(NormalizedNameAndKey, function(str)
         fnam := "";
         for j in [i+1..Length(n)] do
           Add(fnam, First(n[j], x-> not x in WHITESPACE 
-                                    and not x in "-.{}\\\"\'\`"));
+                                    and not x in "-.{}\\\"\'`"));
           Append(fnam, ". ");
         od;
         fnamfull := JoinStringsWithSeparator(n{[i+1..Length(n)]}, " ");

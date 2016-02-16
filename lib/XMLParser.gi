@@ -206,7 +206,7 @@ BindGlobal("ENTITYDICT_GAPDoc", rec(
 InstallGlobalFunction(GetEnt, function(str, pos)
   local   d,  i,  ch,  pos1,  nam,  doc,  res,  ent;
   # character entity
-  if str[pos] = '\#' then
+  if str[pos] = '#' then
      d := "";
     if str[pos+1] = 'x' then
       i := pos + 2;
@@ -249,7 +249,7 @@ InstallGlobalFunction(GetEnt, function(str, pos)
   i := 1;
   res := "";
   while i <= Length(doc) do
-    if doc[i] <> '&' or (i<Length(doc) and doc[i+1] <> '\#') then
+    if doc[i] <> '&' or (i<Length(doc) and doc[i+1] <> '#') then
       Add(res, doc[i]);
       i := i+1;
     else

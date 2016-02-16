@@ -199,7 +199,7 @@ InstallGlobalFunction(ComposedDocument, function(arg)
     posnl := Positions(cont, '\n');
     pos := 0;
     while pos <> fail do
-      i := PositionSublist(cont, "<\#Include ", pos);
+      i := PositionSublist(cont, "<#Include ", pos);
       if i = fail then
         # in this case add the rest to res
         i := Length(cont) + 1;
@@ -221,7 +221,7 @@ InstallGlobalFunction(ComposedDocument, function(arg)
       if i <= Length(cont) then
         pos := Position(cont, '>', i);
         if pos = fail then
-          Error("Input ends within <\#Include ... tag.");
+          Error("Input ends within <#Include ... tag.");
         fi;
         piece := SplitString(cont{[i+9..pos-1]}, "", "\"= ");
         if piece[1]="SYSTEM" then
