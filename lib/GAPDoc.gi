@@ -598,9 +598,12 @@ BindGlobal("GAPDocAddBibData", function(r)
     RemoveFile(tmp);
     tmp := [];
     for p in lab do
-      a := need[Position(keys, p[1])];
-      a[2].key := HeuristicTranslationsLaTeX2XML.Apply(p[2]);
-      Add(tmp, a);
+      a := Position(keys, p[1]);
+      if a <> fail then
+        a := need[Position(keys, p[1])];
+        a[2].key := HeuristicTranslationsLaTeX2XML.Apply(p[2]);
+        Add(tmp, a);
+      fi;
     od;
   fi;
   need := tmp;
