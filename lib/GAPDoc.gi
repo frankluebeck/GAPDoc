@@ -605,8 +605,9 @@ BindGlobal("GAPDocAddBibData", function(r)
         Add(tmp, a);
       fi;
     od;
+    need := tmp;
+    keys := List(need, a-> a[2].Label);
   fi;
-  need := tmp;
 
   # now we get the labels
   labels := List(need, function(a) if IsBound(a[2].key) then return
