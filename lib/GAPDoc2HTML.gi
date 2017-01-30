@@ -1817,6 +1817,10 @@ GAPDoc2HTMLProcs.ManSection := function(r, par)
   s := Concatenation(num, " ", 
          GAPDoc2HTMLProcs.EscapeAttrVal(r.content[i].attributes.Name));
   Add(par, r.count);
+  # avoid MathJax interpretation in \(, \[ outside <code>
+  if '\\' in s then
+    s := Concatenation("<code>",s,"</code>");
+  fi;
   Add(par, Concatenation("\n<h5>", s, "</h5>\n\n"));
   
   # append to TOC as subsection
