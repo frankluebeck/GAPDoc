@@ -331,6 +331,12 @@ end);
 ##  sensible value for the text version of the &GAPDoc; document used
 ##  in a 80 character wide terminal.
 ##  </Item>
+##  <Mark><C>ignoreComments</C></Mark>
+##  <Item>
+##  The default is <K>false</K>.<Br/>
+##  If set to <K>true</K> comments in the input will be ignored (as in the
+##  default behaviour of the <Ref Func="Test" BookName="reference"/> function).
+##  </Item>
 ##  <Mark><C>changeSources</C></Mark>
 ##  <Item>
 ##  If this is set to <K>true</K> then the source code of all manual
@@ -367,6 +373,7 @@ InstallGlobalFunction(RunExamples, function(arg)
   opts := rec(
           showDiffs := true,
           changeSources := false,
+          ignoreComments := false,
           width := 72,
           compareFunction := EQ,
           checkWidth := false,
@@ -399,7 +406,7 @@ InstallGlobalFunction(RunExamples, function(arg)
         fi;
       fi;
       s := InputTextString(ex[1]);
-      test := Test(s, rec(ignoreComments := false,
+      test := Test(s, rec(ignoreComments := opts.ignoreComments,
                    width := opts.width,
                    compareFunction := opts.compareFunction,
                    reportDiff := Ignore
