@@ -1128,11 +1128,11 @@ end);
 ##  gap> for b in bib2.entries do 
 ##  >          PrintFormattedString(StringBibXMLEntry(b, "Text")); od;     
 ##  [Gau95]   Gauss,   C.   F.,  Disquisitiones  arithmeticae,  Academia
-##  Colombiana  de  Ciencias  Exactas  Físicas  y  Naturales,  Colección
-##  Enrique  Pérez  Arbeláez  [Enrique  Pérez  Arbeláez Collection], 10,
-##  Bogotá  (1995),  xliv+495  pages, (Translated from the Latin by Hugo
-##  Barrantes  Campos,  Michael  Josephy  and  Ángel Ruiz Zúñiga, With a
-##  preface by Ruiz Zúñiga).
+##  Colombiana   de  Ciencias  Exactas,  Físicas  y  Naturales,  Bogotá,
+##  Colección   Enrique   Pérez   Arbeláez   [Enrique   Pérez   Arbeláez
+##  Collection],  10  (1995), xliv+495 pages, (Translated from the Latin
+##  by  Hugo  Barrantes  Campos,  Michael Josephy and Ángel Ruiz Zúñiga,
+##  With a preface by Ruiz Zúñiga).
 ##  
 ##  [Gau86]  Gauss, C. F., Disquisitiones arithmeticae, Springer-Verlag,
 ##  New  York  (1986),  xx+472  pages, (Translated and with a preface by
@@ -1140,8 +1140,8 @@ end);
 ##  Greither and A. W. Grootendorst and with a preface by Waterhouse).
 ##  
 ##  [Gau66]  Gauss,  C. F., Disquisitiones arithmeticae, Yale University
-##  Press, Translated into English by Arthur A. Clarke, S. J, New Haven,
-##  Conn. (1966), xx+472 pages.
+##  Press, New Haven, Conn.-London, Translated into English by Arthur A.
+##  Clarke, S. J (1966), xx+472 pages.
 ##  
 ##  </Example>
 ##  </Description>
