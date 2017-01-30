@@ -302,7 +302,7 @@ end);
 ##  <#GAPDoc Label="RunExamples">
 ##  <ManSection >
 ##  <Func Arg="exmpls[, optrec]" Name="RunExamples" />
-##  <Returns>nothing</Returns>
+##  <Returns><K>true</K> or <K>false</K></Returns>
 ##  <Description>
 ##  The argument <A>exmpls</A> must be the output of a call to 
 ##  <Ref Func="ExtractExamples"/> or <Ref Func="ExtractExamplesXMLTree"/>.
@@ -315,6 +315,9 @@ end);
 ##  source code of that example. Before running the examples in each unit (entry
 ##  of <A>exmpls</A>) the function <Ref BookName="Reference" Func="START_TEST"/>
 ##  is called and the screen width is set to 72 characters.
+##  <P/>
+##  This function returns <K>true</K> if no differences are found and
+##  <K>false</K> otherwise.
 ##  <P/>
 ##  If the argument <A>optrec</A> is given, the following components are
 ##  recognized:
@@ -368,7 +371,7 @@ end);
 
 InstallGlobalFunction(RunExamples, function(arg)
   local exlists, opts, oldscr, l, sp, bad, s, test, pex, new, inp, ch, 
-        fnams, str, fch, pos, pre, a, j, ex, i, attedStrin, f;
+        fnams, str, fch, pos, pre, a, j, ex, i, attedStrin, f, nodiffs;
   exlists := arg[1];
   opts := rec(
           showDiffs := true,
@@ -378,6 +381,7 @@ InstallGlobalFunction(RunExamples, function(arg)
           compareFunction := EQ,
           checkWidth := false,
   );                 
+  nodiffs := true;
   if Length(arg) > 1 and IsRecord(arg[2]) then
     for a in RecFields(arg[2]) do
       opts.(a) := arg[2].(a);
@@ -416,6 +420,7 @@ InstallGlobalFunction(RunExamples, function(arg)
       if test = false then
         for i in [1..Length(pex[1])] do
           if opts.compareFunction(pex[2][i], pex[4][i]) <> true then
+            nodiffs := false;
             if opts.showDiffs = true then
               Print("########> Diff in ", ex[2]{[1..3]}, "\n# Input is:\n");
               PrintFormattedString(pex[1][i]);
@@ -492,5 +497,6 @@ InstallGlobalFunction(RunExamples, function(arg)
     fi;
   fi;
   SizeScreen(oldscr);
+  return nodiffs;
 end);
 
