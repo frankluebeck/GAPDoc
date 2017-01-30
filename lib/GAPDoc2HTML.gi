@@ -219,6 +219,7 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
   for i in [1..Length(chnrs)] do
     n := chnrs[i];
     if r.root.mathmode = "MathML" then
+      # this MathML is no longer documented
       files.(n) := rec(text := 
                    ShallowCopy(GAPDoc2HTMLProcs.Head1MML), ssnr := []);
     elif r.root.mathmode = "Tth" then
@@ -399,23 +400,6 @@ end;
 ##  to  display  this  in  a  useful  manner,  check  <URL  Text="the
 ##  Tth homepage">http://hutchinson.belmont.ma.us/tth/</URL> for more
 ##  details.<P/>
-##  
-##  If  the   <A>mtrans</A>  argument   is  set   to  <C>"MathML"</C>
-##  it   is  assumed   that  you   have  installed   the  translation
-##  program    <C>ttm</C>,    see    also    <URL    Text="the    Tth
-##  homepage">http://hutchinson.belmont.ma.us/tth/</URL>).   This  is
-##  used    to   translate    the   contents    of   the    <C>M</C>,
-##  <C>Math</C>   and   <C>Display</C>   elements   to   MathML   2.0
-##  markup.  The  resulting  files   should  conform  to  the  "XHTML
-##  1.1   plus    MathML   2.0"   standard,   see    <URL   Text="the
-##  W3C  information">http://www.w3.org/TR/MathML2/</URL>   for  more
-##  details. It  is expected  that the  next generation  of graphical
-##  browsers  will be  able to  render  such files  (try for  example
-##  <C>Mozilla</C>, at  least 0.9.9).  You must copy  the <C>.xsl</C>
-##  and <C>.css</C>  files from &GAPDoc;s <F>mathml</F>  directory to
-##  the directory  containing the output files.  The translation with
-##  <C>ttm</C> is  still experimental.  The output of  this converter
-##  variant is garbage for browsers which don't support MathML.<P/>
 ##  
 ##  This  function works  by  running recursively  through the  document
 ##  tree   and   calling   a   handler  function   for   each   &GAPDoc;
@@ -2093,11 +2077,11 @@ end;
 ##  The <Package>MathJax</Package> versions are written to files
 ##  <F>chap0_mj.html</F>, ..., <F>chapInd_mj.html</F>. <P/>
 ##  
-##  The  experimental versions  which  are  produced with  <C>tth</C>
-##  or  <C>ttm</C>   use  different  names  for   the  files,  namely
+##  The  experimental version  which  is  produced with  <C>tth</C>
+##  uses  different  names  for   the  files,  namely
 ##  <F>chap0_sym.html</F>,  and so  on  for  files which  need
-##  symbol  fonts  and  <F>chap0_mml.xml</F>  for  files  with
-##  MathML translations.<P/>
+##  symbol  fonts.
+##  <P/>
 ##  
 ##  You should also add stylesheet files to the directory with the HTML
 ##  files, see <Ref Subsect="StyleSheets"/>.

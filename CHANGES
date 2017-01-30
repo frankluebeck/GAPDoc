@@ -1,6 +1,9 @@
                        CHANGES of the GAPDoc package
 
 1.5.1 -> 1.6
+- Removed support for the "MathML" variant of 'GAPDoc2HTML' which 
+  was probably not used anyway.
+
 - MakeGAPDocDoc (more precisely AddPageNumbersToSix) will no longer enter
   a break loop in case of an empty index (noticed by Thomas Breuer).
 
