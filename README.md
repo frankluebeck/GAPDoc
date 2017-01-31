@@ -1,5 +1,6 @@
 
-   GAPDoc  --- A GAP 4 package for preparing documentation of GAP programs
+GAPDoc  --- A GAP 4 package for preparing documentation of GAP programs
+=======================================================================
 
                         Frank Lübeck
                        Max Neunhöffer
@@ -21,9 +22,9 @@ This package provides:
     source code files.
   - GAP programs (written by the first named author) which produce from
     documentation written in the GAPDoc language several document formats:
-      □ text format with color markup for onscreen browsing.
-      □ LaTeX format and from this PDF- (and DVI)-versions with hyperlinks.
-      □ HTML (XHTML 1.0 strict) format for reading with a Web-browser (and many
+      * text format with color markup for onscreen browsing.
+      * LaTeX format and from this PDF- (and DVI)-versions with hyperlinks.
+      * HTML (XHTML 1.0 strict) format for reading with a Web-browser (and many
         hooks for CSS layout).
   - Utility GAP programs which are used for the above but can be of independent
     interest as well:
@@ -37,38 +38,44 @@ This package provides:
 
 
 For further information see:
-   http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/
+   `http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/`
 
 
 INSTALLATION
+------------
 
 Just unpack one of the archives in the "pkg" subdirectory of your GAP 
 installation. The archive is available in several formats:
 
-   GAPDoc-XXX.zoo     (use the "unzoo" or "unzoo.exe" from the GAP homepage)
-   GAPDoc-XXX.tar.gz  (GNU tar archive, gzip'ed)
-   GAPDoc-XXX.tar.bz2 (GNU tar archive, bzip2'ed)
-   GAPDoc-XXX-win.zip (with DOS/Windows style line breaks in text files)
+  - `GAPDoc-XXX.tar.gz`  (GNU tar archive, gzip'ed)
+  - `GAPDoc-XXX.tar.bz2` (GNU tar archive, bzip2'ed)
+  - `GAPDoc-XXX-win.zip` (with DOS/Windows style line breaks in text files)
 
-Unpacking generates a subdirectory of form "GAPDoc-x.y.z". 
+Unpacking generates a subdirectory of form `GAPDoc-x.y.z`. 
 
-That's it! (Maybe you want to read the help section "?SetHelpViewer" 
+That's it! (Maybe you want to read the help section `?SetHelpViewer` 
 in the GAP reference manual.)
 
 
 Installation *outside the GAP main directory*: When you don't have access to
 the directory of your main GAP installation you can also install the package
-by unpacking inside a directory "MYGAPDIR/pkg". (Don't forget to call "gap"
-with the '-l ";MYGAPDIR"' option.) 
+by unpacking inside a directory `MYGAPDIR/pkg`. (Don't forget to call `gap`
+with the `-l ";MYGAPDIR"` option or to adjust your `gap` start script.) 
+
+On UNIX/Linux you can put this package in the directory `~/.gap/pkg/` where
+is will be found by the default start script.
 
 The only drawback with this installation is  that in the HTML version of the
 package  documentation the  links to  the main  GAP
 manuals  don't  work.  You  can  correct  this  by  recompiling  the  GAPDoc
-documentation: Say 'cd GAPDoc*; gap makedocrel.g'.
+documentation: Say `cd GAPDoc*; gap makedocrel.g`.
 
 For questions, suggestions, ... write to
 
-   Frank.Luebeck@Math.RWTH-Aachen.De
+   `Frank.Luebeck@Math.RWTH-Aachen.De`
+
+or use the issue tracker (`https://github.com/frankluebeck/GAPDoc/issues`) of
+the git-repository.
 
 
 Frank Lübeck
