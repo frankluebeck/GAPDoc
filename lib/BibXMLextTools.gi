@@ -1343,7 +1343,7 @@ end);
 AddHandlerBuildRecBibXMLEntry("value", "default",
 function(entry, elt, default, strings, opts)
   local pos;
-  pos := PositionFirstComponent(strings, elt.attributes.key);
+  pos := PositionSorted(strings, [elt.attributes.key]);
   if not IsBound(strings[pos]) or strings[pos][1] <> elt.attributes.key then
     return Concatenation("UNKNOWNVALUE(", elt.attributes.key, ")");
   else
