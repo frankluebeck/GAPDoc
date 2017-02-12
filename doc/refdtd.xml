@@ -1033,7 +1033,7 @@ reasonable in all output formats.
 <Index Key="List"><C>List</C></Index>
 
 <Listing Type="From gapdoc.dtd">
-<![CDATA[<!ELEMENT List ( ((Mark,Item)|(BigMark,Item)|Item)+ )>
+<![CDATA[<!ELEMENT List ( ((Mark,Item)|Item)+ )>
 <!ATTLIST List Only CDATA #IMPLIED
                Not  CDATA #IMPLIED>]]>
 </Listing>
