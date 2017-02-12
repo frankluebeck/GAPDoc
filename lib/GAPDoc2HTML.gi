@@ -2108,7 +2108,10 @@ end);
 
 InstallGlobalFunction(CopyHTMLStyleFiles, function(dir)
   local d, todo, l, s, e, f;
-  d := Filename(DirectoriesPackageLibrary("GAPDoc","styles"),"");
+  if not IsDirectory(dir) then
+    dir := Directory(dir);
+  fi;
+  d := DirectoriesPackageLibrary("GAPDoc","styles")[1];
   todo := [];
   for f in DirectoryContents(d) do
     if f = "chooser.html" then
@@ -2123,14 +2126,13 @@ InstallGlobalFunction(CopyHTMLStyleFiles, function(dir)
     fi;
   od;
   for f in todo do
-    s := StringFile(Filename(Directory(d),f));
+    s := StringFile(Filename(d,f));
     if s = fail then
-      Info(InfoGAPDoc, 1, "Cannot read file ", Filename(Directory(d),f), "\n");
+      Info(InfoGAPDoc, 1, "Cannot read file ", Filename(d,f), "\n");
     else
-      e := FileString(Filename(Directory(dir),f), s);
+      e := FileString(Filename(dir,f), s);
       if e = fail then
-        Info(InfoGAPDoc, 1, "Cannot write file ", 
-                                             Filename(Directory(dir),f), "\n");
+        Info(InfoGAPDoc, 1, "Cannot write file ", Filename(dir,f), "\n");
       fi;
     fi;
   od;
