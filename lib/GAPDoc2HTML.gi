@@ -267,6 +267,11 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
                 Concatenation("<p id=\"mathjaxlink\" ",
                 "class=\"pcenter\"><a href=\"chap",
                 String(n), ".html\">[MathJax off]</a></p>\n"));
+    else
+      # we still want the hook for the [Style] link
+      Append(files.(n).text, 
+                Concatenation("<p id=\"mathjaxlink\" ",
+                "class=\"pcenter\"></p>\n"));
     fi;
   od;
   for i in [2,4..Length(l)] do

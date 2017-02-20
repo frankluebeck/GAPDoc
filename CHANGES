@@ -1,6 +1,9 @@
                        CHANGES of the GAPDoc package
 
 1.5.1 -> 1.6
+- The HTML manuals in Browsers with Javascript now always have the 
+  [Style] link, even if no MathJax version is generated.
+
 - 'RunExamples' now returns 'true' or 'false'.
 
 - Removed support for the "MathML" variant of 'GAPDoc2HTML' which 
