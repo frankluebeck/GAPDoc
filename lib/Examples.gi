@@ -39,6 +39,13 @@
 ##  </ManSection>
 ##  <#/GAPDoc>
 
+if not GAPInfo.CommandLineOptions.O and 
+       UserPreference( "ReadObsolete" ) <> false then
+  MANEXreadobs := true;
+else
+  MANEXreadobs := false;
+fi;
+
 # obsolete
 # Extract examples units-wise from a GAPDoc document as XML tree, 
 # 'units' can either be: "Chapter" or "Section" or "Subsection" or "Single"
@@ -46,6 +53,7 @@
 # For all other values of 'units' one string with all examples is returned.
 # Before each extracted example there is its paragraph number in a comment:
 #  [ chapter, section, subsection, paragraph ]
+if MANEXreadobs then
 InstallGlobalFunction(ManualExamplesXMLTree, function( tree, units )
   local secelts, sec, exelts, res, str, a, ex;
   if units = "Chapter" then
@@ -92,6 +100,7 @@ InstallGlobalFunction(ManualExamplesXMLTree, function( tree, units )
   fi;
   return res;
 end);
+fi;
 
 InstallGlobalFunction(ExtractExamplesXMLTree, function( tree, units )
   local secelts, sec, exelts, orig, res, l, b, e, a, ex;
@@ -139,12 +148,14 @@ end);
 
 # obsolete
 # compose and parse document, then extract examples units-wise
+if MANEXreadobs then
 InstallGlobalFunction(ManualExamples, function( path, main, files, units )
   local str, xmltree;
   str:= ComposedDocument( "GAPDoc", path, main, files, true );
   xmltree:= ParseTreeXMLString( str[1], str[2] );
   return ManualExamplesXMLTree(xmltree, units);
 end);
+fi;
 
 # compose and parse document, then extract examples units-wise
 InstallGlobalFunction(ExtractExamples, function( path, main, files, units )
@@ -202,6 +213,7 @@ end);
 
 # obsolete
 # test a string with examples 
+if MANEXreadobs then
 InstallGlobalFunction(ReadTestExamplesString, function(str)
   local res, file;
   file := InputTextString(str);
@@ -209,9 +221,11 @@ InstallGlobalFunction(ReadTestExamplesString, function(str)
   CloseStream(file);
   return res;
 end);
+fi;
 
 # obsolete
 # args:  str, print
+if MANEXreadobs then
 InstallGlobalFunction(TestExamplesString, function(arg)
   local l, s, z, inp, out, f, lout, pos, bad, i, n, diffs, str;
   str := arg[1];
@@ -279,8 +293,10 @@ InstallGlobalFunction(TestExamplesString, function(arg)
   fi;
   return bad;
 end);
+fi;
 
 # obsolete
+if MANEXreadobs then
 InstallGlobalFunction(TestManualExamples, function(arg)
   local ex, bad, res, a;
   if IsRecord(arg[1]) then
@@ -297,6 +313,7 @@ InstallGlobalFunction(TestManualExamples, function(arg)
   od; 
   return res;
 end);
+fi;
 
 
 ##  <#GAPDoc Label="RunExamples">
@@ -499,4 +516,6 @@ InstallGlobalFunction(RunExamples, function(arg)
   SizeScreen(oldscr);
   return nodiffs;
 end);
+
+Unbind(MANEXreadobs);
 
