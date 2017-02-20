@@ -659,8 +659,8 @@ end);
 ##  
 ##  <Emph>Further  hints:</Emph>   To  get   strings  produced   by  &LaTeX;
 ##  right  you  will  probably  use the  <C>babel</C>  package  with  option
-##  <A>lang</A>,  see  the  information   on  <C>ExtraPreamble</C>  in  <Ref
-##  Func="GAPDoc2LaTeX"/>. If <A>lang</A> cannot be encoded in <C>latin1</C>
+##  <A>lang</A>,  see  <Ref Func="SetGapDocLaTeXOptions"/>. 
+##  If <A>lang</A> cannot be encoded in <C>latin1</C>
 ##  encoding  you   can  consider  the   use  of  <C>"utf8"</C>   with  <Ref
 ##  Func="SetGapDocLaTeXOptions"/>.
 ##  </Description>
