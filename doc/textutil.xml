@@ -55,6 +55,8 @@ encodings.
 
 <#Include Label="WidthUTF8String">
 
+<#Include Label="InitialSubstringUTF8String">
+
 </Section>
 
 <Section Label="PrintUtil">

@@ -1151,6 +1151,57 @@ InstallGlobalFunction(WidthUTF8String, function(str)
   return res;
 end);
 
+##  <#GAPDoc Label="InitialSubstringUTF8String">
+##  <ManSection >
+##  <Func Arg="str, maxwidth" Name="InitialSubstringUTF8String" />
+##  <Returns>UTF-8 encoded string</Returns>
+##  <Description>
+##  The argument <A>str</A> must be a &GAP; string  with text in UTF-8 encoding
+##  or a unicode string. The function returns the longest initial substring of
+##  <A>str</A> which has at most visible width <A>maxwidth</A>, as UTF-8 encoded
+##  &GAP; string.
+##  <Example>
+##  gap> # A, German umlaut u, B, zero width space, C, newline
+##  gap> str := Encode( Unicode( "A&amp;#xFC;B&amp;#x200B;C\n", "XML" ) );;
+##  gap> ini := InitialSubstringUTF8String(str, 3);;
+##  gap> WidthUTF8String(ini);
+##  3
+##  gap> IntListUnicodeString(Unicode(ini));
+##  [ 65, 252, 66, 8203 ]
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+InstallGlobalFunction(InitialSubstringUTF8String, function(str, len)
+  local ints, sum, pos, j;
+  if not IsUnicodeString(str) then
+    ints := IntListUnicodeString(Unicode(str, "UTF-8"));
+  else
+    ints := IntListUnicodeString(str);
+  fi;
+  sum := 0;
+  for j in [1..Length(ints)] do
+    if ints[j] > 31 and ints[j] < 127 then
+      sum := sum + 1;
+    else 
+      pos := POSITION_FIRST_COMPONENT_SORTED(WidthUnicodeTable, ints[j]);
+      if not IsBound( WidthUnicodeTable[ pos ] ) or
+         WidthUnicodeTable[pos][1] <> ints[j] then
+         pos := pos-1;
+      fi;
+      sum := sum + WidthUnicodeTable[pos][2];
+    fi;
+    if sum > len then
+      return Encode(Unicode(ints{[1..j-1]}));
+    fi;
+  od;
+  if IsString(str) then
+    return str;
+  else
+    return Encode(str, "UTF-8");
+  fi;
+end);
+
 
 # Not (yet?) documented utility to translate a latin1 or UTF-8 encoded
 # GAP string to a string with lowercase ASCII characters. Can be used for 
