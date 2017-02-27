@@ -14,13 +14,26 @@
 ##  name(s) and ...
 ##  see Lamport: LaTeX App.B 1.2
 InstallGlobalFunction(NormalizedNameAndKey, function(str)
-  local   nbsp,  new,  pp,  p,  a,  i,  names,  norm,  keyshort,  
-          keylong,  res;
+  local   isutf8, nbsp, ini, new,  pp,  p,  a,  i,  names,  norm,  keyshort,  
+          keylong,  res, utf8initial;
+  utf8initial := function(s)
+    local i, n;
+    i := 1;
+    while Length(s) <= i and s[i] in "-.{}\\\"\'`\003" do
+      i := i+1;
+    od;
+    if i > Length(s) then
+      return fail;
+    fi;
+    n := UNICODE_RECODE.UnicodeUTF8Char(s, i);
+    return Encode(Unicode([n]),"UTF-8");
+  end;
   # do almost nothing if already list of strings (e.g., from BibXMLext tools
   if IsString(str) then
+    isutf8 := (Unicode(str) <> fail);
     # first normalize white space inside braces { ... } and change
-    # spaces to non-breakable spaces
-    nbsp := CHAR_INT(160);
+    # spaces to non-spaces (removed below)
+    nbsp := '\003';
     new := "";
     pp := 0;
     p := Position(str, '{');
@@ -89,12 +102,22 @@ InstallGlobalFunction(NormalizedNameAndKey, function(str)
           fi;
           lnam := Filtered(lnam, x-> x<>',');
         od;
-        # first name initials   -  wrong for UTF-8!
+        # first name initials
         fnam := "";
         for j in [i+1..Length(n)] do
-          Add(fnam, First(n[j], x-> not x in WHITESPACE 
-                                    and not x in "-.{}\\\"\'`"));
-          Append(fnam, ". ");
+          if isutf8 then
+            ini := utf8initial(n[j]);
+          else
+            ini := First(n[j], x-> not x in WHITESPACE 
+                              and not x in "-.{}\\\"\'`\003");
+            if ini <> fail then
+              ini := [ini];
+            fi;
+          fi;
+          if ini <> fail then
+            Append(fnam, ini);
+            Append(fnam, ". ");
+          fi;
         od;
         fnamfull := JoinStringsWithSeparator(n{[i+1..Length(n)]}, " ");
       else
@@ -112,14 +135,35 @@ InstallGlobalFunction(NormalizedNameAndKey, function(str)
             Add(lnam, ' ');
           fi;
         od;
-        # first name capitals
+        # first name initials
         fnam := "";
         for j in [1..i-1] do
-          Add(fnam, First(n[j], x-> x in LETTERS));
-          Append(fnam, ". ");
+          if isutf8 then
+            ini := utf8initial(n[j]);
+          else
+            ini := First(n[j], x-> not x in WHITESPACE 
+                              and not x in "-.{}\\\"\'`\003");
+            if ini <> fail then
+              ini := [ini];
+            fi;
+          fi;
+          if ini <> fail then
+            Append(fnam, ini);
+            Append(fnam, ". ");
+          fi;
         od;
         fnamfull := JoinStringsWithSeparator(n{[1..i-1]}, " ");
       fi;
+      for j in [1..Length(lnam)] do
+        if lnam[j] = '\003' then
+          lnam[j] := ' ';
+        fi;
+      od;
+      for j in [1..Length(fnamfull)] do
+        if fnamfull[j] = '\003' then
+          fnamfull[j] := ' ';
+        fi;
+      od;
       while Length(fnam) > 0 and fnam[Length(fnam)] in WHITESPACE do
         fnam := fnam{[1..Length(fnam)-1]};
       od;
@@ -362,10 +406,6 @@ end);
 ##  names. The fourth entry is a list of lists, one for each name, where a 
 ##  name is described by three strings for the last name, the first name
 ##  initials and the first name(s) as given in the input. <P/>
-##  
-##  Note that the determination of the initials is limited to names where the
-##  first letter is described by a single character (and does not contain some
-##  markup, say for accents).<P/>
 ##  
 ##  The function <Ref Func="NormalizeNameAndKey"/> gets as argument <A>r</A> 
 ##  a record for a bibliography entry as returned by <Ref  Func="ParseBibFiles"
