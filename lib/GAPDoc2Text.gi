@@ -1697,15 +1697,17 @@ GAPDoc2TextProcs.List := function(r, par)
     for a in Filtered(r.content, a-> a.name = "Item") do
       ss := "";
       GAPDoc2TextProcs.Item(a, ss);
-      # insert bullet
-      start := ss[2]{[1..Length(r.root.indent)]};
-      ss[2] := ss[2]{[Length(r.root.indent)+1..Length(ss[2])]};
-      for i in [1..2] do
-        Remove(ss[2], Position(ss[2],' '));
-      od;
-      ss[2] := Concatenation(start,
-                             GAPDoc2TextProcs.TextAttr.ListBullet[1], ss[2]);
-      Append(par, ss);
+      if ss <> "" then # ignore empty <Item>
+        # insert bullet
+        start := ss[2]{[1..Length(r.root.indent)]};
+        ss[2] := ss[2]{[Length(r.root.indent)+1..Length(ss[2])]};
+        for i in [1..2] do
+          Remove(ss[2], Position(ss[2],' '));
+        od;
+        ss[2] := Concatenation(start,
+                               GAPDoc2TextProcs.TextAttr.ListBullet[1], ss[2]);
+        Append(par, ss);
+      fi;
     od;
   fi;
 end;
