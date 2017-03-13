@@ -1382,12 +1382,15 @@ using  the  corresponding  entities  or by  enclosing  the  formula  between
 <Q><C>&lt;![CDATA[</C></Q> and  <Q><C>]]&gt;</C></Q>. (The  main reference
 for &LaTeX; is <Cite Key="La85" />.)<P/>
 
-It is also possible to use some unicode characters for mathematical
-symbols directly, provided that it can be translated by <Ref Func="Encode" /> into <C>"LaTeX"</C> encoding and that <Ref Func="SimplifiedUnicodeString"/> with arguments <C>"latin1"</C> and <C>"single"</C> returns something sensible.
-Currently, we support entities <C>&amp;CC;</C>, <C>&amp;ZZ;</C>,
-<C>&amp;NN;</C>, <C>&amp;PP;</C>, <C>&amp;QQ;</C>, <C>&amp;HH;</C>,
-<C>&amp;RR;</C> for the corresponding black board bold letters 
-&CC;, &ZZ;, &NN;,&PP;, &QQ;, &HH; and  &RR;, respectively.
+It   is   also   possible   to   use   some   unicode   characters   for
+mathematical  symbols  directly,  provided  that it  can  be  translated
+by  <Ref   Func="Encode"  />  into  <C>"LaTeX"</C>   encoding  and  that
+<Ref  Func="SimplifiedUnicodeString"/>  with  arguments  <C>"latin1"</C>
+and   <C>"single"</C>   returns   something  sensible.   Currently,   we
+support  entities   <C>&amp;CC;</C>,  <C>&amp;ZZ;</C>,  <C>&amp;NN;</C>,
+<C>&amp;PP;</C>,  <C>&amp;QQ;</C>, <C>&amp;HH;</C>,  <C>&amp;RR;</C> for
+the corresponding black board bold  letters &CC;, &ZZ;, &NN;, &PP;, &QQ;,
+&HH; and &RR;, respectively.
 <P/>
 
 The only  element type that  is allowed within  the formula elements  is the
