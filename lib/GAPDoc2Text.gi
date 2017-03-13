@@ -964,9 +964,20 @@ end;
 
 ##  this really produces the content of the heading
 GAPDoc2TextProcs.Heading1 := function(r, str)
-  local a;
+  local a, where;
   a := "";
   GAPDoc2TextContent(r, a);
+  if a = "" then
+    if IsBound(r.root) and IsBound(r.root.inputorigins) then
+      where := OriginalPositionDocument(r.root.inputorigins,r.start);
+      where := Concatenation("(file ",where[1],
+                             ", line ",String(where[2]),")");
+    else
+      where := "";
+    fi;
+    Error("Empty <Heading> element is not supported ",where);
+    return;
+  fi;
   Append(str, a[2]);
 end;
 ##  and this ignores the heading (for simpler recursion)
