@@ -903,7 +903,7 @@ UNICODE_RECODE.Encoder.("LaTeX") := function(arg)
     elif n < 128 then
       Add(res, CHAR_INT(n));
     else
-      pos := POSITION_FIRST_COMPONENT_SORTED(tt, n);
+      pos := PositionSorted(tt, [n]);
       if IsBound(tt[pos]) and tt[pos][1] = n then
         Append(res, tt[pos][2]);
       elif leaveutf8 = true then
@@ -959,7 +959,7 @@ InstallGlobalFunction(SimplifiedUnicodeString, function(arg)
     if n <= max then
       Add(res, n);
     else
-      pos := POSITION_FIRST_COMPONENT_SORTED(tt, n);
+      pos := PositionSorted(tt, [n]);
       if IsBound(tt[pos]) and tt[pos][1] = n then
         a := tt[pos];
         f := Filtered([2..Length(a)], i-> (IsInt(a[i]) and a[i] <= max)
@@ -991,7 +991,7 @@ InstallGlobalFunction(LowercaseUnicodeString, function(ustr)
   res := ShallowCopy(IntListUnicodeString(ustr));
   tt := LowercaseUnicodeTable;
   for i in [1..Length(res)] do
-    pos := POSITION_FIRST_COMPONENT_SORTED(tt, res[i]);
+    pos := PositionSorted(tt, [res[i]]);
     if IsBound(tt[pos]) and tt[pos][1] = res[i] then
       res[i] := tt[pos][2];
     fi;
@@ -1006,7 +1006,7 @@ InstallGlobalFunction(UppercaseUnicodeString, function(ustr)
   fi;
   tt := UppercaseUnicodeTable;
   for i in [1..Length(res)] do
-    pos := POSITION_FIRST_COMPONENT_SORTED(tt, res[i]);
+    pos := PositionSorted(tt, [res[i]]);
     if IsBound(tt[pos]) and tt[pos][1] = res[i] then
       res[i] := tt[pos][2];
     fi;
@@ -1140,7 +1140,7 @@ InstallGlobalFunction(WidthUTF8String, function(str)
     if i > 31 and i < 127 then
       res := res+1;
     else
-      pos := POSITION_FIRST_COMPONENT_SORTED(WidthUnicodeTable, i);
+      pos := PositionSorted(WidthUnicodeTable, [i]);
       if not IsBound(WidthUnicodeTable[pos]) or WidthUnicodeTable[pos][1] <> i
           then
         pos := pos-1;
@@ -1184,7 +1184,7 @@ InstallGlobalFunction(InitialSubstringUTF8String, function(str, len)
     if ints[j] > 31 and ints[j] < 127 then
       sum := sum + 1;
     else 
-      pos := POSITION_FIRST_COMPONENT_SORTED(WidthUnicodeTable, ints[j]);
+      pos := PositionSorted(WidthUnicodeTable, [ints[j]]);
       if not IsBound( WidthUnicodeTable[ pos ] ) or
          WidthUnicodeTable[pos][1] <> ints[j] then
          pos := pos-1;
