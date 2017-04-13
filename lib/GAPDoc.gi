@@ -247,6 +247,12 @@ end);
 PAGENRS := 0;
 InstallGlobalFunction(AddPageNumbersToSix, function(r, pnrfile)
   local   six,  a,  pos;
+  if not IsExistingFile(pnrfile) and
+    IsBound(GAPInfo.SIXFILEIGNOREMISSINGPNR) and
+    GAPInfo.SIXFILEIGNOREMISSINGPNR = true then
+    for a in r.six do a[5] := -1; od;
+    return;
+  fi;
   Read(pnrfile);
   six := r.six;
   for a in six do
