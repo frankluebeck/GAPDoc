@@ -117,7 +117,7 @@ GAPDoc2HTMLProcs.Head1 := "\
 <head>\n\
 <title>GAP (";
 
-GAPDoc2HTMLProcs.MathJaxURL := "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+GAPDoc2HTMLProcs.MathJaxURL := "http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
 
 GAPDoc2HTMLProcs.Head1MathJax := "\
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
