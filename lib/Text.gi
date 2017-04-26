@@ -808,6 +808,10 @@ InstallGlobalFunction(StripEscapeSequences, function(str)
       od;
       # first letter is last character of escape sequence
       i := i+1; 
+      # remove \027 marker of inner escape sequences as well
+      if IsBound(str[i]) and str[i] = '\027' then
+        i := i+1;
+      fi;
     else
       p := Position(str, esc, i);
       if p=fail then
