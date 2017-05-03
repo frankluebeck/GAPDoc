@@ -1319,6 +1319,9 @@ AddHandlerBuildRecBibXMLEntry("C", ["Text", "HTML"], "Ignore");
 AddHandlerBuildRecBibXMLEntry(["M", "Math"], "default",
 function(entry, elt, default, strings, opts)
   local res;
+  if IsBound(opts.MathJax) and opts.MathJax = true then
+    return RECBIBXMLHNDLR.M.MathJax(entry, elt, default, strings, opts);
+  fi;
   RECBIBXMLHNDLR.recode := false;
   res := Concatenation("$", ContentBuildRecBibXMLEntry(entry, elt,
                                           default, strings, opts), "$");
@@ -1328,8 +1331,23 @@ end);
 AddHandlerBuildRecBibXMLEntry("M", "HTML",
 function(entry, elt, default, strings, opts)
   local res;
+  if IsBound(opts.MathJax) and opts.MathJax = true then
+    return RECBIBXMLHNDLR.M.MathJax(entry, elt, default, strings, opts);
+  fi;
   RECBIBXMLHNDLR.recode := false;
   res := TextM( ContentBuildRecBibXMLEntry(entry, elt, default, strings, opts));
+  RECBIBXMLHNDLR.recode := true;
+  res := SubstitutionSublist(res, "&", "&amp;");
+  res := SubstitutionSublist(res, "<", "&lt;");
+  return res;
+end);
+AddHandlerBuildRecBibXMLEntry("M", "MathJax",
+function(entry, elt, default, strings, opts)
+  local res;
+  RECBIBXMLHNDLR.recode := false;
+  res := Concatenation("\\(",
+         ContentBuildRecBibXMLEntry(entry, elt, default, strings, opts),
+         "\\)");
   RECBIBXMLHNDLR.recode := true;
   res := SubstitutionSublist(res, "&", "&amp;");
   res := SubstitutionSublist(res, "<", "&lt;");
@@ -1595,7 +1613,10 @@ end);
 ##  <Item>An HTML representation of the bibliography entry is returned. The text
 ##  from each field is enclosed in markup (mostly <C>&lt;span></C>-elements)
 ##  with the <C>class</C> attribute set to the field name. This allows a
-##  detailed layout of the code via a style sheet file.</Item>
+##  detailed layout of the code via a style sheet file.
+##  If <C>options.MathJax</C> is bound and has the value <K>true</K> then 
+##  formulae are encoded for display on pages with <Package>MathJax</Package>
+##  support.</Item>
 ##  </List>
 ## 
 ##  We use again the file shown in the example for <Ref
@@ -1627,7 +1648,23 @@ end);
 ##  formula  x^y  -  l_{i+1}  ?  R, Important Journal, 13 (2000), 13-25,
 ##  (Online        data        at        Bla        Bla        Publisher
 ##  (http://www.publish.com/~ImpJ/123#data)).
-##  
+##  gap> ehtml := StringBibXMLEntry(e, "HTML", strs, rec(MathJax := true));;
+##  gap> ehtml := Encode(Unicode(ehtml), GAPInfo.TermEncoding);;
+##  gap> PrintFormattedString(ehtml);
+##  <![CDATA[<p class='BibEntry'>
+##  [<span class='BibKey'>FS00</span>]   
+##   <b class='BibAuthor'>First, F. A. and Secőnd, X. Y.</b>,
+##   <i class='BibTitle'>The  Fritz package for the 
+##           formula \(x^y - l_{{i+1}} \rightarrow \mathbb{R}\)</i>,
+##   <span class='BibJournal'>Important Journal</span> 
+##  (<span class='BibNumber'>13</span>)
+##   (<span class='BibYear'>2000</span>),
+##   <span class='BibPages'>13–25</span><br />
+##  (<span class='BibNote'>Online data at 
+##  <a href="http://www.publish.com/~ImpJ/123#data">Bla Bla 
+##  Publisher</a></span>).
+##  </p>
+##  ]]>
 ##  </Example>
 ##  </Description>
 ##  </ManSection>
