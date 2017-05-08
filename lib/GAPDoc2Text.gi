@@ -1664,8 +1664,15 @@ GAPDoc2TextProcs.Mark := function(r, str)
   local s;
   s := "";
   GAPDoc2TextProcs.WrapAttr(r, s, "Mark");
+  # allow for <C> and <A> elements in <Mark>
+  s := SubstitutionSublist(s, GAPDoc2TextProcs.TextAttr.Arg[2], 
+                               Concatenation(GAPDoc2TextProcs.TextAttr.Arg[2],
+                               GAPDoc2TextProcs.TextAttr.Mark[1],"\027"));
+  s := SubstitutionSublist(s, GAPDoc2TextProcs.TextAttr.C[2], 
+                               Concatenation(GAPDoc2TextProcs.TextAttr.C[2],
+                               GAPDoc2TextProcs.TextAttr.Mark[1],"\027"));
   Append(str, r.root.indent);
-  Append(str, s);
+  Append(str, NormalizedWhitespace(s));
   Append(str, "\n");
 end;
 
