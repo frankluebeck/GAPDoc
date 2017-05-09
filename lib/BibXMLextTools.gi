@@ -181,7 +181,7 @@ end);
 ##  
 ##  <#GAPDoc Label="ParseBibXMLextString">
 ##  <ManSection >
-##  <Func Arg="str" Name="ParseBibXMLextString" />
+##  <Func Arg="str[, res]" Name="ParseBibXMLextString" />
 ##  <Func Arg="fname1[, fname2[, ...]]" Name="ParseBibXMLextFiles" />
 ##  <Returns>a record with fields <C>.entries</C>, <C>.strings</C> and
 ##  <C>.entities</C></Returns>
@@ -193,6 +193,11 @@ end);
 ##  is a list of key-value pairs from the <C>&lt;string></C>-elements in 
 ##  <A>str</A>. And <C>.strings</C> is a list of name-value pairs of the 
 ##  named entities which were used during the parsing.
+##  <P/>
+##  
+##  The optional argument <A>res</A> can be the result of a former call of 
+##  this function, in that case the newly parsed entries are added to this
+##  data structure.
 ##  <P/>
 ##  
 ##  The second function <Ref Func="ParseBibXMLextFiles"/> uses the first 
