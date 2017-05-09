@@ -597,7 +597,7 @@ end);
 ##  write head and foot of HTML file.
 GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   local i, pi, t, el, remdiv, math, pos, pos1, str, dat, datbt, bib, b, 
-        keys, need, labels, tmp, j, diff, text, a, k, l, ind;
+        keys, need, labels, tmp, j, diff, text, a, k, l, ind, opts;
   
   ##  add paragraph numbers to all nodes of the document
   AddParagraphNumbersGapDocTree(r);
@@ -753,7 +753,13 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   if Length(r.bibkeys) > 0 then
     GAPDocAddBibData(r);
     Info(InfoGAPDoc, 1, "#I Writing bibliography . . .\n");
-    need := List(r.bibentries, a-> RecBibXMLEntry(a, "HTML", r.bibstrings));
+    if r.root.mathmode = "MathJax" then
+      opts := rec(MathJax := true);
+    else
+      opts := rec();
+    fi;
+    need := List(r.bibentries, a-> RecBibXMLEntry(a, "HTML", r.bibstrings,
+            opts));
     # copy the unique labels
     for a in [1..Length(need)] do
       need[a].key := r.biblabels[a];
