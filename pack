@@ -20,15 +20,15 @@ rm -rf ttttmp
 echo "Checking out current version into ttttmp/pkg/"$dirnam" . . ."
 mkdir -p ttttmp/pkg/$dirnam
 cd ttttmp/pkg/$dirnam
-cp -a ../../../.svn .
-svn update  > /dev/null 2>&1
-svn info | grep -v ^URL |grep -v ^Repository > svnrevision
+cp -a ../../../.git .
+git co master .
 echo building documentation
 ../../../../../bin/gap.sh -r -l "../..;" < makedocrel.g > /dev/null
 
+
 echo "removing unwanted files . . ."
 rm -r pack TODO clean index.html pkgreadme.css
-rm -rf `find . -regex ".*/.svn"`
+rm -rf .git .gitignore
 rm -rf */*.{log,aux,blg,brf,bbl,idx,ilg,ind,pnr} */*.xml.bib */.cvsignore
 rm -f ./makedoc.g ./maketxt ./doku toweb
 
