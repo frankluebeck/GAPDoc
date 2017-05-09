@@ -471,3 +471,7 @@ HELP_BOOK_HANDLER.GapDocGAP.MatchNext := function(book, entrynr)
   return [info, nr];
 end;
 
+HELP_BOOK_HANDLER.GapDocGAP.SubsectionNumber := function(info, entrynr)
+  return info.entries[entrynr][3];
+end;
+
