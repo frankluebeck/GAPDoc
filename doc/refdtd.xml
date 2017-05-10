@@ -1439,7 +1439,7 @@ some not too bad representation of a formula.<P/>
 As examples, here are some  &LaTeX;  macros which have  a  sensible 
 ASCII  translation and  are
 guaranteed to be translated accordingly by text (and HTML) converters 
-(for a full list of handled Macros see <C>RecFields(TEXTMTRANSLATIONS)</C>):
+(for a full list of handled Macros see <C>RecNames(TEXTMTRANSLATIONS)</C>):
 
 <Table Align="|l|l|">
  <Caption>&LaTeX; macros with special text translation</Caption>

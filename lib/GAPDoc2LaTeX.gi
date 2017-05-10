@@ -256,14 +256,14 @@ GAPDoc2LaTeXProcs.HeadWithOptions := function(extra)
   local head, opt, f, ff;
   head := GAPDoc2LaTeXProcs.Head;
   opt := GAPDoc2LaTeXProcs.Options;
-  for f in RecFields(opt) do
+  for f in RecNames(opt) do
     if f = "ColorDefinitions" then
-      for ff in RecFields(opt.(f)) do
+      for ff in RecNames(opt.(f)) do
         head := SubstitutionSublist(head, 
                                Concatenation("CONFIGCOLOR",ff), opt.(f).(ff));
       od;
     elif f = "HyperrefOptions" then
-      for ff in RecFields(opt.(f)) do
+      for ff in RecNames(opt.(f)) do
         head := SubstitutionSublist(head, 
                                Concatenation("CONFIGHR",ff), opt.(f).(ff));
       od;
@@ -309,10 +309,10 @@ SetGapDocLaTeXOptions := function(arg)
 
   # now overwrite the defaults
   for r in recs do
-    for f in RecFields(r) do
+    for f in RecNames(r) do
       if IsRecord(r.(f)) then
         if IsBound(new.(f)) then
-          for ff in RecFields(r.(f)) do
+          for ff in RecNames(r.(f)) do
             if IsBound(new.(f).(ff)) then
               new.(f).(ff) := r.(f).(ff);
             fi;

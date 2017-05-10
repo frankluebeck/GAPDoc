@@ -514,7 +514,7 @@ InstallGlobalFunction(GetElement, function(str, pos)
           ##  GAPDoc defined entities automatically
           pos := PositionSublist(dt.content, "gapdoc.dtd");
           if pos <> fail and dt.content[pos-1] in "'\"/" then
-            for p in RecFields(ENTITYDICT_GAPDoc) do
+            for p in RecNames(ENTITYDICT_GAPDoc) do
               ENTITYDICT.(p) := ENTITYDICT_GAPDoc.(p);
             od;
           fi;
@@ -685,16 +685,16 @@ InstallGlobalFunction(ParseTreeXMLString, function(arg)
     XMLPARSEORIGINS := false;
   fi;
   # reset ENTITYDICT
-  for a in RecFields(ENTITYDICT) do
+  for a in RecNames(ENTITYDICT) do
     Unbind(ENTITYDICT.(a));
   od;
-  for a in RecFields(ENTITYDICT_default) do
+  for a in RecNames(ENTITYDICT_default) do
     ENTITYDICT.(a) := ENTITYDICT_default.(a);
   od;
   # maybe load more entities from last argument
   if Length(arg) > 1 and IsRecord(arg[Length(arg)]) then
     ents := arg[Length(arg)];
-    for a in RecFields(ents) do
+    for a in RecNames(ents) do
       ENTITYDICT.(a) := ents.(a);
     od;
   fi;
@@ -898,7 +898,7 @@ StringXMLElement := function(arg)
   p := [Length(str)+1];
   Append(str, "<");
   Append(str, r.name);
-  for att in RecFields(r.attributes) do
+  for att in RecNames(r.attributes) do
     Add(str, ' ');
     Append(str, att);
     Append(str, "=\"");
@@ -966,7 +966,7 @@ EntitySubstitution := function(xmlstr, entities)
     posinfo := fail;
   fi;
   if IsRecord(entities) then
-    entities := List(RecFields(entities), f-> [f, entities.(f)]);
+    entities := List(RecNames(entities), f-> [f, entities.(f)]);
   fi;
   # parse and rewrite entities
   entities2 := List(entities, a-> [a[1], StringXMLElement(

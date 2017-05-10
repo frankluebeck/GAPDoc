@@ -400,7 +400,7 @@ InstallGlobalFunction(RunExamples, function(arg)
   );                 
   nodiffs := true;
   if Length(arg) > 1 and IsRecord(arg[2]) then
-    for a in RecFields(arg[2]) do
+    for a in RecNames(arg[2]) do
       opts.(a) := arg[2].(a);
     od;
   fi;

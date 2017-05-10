@@ -114,7 +114,7 @@ BibXMLextStructure.fill();
 InstallGlobalFunction(TemplateBibXML, function(arg)
   local type, res, add, a, b;
   if Length(arg) = 0 then
-    return Filtered(RecFields(BibXMLextStructure), a-> not a in ["fill"]);
+    return Filtered(RecNames(BibXMLextStructure), a-> not a in ["fill"]);
   fi;
   type := arg[1];
   if type = "fill" or not IsBound(BibXMLextStructure.(type)) then
@@ -209,7 +209,7 @@ end);
 ##  
 ##  <Example>
 ##  gap> bib := ParseBibXMLextFiles("doc/testbib.xml");;
-##  gap> RecFields(bib);
+##  gap> RecNames(bib);
 ##  [ "entries", "strings", "entities" ]
 ##  gap> bib.entries;
 ##  [ &lt;BibXMLext entry: AB2000> ]
@@ -253,7 +253,7 @@ InstallGlobalFunction(ParseBibXMLextString, function(arg)
   fi;
   tr := ParseTreeXMLString(str, ENTITYDICT_bibxml);
   # get used entities from ENTITYDICT
-  ent := List(RecFields(ENTITYDICT), a-> [a, ENTITYDICT.(a)]);
+  ent := List(RecNames(ENTITYDICT), a-> [a, ENTITYDICT.(a)]);
   Append(res.entities, ent);
   res.entities := Set(res.entities);
 
@@ -401,7 +401,7 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
     enc := arg[Length(arg)];
   else
     # try to autodetect UTF-8, else assume latin1
-    if ForAny(RecFields(r), a-> IsString(r.(a)) and Unicode(r.(a)) = fail) or
+    if ForAny(RecNames(r), a-> IsString(r.(a)) and Unicode(r.(a)) = fail) or
        ForAny(abbrevs, a-> Unicode(a) = fail) or
        ForAny(texts, a-> Unicode(a) = fail) then
       enc := "ISO-8859-1";
@@ -417,7 +417,7 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
   fi;
   if enc <> "UTF-8" then
     r := ShallowCopy(r);
-    for a in RecFields(r) do
+    for a in RecNames(r) do
       if IsString(r.(a)) then
         r.(a) := Encode(Unicode(r.(a), enc));
       fi;
@@ -456,14 +456,14 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
     od;
     return ParseTreeXMLString(res).content;
   end;
-  if not (r.Type in RecFields(BibXMLextStructure)) then
+  if not (r.Type in RecNames(BibXMLextStructure)) then
     Info(InfoBibTools, 1, "#W WARNING: invalid .Type in Bib-record: ",
                                                           r.Type, "\n");
     Info(InfoBibTools, 2, r, "\n");
     return fail;
   fi;
   struct := BibXMLextStructure.(r.Type);
-  f := RecFields(r);
+  f := RecNames(r);
 
   if "Label" in f then
     lbl:= Concatenation( " (", r.Label, ") " );
@@ -1109,7 +1109,7 @@ function(entry, elt, type, strings, opts)
     res := rec(From := rec(BibXML := true, type := type, options := opts));
     res.Label := entry.attributes.id;
     f := First(entry.content, a-> IsRecord(a) and a.name in
-                                             RecFields(BibXMLextStructure));
+                                             RecNames(BibXMLextStructure));
     res.Type := f.name;
     for a in f.content do
       if IsRecord(a) and not a.name = "PCDATA" then
