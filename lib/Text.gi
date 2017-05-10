@@ -1111,7 +1111,7 @@ InstallGlobalFunction(Base64String, function(str)
     Add(istr,0);
   od;
   i := 1;
-  res := [];
+  res := "";
   while i < Length(istr) do
     if i > 1 and i mod 57 = 1 then
       Add(res, '\n');
