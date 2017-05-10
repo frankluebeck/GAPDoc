@@ -40,7 +40,7 @@ BibXMLextStructure.fill := function()
   Unbind(BibXMLextStructure.fill);
 end;
 BibXMLextStructure.fill();
-
+MakeImmutable(BibXMLextStructure);
 
 ##  <#GAPDoc Label="TemplateBibXML">
 ##  <ManSection >
@@ -236,6 +236,9 @@ BindGlobal("BibXMLEntryOps", rec(
     Print(StringXMLElement(entry)[1]);
   end
   ));
+
+MakeImmutable(BibXMLEntryOps);
+
 # the entities from bibxmlext.dtd
 BindGlobal("ENTITYDICT_bibxml", rec( 
   nbsp := "&#160;" ,

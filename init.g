@@ -84,6 +84,7 @@ GAPInfo.tmpfunc := function()
   else
     GAPInfo.TermEncoding := GAPInfo.TermEncodingOverwrite;
   fi;
+  MakeImmutable( GAPInfo.TermEncoding );
 end;
 GAPInfo.tmpfunc();
 Add(GAPInfo.PostRestoreFuncs, GAPInfo.tmpfunc);

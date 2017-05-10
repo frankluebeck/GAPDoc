@@ -1018,7 +1018,7 @@ end);
 UNICODE_RECODE.f := function()
   local nam, i;
   for i in Concatenation([1..11],[13..15]) do
-    nam := Concatenation("ISO-8859-", String(i));
+    nam := MakeImmutable(Concatenation("ISO-8859-", String(i)));
     UNICODE_RECODE.Encoder.(nam) := function(ustr)
       local t, s, res, pos, c;
       if not IsBound(UNICODE_RECODE.TABLES.reverse.(nam)) then
