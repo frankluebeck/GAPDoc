@@ -1936,7 +1936,7 @@ GAPDoc2HTMLProcs.TheIndex := function(r, par)
 end;
 
 GAPDoc2HTMLProcs.AltYes := function(r)
-  local mark;
+  local mark, mj, l;
   # recursively mark text as HTML code (no escaping of HTML markup)
   mark := function(r)
     local a;
@@ -1948,18 +1948,52 @@ GAPDoc2HTMLProcs.AltYes := function(r)
       od;
     fi;
   end;
+  mj := r.root.mathmode="MathJax";
   if IsBound(r.attributes.Only) then
-    if "HTML" in SplitString(r.attributes.Only, "", "\n\r\t ,") then
-      mark(r);
-      return true;
+    l := SplitString(r.attributes.Only, "", "\n\r\t ,");
+    if "HTML" in l then
+      if "MathJax" in l then
+        if mj then
+          mark(r);
+          return true;
+        else
+          return false;
+        fi;
+      elif "noMathJax" in l then
+        if not mj then
+          mark(r);
+          return true;
+        else
+          return false;
+        fi;
+      else
+        mark(r);
+        return true;
+      fi;
     else
       return false;
     fi;
   elif IsBound(r.attributes.Not) then
-    if not "HTML" in SplitString(r.attributes.Not, "", "\n\r\t ,") then
-      return true;
+    # here, even if it is used, it is not HTML specific, so we not 'mark'
+    l := SplitString(r.attributes.Not, "", "\n\r\t ,");
+    if "HTML" in l then
+      if "MathJax" in l then
+        if mj then
+          return false;
+        else
+          return true;
+        fi;
+      elif "noMathJax" in l then
+        if not mj then
+          return false;
+        else
+          return true;
+        fi;
+      else
+        return false;
+      fi;
     else
-      return false;
+      return true;
     fi;
   fi;
   return true;

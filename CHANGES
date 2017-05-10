@@ -4,6 +4,9 @@
 - Some cosmetic improvements, mainly for text output and markup of nested
   elements.
 
+- Introduce finer distinction of <Alt>-elements for HTML with/without
+  MathJax.
+
 - 'StringBibXMLEntry' supports now a 'rec(MathJax := true)' option.
 
 - Added a new utility function 'InitialSubstringUTF8String'.

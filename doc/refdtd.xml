@@ -1574,6 +1574,14 @@ output document. If the <C>Not</C>  attribute is specified the corresponding
 converter will ignore the content of the element. You can use other words to
 specify special alternatives for other converters of &GAPDoc; documents.<P/>
 
+In the case of  <Q><C>HTML</C></Q> there is a second word which is recognized
+and this can either be <Q><C>MathJax</C></Q> or <Q><C>noMathJax</C></Q>.
+For example a pair of <C>Alt</C> elements with 
+<C>&lt;Alt Only="HTML noMathJax">...</C> and 
+<C>&lt;Alt Not="HTML noMathJax">...</C> could provide special content for the
+case of HTML output without use of <Package>MathJax</Package> and every
+other output.<P/>
+
 We fix  a rule for  handling the content of  an <C>Alt</C> element  with 
 <C>Only</C> attribute. 
 In  their content code for the corresponding output format is included
