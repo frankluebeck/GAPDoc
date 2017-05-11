@@ -10,12 +10,11 @@ SetPackageInfo( rec(
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
-#Version := "1.5.1",
-Version := "1.dev",
+Version := "1.6",
 ##  DD/MM/YYYY format:
-Date := "23/02/2012",
+Date := "12/05/2017",
 ArchiveURL := 
-          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.5.1",
+          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.6",
 ArchiveFormats := ".tar.bz2",
 Persons := [
   rec(
@@ -69,12 +68,13 @@ PackageDoc := [rec(
   Autoload := false
   )],
 Dependencies := rec(
-  GAP := "4.5.3",
+  GAP := "4.7.6",
   NeededOtherPackages := [],
   SuggestedOtherPackages := [["IO", ">= 2.3"]],
   ExternalConditions := 
             [["(La)TeX installation for converting documents to PDF",
-              "http://www.latex-project.org"]]
+              "http://www.latex-project.org"], 
+              ["BibTeX installation to produce unified labels for refs"]]
 ),
 AvailabilityTest := ReturnTrue,
 Keywords := ["GAP documentation", "help system", "XML", "pdf", "hyperlink",
