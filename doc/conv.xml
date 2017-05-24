@@ -149,7 +149,8 @@ gap> GAPDoc2HTMLPrintHTMLFiles(h, path);
 </Log>
 
 <ManSection >
-<Func Arg="path, main, files, bookname[, gaproot]" Name="MakeGAPDocDoc" />
+<Func Arg="path, main, files, bookname[, gaproot][, entitydict]"
+      Name="MakeGAPDocDoc" />
 
 <Description>
 This  function  collects  all  the   commands  for  producing  a  text-,
@@ -173,7 +174,11 @@ Chapter&nbsp;<Ref Chap="Distributing"/>. And <A>bookname</A> is the name
 of  the  book  used  by  &GAP;'s  online  help.  The  optional  argument
 <A>gaproot</A>  must be  a string  which  gives the  relative path  from
 <A>path</A> to the main &GAP; root directory. If this is given, the HTML
-files are produced with relative paths to external books.<P/>
+files are produced with relative paths to external books.
+The optional argument <A>entities</A> must be a record and is passed
+unchanged to <Ref Func="ParseTreeXMLString"/>. See there for an
+explanation of what it does.
+<P/>
 
 <Index Key="MathJax" Subkey="in MakeGAPDocDoc"><Package>MathJax</Package> 
 <Subkey>in <C>MakeGAPDocDoc</C></Subkey></Index>

@@ -12,9 +12,9 @@
 ##  
 
 ##  args: 
-##     path, main, files, bookname[, gaproot][, "MathML"][, "Tth"][, "MathJax"]
+##     path, main, files, bookname[, gaproot][, entitydict][, "MathML"][, "Tth"][, "MathJax"]
 BindGlobal("MakeGAPDocDoc", function(arg)
-  local htmlspecial, path, main, files, bookname, gaproot, str, 
+  local htmlspecial, path, main, files, bookname, gaproot, entitydict, str,
         r, t, l, latex, null, log, pos, h, i, j;
   htmlspecial := Filtered(arg, a-> a in ["MathML", "Tth", "MathJax"]);
   if Length(htmlspecial) > 0 then
@@ -24,10 +24,17 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   main := arg[2];
   files := arg[3];
   bookname := arg[4];
-  if IsBound(arg[5]) then
+  gaproot := false;
+  entitydict := false;
+  if Length(arg) >= 6 then
     gaproot := arg[5];
-  else
-    gaproot := false;
+    entitydict := arg[6];
+  elif Length(arg) = 5 then
+    if IsString(arg[5]) then
+      gaproot := arg[5];
+    else
+      entitydict := arg[5];
+    fi;
   fi;
   # ensure that path is directory object
   if IsString(path) then
@@ -43,7 +50,7 @@ BindGlobal("MakeGAPDocDoc", function(arg)
                              Concatenation(main, ".xml"), files, true);
   # parse the XML document
   Info(InfoGAPDoc, 1, "#I Parsing XML document . . .\n");
-  r := ParseTreeXMLString(str[1], str[2]);
+  r := ParseTreeXMLString(str[1], str[2], entitydict);
   # clean the result
   Info(InfoGAPDoc, 1, "#I Checking XML structure . . .\n");
   CheckAndCleanGapDocTree(r);
