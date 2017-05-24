@@ -46,7 +46,9 @@ ReadPackage("GAPDoc", "lib/Examples.gd");
 
 
 # try to find terminal encoding
-GAPInfo.tmpfunc := function()
+CallFuncList(function()
+local tmp;
+tmp := function()
   local env, pos, enc, a;
   # we leave the GAPInfo.TermEncodingOverwrite for .gaprc
   # for a moment, but don't document it - doesn't work with 
@@ -84,8 +86,8 @@ GAPInfo.tmpfunc := function()
   else
     GAPInfo.TermEncoding := GAPInfo.TermEncodingOverwrite;
   fi;
+  MakeImmutable( GAPInfo.TermEncoding );
 end;
-GAPInfo.tmpfunc();
-Add(GAPInfo.PostRestoreFuncs, GAPInfo.tmpfunc);
-Unbind(GAPInfo.tmpfunc);
-
+tmp();
+Add(GAPInfo.PostRestoreFuncs, tmp);
+end, []);
