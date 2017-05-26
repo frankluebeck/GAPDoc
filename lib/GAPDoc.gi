@@ -548,6 +548,9 @@ end);
 BindGlobal("GAPDocAddBibData", function(r) 
   local dat, datbt, bib, bibbt, b, keys, need, labels, tmp, pos, diff, a,
         j, p, lab, st;
+  if not IsBound(r.bibdata) then
+    return;
+  fi;
   if IsBound(r.bibentries) and IsBound(r.biblabels) then
     return;
   fi;
