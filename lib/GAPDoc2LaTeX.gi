@@ -1062,7 +1062,7 @@ end;
 ##  this produces an implicit index entry and a label entry
 GAPDoc2LaTeXProcs.LikeFunc := function(r, str, typ)
   local nam, namclean, lab, inam, i;
-  Append(str, "\\noindent\\textcolor{FuncColor}{$\\triangleright$\\ \\ \\texttt{");
+  Append(str, "\\noindent\\textcolor{FuncColor}{$\\triangleright$\\enspace\\texttt{");
   nam := r.attributes.Name;
   namclean := GAPDoc2LaTeXProcs.DeleteUsBs(nam);
   # we allow _,  \ and so on here
