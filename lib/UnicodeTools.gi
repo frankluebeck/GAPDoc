@@ -61,7 +61,7 @@ UNICODE_RECODE.f := function()
 
   UNICODE_RECODE.NormalizedEncodings.("UTF-8") := "UTF-8";
   UNICODE_RECODE.NormalizedEncodings.("XML") := "XML";
-  for nam in RecFields(UNICODE_RECODE.NormalizedEncodings) do
+  for nam in RecNames(UNICODE_RECODE.NormalizedEncodings) do
     UNICODE_RECODE.NormalizedEncodings.(LowercaseString(nam)) :=
               UNICODE_RECODE.NormalizedEncodings.(nam);
   od;
@@ -569,7 +569,7 @@ InstallMethod(Unicode, [IsString, IsString], function(str, enc)
   fi;
   if not IsBound(UNICODE_RECODE.NormalizedEncodings.(enc)) then
     Error("Sorry, only the following encodings are supported for 'Unicode':\n",
-              RecFields(UNICODE_RECODE.Decoder), "\n");
+              RecNames(UNICODE_RECODE.Decoder), "\n");
   fi;
   enc := UNICODE_RECODE.NormalizedEncodings.(enc);
   res := UNICODE_RECODE.Decoder.(enc)(str);
@@ -1057,7 +1057,7 @@ end;
 InstallMethod(Encode, [IsUnicodeString, IsString], function(ustr, enc)
   if not IsBound(UNICODE_RECODE.NormalizedEncodings.(enc)) then
     Error("Sorry, only the following encodings are supported for Encode:\n",
-                    RecFields(UNICODE_RECODE.Encoder), "\n");
+                    RecNames(UNICODE_RECODE.Encoder), "\n");
   fi;
   enc := UNICODE_RECODE.NormalizedEncodings.(enc);
   return UNICODE_RECODE.Encoder.(enc)(ustr);
@@ -1067,7 +1067,7 @@ InstallOtherMethod(Encode, [IsUnicodeString, IsString, IsObject],
 function(ustr, enc, data)
   if not IsBound(UNICODE_RECODE.NormalizedEncodings.(enc)) then
     Error("Sorry, only the following encodings are supported for Encode:\n",
-                    RecFields(UNICODE_RECODE.Encoder), "\n");
+                    RecNames(UNICODE_RECODE.Encoder), "\n");
   fi;
   enc := UNICODE_RECODE.NormalizedEncodings.(enc);
   return UNICODE_RECODE.Encoder.(enc)(ustr, data);

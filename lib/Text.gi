@@ -850,7 +850,7 @@ InstallGlobalFunction(SubstituteEscapeSequences, function(str, subs)
     else
       orig := subs;
       subs := ShallowCopy(subs);
-      for a in RecFields(subs) do
+      for a in RecNames(subs) do
         if IsList(subs.(a)) then
           subs.(a) := [subs.(a)[1], List(subs.(a)[2], x-> 
                                 Encode(

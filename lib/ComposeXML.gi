@@ -246,7 +246,7 @@ InstallGlobalFunction(ComposedDocument, function(arg)
   # now start the recursion as #Include of the main file in empty string
   Collect(res, src, NormalizedFilename(main), 0);
   Info(InfoGAPDoc, 2, "#I Labels of chunks which were not used: ",
-                      Difference(RecFields(pieces), usedpieces), "\n");
+                      Difference(RecNames(pieces), usedpieces), "\n");
   if info then
     return [res, src];
   else

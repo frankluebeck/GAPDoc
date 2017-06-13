@@ -943,16 +943,16 @@ InstallGlobalFunction(StringBibAsText, function(arg)
   ansi.Bib_editor := ansi.Bib_author;
   ansi.Bib_subtitle := ansi.Bib_title;
   if Length(arg) = 2  and arg[2] <> true then
-    for f in RecFields(arg[2]) do
+    for f in RecNames(arg[2]) do
       ansi.(f) := arg[2].(f);
     od;
   elif IsBound(r.From) and IsBound(r.From.options) and
             IsBound(r.From.options.ansi) then
-    for f in RecFields(r.From.options.ansi) do
+    for f in RecNames(r.From.options.ansi) do
       ansi.(f) := r.From.options.ansi.(f);
     od;
   else
-    for f in RecFields(ansi) do
+    for f in RecNames(ansi) do
       ansi.(f) := "";
     od;
   fi;
@@ -1290,7 +1290,7 @@ InstallGlobalFunction(SearchMRBib, function(arg)
     fi;
   else
     a := ShallowCopy(a);
-    for f in RecFields(a) do
+    for f in RecNames(a) do
       if IsString(a.(f)) then
         a.(f) := HeuristicTranslationsLaTeX2XML.Apply(a.(f));
       fi;

@@ -143,7 +143,7 @@ GAPDoc2TextProcs.f := function()
   local dt, a;
   dt := GAPDoc2TextProcs.OtherThemes.default;
   # most empty, some copied from default
-  for a in RecFields(dt) do
+  for a in RecNames(dt) do
     GAPDoc2TextProcs.OtherThemes.none.(a) := "";
   od;
   for a in ["Q", "DefLineMarker", "ListBullet", "FillString", "EnumMarks"] do
@@ -191,18 +191,18 @@ InstallGlobalFunction(SetGAPDocTextTheme, function(arg)
       if not IsBound(GAPDoc2TextProcs.OtherThemes.(a)) then
         Print("Only the following named text themes are available \
 (choose one or several):\n");
-        for nam in RecFields(GAPDoc2TextProcs.OtherThemes) do
+        for nam in RecNames(GAPDoc2TextProcs.OtherThemes) do
           Print("  ",String(Concatenation("\"",nam,"\""), -25),
                 GAPDoc2TextProcs.OtherThemes.(nam).info, "\n");
         od;
         return;
       else
-        for f in RecFields(GAPDoc2TextProcs.OtherThemes.(a)) do
+        for f in RecNames(GAPDoc2TextProcs.OtherThemes.(a)) do
           r.(f) := GAPDoc2TextProcs.OtherThemes.(a).(f);
         od;
       fi;
     else
-      for f in RecFields(a) do
+      for f in RecNames(a) do
         r.(f) := a.(f);
       od;
     fi;
@@ -235,7 +235,7 @@ InstallGlobalFunction(SetGAPDocTextTheme, function(arg)
     res.(af[i]) := [[h[1][2*i-1], h[1][2*i]],[h[2][2*i-1], h[2][2*i]]];
   od;
   SortParallel(h[1], h[2]);
-  for f in RecFields(res) do
+  for f in RecNames(res) do
     GAPDocTextTheme.(f) := res.(f);
   od;
 end);
