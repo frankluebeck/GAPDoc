@@ -1587,7 +1587,8 @@ We fix  a rule for  handling the content of  an <C>Alt</C> element  with
 In  their content code for the corresponding output format is included
 directly. So, in case of HTML the content is HTML code, in case of
 &LaTeX; the content is &LaTeX; code. The converters don't apply any
-handling of special  characters to this content. <P/>
+handling of special  characters to this content. In the case of &LaTeX;
+the formatting of the code is not changed.<P/>
 
 Within  the element  only <C>%InnerText;</C>  (see <Ref  Text="here"
 Label="InnerText"/>) is  allowed. This  is to  ensure that  the same  set of

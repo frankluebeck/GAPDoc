@@ -118,6 +118,9 @@ InstallGlobalFunction(GAPDoc2LaTeX, function(arg)
     str := arg[2];
   else
     AddRootParseTree(r);
+    # reset to defaults in case of interrupted previous call
+    GAPDoc2LaTeXProcs.verbatimPCDATA := false;
+    GAPDoc2LaTeXProcs.recode := true;
     str := "";
   fi;
   name := r.name;
@@ -795,6 +798,11 @@ end;
 ##  by one space).
 GAPDoc2LaTeXProcs.PCDATA := function(r, str)
   local   lines,  i;
+  if GAPDoc2LaTeXProcs.verbatimPCDATA then
+    # no reformatting at all, used for <Alt Only="LaTeX"> content
+    Append(str, r.content);
+    return;
+  fi;
   if Length(r.content)>0 and r.content[1] in WHITESPACE then
     Add(str, ' ');
   fi;
@@ -1474,6 +1482,7 @@ GAPDoc2LaTeXProcs.Alt := function(r, str)
     if "LaTeX" in types or "BibTeX" in types then
       take := true;
       GAPDoc2LaTeXProcs.recode := false;
+      GAPDoc2LaTeXProcs.verbatimPCDATA := true;
     fi;
   fi;
   if IsBound(r.attributes.Not) then
@@ -1487,6 +1496,7 @@ GAPDoc2LaTeXProcs.Alt := function(r, str)
     GAPDoc2LaTeXContent(r, str);
   fi;
   GAPDoc2LaTeXProcs.recode := true;
+  GAPDoc2LaTeXProcs.verbatimPCDATA := false;
 end;
 
 # copy a few entries with two element names
