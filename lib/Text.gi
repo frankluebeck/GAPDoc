@@ -457,6 +457,80 @@ InstallGlobalFunction(DigitsNumber, function(n, base)
   return Concatenation(s, Reversed(str));
 end);
 
+##  <#GAPDoc Label="LabelInt">
+##  <ManSection >
+##  <Func Arg="n, type, pre, post" Name="LabelInt" />
+##  <Returns>string</Returns>
+##  <Description>
+##  The argument <A>n</A> must be an integer in the range from 1 to 5000,
+##  while <A>pre</A> and <A>post</A> must be strings.
+##  <P/>
+##  The argument <A>type</A> can be one of <C>"Decimal"</C>,
+##  <C>"Roman"</C>, <C>"roman"</C>, <C>"Alpha"</C>, <C>"alpha"</C>.
+##  <P/>
+##  The function returns a string that starts with <A>pre</A>, followed by
+##  a decimal, respectively roman number or alphanumerical number literal
+##  (capital, respectively small letters), followed by <A>post</A>.
+##  <P/>
+##  <Example>
+##  gap> List([1,2,3,4,5,691], i-> LabelInt(i,"Decimal","","."));
+##  [ "1.", "2.", "3.", "4.", "5.", "691." ]
+##  gap> List([1,2,3,4,5,691], i-> LabelInt(i,"alpha","(",")"));
+##  [ "(a)", "(b)", "(c)", "(d)", "(e)", "(zo)" ]
+##  gap> List([1,2,3,4,5,691], i-> LabelInt(i,"alpha","(",")"));
+##  [ "(a)", "(b)", "(c)", "(d)", "(e)", "(zo)" ]
+##  gap> List([1,2,3,4,5,691], i-> LabelInt(i,"Alpha","",".)"));
+##  [ "A.)", "B.)", "C.)", "D.)", "E.)", "ZO.)" ]
+##  gap> List([1,2,3,4,5,691], i-> LabelInt(i,"roman","","."));
+##  [ "i.", "ii.", "iii.", "iv.", "v.", "dcxci." ]
+##  gap> List([1,2,3,4,5,691], i-> LabelInt(i,"Roman","",""));
+##  [ "I", "II", "III", "IV", "V", "DCXCI" ]
+##  </Example>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+##  
+InstallGlobalFunction(LabelInt, function(n, type, pre, post)
+  local l1, l2, l3, l, res, r, i;
+  if not IsInt(n) or n < 1 or n>5000 then
+    return fail;
+  fi;
+  if type="roman" then
+    l1 := ["","i","ii","iii","iv","v","vi","vii","viii","ix"];
+    l2 := ["","x","xx","xxx","xl","l","lx","lxx","lxxx","xc"];
+    l3 := ["","c","cc","ccc","cd","d","dc","dcc","dccc","cm","m"];
+  elif type="Roman" then
+    l1 := ["","I","II","III","IV","V","VI","VII","VIII","IX"];
+    l2 := ["","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"];
+    l3 := ["","C","CC","CCC","CD","D","DC","DCC","DCCC","CM","M"];
+  fi;
+  if type="alpha" then
+    l := LETTERS{[27..52]};
+  elif type="Alpha" then
+    l := LETTERS{[1..26]};
+  fi;
+  if type="Decimal" then
+    res := String(n);
+  elif type in ["roman","Roman"] then
+    res := "";
+    for i in [1..QuoInt(n,1000)] do
+      Append(res, l3[11]);
+    od;
+    Append(res, l3[QuoInt(n,100) mod 10 + 1]);
+    Append(res, l2[QuoInt(n,10) mod 10 + 1]);
+    Append(res, l1[n mod 10 + 1]);
+  elif type in ["alpha", "Alpha"] then
+    if n < 27 then
+      res := l{[n]};
+    elif n <= 26*27 then
+      res := l{[QuoInt(n-1,26),((n-1) mod 26)+1]};
+    else
+      res := l{[QuoInt(n-27,26*26),
+                QuoInt((n-27) mod 26^2-1, 26)+1,((n-1) mod 26)+1]};
+    fi;
+  fi;
+  return Concatenation(pre, res, post);
+end);
  
 ##  <#GAPDoc Label="StripBeginEnd">
 ##  <ManSection >

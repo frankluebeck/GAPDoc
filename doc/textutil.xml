@@ -35,6 +35,8 @@ useful strings and  go on with functions for parsing  and reformatting text.
 
 <#Include Label="NumberDigits">
 
+<#Include Label="LabelInt">
+
 <#Include Label="PositionMatchingDelimiter">
 
 <#Include Label="WordsString">
