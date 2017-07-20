@@ -12,7 +12,7 @@ PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
 Version := "1.6",
 ##  DD/MM/YYYY format:
-Date := "12/05/2017",
+Date := "20/07/2017",
 ArchiveURL := 
           "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.6",
 ArchiveFormats := ".tar.bz2",
