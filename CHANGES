@@ -1,6 +1,14 @@
                        CHANGES of the GAPDoc package
 
 1.5.1 -> 1.6
+- Changed and documented the handling of <Alt Only="LaTeX"> elements;
+  its content is not reformatted.
+
+- Can now handle help books with empty bibliography.
+
+- Some technical adjustments which make it easier to use GAPDoc with
+  HPC-GAP.
+
 - Some cosmetic improvements, mainly for text output and markup of nested
   elements.
 
