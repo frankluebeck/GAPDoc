@@ -8,13 +8,13 @@ found in the main directory of the  &GAPDoc; package and it is reproduced in
 Appendix&nbsp;<Ref Appendix="GAPDocdtd" />.<P/>
 
 We do  not give many examples  in this chapter  which is more intended  as a
-formal  reference for  all &GAPDoc;  elements. Instead  we provide  an extra
-document with book name <C>GAPDocExample</C> (also accessible from the &GAP;
-online  help). This  uses  all  the constructs  introduced  in this  chapter
-and  you can  easily  compare the  source  code  and how  it  looks like  in
-the  different output  formats. Furthermore  recall that  many basic  things
-about  XML markup  were already  explained  by example  in the  introductory
-chapter&nbsp;<Ref Chap="ch:intro" />.
+formal reference for  all &GAPDoc; elements. Instead, we  provide a separate
+help book, see&nbsp;<Ref BookName="GAPDoc Example" Label=""/>. This uses all
+the constructs  introduced in this  chapter and  you can easily  compare the
+source  code  and  how  it  looks like  in  the  different  output  formats.
+Furthermore  recall that  many basic  things about  XML markup  were already
+explained by  example in the introductory  chapter&nbsp;<Ref Chap="ch:intro"
+/>.
 
 <Section><Heading>What is a DTD?</Heading>
 
