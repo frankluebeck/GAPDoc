@@ -38,7 +38,7 @@ Add(GAPDOCDTDINFO, rec(name := "WHOLEDOCUMENT", attr := [  ],
             reqattr := [  ], type := "elements", content := ["Book"]));
 BindGlobal("GAPDOCDTDINFOELS", List(GAPDOCDTDINFO, a-> a.name));
 InstallGlobalFunction(CheckAndCleanGapDocTree, function(arg)
-  local r, str, name, pos, type, namc, l, i, namattr, typ, c;
+  local r, str, name, pos, type, namc, l, ml, i, namattr, typ, c;
   # we save orignal XML input string if available (as r.input on top
   # level and as second argument in recursive calls of this function)
   # This allows to browse the input if an error occurs.
@@ -140,6 +140,15 @@ InstallGlobalFunction(CheckAndCleanGapDocTree, function(arg)
     in List(r.content, a-> a.name) then
     ParseError(str, r.start, 
                     "Chapter, Section or Subsection must have a heading");
+  elif name = "ManSection" then
+    l := List(r.content, a-> a.name);
+    ml := ["Func", "Oper", "Meth", "Filt", "Prop", "Attr", "Constr",
+           "Var", "Fam", "InfoClass"];
+    if ForAll(ml, a-> not a in l) then
+      ParseError(str, r.start, Concatenation(
+         "ManSection must contain at least one of the following ",
+         "elements:\n", JoinStringsWithSeparator(ml, ", ")));
+    fi;
   fi;
   
   if r.content = EMPTYCONTENT then
