@@ -157,7 +157,7 @@ GAPDoc2TextProcs.ParEls :=
 "Acknowledgements", "Colophon", "TableOfContents", "Bibliography", "TheIndex",
 "Subsection", "ManSection", "Description", "Returns", "Section", "Chapter",
 "Appendix", "Body", "Book", "WHOLEDOCUMENT", "Attr", "Fam", "Filt", "Func",
-"Heading", "InfoClass", "Meth", "Oper", "Prop", "Var", "Verb" ];
+"Heading", "InfoClass", "Meth", "Oper", "Constr", "Prop", "Var", "Verb" ];
 
 ##  arg: a list of strings
 ##  nothing for now, may be enhanced and documented later. 
@@ -1427,6 +1427,10 @@ GAPDoc2TextProcs.Oper := function(r, str)
   GAPDoc2TextProcs.LikeFunc(r, str, GAPDocTexts.d.Oper);
 end;
 
+GAPDoc2TextProcs.Constr := function(r, str)
+  GAPDoc2TextProcs.LikeFunc(r, str, GAPDocTexts.d.Constr);
+end;
+
 GAPDoc2TextProcs.Meth := function(r, str)
   GAPDoc2TextProcs.LikeFunc(r, str, GAPDocTexts.d.Meth);
 end;
@@ -1480,8 +1484,8 @@ GAPDoc2TextProcs.Ref := function(r, str)
   local   funclike,  int,  txt,  ref,  lab,  sectlike;
   
   # function like cases
-  funclike := [ "Func", "Oper", "Meth", "Filt", "Prop", "Attr", "Var", 
-                "Fam", "InfoClass" ];
+  funclike := [ "Func", "Oper", "Constr", "Meth", "Filt", "Prop", "Attr", 
+                "Var", "Fam", "InfoClass" ];
   int := Intersection(funclike, NamesOfComponents(r.attributes));
   if Length(int)>0 then
     txt := r.attributes.(int[1]);
@@ -1634,8 +1638,8 @@ GAPDoc2TextProcs.ManSection := function(r, par)
   fi;
   strn := "";
   # function like elements
-  funclike := [ "Func", "Oper", "Meth", "Filt", "Prop", "Attr", "Var", 
-                "Fam", "InfoClass" ];
+  funclike := [ "Func", "Oper", "Constr", "Meth", "Filt", "Prop", "Attr",
+                "Var", "Fam", "InfoClass" ];
   
   # heading comes from name of first function like element
   i := 1;

@@ -176,8 +176,8 @@ InstallGlobalFunction(AddParagraphNumbersGapDocTree, function(r)
   
   # these elements are paragraphs  
   parels := [ "List", "Enum", "Table", "Item", "Heading", "Attr", "Fam", 
-              "Filt", "Func", "InfoClass", "Meth", "Oper", "Prop", "Var",
-              "Display", "Example", "Listing", "Log", "Verb", "Address", 
+              "Filt", "Func", "InfoClass", "Meth", "Oper", "Constr", "Prop",
+              "Var", "Display", "Example", "Listing", "Log", "Verb", "Address",
               "TitleComment"];
   # reset counter
   cssp := [0, 0, 0, 1];
@@ -711,6 +711,7 @@ GAPDocTexts.english := rec(
   # variable types, should these be translated?
   Func := "function",
   Oper := "operation",
+  Constr := "constructor",
   Meth := "method",
   Filt := "filter",
   Prop := "property",
@@ -774,6 +775,7 @@ GAPDocTexts.russian := rec(
   # variable types, should these be translated?
   Func := "функция",
   Oper := "операция",
+  Constr := "конструктор",
   Meth := "метод",
   Filt := "фильтр",
   Prop := "свойство",
@@ -818,6 +820,7 @@ GAPDocTexts.ukrainian := rec(
   # variable types, should these be translated?
   Func := "функція",
   Oper := "операція",
+  Constr := "конструктор",
   Meth := "метод",
   Filt := "фільтр",
   Prop := "властивість",
@@ -859,6 +862,7 @@ GAPDocTexts.german := rec(
   # variable types, should these be translated?
   Func := "Funktion",
   Oper := "Operation",
+  Constr := "Konstruktor",
   Meth := "Methode",
   Filt := "Filter",
   Prop := "Eigenschaft",

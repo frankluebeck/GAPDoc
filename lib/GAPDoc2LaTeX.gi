@@ -1125,6 +1125,10 @@ GAPDoc2LaTeXProcs.Oper := function(r, str)
   GAPDoc2LaTeXProcs.LikeFunc(r, str, GAPDocTexts.d.Oper);
 end;
 
+GAPDoc2LaTeXProcs.Constr := function(r, str)
+  GAPDoc2LaTeXProcs.LikeFunc(r, str, GAPDocTexts.d.Constr);
+end;
+
 GAPDoc2LaTeXProcs.Meth := function(r, str)
   GAPDoc2LaTeXProcs.LikeFunc(r, str, GAPDocTexts.d.Meth);
 end;
@@ -1181,8 +1185,8 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
   local   funclike,  int,  txt,  ref,  lab,  sectlike, slab;
   
   # function like cases
-  funclike := [ "Func", "Oper", "Meth", "Filt", "Prop", "Attr", "Var", 
-                "Fam", "InfoClass" ];
+  funclike := [ "Func", "Oper", "Constr", "Meth", "Filt", "Prop", "Attr", 
+                "Var", "Fam", "InfoClass" ];
   int := Intersection(funclike, NamesOfComponents(r.attributes));
   if Length(int)>0 then
     txt := r.attributes.(int[1]);
@@ -1316,8 +1320,8 @@ GAPDoc2LaTeXProcs.ManSection := function(r, str)
     return;
   fi;
   # function like elements
-  funclike := [ "Func", "Oper", "Meth", "Filt", "Prop", "Attr", "Var", 
-                "Fam", "InfoClass" ];
+  funclike := [ "Func", "Oper", "Constr", "Meth", "Filt", "Prop", "Attr",
+                "Var", "Fam", "InfoClass" ];
   
   # heading comes from name of first function like element
   i := 1;
