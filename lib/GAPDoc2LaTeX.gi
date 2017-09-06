@@ -1176,7 +1176,7 @@ GAPDoc2LaTeXProcs.ResolveExternalRef := function(bookname,  label, nr)
   if Length(match) < nr then
     return fail;
   fi;
-  res := HELP_BOOK_HANDLER.(info.handler).HelpData(info, match[nr][2], "ref");
+  res := GetHelpDataRef(info, match[nr][2]);
   res[1] := SubstitutionSublist(res[1], " (not loaded): ", ": ", "one");
   return res;
 end;

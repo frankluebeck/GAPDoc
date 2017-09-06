@@ -385,7 +385,7 @@ BindGlobal("TEXTMTRANSLATIONS",
 # unicode characters which do not yet have a simplification, we add their
 # LaTeX code as simplification to SimplifiedUnicodeTable (sometimes without
 # the leading backslash)
-GAPInfo.addMoreTEXTMUnicode := function()
+CallFuncList(function()
   local hash, s, str, pos, a;
   hash := List(SimplifiedUnicodeTable, a-> a[1]);
   # the candidates to add are found in the LaTeXUnicodeTable
@@ -412,9 +412,7 @@ GAPInfo.addMoreTEXTMUnicode := function()
     fi;
   od;
   Sort(SimplifiedUnicodeTable);
-end;
-GAPInfo.addMoreTEXTMUnicode();
-Unbind(GAPInfo.addMoreTEXTMUnicode);
+end, []);
 
 InstallGlobalFunction(TextM, function(str)
   local subs, res, i, j;

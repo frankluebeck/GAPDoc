@@ -181,6 +181,12 @@ GAPDoc2TextProcs.OtherThemes.raggedright := rec(
 
 InstallValue(GAPDocTextTheme, rec());
 
+# this is only relevant for HPCGAP, record is used by the handler functions
+# in the GAP help system
+if IsBound(HPCGAP) then
+  LockAndMigrateObj(GAPDocTextTheme, HELP_REGION);
+fi;
+
 # argument doesn't need all component, the missing ones are taken from default
 InstallGlobalFunction(SetGAPDocTextTheme, function(arg)
   local r, res, h, af, v, a, nam, f, i;
@@ -235,9 +241,19 @@ InstallGlobalFunction(SetGAPDocTextTheme, function(arg)
     res.(af[i]) := [[h[1][2*i-1], h[1][2*i]],[h[2][2*i-1], h[2][2*i]]];
   od;
   SortParallel(h[1], h[2]);
-  for f in RecNames(res) do
-    GAPDocTextTheme.(f) := res.(f);
-  od;
+  if IsBound(HPCGAP) then
+    # in HPCGAP `GAPDocTextTheme` and its entries must be visible to
+    # all threads
+    atomic HELP_REGION do
+      for f in RecNames(res) do
+        GAPDocTextTheme.(f) := CopyToRegion(res.(f), HELP_REGION);
+      od;
+    od;
+  else
+    for f in RecNames(res) do
+      GAPDocTextTheme.(f) := res.(f);
+    od;
+  fi;
 end);
 SetGAPDocTextTheme(rec());
 
