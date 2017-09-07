@@ -114,6 +114,6 @@ BindGlobal("GetHelpDataRef", function(info, i)
   return res;
 end);
 # This is make GAPDoc work with GAP < 4.9, despite the HPCGAP specific code
-if not IsBound(HPCGAP) then
+if not IsBound(CopyToRegion) then
   BindGlobal("CopyToRegion", Immutable("notexisting"));
 fi;
