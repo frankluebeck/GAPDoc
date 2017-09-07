@@ -241,7 +241,7 @@ InstallGlobalFunction(SetGAPDocTextTheme, function(arg)
     res.(af[i]) := [[h[1][2*i-1], h[1][2*i]],[h[2][2*i-1], h[2][2*i]]];
   od;
   SortParallel(h[1], h[2]);
-  if IsBound(HPCGAP) then
+  if IsBoundGlobal("HPCGAP") then
     # in HPCGAP `GAPDocTextTheme` and its entries must be visible to
     # all threads
     atomic HELP_REGION do
