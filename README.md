@@ -38,7 +38,7 @@ This package provides:
 
 
 For further information see:
-   `http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/`
+   <http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/>
 
 
 INSTALLATION
@@ -72,9 +72,9 @@ documentation: Say `cd GAPDoc*; gap makedocrel.g`.
 
 For questions, suggestions, ... write to
 
-   `Frank.Luebeck@Math.RWTH-Aachen.De`
+   Frank.Luebeck@Math.RWTH-Aachen.De
 
-or use the issue tracker (`https://github.com/frankluebeck/GAPDoc/issues`) of
+or use the issue tracker <https://github.com/frankluebeck/GAPDoc/issue> of
 the git-repository.
 
 
