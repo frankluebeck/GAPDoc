@@ -1601,8 +1601,8 @@ GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
   s := Concatenation("<div class=\"func\"><table class=\"func\" ", 
                "width=\"100%\">", 
                "<tr><td class=\"tdleft\">", s,
-               "</td><td class=\"tdright\">( ", typ, 
-               " )</td></tr></table></div>\n");
+               "</td><td class=\"tdright\">(&nbsp;", typ, 
+               "&nbsp;)</td></tr></table></div>\n");
   Add(par, r.count);
   Add(par, s);
 end;

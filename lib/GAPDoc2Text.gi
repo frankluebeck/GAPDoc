@@ -1384,7 +1384,9 @@ end;
 ##  this produces an implicit index entry and a label entry
 GAPDoc2TextProcs.LikeFunc := function(r, par, typ)
   local   str,  s,  name,  lab, comma, i, entry;
-  s := Concatenation(GAPDoc2TextProcs.TextAttr.DefLineMarker[1],
+  # for very long lines we allow left flushed paragraph formatting
+  s := Concatenation(GAPDoc2TextProcs.TextAttr.format[1], "\033[1;0Y", 
+         GAPDoc2TextProcs.TextAttr.DefLineMarker[1],
          WrapTextAttribute(r.attributes.Name, GAPDoc2TextProcs.TextAttr.Func));
   if IsBound(r.attributes.Arg) then
     Append(s, "( "); 
@@ -1414,7 +1416,7 @@ GAPDoc2TextProcs.LikeFunc := function(r, par, typ)
   Add(r.root.index, entry);
   # some hint about the type of the variable
   Append(s, GAPDoc2TextProcs.TextAttr.FillString[1]);
-  Append(s, Concatenation(" ",typ,"\n"));
+  Append(s, Concatenation(" ",typ,GAPDoc2TextProcs.TextAttr.format[2],"\n"));
   Add(par, r.count);
   Add(par, s);
 end;
