@@ -1866,7 +1866,8 @@ GAPDoc2TextProcs.Table := function(r, str)
   # equalize width of entries in columns
   lens := [];
   for i in [2,4..2*QuoInt(Length(align), 2)] do
-    a := List(t, b-> WidthUTF8String(StripEscapeSequences(b[i])));
+    a := List(t, b-> WidthUTF8String(StripEscapeSequences(
+              SubstituteEscapeSequences(b[i], GAPDocTextTheme))));
     m := Maximum(a);
     lens[i] := m;
     z := "";
