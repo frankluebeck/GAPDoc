@@ -4,7 +4,7 @@
 - Slightly nicer display of header lines of ManSection's with long
   names and/or long argument lists.
 
-- Added an element <Constr> to be used in ManSection's on construtors.
+- Added an element <Constr> to be used in ManSection's on constructors.
 
 - Minimal changes to make GAPDoc (translation of manual, and handler
   functions for the help system) work in any single thread in HPCGAP.
