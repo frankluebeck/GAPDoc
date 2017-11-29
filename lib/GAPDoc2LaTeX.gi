@@ -39,7 +39,7 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  &BibTeX; and <C>makeindex</C>). <P/>
 ##  
 ##  The   output   uses   the  <C>report</C>   document   class   and
-##  needs    the   following    &LaTeX;   packages:    <C>a4wide</C>,
+##  needs    the   following    &LaTeX;   packages:
 ##  <C>amssymb</C>,  <C>inputenc</C>, <C>makeidx</C>,  <C>color</C>,
 ##  <C>fancyvrb</C>,  <C>psnfss</C>, <C>pslatex</C>, <C>enumitem</C>  
 ##  and  <C>hyperref</C>.   These
