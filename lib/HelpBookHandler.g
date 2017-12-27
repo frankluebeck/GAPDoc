@@ -232,18 +232,26 @@ HELP_BOOK_HANDLER.GapDocGAP.ShowSections :=
 #  very similar to the .default handler, but we allow search for
 #  (sub-)section numbers as well
 HELP_BOOK_HANDLER.GapDocGAP.SearchMatches := function (book, topic, frombegin)
-  local   info,  exact,  match,  i;
+  local   info,  exact,  match,  rank,  m,  i;
   
   info := HELP_BOOK_INFO(book);
   exact := [];
   match := [];
+  rank := [];
   for i in [1..Length(info.entries)] do
     if topic=info.entries[i][6] or topic=info.entries[i][2] then
       Add(exact, i);
     elif frombegin = true then
-      if MATCH_BEGIN(info.entries[i][6], topic) or 
-         MATCH_BEGIN(info.entries[i][2], topic) then
+      m := MATCH_BEGIN_COUNT(info.entries[i][6], topic);
+      if m >= 0 then
         Add(match, i);
+        Add(rank, -m);
+      else
+        m := MATCH_BEGIN_COUNT(info.entries[i][2], topic);
+        if m >= 0 then
+          Add(match, i);
+          Add(rank, -m);
+        fi;
       fi;
     else
       if IS_SUBSTRING(info.entries[i][6], topic) then
@@ -251,6 +259,12 @@ HELP_BOOK_HANDLER.GapDocGAP.SearchMatches := function (book, topic, frombegin)
       fi;
     fi;
   od;
+
+  # sort by rank if applicable
+  if frombegin = true then
+    SortParallel(rank, match);
+  fi;
+
 ##    HELP_BOOK_HANDLER.GapDocGAP.setTextTheme();
   HELP_BOOK_HANDLER.GapDocGAP.apptheme(info, GAPDocTextTheme);
 
