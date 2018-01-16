@@ -1041,8 +1041,17 @@ end;
 
 ##  explicit index entries
 GAPDoc2LaTeXProcs.Subkey := GAPDoc2LaTeXContent;
+##  'makeindex' has the following rule to include its special characters
+GAPDoc2LaTeXProcs.EscapeIndexChars := function(str)
+  str := ReplacedString(str, "\"", "\"\"");
+  str := ReplacedString(str, "@", "\"@");
+  str := ReplacedString(str, "!", "\"!");
+  str := ReplacedString(str, "|", "\"|");
+  return str;
+end;
 GAPDoc2LaTeXProcs.Index := function(r, str)
-  local s, sub, a;
+  local s, sub, a, esc;
+  esc := GAPDoc2LaTeXProcs.EscapeIndexChars;
   s := "";
   sub := "";
   for a in r.content do
@@ -1055,12 +1064,12 @@ GAPDoc2LaTeXProcs.Index := function(r, str)
   NormalizeWhitespace(s);
   NormalizeWhitespace(sub);
   if IsBound(r.attributes.Key) then
-    s := Concatenation(r.attributes.Key, "@", s);
+    s := Concatenation(esc(r.attributes.Key), "@", esc(s));
   fi;
   if Length(sub) > 0 then
-    s := Concatenation(s, "!", sub);
+    s := Concatenation(s, "!", esc(sub));
   elif IsBound(r.attributes.Subkey) then
-    s := Concatenation(s, "!", r.attributes.Subkey);
+    s := Concatenation(s, "!", esc(r.attributes.Subkey));
   fi;
   Append(str, "\\index{");
   Append(str, s);

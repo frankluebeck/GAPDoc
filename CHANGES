@@ -1,5 +1,9 @@
                        CHANGES of the GAPDoc package
 
+1.6.1 -> 1.6.2
+- Escape the special characters @!|" for 'makeindex' in index entries for
+  LaTeX.
+
 1.6 -> 1.6.1
 - Slightly nicer display of header lines of ManSection's with long
   names and/or long argument lists.
