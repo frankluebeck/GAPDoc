@@ -1130,9 +1130,14 @@ InstallGlobalFunction(NrCharsUTF8String, function(str)
 end);
 
 InstallGlobalFunction(WidthUTF8String, function(str)
-  local res, pos, i;
+  local ustr, res, pos, i;
   if not IsUnicodeString(str) then
-    str := Unicode(str, "UTF-8");
+    ustr := Unicode(str, "UTF-8");
+    if ustr = fail then
+      Error("string str is not in UTF-8 encoding.\n");
+    else
+      str := ustr;
+    fi;
   fi;
   str := IntListUnicodeString(str);
   res := 0;
