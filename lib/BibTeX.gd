@@ -21,6 +21,7 @@ DeclareGlobalFunction("StringBibAsText");
 DeclareGlobalFunction("PrintBibAsText");
 DeclareGlobalFunction("StringBibAsHTML");
 DeclareGlobalFunction("PrintBibAsHTML");
+DeclareGlobalFunction("GetByWgetOrCurl");
 DeclareGlobalFunction("SearchMR");
 DeclareGlobalFunction("SearchMRBib");
 DeclareGlobalFunction("LabelsFromBibTeX");

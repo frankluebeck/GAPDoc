@@ -1116,8 +1116,9 @@ end);
 ##  We provide utilities to access the <URL
 ##  ><Link>http://www.ams.org/mathscinet/</Link><LinkText><Package>
 ##  MathSciNet</Package></LinkText></URL> 
-##  data base from within GAP. One condition for this to work is that the 
-##  <Package>IO</Package>-package <Cite Key="IO"/> is available. The other is,
+##  data base from within GAP. The first condition for this to work is that 
+##  one of the programs <C>wget</C> or <C>curl</C> is installed on your system.
+##  The second is,
 ##  of course, that you use these functions from a computer which has access to
 ##  <Package>MathSciNet</Package>.<P/>
 ##  
@@ -1193,6 +1194,27 @@ end);
 ##  </Section>
 ##  <#/GAPDoc>
 
+InstallGlobalFunction(GetByWgetOrCurl, function(url)
+  local res, out, fn;
+  res := "";
+  out := OutputTextString(res, false);
+  fn := Filename(DirectoriesSystemPrograms(), "wget");
+  if not fn = fail and IsExecutableFile(fn) then
+    Process(Directory("."), fn, InputTextNone(), out, 
+            ["--quiet", "-O", "-", url]);
+    CloseStream(out);
+    return res;
+  fi;
+  fn := Filename(DirectoriesSystemPrograms(), "curl");
+  if not fn = fail and IsExecutableFile(fn) then
+    Process(Directory("."), fn, InputTextNone(), out, 
+            ["--silent", "--output", "-", url]);
+    CloseStream(out);
+    return res;
+  fi;
+  Error("Cannot find 'wget' or 'curl' on this system.\n");
+end
+);
 
 SEARCHMRHOST := "www.ams.org";
 ##  SEARCHMRHOST := "ams.math.uni-bielefeld.de";
@@ -1205,10 +1227,6 @@ InstallGlobalFunction(SearchMR, function(r)
             ["ReviewText","RT"],["Journal","JOUR"],["InstitutionCode","IC"],
             ["Series","SE"],["MSCPrimSec","CC"],["MSCPrimary","PC"],
             ["MRNumber","MR"],["Anywhere","ALLF"],["References","REFF"]];
-  if LoadPackage("IO") <> true then
-    Print("SearchMR not available because IO package not available.\n");
-    return fail;
-  fi;
   if not IsBound(r.type) then
     r.type := "bibtex";
   fi;
@@ -1257,26 +1275,15 @@ InstallGlobalFunction(SearchMR, function(r)
   od;
   # get all entries
   Append(uri, "&extend=1");
-  res := SingleHTTPRequest(SEARCHMRHOST, 80, "GET", uri, rec(), false, false);
-  while res.statuscode = 302 do
-    res := SingleHTTPRequest(SEARCHMRHOST, 80, "GET", res.header.location, 
-           rec(), false, false);
+  uri := Concatenation("https://",SEARCHMRHOST,uri);
+  res := GetByWgetOrCurl(uri);
+  i := PositionSublist(res, "<pre>\n@");
+  extr := [];
+  while i <> fail do
+    Add(extr, res{[i+5..PositionSublist(res, "</pre>", i)-1]});
+    i := PositionSublist(res, "<pre>\n@", i);
   od;
-  if not IsBound(res.body) then
-    Info(InfoBibTools, 1, "Cannot reach MathSciNet service.");
-    return fail;
-  fi;
-  if r.type = "bibtex" then
-    i := PositionSublist(res.body, "<pre>\n@", i);
-    extr := [];
-    while i <> fail do
-      Add(extr, res.body{[i+5..PositionSublist(res.body, "</pre>", i)-1]});
-      i := PositionSublist(res.body, "<pre>\n@", i);
-    od;
-    return extr;
-  else
-    return res.body;
-  fi;
+  return extr;
 end);
 # args: record[, type]
 # records like entry from ParseBibStrings/Files, default for type is "bibtex"

@@ -1,8 +1,13 @@
                        CHANGES of the GAPDoc package
 
 1.6.1 -> 1.6.2
+- Made 'SearchMR' work again using 'wget' or 'curl' (MathSciNet is now only
+  accessible via HTTPS).
+
 - Escape the special characters @!|" for 'makeindex' in index entries for
   LaTeX.
+
+- Removed dependency on 'a4wide.sty' file in LaTeX installation.
 
 1.6 -> 1.6.1
 - Slightly nicer display of header lines of ManSection's with long
