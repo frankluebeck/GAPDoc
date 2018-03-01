@@ -45,19 +45,17 @@ UNICODE_RECODE.NormalizedEncodings := rec(
   percent := "URL",
 );
 UNICODE_RECODE.f := function()
-  local nam, i;
-  for i in Concatenation([1..11],[13..15]) do
-    nam := Concatenation("ISO-8859-",String(i));
+  local f, nam, i;
+  f := function(nam)
     UNICODE_RECODE.NormalizedEncodings.(nam) := nam;
     UNICODE_RECODE.Decoder.(nam) := function(str)
       return UNICODE_RECODE.TABLES.(nam){List(str, INT_CHAR)+1};
     end;
-  od;
-  nam := "ANSI_X3.4-1968";
-  UNICODE_RECODE.NormalizedEncodings.(nam) := nam;
-  UNICODE_RECODE.Decoder.(nam) := function(str)
-    return UNICODE_RECODE.TABLES.(nam){List(str, INT_CHAR)+1};
   end;
+  for i in Concatenation([1..11],[13..15]) do
+    f(Concatenation("ISO-8859-",String(i)));
+  od;
+  f("ANSI_X3.4-1968");
 
   UNICODE_RECODE.NormalizedEncodings.("UTF-8") := "UTF-8";
   UNICODE_RECODE.NormalizedEncodings.("XML") := "XML";
