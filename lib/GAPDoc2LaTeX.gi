@@ -196,7 +196,21 @@ GAPDoc2LaTeXProcs.EscapeAttrVal := function(str)
 end;
 
 GAPDoc2LaTeXProcs.DeleteUsBs := function(str)
-  return Filtered(str, x-> not (x in "\\_"));
+  local res, c;
+  if ForAny(str, c-> c in "\\_") then
+    res := "";
+    for c in str do
+      if c = '\\' then
+        Append(res, "bSlash");
+      elif c = '_' then
+        Append(res, "uScore");
+      else
+        Add(res, c);
+      fi;
+    od;
+    return res;
+  fi;
+  return str;
 end;
 
 ##  this is for getting a string "[ \"A\", 1, 1 ]" from [ "A", 1, 1 ]
