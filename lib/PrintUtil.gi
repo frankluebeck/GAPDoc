@@ -109,14 +109,19 @@ end);
 ##  <#/GAPDoc>
 ##  
 InstallGlobalFunction(PrintFormattedString, function(str)
-  local   n,  l,  i;
+  local   n,  l,  i, u;
   Print("\c");
   n := QuoInt(SizeScreen()[1], 2)+1;
   l := Length(str);
   i := 0;
-  while i+n<=l do
-    Print(str{[i+1..i+n]}, "\c");
-    i := i+n;
+  while i+n<=l-4 do
+    u:=0;
+    # Avoid breaking up utf8 characters
+    while str[i+n+u+1]>=CharInt(128) and str[i+n+u+1]<CharInt(192) and u<4 do
+      u:=u+1;
+    od;
+    Print(str{[i+1..i+n+u]}, "\c");
+    i := i+n+u;
   od;
   if i<l then
     Print(str{[i+1..l]}, "\c");
