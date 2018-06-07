@@ -1,6 +1,10 @@
                        CHANGES of the GAPDoc package
 
 1.6.1 -> 1.6.2
+- Added many cases handled by 'HeuristicTranslationsLaTeX2XML', this is
+  needed because MathSciNet has changed the markup for accented characters
+  in many cases.
+
 - Made 'SearchMR' work again using 'wget' or 'curl' (MathSciNet is now only
   accessible via HTTPS).
 
