@@ -555,7 +555,7 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   # .index has entries of form [sorttext, subsorttext, numbertext, 
   #  entrytext, count[, subtext]]
   Info(InfoGAPDoc, 1, "#I Producing the index . . .\n");
-  SortBy(r.index, a-> [a[1],STRING_LOWER(a[2]),
+  SortBy(r.index, a-> [a[1],LowercaseString(a[2]),
                        List(SplitString(a[3],".-",""), Int)]);
   str := "";
   ind := r.index;
@@ -1340,14 +1340,14 @@ GAPDoc2TextProcs.Index := function(r, str)
   NormalizeWhitespace(s);
   NormalizeWhitespace(sub);
   if IsBound(r.attributes.Key) then
-    entry := [STRING_LOWER(r.attributes.Key)];
+    entry := [LowercaseString(r.attributes.Key)];
   else
-    entry := [STRING_LOWER(StripEscapeSequences(s))];
+    entry := [LowercaseString(StripEscapeSequences(s))];
   fi;
   if IsBound(r.attributes.Subkey) then
     Add(entry, r.attributes.Subkey);
   else
-    Add(entry, STRING_LOWER(StripEscapeSequences(sub)));
+    Add(entry, LowercaseString(StripEscapeSequences(sub)));
   fi;
   Add(entry, GAPDoc2TextProcs.SectionNumber(r.count, "Subsection"));
   Add(entry, s);
@@ -1405,12 +1405,12 @@ GAPDoc2TextProcs.LikeFunc := function(r, par, typ)
        := Concatenation(r.attributes.Name, comma, lab)), root := r.root), par);
   # index entry
   name := r.attributes.Name;
-  entry := [STRING_LOWER(name), "", 
+  entry := [LowercaseString(name), "", 
             GAPDoc2TextProcs.SectionNumber(r.count, "Subsection"), 
             WrapTextAttribute(name, GAPDoc2TextProcs.TextAttr.Func),
             r.count{[1..3]}];
   if Length(lab) > 0 then
-    entry[2] := STRING_LOWER(StripEscapeSequences(lab));
+    entry[2] := LowercaseString(StripEscapeSequences(lab));
     Add(entry, lab);
   fi;
   Add(r.root.index, entry);

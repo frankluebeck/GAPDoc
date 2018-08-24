@@ -199,7 +199,7 @@ InstallGlobalFunction(NormalizedNameAndKey, function(str)
       else
         Add(keyshort, 'X');
       fi;
-      Append(keylong, STRING_LOWER(Filtered(a[1]{[p..Length(a[1])]},
+      Append(keylong, LowercaseString(Filtered(a[1]{[p..Length(a[1])]},
               x-> x in LETTERS)));
     fi;
   od;
