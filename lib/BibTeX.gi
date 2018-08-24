@@ -1277,6 +1277,9 @@ InstallGlobalFunction(SearchMR, function(r)
   Append(uri, "&extend=1");
   uri := Concatenation("https://",SEARCHMRHOST,uri);
   res := GetByWgetOrCurl(uri);
+  if r.type <> "bibtex" then
+    return res;
+  fi;
   i := PositionSublist(res, "<pre>\n@");
   extr := [];
   while i <> fail do
