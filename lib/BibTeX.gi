@@ -1145,10 +1145,14 @@ end);
 ##  Furthermore, the component <C>type</C> can be specified. It can be one of 
 ##  <C>"bibtex"</C> (the default if not given), <C>"pdf"</C>, <C>"html"</C> and
 ##  probably others. In the last  cases the function returns a string with
-##  the correspondig PDF-file or web page from <Package>MathSciNet</Package>.
+##  the content of the web page returned by <Package>MathSciNet</Package>.
 ##  In the first case the <Package>MathSciNet</Package> interface returns a web
 ##  page with  &BibTeX; entries, for convenience this function returns a list
 ##  of strings,  each containing the &BibTeX; text for a single result entry.
+##  <P/>
+##  If a component <C>uri</C> is bound and set to <K>true</K> the function 
+##  does not actually send a request to <Package>MathSciNet</Package> but
+##  returns a string with the URI that can be called for the request.
 ##  <P/>
 ##  The format of a <C>.Year</C> component can be either a four digit number,
 ##  optionally preceded by  one of the characters <C>'&lt;'</C>,
@@ -1276,7 +1280,15 @@ InstallGlobalFunction(SearchMR, function(r)
   # get all entries
   Append(uri, "&extend=1");
   uri := Concatenation("https://",SEARCHMRHOST,uri);
+  if IsBound(r.uri) and r.uri = true then
+    return uri;
+  fi;
   res := GetByWgetOrCurl(uri);
+  if r.type <> "bibtex" then
+    # just return the content of the returned web page 
+    return res;
+  fi;
+  # by default we extract BibTeX source from <pre> element
   i := PositionSublist(res, "<pre>\n@");
   extr := [];
   while i <> fail do

@@ -1,6 +1,9 @@
                        CHANGES of the GAPDoc package
 
 1.6.1 -> 1.6.2
+- Added option ".uri := true" to 'SearchMR' to return URI instead of sending
+  a request to MathSciNet.
+
 - Added many cases handled by 'HeuristicTranslationsLaTeX2XML', this is
   needed because MathSciNet has changed the markup for accented characters
   in many cases.
