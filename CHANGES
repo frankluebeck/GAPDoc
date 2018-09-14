@@ -11,6 +11,9 @@
 - Made 'SearchMR' work again using 'wget' or 'curl' (MathSciNet is now only
   accessible via HTTPS).
 
+- Better ordering of help matches if the first word is the query string
+  (patch provided by Max Horn).
+
 - Escape the special characters @!|" for 'makeindex' in index entries for
   LaTeX.
 
