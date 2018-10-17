@@ -61,7 +61,7 @@ cd ttttmpdir
 tar xjf $HERE/GAPDoc-`cat $HERE/version`.tar.bz2 
 cd *
 mv CHANGES ../../CHANGES.txt
-mv README ../../README.txt
+mv README.md ../../README.txt
 mv PackageInfo.g ../../
 mv doc/* ../../doc
 mv example/* ../../example
