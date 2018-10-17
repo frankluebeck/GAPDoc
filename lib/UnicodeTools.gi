@@ -1156,13 +1156,17 @@ end);
 
 ##  <#GAPDoc Label="InitialSubstringUTF8String">
 ##  <ManSection >
-##  <Func Arg="str, maxwidth" Name="InitialSubstringUTF8String" />
+##  <Func Arg="str, maxwidth[, suf]" Name="InitialSubstringUTF8String" />
 ##  <Returns>UTF-8 encoded string</Returns>
 ##  <Description>
-##  The argument <A>str</A> must be a &GAP; string  with text in UTF-8 encoding
-##  or a unicode string. The function returns the longest initial substring of
-##  <A>str</A> which has at most visible width <A>maxwidth</A>, as UTF-8 encoded
-##  &GAP; string.
+##  The arguments <A>str</A> and <A>suf</A> each must be a &GAP; string with
+##  text in UTF-8  encoding or a unicode string. The  argument <A>suf</A> is
+##  optional and its default value is the empty string. If the visible width
+##  of <A>str</A> is at most  <A>maxwidth</A> then <A>str</A> is returned as
+##  UTF-8 encoded  &GAP; string.  Otherwise, <A>suf</A>  is appended  to the
+##  maximal  initial substring  of <A>str</A>  such that  the total  visible
+##  width of the result is at most <A>maxwidth</A>.
+##  
 ##  <Example>
 ##  gap> # A, German umlaut u, B, zero width space, C, newline
 ##  gap> str := Encode( Unicode( "A&amp;#xFC;B&amp;#x200B;C\n", "XML" ) );;
@@ -1171,18 +1175,37 @@ end);
 ##  3
 ##  gap> IntListUnicodeString(Unicode(ini));
 ##  [ 65, 252, 66, 8203 ]
+##  gap> l := Unicode([ 23380, 22827, 23376 ] );; # three chars of width 2
+##  gap> s := InitialSubstringUTF8String(l, 4, "*");;
+##  gap> WidthUTF8String(s);
+##  3
 ##  </Example>
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
-InstallGlobalFunction(InitialSubstringUTF8String, function(str, len)
-  local ints, sum, pos, j;
+InstallGlobalFunction(InitialSubstringUTF8String, function(str, len, lsuf...)
+  local u, suf, wsuf, cut, ints, sum, pos, j;
   if not IsUnicodeString(str) then
-    ints := IntListUnicodeString(Unicode(str, "UTF-8"));
+    u := Unicode(str, "UTF-8");
+    if u = fail then
+      Error("string str is not in UTF-8 encoding");
+    fi;
+    ints := IntListUnicodeString(u);
   else
     ints := IntListUnicodeString(str);
   fi;
+  if Length(lsuf) > 0 then
+    if IsUnicodeString(lsuf[1]) then
+      suf := Encode(lsuf[1], "UTF-8");
+    else
+      suf := lsuf[1];
+    fi;
+  else
+    suf := "";
+  fi;
+  wsuf := WidthUTF8String(suf);
   sum := 0;
+  cut := -1;
   for j in [1..Length(ints)] do
     if ints[j] > 31 and ints[j] < 127 then
       sum := sum + 1;
@@ -1194,8 +1217,11 @@ InstallGlobalFunction(InitialSubstringUTF8String, function(str, len)
       fi;
       sum := sum + WidthUnicodeTable[pos][2];
     fi;
+    if sum+wsuf > len and cut < 0 then
+      cut := j-1;
+    fi;
     if sum > len then
-      return Encode(Unicode(ints{[1..j-1]}));
+      return Concatenation(Encode(Unicode(ints{[1..cut]})), suf);
     fi;
   od;
   if IsString(str) then
