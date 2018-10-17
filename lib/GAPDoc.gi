@@ -296,7 +296,7 @@ InstallGlobalFunction(PrintSixFile, function(file, r, bookname)
   f := function(a)
     local   res;
     res := ShallowCopy(a);
-    res[2] := STRING_LOWER(res[2]);
+    res[2] := LowercaseString(res[2]);
     return res;
   end;
   PrintTo(file, "#SIXFORMAT  GapDocGAP\nHELPBOOKINFOSIXTMP := rec(\n",

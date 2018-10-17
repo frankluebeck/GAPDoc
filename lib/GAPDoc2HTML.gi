@@ -713,7 +713,7 @@ GAPDoc2HTMLProcs.WHOLEDOCUMENT := function(r, par)
   # .index has entries of form [sorttext, subsorttext, numbertext, 
   # entrytext, url[, subtext]]
   Info(InfoGAPDoc, 1, "#I Producing the index . . .\n");
-  SortBy(r.index, a-> [a[1],STRING_LOWER(a[2]),
+  SortBy(r.index, a-> [a[1],LowercaseString(a[2]),
                        List(SplitString(a[3],".-",""), Int)]);
   str := "";
   ind := r.index;
@@ -1519,9 +1519,9 @@ GAPDoc2HTMLProcs.Index := function(r, str)
   NormalizeWhitespace(s);
   NormalizeWhitespace(sub);
   if IsBound(r.attributes.Key) then
-    entry := [STRING_LOWER(r.attributes.Key)];
+    entry := [LowercaseString(r.attributes.Key)];
   else
-    entry := [STRING_LOWER(s)];
+    entry := [LowercaseString(s)];
   fi;
   if IsBound(r.attributes.Subkey) then
     Add(entry, r.attributes.Subkey);
@@ -1581,7 +1581,7 @@ GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
   else
     lab := "";
   fi;
-  Add(r.root.index, [STRING_LOWER(name), lab, 
+  Add(r.root.index, [LowercaseString(name), lab, 
           GAPDoc2HTMLProcs.SectionNumber(r.count, "Subsection"), 
           Concatenation(attr[1], name, attr[2]),
           url]);
