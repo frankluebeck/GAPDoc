@@ -1,6 +1,9 @@
                        CHANGES of the GAPDoc package
 
 1.6.1 -> 1.6.2
+- Change access of javascript code for MathJax to https protocol (such that
+  MathJax works for help pages accessed via https).
+
 - Added option ".uri := true" to 'SearchMR' to return URI instead of sending
   a request to MathSciNet.
 
