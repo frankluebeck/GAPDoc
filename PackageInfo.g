@@ -13,6 +13,7 @@ Subtitle := "A Meta Package for GAP Documentation",
 Version := "1.6.2.dev",
 ##  DD/MM/YYYY format:
 Date := "17/10/2018",
+License := "GPL-2.0-or-later",
 SourceRepository := rec(
     Type := "git",
     URL := "https://github.com/frankluebeck/GAPDoc"
