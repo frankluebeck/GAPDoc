@@ -5,7 +5,7 @@ echo "Is ./index.html updated (Version, subdir, archive names, last updated)?"
 echo "Copying files to this web directory, is that ok?"
 echo "       "$WEBDIR
 echo "Assuming that in this directory exist archives "
-echo "       "GAPDoc-`cat version`"{.tar.bz2,,tar.gz,.zoo,-win.zip}"
+echo "       "GAPDoc-`cat version`"{.tar.bz2,,tar.gz,-win.zip}"
 
 echo "Shall I start (y/N)?"
 read -n 1 -p "-->" start
@@ -76,7 +76,7 @@ echo copying index.html and pkgreadme.css . . .
 cp index.html pkgreadme.css $WEBDIR
 
 echo copying archives . . .
-cp GAPDoc-`cat version`{.tar.bz2,.tar.gz,.zoo,-win.zip} $WEBDIR
+cp GAPDoc-`cat version`{.tar.bz2,.tar.gz,-win.zip} $WEBDIR
 
 echo "creating SERVE files (maybe restart server)"
 cd $WEBDIR
