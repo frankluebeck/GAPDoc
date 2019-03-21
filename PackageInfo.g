@@ -21,7 +21,7 @@ SourceRepository := rec(
 IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
 ArchiveURL := 
           "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.6.2",
-ArchiveFormats := ".tar.bz2",
+ArchiveFormats := ".tar.bz2 .tar.gz -win.zip",
 Persons := [
   rec(
   LastName := "Lübeck",
