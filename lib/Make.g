@@ -15,7 +15,7 @@
 ##     path, main, files, bookname[, gaproot][, "MathML"][, "Tth"][, "MathJax"]
 BindGlobal("MakeGAPDocDoc", function(arg)
   local htmlspecial, path, main, files, bookname, gaproot, str, 
-        r, t, l, latex, null, log, pos, h, i, j;
+        r, t, l, latex, null, log, pos, h, i, j, nopdflatex;
   htmlspecial := Filtered(arg, a-> a in ["MathML", "Tth", "MathJax"]);
   if Length(htmlspecial) > 0 then
     arg := Filtered(arg, a-> not a in ["MathML", "Tth", "MathJax"]);
@@ -59,7 +59,11 @@ BindGlobal("MakeGAPDocDoc", function(arg)
   Info(InfoGAPDoc, 1, "#I Writing LaTeX file, \c");
   Info(InfoGAPDoc, 2, Concatenation(main, ".tex"), "\n#I     ");
   FileString(Filename(path, Concatenation(main, ".tex")), l);
-  if Filename(DirectoriesSystemPrograms(), "pdflatex") = fail then
+  nopdflatex := ValueOption( "MakeGAPDocDoc_NoPDFLatex" );
+  if nopdflatex = true then
+    Info(InfoGAPDoc, 1, "\n#W WARNING: Creating pdf disabled by the user.\n");
+    Info(InfoGAPDoc, 1, "#W WARNING: will NOT produce pdf version from LaTeX file.\n");
+  elif Filename(DirectoriesSystemPrograms(), "pdflatex") = fail then
     Info(InfoGAPDoc, 1, "\n#W WARNING: cannot find 'pdflatex', please install TeX.\n");
     Info(InfoGAPDoc, 1, "#W WARNING: will NOT produce pdf version from LaTeX file.\n");
   else
