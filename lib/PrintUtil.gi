@@ -61,9 +61,11 @@ end);
 ##  <ManSection >
 ##  <Func Arg="obj1[, obj2[, ...]]" Name="StringPrint" />
 ##  <Func Arg="obj" Name="StringView" />
+##  <Func Arg="obj" Name="StringDisplay" />
 ##  <Description>
 ##  These  functions  return a  string  containing  the output  of  a
-##  <C>Print</C> or <C>ViewObj</C> call with the same arguments.<P/>
+##  <C>Print</C>, <C>ViewObj</C> or <C>Display</C> 
+##  call, respectively, with the same arguments.<P/>
 ##  
 ##  This should  be considered  as a (temporary?)  hack. It  would be
 ##  better to  have <Ref  BookName="ref" Oper="String"/>  methods for
@@ -87,6 +89,15 @@ InstallGlobalFunction(StringView, function(obj)
   str := "";
   out := OutputTextString(str, false);
   PrintTo1(out, function() View(obj); end);
+  CloseStream(out);
+  return str;
+end);
+
+InstallGlobalFunction(StringDisplay, function(obj)
+  local   str,  out;
+  str := "";
+  out := OutputTextString(str, false);
+  PrintTo1(out, function() Display(obj); end);
   CloseStream(out);
   return str;
 end);

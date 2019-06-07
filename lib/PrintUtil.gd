@@ -20,6 +20,7 @@ DeclareGlobalFunction("AppendTo1");
 ##  meta `String' function for objects without String-method
 DeclareGlobalFunction("StringPrint");
 DeclareGlobalFunction("StringView");
+DeclareGlobalFunction("StringDisplay");
 
 ##  viewing "large" objects
 DeclareGlobalFunction("PrintFormattedString");
