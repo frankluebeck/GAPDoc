@@ -14,10 +14,10 @@
 ##  args: 
 ##     path, main, files, bookname[, gaproot][, "MathML"][, "Tth"][, "MathJax"]
 BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname, opts...)
-  local htmlspecial, gaproot, str, r, t, l, latex, null, log, pos, h, i, j;
-  htmlspecial := Filtered(opts, a-> a in ["MathML", "Tth", "MathJax"]);
-  if Length(htmlspecial) > 0 then
-    opts := Filtered(opts, a-> not a in ["MathML", "Tth", "MathJax"]);
+  local special, gaproot, str, r, t, l, latex, null, log, pos, h, i, j;
+  special := Filtered(opts, a-> a in ["MathML", "Tth", "MathJax", "nopdf"]);
+  if Length(special) > 0 then
+    opts := Filtered(opts, a-> not a in ["MathML", "Tth", "MathJax", "nopdf"]);
   fi;
   if IsBound(opts[1]) then
     gaproot := opts[1];
@@ -54,110 +54,115 @@ BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname, opts...)
   Info(InfoGAPDoc, 1, "#I Writing LaTeX file, \c");
   Info(InfoGAPDoc, 2, Concatenation(main, ".tex"), "\n#I     ");
   FileString(Filename(path, Concatenation(main, ".tex")), l);
-  if Filename(DirectoriesSystemPrograms(), "pdflatex") = fail then
-    Info(InfoGAPDoc, 1, "\n#W WARNING: cannot find 'pdflatex', please install TeX.\n");
-    Info(InfoGAPDoc, 1, "#W WARNING: will NOT produce pdf version from LaTeX file.\n");
+  if "nopdf" in special then
+    Info(InfoGAPDoc, 1, " NO PDF generated!\n");
+    PrintSixFile(Filename(path, "manual.six"), r, bookname);
   else
-    # call latex and pdflatex (with bibtex, makeindex and dvips)
-    latex := "latex -interaction=nonstopmode ";
-    # sh-syntax for redirecting stderr and stdout to /dev/null
-    null := " > /dev/null 2>&1 ";
-    Info(InfoGAPDoc, 1, "4 x pdflatex with bibtex and makeindex, \c");
-    Exec(Concatenation("sh -c \" cd ", Filename(path,""),
-    "; rm -f ", main, ".aux ", main, ".pdf ", main, ".log ",
-    "; pdf", latex, main, null,
-    "; bibtex ", main, null,
-    "; pdf", latex, main, null,
-    "; makeindex ", main, null,
-    "; pdf", latex, main, null,
-    "; pdf", latex, main, null,"\""));
-    # check log file for errors, warning, overfull boxes
-    log := Filename(path, Concatenation(main, ".log"));
-    log := StringFile(log);
-    if log = fail then
-      Info(InfoGAPDoc, 1, "\n#W WARNING: Something wrong, don't find log file ",
-                            Filename(path, Concatenation(main, ".log")), "\n");
+    if Filename(DirectoriesSystemPrograms(), "pdflatex") = fail then
+      Info(InfoGAPDoc, 1, "\n#W WARNING: cannot find 'pdflatex', please install TeX.\n");
+      Info(InfoGAPDoc, 1, "#W WARNING: will NOT produce pdf version from LaTeX file.\n");
     else
-      log := SplitString(log, "\n", "");
-      pos := Filtered([1..Length(log)], i-> Length(log[i]) > 0 
-                                                   and log[i][1] = '!');
-      if Length(pos) > 0 then
-        Info(InfoGAPDoc, 1, "\n#W There were LaTeX errors:\n");
-        for i in pos do
-          for j in [i..Minimum(i+2, Length(log))] do
-            Info(InfoGAPDoc, 1, log[j], "\n");
-          od;
-          Info(InfoGAPDoc, 1, "____________________\n");
-        od;
-      fi;
-      pos := Filtered([1..Length(log)], i-> Length(log[i]) > 13 
-                                       and log[i]{[1..14]} = "LaTeX Warning:");
-      if Length(pos) > 0 then
-        Info(InfoGAPDoc, 1, "\n#W There were LaTeX Warnings:\n");
-        for i in pos do
-          for j in [i..Minimum(i+2, Length(log))] do
-            Info(InfoGAPDoc, 1, log[j], "\n");
-          od;
-          Info(InfoGAPDoc, 1, "____________________\n");
-        od;
-      fi;
-      pos := Filtered([1..Length(log)], i-> Length(log[i]) > 7 
-                                       and log[i]{[1..8]} = "Overfull");
-      if Length(pos) > 0 then
-        Info(InfoGAPDoc, 1, "\n#W There are overfull boxes:\n");
-        for i in pos do
-          Info(InfoGAPDoc, 1, log[i], "\n");
-        od;
-      fi;
-    fi;
-    # check for BibTeX warnings
-    log := StringFile(Filename(path, Concatenation(main, ".blg")));
-    if log <> fail then
-      log := SplitString(log, "\n", "");
-      log := Filtered(log, z-> PositionSublist(z, "Warning--") = 1);
-      if Length(log) > 0 then
-        Info(InfoGAPDoc, 1, "\n#W BibTeX had warnings:\n",
-             JoinStringsWithSeparator(log, "\n"));
-      fi;
-    fi;
-    
-    if not IsExistingFile(Filename(path, Concatenation(main, ".pdf"))) then
-      Info(InfoGAPDoc, 1, "\n#I ERROR: no .pdf file produced (and no .six file)");
-    else
+      # call latex and pdflatex (with bibtex, makeindex and dvips)
+      latex := "latex -interaction=nonstopmode ";
+      # sh-syntax for redirecting stderr and stdout to /dev/null
+      null := " > /dev/null 2>&1 ";
+      Info(InfoGAPDoc, 1, "4 x pdflatex with bibtex and makeindex, \c");
       Exec(Concatenation("sh -c \" cd ", Filename(path,""),
-      "; mv ", main, ".pdf manual.pdf; ", 
-      "\""));
-      Info(InfoGAPDoc, 1, "\n");
-      # read page number information for .six file
-      Info(InfoGAPDoc, 1, "#I Writing manual.six file ... \c");
-      Info(InfoGAPDoc, 2, Filename(path, "manual.six"), "\n");
-      Info(InfoGAPDoc, 1, "\n");
-      AddPageNumbersToSix(r, Filename(path, Concatenation(main, ".pnr")));
-      # print manual.six file
-      PrintSixFile(Filename(path, "manual.six"), r, bookname);
+      "; rm -f ", main, ".aux ", main, ".pdf ", main, ".log ",
+      "; pdf", latex, main, null,
+      "; bibtex ", main, null,
+      "; pdf", latex, main, null,
+      "; makeindex ", main, null,
+      "; pdf", latex, main, null,
+      "; pdf", latex, main, null,"\""));
+      # check log file for errors, warning, overfull boxes
+      log := Filename(path, Concatenation(main, ".log"));
+      log := StringFile(log);
+      if log = fail then
+        Info(InfoGAPDoc, 1, "\n#W WARNING: Something wrong, don't find log file ",
+                              Filename(path, Concatenation(main, ".log")), "\n");
+      else
+        log := SplitString(log, "\n", "");
+        pos := Filtered([1..Length(log)], i-> Length(log[i]) > 0 
+                                                     and log[i][1] = '!');
+        if Length(pos) > 0 then
+          Info(InfoGAPDoc, 1, "\n#W There were LaTeX errors:\n");
+          for i in pos do
+            for j in [i..Minimum(i+2, Length(log))] do
+              Info(InfoGAPDoc, 1, log[j], "\n");
+            od;
+            Info(InfoGAPDoc, 1, "____________________\n");
+          od;
+        fi;
+        pos := Filtered([1..Length(log)], i-> Length(log[i]) > 13 
+                                         and log[i]{[1..14]} = "LaTeX Warning:");
+        if Length(pos) > 0 then
+          Info(InfoGAPDoc, 1, "\n#W There were LaTeX Warnings:\n");
+          for i in pos do
+            for j in [i..Minimum(i+2, Length(log))] do
+              Info(InfoGAPDoc, 1, log[j], "\n");
+            od;
+            Info(InfoGAPDoc, 1, "____________________\n");
+          od;
+        fi;
+        pos := Filtered([1..Length(log)], i-> Length(log[i]) > 7 
+                                         and log[i]{[1..8]} = "Overfull");
+        if Length(pos) > 0 then
+          Info(InfoGAPDoc, 1, "\n#W There are overfull boxes:\n");
+          for i in pos do
+            Info(InfoGAPDoc, 1, log[i], "\n");
+          od;
+        fi;
+      fi;
+      # check for BibTeX warnings
+      log := StringFile(Filename(path, Concatenation(main, ".blg")));
+      if log <> fail then
+        log := SplitString(log, "\n", "");
+        log := Filtered(log, z-> PositionSublist(z, "Warning--") = 1);
+        if Length(log) > 0 then
+          Info(InfoGAPDoc, 1, "\n#W BibTeX had warnings:\n",
+               JoinStringsWithSeparator(log, "\n"));
+        fi;
+      fi;
+      
+      if not IsExistingFile(Filename(path, Concatenation(main, ".pdf"))) then
+        Info(InfoGAPDoc, 1, "\n#I ERROR: no .pdf file produced (and no .six file)");
+      else
+        Exec(Concatenation("sh -c \" cd ", Filename(path,""),
+        "; mv ", main, ".pdf manual.pdf; ", 
+        "\""));
+        Info(InfoGAPDoc, 1, "\n");
+        # read page number information for .six file
+        Info(InfoGAPDoc, 1, "#I Writing manual.six file ... \c");
+        Info(InfoGAPDoc, 2, Filename(path, "manual.six"), "\n");
+        Info(InfoGAPDoc, 1, "\n");
+        AddPageNumbersToSix(r, Filename(path, Concatenation(main, ".pnr")));
+        # print manual.six file
+        PrintSixFile(Filename(path, "manual.six"), r, bookname);
+      fi;
     fi;
   fi;
   # produce html version
   Info(InfoGAPDoc, 1, "#I Finally the HTML version . . .\n");
   # if MathJax version is also produced we include links to them
-  if "MathJax"  in htmlspecial then
+  if "MathJax"  in special then
     r.LinkToMathJax := true;
   fi;
   h := GAPDoc2HTML(r, path, gaproot);
   GAPDoc2HTMLPrintHTMLFiles(h, path);
   Unbind(r.LinkToMathJax);
-  if "Tth" in htmlspecial then
+  if "Tth" in special then
     Info(InfoGAPDoc, 1, 
             "#I - also HTML version with 'tth' translated formulae . . .\n");
     h := GAPDoc2HTML(r, path, gaproot, "Tth");
     GAPDoc2HTMLPrintHTMLFiles(h, path);
   fi;
-  if "MathML" in htmlspecial then
+  if "MathML" in special then
     Info(InfoGAPDoc, 1, "#I - also HTML + MathML version with 'ttm' . . .\n");
     h := GAPDoc2HTML(r, path, gaproot, "MathML");
     GAPDoc2HTMLPrintHTMLFiles(h, path);
   fi;
-  if "MathJax" in htmlspecial then
+  if "MathJax" in special then
     Info(InfoGAPDoc, 1, "#I - also HTML version for MathJax . . .\n");
     h := GAPDoc2HTML(r, path, gaproot, "MathJax");
     GAPDoc2HTMLPrintHTMLFiles(h, path);
