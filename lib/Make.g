@@ -13,19 +13,14 @@
 
 ##  args: 
 ##     path, main, files, bookname[, gaproot][, "MathML"][, "Tth"][, "MathJax"]
-BindGlobal("MakeGAPDocDoc", function(arg)
-  local htmlspecial, path, main, files, bookname, gaproot, str, 
-        r, t, l, latex, null, log, pos, h, i, j;
-  htmlspecial := Filtered(arg, a-> a in ["MathML", "Tth", "MathJax"]);
+BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname, opts...)
+  local htmlspecial, gaproot, str, r, t, l, latex, null, log, pos, h, i, j;
+  htmlspecial := Filtered(opts, a-> a in ["MathML", "Tth", "MathJax"]);
   if Length(htmlspecial) > 0 then
-    arg := Filtered(arg, a-> not a in ["MathML", "Tth", "MathJax"]);
+    opts := Filtered(opts, a-> not a in ["MathML", "Tth", "MathJax"]);
   fi;
-  path := arg[1];
-  main := arg[2];
-  files := arg[3];
-  bookname := arg[4];
-  if IsBound(arg[5]) then
-    gaproot := arg[5];
+  if IsBound(opts[1]) then
+    gaproot := opts[1];
   else
     gaproot := false;
   fi;
