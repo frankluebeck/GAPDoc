@@ -612,17 +612,20 @@ BindGlobal("GAPDocAddBibData", function(r)
     #ids := List(need, a->a[1].attributes.id);
     lab := LabelsFromBibTeX(".", keys, [tmp], st);
     RemoveFile(tmp);
-    tmp := [];
-    for p in lab do
-      a := Position(keys, p[1]);
-      if a <> fail then
-        a := need[Position(keys, p[1])];
-        a[2].key := HeuristicTranslationsLaTeX2XML.Apply(p[2]);
-        Add(tmp, a);
-      fi;
-    od;
-    need := tmp;
-    keys := List(need, a-> a[2].Label);
+    # if empty, we assume something went wrong, and leave 'need' and 'keys'
+    if Length(lab) > 0 then
+      tmp := [];
+      for p in lab do
+        a := Position(keys, p[1]);
+        if a <> fail then
+          a := need[Position(keys, p[1])];
+          a[2].key := HeuristicTranslationsLaTeX2XML.Apply(p[2]);
+          Add(tmp, a);
+        fi;
+      od;
+      need := tmp;
+      keys := List(need, a-> a[2].Label);
+    fi;
   fi;
 
   # now we get the labels
