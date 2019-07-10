@@ -388,6 +388,9 @@ HELP_BOOK_HANDLER.GapDocGAP.HelpData := function(book, entrynr, type)
   fi;
   
   if type = "pdf" then
+    if not IsBound(a[5]) then
+      return fail;
+    fi;
     res := rec(file := info.pdffile, page := a[5]);
     if IsBound(a[7]) then
       res.label := Concatenation("L.", a[7]);
