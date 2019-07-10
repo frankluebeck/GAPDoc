@@ -1,5 +1,14 @@
                        CHANGES of the GAPDoc package
 
+1.6.2 -> 1.6.3
+- New optional "nopdf" argument of 'MakeGAPDocDoc'.
+
+- 'MakeGAPDocDoc' now produces useful text and HTML versions even if 
+  'bibtex' and 'pdflatex' do not work.
+
+- 'HelpData" handler for "pdf" format now returns 'fail' if there are no
+  page numbers in manual.six file.
+
 1.6.1 -> 1.6.2
 - Improved 'InitialSubstringUTF8String' by an optional argument to return 
   a string with a suffix.
