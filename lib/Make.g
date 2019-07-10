@@ -126,7 +126,8 @@ BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname, opts...)
       fi;
       
       if not IsExistingFile(Filename(path, Concatenation(main, ".pdf"))) then
-        Info(InfoGAPDoc, 1, "\n#I ERROR: no .pdf file produced (and no .six file)");
+        Info(InfoGAPDoc, 1, "\n#I ERROR: no .pdf file produced (writing incomplete .six file)\n");
+        PrintSixFile(Filename(path, "manual.six"), r, bookname);
       else
         Exec(Concatenation("sh -c \" cd ", Filename(path,""),
         "; mv ", main, ".pdf manual.pdf; ", 
