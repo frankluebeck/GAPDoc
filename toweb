@@ -25,7 +25,7 @@ cd ../example
 ./clean
 cd ..
 rm -f tttttmppre
-echo 'SetGapDocLaTeXOptions("nocolor");relpath:="http://www.gap-system.org/Manuals";' >  tttttmppre
+echo 'SetGapDocLaTeXOptions("nocolor");pathtoroot:="https://www.gap-system.org/Manuals";' >  tttttmppre
 grep -v SetGapDocLaTeXOptions makedocrel.g >> tttttmppre
 ../../bin/gap.sh -r < tttttmppre > /dev/null
 rm -f tttttmppre

@@ -10,7 +10,11 @@
 
 #SetInfoLevel(InfoGAPDoc,4);
 #SetGapDocLaTeXOptions("pdf","color", "latin1"); 
-relpath := "../../..";
+if IsBound(pathtoroot) then
+  relpath := pathtoroot;
+else
+  relpath:="../../..";
+fi;
 # main
 Print("\n========== converting main documentation for GAPDoc ==============\n");
 maintree := MakeGAPDocDoc("doc", "gapdoc", ["../lib/BibTeX.gi", 
