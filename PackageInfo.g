@@ -10,9 +10,9 @@ SetPackageInfo( rec(
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
-Version := "1.6.2.dev",
+Version := "1.6.3",
 ##  DD/MM/YYYY format:
-Date := "17/10/2018",
+Date := "16/07/2019",
 License := "GPL-2.0-or-later",
 SourceRepository := rec(
     Type := "git",
@@ -20,7 +20,7 @@ SourceRepository := rec(
 ),
 IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
 ArchiveURL := 
-          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.6.2",
+          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.6.3",
 ArchiveFormats := ".tar.bz2 .tar.gz -win.zip",
 Persons := [
   rec(
