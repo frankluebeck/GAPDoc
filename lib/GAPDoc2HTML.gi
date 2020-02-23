@@ -1031,7 +1031,7 @@ end;
 ##  the sectioning commands are just translated and labels are
 ##  generated, if given as attribute  
 GAPDoc2HTMLProcs.ChapSect := function(r, par, sect)
-  local   num, posh, s, ind, strn, lab, types, nrs, hord, a, pos, l, i;
+  local   num, posh, s, ind, strn, lab, lb, types, nrs, hord, a, pos, l, i;
   
   types := ["Chapter", "Appendix", "Section", "Subsection"];
   nrs := ["3", "3", "4", "5"];
@@ -1067,8 +1067,9 @@ GAPDoc2HTMLProcs.ChapSect := function(r, par, sect)
     
     # label entry, if present
     if IsBound(r.attributes.Label) then
-      r.root.labels.(r.attributes.Label) := [num, lab];
-      r.root.labeltexts.(r.attributes.Label) := s;
+      lb := NormalizedWhitespace(r.attributes.Label);
+      r.root.labels.(lb) := [num, lab];
+      r.root.labeltexts.(lb) := s;
     fi;
   
     # the heading text
@@ -1474,10 +1475,11 @@ end;
 
 ##  explicit labels
 GAPDoc2HTMLProcs.Label := function(r, str)
-  local num,  lab;
+  local num,  lab, lb;
   num := GAPDoc2HTMLProcs.SectionNumber(r.count, "Subsection");
   lab := GAPDoc2HTMLProcs.SectionLabel(r, r.count, "Subsection"); 
-  r.root.labels.(r.attributes.Name) := [num, Concatenation(lab[1],"#",lab[2])];
+  lb := NormalizedWhitespace(r.attributes.Name);
+  r.root.labels.(lb) := [num, Concatenation(lab[1],"#",lab[2])];
 end;
 
 ##  citations
@@ -1719,6 +1721,7 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
       lab := r.attributes.Label;
     fi;
   fi;
+  lab := NormalizedWhitespace(lab);
   if IsBound(r.attributes.BookName) then
     ref := GAPDoc2HTMLProcs.ResolveExternalRef(r.attributes.BookName, lab, 1);
     if ref <> fail and ref[6] <> fail then
@@ -1810,7 +1813,7 @@ GAPDoc2HTMLProcs.Returns := function(r, par)
 end;
 
 GAPDoc2HTMLProcs.ManSection := function(r, par)
-  local   strn,  funclike,  i,  num,  s,  lab, ind;
+  local   strn,  funclike,  i,  num,  s,  lab, lb, ind;
   
   # if there is a Heading then handle as subsection
   if ForAny(r.content, a-> IsRecord(a) and a.name = "Heading") then
@@ -1847,8 +1850,9 @@ GAPDoc2HTMLProcs.ManSection := function(r, par)
 
   # label entry, if present
   if IsBound(r.attributes.Label) then
-    r.root.labels.(r.attributes.Label) := [num, lab];
-    r.root.labeltexts.(r.attributes.Label) := s;
+    lb := NormalizedWhitespace(r.attributes.Label);
+    r.root.labels.(lb) := [num, lab];
+    r.root.labeltexts.(lb) := s;
   fi;
 
   GAPDoc2HTMLContent(r, par);

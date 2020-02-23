@@ -902,7 +902,7 @@ end;
 ##  the sectioning commands are just translated and labels are
 ##  generated, if given as attribute
 GAPDoc2TextProcs.ChapSect := function(r, par, sect)
-  local   num,  posh,  s,  ind, strn, sm, sms, t;
+  local   num,  posh,  s,  ind, strn, lb, sm, sms, t;
   
   # section number as string
   num := GAPDoc2TextProcs.SectionNumber(r.count, sect);
@@ -932,8 +932,9 @@ GAPDoc2TextProcs.ChapSect := function(r, par, sect)
     
     # label entry, if present
     if IsBound(r.attributes.Label) then
-      r.root.labels.(r.attributes.Label) := num;
-      r.root.labeltexts.(r.attributes.Label) := s;
+      lb := NormalizedWhitespace(r.attributes.Label);
+      r.root.labels.(lb) := num;
+      r.root.labeltexts.(lb) := s;
     fi;
   
     # the heading text
@@ -1299,7 +1300,7 @@ end;
 
 ##  explicit labels
 GAPDoc2TextProcs.Label := function(r, str)
-  r.root.labels.(r.attributes.Name) :=
+  r.root.labels.(NormalizedWhitespace(r.attributes.Name)) :=
     GAPDoc2TextProcs.SectionNumber(r.count, "Subsection");
 end;
 
@@ -1496,6 +1497,7 @@ GAPDoc2TextProcs.Ref := function(r, str)
     else
       lab := txt;
     fi;
+    lab := NormalizedWhitespace(lab);
     if IsBound(r.attributes.BookName) then
       ref := GAPDoc2TextProcs.ResolveExternalRef(r.attributes.BookName, lab, 1);
       if ref = fail then
@@ -1539,6 +1541,7 @@ GAPDoc2TextProcs.Ref := function(r, str)
     else
       lab := txt;
     fi;
+    lab := NormalizedWhitespace(lab);
     if IsBound(r.attributes.BookName) then
       ref := GAPDoc2TextProcs.ResolveExternalRef(r.attributes.BookName, lab, 1);
       if ref = fail then
@@ -1553,7 +1556,7 @@ GAPDoc2TextProcs.Ref := function(r, str)
       fi;
     else
       # with sectioning references Label must be given
-      lab := r.attributes.(int[1]);
+      lab := NormalizedWhitespace(r.attributes.(int[1]));
       # default is printing section number, but we allow a Style="Text"
       # attribute
       if IsBound(r.attributes.Style) and r.attributes.Style = "Text" and
@@ -1575,7 +1578,7 @@ GAPDoc2TextProcs.Ref := function(r, str)
   fi;
   
   # neutral reference to a label
-  lab := r.attributes.Label;
+  lab := NormalizedWhitespace(r.attributes.Label);
   if IsBound(r.attributes.BookName) then
     ref := GAPDoc2TextProcs.ResolveExternalRef(r.attributes.BookName, lab, 1);
     if ref = fail then
@@ -1631,7 +1634,7 @@ end;
 
 
 GAPDoc2TextProcs.ManSection := function(r, par)
-  local   funclike,  i,  num,  s, strn;
+  local   funclike,  i,  num, lb,  s, strn;
   
   # if there is a Heading then handle as subsection
   if ForAny(r.content, a-> IsRecord(a) and a.name = "Heading") then
@@ -1659,8 +1662,9 @@ GAPDoc2TextProcs.ManSection := function(r, par)
 
   # label entry, if present
   if IsBound(r.attributes.Label) then
-    r.root.labels.(r.attributes.Label) := num;
-    r.root.labeltexts.(r.attributes.Label) := s;
+    lb := NormalizedWhitespace(r.attributes.Label);
+    r.root.labels.(lb) := num;
+    r.root.labeltexts.(lb) := s;
   fi;
 
   GAPDoc2TextContent(r, par);
@@ -1801,7 +1805,7 @@ GAPDoc2TextProcs.Table := function(r, str)
   fi;
   # head part of table and tabular
   if IsBound(r.attributes.Label) then
-    r.root.labels.(r.attributes.Label) :=
+    r.root.labels.(NormalizedWhitespace(r.attributes.Label)) :=
                     GAPDoc2TextProcs.SectionNumber(r.count, "Subsection");
   fi;
   

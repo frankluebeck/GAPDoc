@@ -1,6 +1,9 @@
                        CHANGES of the GAPDoc package
 
 1.6.2 -> 1.6.3
+- In Text and HTML versions: Made 'Label' strings independent of whitespace
+  (as is usual in LaTeX).
+
 - New optional "nopdf" argument of 'MakeGAPDocDoc'.
 
 - 'MakeGAPDocDoc' now produces useful text and HTML versions even if 
