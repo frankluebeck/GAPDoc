@@ -1393,6 +1393,8 @@ GAPDoc2TextProcs.LikeFunc := function(r, par, typ)
     Append(s, "( "); 
     Append(s, GAPDoc2TextProcs.WrapArgs(NormalizedArgList(r.attributes.Arg)));
     Append(s, " ) ");
+  else
+    Append(s, " ");
   fi;
   # label (if not given, the default is the Name)
   if IsBound(r.attributes.Label) then
