@@ -1583,7 +1583,7 @@ GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
   else
     lab := "";
   fi;
-  Add(r.root.index, [STRING_LOWER(name), lab, 
+  Add(r.root.index, [STRING_LOWER(r.attributes.Name), lab, 
           GAPDoc2HTMLProcs.SectionNumber(r.count, "Subsection"), 
           Concatenation(attr[1], name, attr[2]),
           url]);

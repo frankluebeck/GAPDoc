@@ -1126,7 +1126,8 @@ GAPDoc2LaTeXProcs.LikeFunc := function(r, str, typ)
   else
     inam := nam;
   fi;
-  Append(str, Concatenation("\\index{", namclean, "@\\texttt{",
+  Append(str, Concatenation("\\index{", 
+          GAPDoc2LaTeXProcs.EscapeIndexChars(nam), "@\\texttt{",
           inam, "}", lab, "}\n"));
   # label (if not given, the default is the Name)
   if IsBound(r.attributes.Label) then
