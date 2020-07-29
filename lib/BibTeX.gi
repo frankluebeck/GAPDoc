@@ -15,7 +15,7 @@
 ##  see Lamport: LaTeX App.B 1.2
 InstallGlobalFunction(NormalizedNameAndKey, function(str)
   local   isutf8, nbsp, ini, new,  pp,  p,  a,  i,  names,  norm,  keyshort,  
-          keylong,  res, utf8initial;
+          keylong,  res, utf8initial, nstr;
   utf8initial := function(s)
     local i, n;
     i := 1;
@@ -187,19 +187,22 @@ InstallGlobalFunction(NormalizedNameAndKey, function(str)
     if a[1] = "others" then
       Add(keyshort, '+');
     else
+      # simplify non-ASCII characters
+      nstr := SimplifiedUnicodeString(Unicode(a[1], "UTF-8"), "ASCII");
+      nstr := Encode(nstr, "ASCII");
       p := 1;
-      while p <= Length(a[1]) and not a[1][p] in CAPITALLETTERS do
+      while p <= Length(nstr) and not nstr[p] in CAPITALLETTERS do
         p := p+1;
       od;
-      if p > Length(a[1]) then
+      if p > Length(nstr) then
         p := 1;
       fi;
-      if a[1][p] in LETTERS then
-        Add(keyshort, a[1][p]);
+      if nstr[p] in LETTERS then
+        Add(keyshort, nstr[p]);
       else
         Add(keyshort, 'X');
       fi;
-      Append(keylong, STRING_LOWER(Filtered(a[1]{[p..Length(a[1])]},
+      Append(keylong, STRING_LOWER(Filtered(nstr{[p..Length(nstr)]},
               x-> x in LETTERS)));
     fi;
   od;
