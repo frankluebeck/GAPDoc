@@ -1,5 +1,16 @@
                        CHANGES of the GAPDoc package
 
+1.6.3 -> 1.6.4
+- Now computing better labels for bibliography entries containing names with
+  certain non-ASCII initials.
+
+- Fixed sorting of index entries containing special characters `<`, `>`,
+  `&`, `\` or `_` .
+
+- Made labels independent of white space.
+
+- Added various new translations from LaTeX markup to UTF-8.
+
 1.6.2 -> 1.6.3
 - In Text and HTML versions: Made 'Label' strings independent of whitespace
   (as is usual in LaTeX).
