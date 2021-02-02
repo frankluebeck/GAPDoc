@@ -1579,7 +1579,7 @@ GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
   url := GAPDoc2HTMLProcs.SectionLabel(r, r.count, "Subsection");
   url := Concatenation(url[1],"#",url[2]);
   if IsBound(r.attributes.Label) then
-    lab := r.attributes.Label;
+    lab := NormalizedWhitespace(r.attributes.Label);
   else
     lab := "";
   fi;
@@ -1590,7 +1590,8 @@ GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
   # label (if not given, the default is the Name)
   if IsBound(r.attributes.Label) then
     if IsBound(r.attributes.Name) then
-      lab := Concatenation(r.attributes.Name, " (", r.attributes.Label, ")");
+      lab := Concatenation(r.attributes.Name, " (", 
+             NormalizedWhitespace(r.attributes.Label), ")");
     else
       lab := r.attributes.Label;
     fi;
@@ -2037,8 +2038,8 @@ GAPDoc2HTMLProcs.Table := function(r, s)
   fi;
   # label
   if IsBound(r.attributes.Label) then
-    GAPDoc2HTMLProcs.Label(rec(count := r.count, root := r.root, 
-              attributes := rec(Name := r.attributes.Label)), str);
+    GAPDoc2HTMLProcs.Label(rec(count := r.count, root := r.root, attributes := 
+                 rec(Name := NormalizedWhitespace(r.attributes.Label))), str);
   fi;
   # alignments, table has borders and lines everywhere if any | or HorLine
   # is specified

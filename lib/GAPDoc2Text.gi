@@ -1398,7 +1398,7 @@ GAPDoc2TextProcs.LikeFunc := function(r, par, typ)
   fi;
   # label (if not given, the default is the Name)
   if IsBound(r.attributes.Label) then
-    lab := r.attributes.Label;
+    lab := NormalizedWhitespace(r.attributes.Label);
     comma := ", ";
   else
     lab := "";  
