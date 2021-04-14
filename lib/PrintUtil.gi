@@ -166,13 +166,10 @@ end);
 
 InstallGlobalFunction(PageDisplay, function(x)
   local   str,  out;
-  # since output to proper string is terribly slow
-  str := [,1];
+  str := "";
   out := OutputTextString(str, true);
   PrintTo1(out, function() Display(x);end);
   CloseStream(out);
-  str := str{[3..Length(str)]};
-  CONV_STRING(str);
   Pager(rec(lines := str, formatted:=true));
 end);
 
