@@ -25,6 +25,9 @@ maintree := MakeGAPDocDoc("doc", "gapdoc", ["../lib/BibTeX.gi",
 "../lib/Examples.gi", "../lib/TextThemes.g", "../lib/HelpBookHandler.g",
 "../lib/XMLParser.gd", "../lib/Make.g" ], "GAPDoc", relpath, "MathJax");
 
+# check validity
+ValidateGAPDoc([maintree.input, maintree.inputorigins]);
+
 CopyHTMLStyleFiles("doc");
 
 # now load it (for cross reference in example)
@@ -36,12 +39,20 @@ HELP_ADD_BOOK("GAPDoc", "Package for Preparing GAP Documentation",
 exampletree := 
       MakeGAPDocDoc("example", "example", [], "GAPDocExample", relpath,
       "MathJax");
+
+# check validity
+ValidateGAPDoc([exampletree.input, exampletree.inputorigins]);
+
 CopyHTMLStyleFiles("example");
 
 # from first chapter
 Print("\n========== converting small example from introduction ============\n");
 3kp1tree := MakeGAPDocDoc("3k+1", "3k+1", [], "ThreeKPlusOne", relpath,
             "MathJax");
+
+# check validity
+ValidateGAPDoc([3kp1tree.input, 3kp1tree.inputorigins]);
+
 CopyHTMLStyleFiles("3k+1");
 
 # .lab files for references from main manual

@@ -1,5 +1,17 @@
                        CHANGES of the GAPDoc package
 
+1.6.4 -> 1.6.5
+
+- Introduced utility functions 'XMLValidate' and 'ValidateGAPDoc' for
+  proper validation using the external program 'xmllint'.
+
+- We now normalize whitespace of 'Label' attributes. This allows for long
+  labels, even broken over lines.
+
+- Better argument check in 'SetGAPDocTextTheme'.
+
+- Changed default color for 'Example's in color text mode.
+
 1.6.3 -> 1.6.4
 - Now computing better labels for bibliography entries containing names with
   certain non-ASCII initials.

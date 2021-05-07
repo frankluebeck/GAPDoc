@@ -199,8 +199,9 @@ It is possible to use &GAPDoc; with other languages than English, see
 
 <Section Label="ParseXML">
 <Heading>Parsing XML Documents</Heading>
-Arbitrary well-formed XML documents can be parsed and browsed by the
-following functions.
+Arbitrary well-formed  XML documents  can be parsed  and browsed  by the
+following functions.  A proper validation  can be done with  an external
+program, see <Ref Func="XMLValidate"/> below.
 
 <#Include Label="ParseTreeXMLString">
 
@@ -226,6 +227,10 @@ And here are utilities for processing &GAPDoc; XML documents.
 <#Include Label="AddParagraphNumbersGapDocTree">
 
 <#Include Label="InfoXMLParser">
+
+<#Include Label="XMLValidate">
+
+<#Include Label="ValidateGAPDoc">
 
 </Section>
 

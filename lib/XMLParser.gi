@@ -1087,3 +1087,113 @@ InstallGlobalFunction(XMLElements, function(r, eltnames)
   ApplyToNodesParseTree(r, fun);
   return res;
 end);
+
+##  <#GAPDoc Label="XMLValidate">
+##  <ManSection >
+##  <Func Arg="doc, dtdpath" Name="XMLValidate" />
+##  <Returns><K>fail</K> or a record</Returns>
+##  <Description>
+##  The argument <A>doc</A>  must be a string which is  an XML document, and
+##  <A>dtdpath</A> is a path containing the corresponding DTD file.
+##  <P/>
+##  The function  returns <K>fail</K> if  the program <C>xmllint</C>  is not
+##  found.
+##  <P/>
+##  Otherwise    the    document    is   validated    via    the    external
+##  program    <C>xmllint</C>    via   the    function <Ref    BookName="IO"
+##  Func="IO_PipeThroughWithError"/>, and its resulting record is returned.
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+InstallGlobalFunction(XMLValidate, function(str, dtdpath)
+  local xmllint, p;
+  # find xmllint
+  xmllint := Filename(DirectoriesSystemPrograms(), "xmllint");
+  if xmllint = fail then
+    Error("XMLValidate needs 'xmllint' to be installed.");
+    return fail;
+  fi;
+  if not IsBound(IO_PipeThroughWithError) then
+    Error("XMLValidate needs 'IO_PipeThroughWithError' from the 'IO' package.");
+    return fail;
+  fi;
+  p := IO_PipeThroughWithError(xmllint,
+          ["--noout", "--path", dtdpath, "--valid", "-" ], str);
+  return p;
+end);
+
+##  <#GAPDoc Label="ValidateGAPDoc">
+##  <ManSection >
+##  <Func Arg="doc" Name="ValidateGAPDoc" />
+##  <Returns><K>fail</K>, <K>true</K>  or a record</Returns>
+##  <Description>
+##  The  argument  <A>doc</A>  must  be  a string  which  is  a  GAPDoc  XML
+##  document  or  a  pair  of  a   string  and  list  as  returned  by  <Ref
+##  Func="ComposedDocument"/> with argument <A>info</A> set to <K>true</K>.
+##  <P/>
+##  The function  returns <K>fail</K> in case of a problem.
+##  <P/>
+##  Otherwise the document is  validated using <Ref Func="XMLValidate"/>. If
+##  the validation was successful this  function returns <K>true</K>. In the
+##  case of validation errors some information  is printed and the result of
+##  <Ref Func="XMLValidate"/> is returned.
+##  <Log>
+##  gap> fn := Filename(DirectoriesPackageLibrary("gapdoc", ""), 
+##  >                                             "3k+1/3k+1.xml");;
+##  gap> doc := ComposedDocument("GAPDoc", "", fn, [], true);;
+##  gap> doc[1][220] := 't';;
+##  gap> check := ValidateGAPDoc(doc);;
+##  ValidateGAPDoc found problems:
+##  Line 11:  parser error : Opening and ending tag mismatch
+##     source position: /opt/gap/pkg/GAPDoc-1.6.4/3k+1/3k+1.xml, line 11
+##  </Log>
+##  </Description>
+##  </ManSection>
+##  <#/GAPDoc>
+InstallGlobalFunction(ValidateGAPDoc, function(str)
+  local posinfo, dtdpath, p, lineposs, err, orig, r;
+
+  # check if arg has info on original positions
+  if IsList(str) and Length(str) > 1 and IsString(str[1]) then
+    posinfo := str[2];
+    str := str[1];
+  else
+    posinfo := false;
+  fi;
+
+  # path to gapdoc.dtd
+  dtdpath := Filename(DirectoriesPackageLibrary("GAPDoc", ""), "");
+  if dtdpath = fail then
+    Error("ValidateGAPDoc: need to be run in GAP with GAPDoc.");
+    return fail;
+  fi;
+  p := XMLValidate(str, dtdpath);
+  if p = fail then
+    Error("ValidateGAPDoc: cannot call 'XMLValidate'");
+    return fail;
+  fi;
+  if p.status.WEXITSTATUS = 0 then
+    return true;
+  fi;
+  if posinfo <> false then
+    lineposs := Positions(str, '\n');
+  fi;
+  err := SplitString(p.err, "\n", "");
+  err := List(err, r-> SplitString(r, "", ":"));
+  err := Filtered(err, r-> Length(r) > 3 and Int(r[2]) <> fail);
+  for r in err do 
+    r[2] := Int(r[2]);
+  od;
+  if Length(err) > 0 then
+    Print("ValidateGAPDoc found problems:\n");
+    for r in err do
+      Print("Line ", r[2], ": ", r[3], ":", r[4], "\n");
+      if posinfo <> false then
+        orig := OriginalPositionDocument(posinfo, lineposs[r[2]]);
+        Print("   source position: ", orig[1],", line ",orig[2],"\n");
+      fi;
+    od;
+  fi;
+  return p;
+end);
+

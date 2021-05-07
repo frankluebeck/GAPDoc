@@ -21,6 +21,8 @@ DeclareGlobalFunction("DisplayXMLStructure");
 DeclareGlobalFunction("ApplyToNodesParseTree");
 DeclareGlobalFunction("AddRootParseTree");
 DeclareGlobalFunction("RemoveRootParseTree");
+DeclareGlobalFunction("XMLValidate");
+DeclareGlobalFunction("ValidateGAPDoc");
 
 DeclareGlobalFunction("GetTextXMLTree");
 DeclareGlobalFunction("XMLElements");
