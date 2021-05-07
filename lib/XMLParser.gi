@@ -1105,6 +1105,10 @@ end);
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
+# avoid possible error message
+if not IsBound(IO_PipeThroughWithError) then
+  IO_PipeThroughWithError := fail;
+fi;
 InstallGlobalFunction(XMLValidate, function(str, dtdpath)
   local xmllint, p;
   # find xmllint
@@ -1121,6 +1125,9 @@ InstallGlobalFunction(XMLValidate, function(str, dtdpath)
           ["--noout", "--path", dtdpath, "--valid", "-" ], str);
   return p;
 end);
+if IO_PipeThroughWithError=fail then
+  Unbind(IO_PipeThroughWithError);
+fi;
 
 ##  <#GAPDoc Label="ValidateGAPDoc">
 ##  <ManSection >
