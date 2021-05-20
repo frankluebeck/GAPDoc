@@ -2,6 +2,11 @@
 
 1.6.4 -> 1.6.5
 
+- Fixed a problem with capital letters in Label attributes.
+
+- The GAPDoc style changing javascript code now works with manuals
+  served via https.
+
 - Introduced utility functions 'XMLValidate' and 'ValidateGAPDoc' for
   proper validation using the external program 'xmllint'.
 
