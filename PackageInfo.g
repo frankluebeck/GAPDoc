@@ -40,7 +40,7 @@ Persons := [
   IsAuthor := true,
   IsMaintainer := false,
   #Email := "neunhoef at mcs.st-and.ac.uk",
-  WWWHome := "http://www-groups.mcs.st-and.ac.uk/~neunhoef/",
+  #WWWHome := "http://www.math.rwth-aachen.de/~Max.Neunhoeffer/",
   #Place := "St Andrews",
   #Institution := "School of Mathematics and Statistics, St Andrews",
   )
