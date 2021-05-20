@@ -620,8 +620,8 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   GAPDoc2TextProcs.Book(r.content[i], par, pi);
   # adding .six entries from index
   for a in r.index do
-    if Length(a[2]) > 0 then
-      Add(r.six, [Concatenation(a[4], " ", a[2]), a[3], a[5]]);
+    if Length(a) > 5 then
+      Add(r.six, [Concatenation(a[4], " ", a[6]), a[3], a[5]]);
     else
       Add(r.six, [a[4],  a[3], a[5]]);
     fi;
