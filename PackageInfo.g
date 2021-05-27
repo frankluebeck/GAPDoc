@@ -62,7 +62,6 @@ PackageDoc := [rec(
   PDFFile := "doc/manual.pdf",
   SixFile := "doc/manual.six",
   LongTitle := "a meta package for GAP documentation",
-  Autoload := true
   ),
   rec(
   BookName := "GAPDoc Example",
@@ -71,7 +70,6 @@ PackageDoc := [rec(
   PDFFile := "example/manual.pdf",
   SixFile := "example/manual.six",
   LongTitle := "example help book for GAPDoc",
-  Autoload := false
   )],
 Dependencies := rec(
   GAP := "4.7.6",
