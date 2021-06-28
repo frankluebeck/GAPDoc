@@ -2,6 +2,9 @@
 
 1.6.4 -> 1.6.5
 
+- When a  BibTeX entry is translated to HTML and it contains `url = ...`
+  information, then the title is now a link to this URL.
+
 - Fixed a problem with capital letters in Label attributes.
 
 - The GAPDoc style changing javascript code now works with manuals

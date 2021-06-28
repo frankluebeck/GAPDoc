@@ -817,7 +817,13 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
     if ForAny(["author", "editor"], a-> IsBound(r.(a))) then
       Add(res, ',');
     fi;
-    Append(res, Concatenation("\n <i class='BibTitle'>", r.title, "</i>"));
+    # make title a link if .url is given
+    if IsBound( r.url ) then
+      Append( res, Concatenation( "\n<a href=\"", r.url, "\">",
+                       "<i class='BibTitle'>", r.title, "</i></a>" ) );
+    else
+      Append(res, Concatenation("\n <i class='BibTitle'>", r.title, "</i>"));
+    fi;
   fi;
   if IsBound(r.booktitle) then
     Append( res, ",\n " );
@@ -903,7 +909,7 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
     Append(res, Concatenation(",\n<span class='BibHowpublished'>", 
                 r.howpublished, "</span>"));
   fi;
- 
+  # a private extension of the author
   if IsBound(r.BUCHSTABE) then
     Append(res, Concatenation("<br />\nEinsortiert unter ", 
                 r.BUCHSTABE, ".<br />\n"));
