@@ -1785,7 +1785,8 @@ InstallGlobalFunction(StringBibXMLEntry, function(arg)
   if IsBound(STRINGBIBXMLHDLR.(type)) then
     return STRINGBIBXMLHDLR.(type)(r);
   else
-    InfoBibTools(1, "#W Don't know how to make a string of type ", type, "\n");
+    Info(InfoBibTools, 1,
+         "#W Don't know how to make a string of type ", type, "\n");
     return fail;
   fi;
 end);
