@@ -472,7 +472,8 @@ end);
 # non-documented utility
 ##  normalizes the Args attribute in function like elements
 InstallGlobalFunction(NormalizedArgList, function(argl)
-  local pos, opt, f, tr, g;
+  local pr, pos, opt, f, tr, g;
+  ##pr := argl;
   # first optional arguments
   pos := Position(argl, ':');
   if pos <> fail then
@@ -510,46 +511,73 @@ InstallGlobalFunction(NormalizedArgList, function(argl)
     od;
   end;
   tr := f(argl);
-  # put it back in a string with ','s and '[]'s in the right places
-  g := function(tr, ne)
-    local res, r, a, pos;
+  # put it back in a string with ','s and '[]'s in appropriate places
+  g := function(tr, prev, more)
+    local res, pos, opt, a;
     res := "";
-    for a in tr do
-      if IsString(a) then
-        if ne then
+    if prev then
+      # case with at least one previous argument
+      for a in tr do
+        if IsString(a) then
           Append(res, ", ");
-        elif Length(res) > 0 then
-##            Append(res, "[,]");
-          pos := Length(res);
-          while pos > 0 and res[pos] in " []," do
-            pos := pos - 1;
-          od;
-          Add(res, ',', pos+1);
-          Add(res, ' ', pos+2);
+          Append(res, a);
+        else
+          Append(res, "[");
+          Append(res, g(a, true, more));
+          Append(res, "]");
         fi;
-        ne := true;
-        Append(res, a);
+      od;
+    elif more then
+      # case with at least one argument following
+      for a in tr do
+        if IsString(a) then
+          Append(res, a);
+          Append(res, ", ");
+        else
+          Append(res, "[");
+          Append(res, g(a, false, more));
+          Append(res, "]");
+        fi;
+      od;
+    else
+      # position of first non-optional argument
+      pos := First([1..Length(tr)], i-> IsString(tr[i]));
+      if IsInt(pos) then
+          Append(res, g(tr{[1..pos-1]}, false, true));
+          Append(res, tr[pos]);
+          Append(res, g(tr{[pos+1..Length(tr)]}, true, false));
       else
-        r := Concatenation("[", g(a, ne), "]");
-        if not ne and Length(res) > 0  then
-##            Append(res, "[,]");
-          pos := Length(res);
-          while pos > 0 and res[pos] in " []," do
-            pos := pos - 1;
-          od;
-          Add(res, ',', pos+1);
-          Add(res, ' ', pos+2);
-        fi;
-        Append(res, r);
+        opt := false;
+        for a in tr do
+          if not prev and opt then
+            Append(res, "[,] ");
+          fi;
+          if IsString(a) then
+            if prev then
+              Append(res, ", ");
+            fi;
+            Append(res, a);
+            prev := true;
+          else
+            Append(res, "[");
+            Append(res, g(a, prev, false));
+            Append(res, "]");
+            opt := true;
+          fi;
+        od;
       fi;
-    od;
+    fi;
     return res;
   end;
-  tr := g(tr, false);
+
+  tr := g(tr, false, false);
   if Length(opt) > 0 then
     Append(tr, ": ");
     Append(tr, opt);
   fi;
+  ##if pr <> tr then
+  ##  AppendTo("/cache/guck","\n",pr,"\n",tr);   
+  ##fi;
   return tr;
 end);
 
