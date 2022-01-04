@@ -2,6 +2,14 @@
 
 1.6.4 -> 1.6.5
 
+- Some more translations from LaTeX to unicode (from examples in 
+  MathSciNet).
+
+- Now we handle \ge and \le in <M> translations.
+
+- Fixed commas in normalized argument lists with complicated optional
+  arguments.
+
 - When a  BibTeX entry is translated to HTML and it contains `url = ...`
   information, then the title is now a link to this URL.
 
