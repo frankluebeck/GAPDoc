@@ -413,6 +413,9 @@ CallFuncList(function()
       fi;
     fi;
   od;
+  # synomyms
+  TEXTMTRANSLATIONS.le := TEXTMTRANSLATIONS.leq;
+  TEXTMTRANSLATIONS.ge := TEXTMTRANSLATIONS.geq;
   Sort(SimplifiedUnicodeTable);
 end, []);
 
