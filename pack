@@ -15,16 +15,27 @@ if [ $start'X' != 'yX' ]; then
   exit 2
 fi
 
-dirnam=GAPDoc-`cat ./version`
-rm -rf ttttmp
-echo "Checking out current version into ttttmp/pkg/"$dirnam" . . ."
-mkdir -p ttttmp/pkg/$dirnam
-cd ttttmp/pkg/$dirnam
-cp -a ../../../.git .
-git co master .
-echo building documentation
-../../../../../bin/gap.sh -r -l "../..;" < makedocrel.g > /dev/null
+# the GAP version to use for building documentation (with
+# relative external links)
+USEGAP=/usr/local/ca/gap-rsync
 
+CDIR=`pwd`
+dirnam=GAPDoc-`cat ./version`
+
+cd /cache
+mkdir -p gaptmp
+cd gaptmp
+rsync -av $USEGAP/ ./
+cd pkg
+rm -rf GAPDoc*
+echo "Checking out current version into /cache/gaptmp/pkg/"$dirnam" . . ."
+mkdir $dirnam
+cd $dirnam
+cp -a $CDIR/.git .
+git co master .
+echo "building documentation (twice for cross refs)"
+echo "" | ../../gap -r -l "../..;"  makedocrel.g 
+echo "" | ../../gap -r -l "../..;"  makedocrel.g 
 
 echo "removing unwanted files . . ."
 rm -r pack TODO clean index.html pkgreadme.css
@@ -37,18 +48,23 @@ cd ..
 tar cf $dirnam.tar $dirnam
 bzip2 -9 $dirnam.tar
 echo Cleaning up
-mv  $dirnam.tar.bz2 ../..
-cd ../..
-rm -rf ttttmp
+mv  $dirnam.tar.bz2 $CDIR/
+cd $CDIR
+
+echo "Remove copy of GAP in /cache/gaptmp (y/n)?"
+read -n 1 start
+echo
+if [ $start'X' == 'yX' ]; then
+  echo "Ok, removing ..."
+  rm -rf /cache/gaptmp
+fi
 
 echo New archive in ./$dirnam.tar.bz2
 echo If ok then call
-echo "      ~/gap4/dev/DistributionUpdate/maindist/repack.py "$dirnam".tar.bz2"
+echo "      repack.py "$dirnam".tar.bz2"
 
 echo "If you are happy with this archive 
 #tag the current state before"
-#echo "committing further changes, e.g.: "
-#echo "       cvs tag REL"`sed -e "s/\./_/g" version`
 echo "use the ./toweb script to update the webpage."
 echo "Then change version number back to '1.dev'."
 
