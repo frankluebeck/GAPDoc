@@ -1640,6 +1640,38 @@ function(entry, elt, type, strings, opts)
     return hdlr(entry, elt, type, strings, opts);
   fi;
 end);
+# special handlers for Markdown (same as for Text except for URL)
+for field in [ "C", "M", "author", "editor" ] do
+  AddHandlerBuildRecBibXMLEntry( field, "Markdown",
+      RECBIBXMLHNDLR.( field ).Text );
+od;
+AddHandlerBuildRecBibXMLEntry( "URL", "Markdown",
+function(entry, elt, text, strings, opts)
+  local f, txt, res;
+  f := First(elt.content, a-> a.name = "LinkText");
+  if f <> fail then
+    txt := ContentBuildRecBibXMLEntry(entry, f, text, strings, opts);
+    f := First(elt.content, a-> a.name = "Link");
+    if f = fail then
+      Error("#I  <URL>: either use content and 'Text' attribute of elements ",
+              "\n#I  <Link> and <LinkText>.\n");
+    else
+      res := ContentBuildRecBibXMLEntry(entry, f, text, strings, opts);
+      NormalizeWhitespace(res);
+    fi;
+  else
+    res := ContentBuildRecBibXMLEntry(entry, elt, text, strings, opts);
+    NormalizeWhitespace(res);
+    if IsBound(elt.attributes.Text) then
+      txt := elt.attributes.Text;
+    else
+      txt := res;
+    fi;
+  fi;
+
+  return Concatenation( "[", txt, "](", res, ")" );
+end );
+
 
 RECBIBXMLHNDLR.Finish := rec();
 # Finish functions
@@ -1742,8 +1774,14 @@ end);
 ##  If <C>options.MathJax</C> is bound and has the value <K>true</K> then 
 ##  formulae are encoded for display on pages with <Package>MathJax</Package>
 ##  support.</Item>
+##  <Mark><C>"Markdown"</C></Mark>
+##  <Item>A representation of the bibliography entry in Markdown format is 
+##  returned. If <C>options.markup</C> is bound it must be a record which
+##  is used in the same way as <C>options.ansi</C> for the <C>"Text"</C>
+##  version.
+##  </Item>
 ##  </List>
-## 
+##  ## 
 ##  We use again the file shown in the example for <Ref
 ##  Func="ParseBibXMLextFiles"/>.
 ##  <Example>
@@ -1810,6 +1848,7 @@ end);
 STRINGBIBXMLHDLR.BibTeX := StringBibAsBib;
 STRINGBIBXMLHDLR.Text := StringBibAsText;
 STRINGBIBXMLHDLR.HTML := StringBibAsHTML;
+STRINGBIBXMLHDLR.Markdown:= StringBibAsMarkdown;
 
 # Utility for a sort key, can be given as field 'sortkey' or <other
 # type="sortkey"> element, respectively: as list of strings separated by ",". 

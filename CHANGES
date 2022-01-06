@@ -2,6 +2,8 @@
 
 1.6.4 -> 1.6.5
 
+- Added a first version of `StringBibXMLEntry` for Markdown format.
+
 - Some more translations from LaTeX to unicode (from examples in 
   MathSciNet).
 

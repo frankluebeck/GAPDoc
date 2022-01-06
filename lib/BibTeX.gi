@@ -1118,6 +1118,206 @@ InstallGlobalFunction(PrintBibAsText, function(arg)
   PrintFormattedString(CallFuncList(StringBibAsText, arg));
 end);
 
+# Finally a conversion of bib entries to markdown
+##  arg: r[, markup] 
+InstallGlobalFunction(StringBibAsMarkdown, function( arg )
+  local r, markup, str, txt, s, f, field, booklike;
+
+  r := arg[1];
+  markup := rec(
+    Bib_author := [ "**", "**" ],  # emphasize
+    Bib_title := [ "", "" ],
+    Bib_journal := [ "", "" ],
+    Bib_volume := [ "*", "*" ],    # italic
+    Bib_edition := ["", ""],
+    Bib_year := ["", ""],
+    Bib_note := ["", ""],
+    Bib_number:= [ "(", ")" ],   # HTML version has brackets, Text version not?
+    Bib_chapter := ["Chapter ", ""],
+  );
+  markup.Bib_editor := markup.Bib_author;
+  markup.Bib_subtitle := markup.Bib_title;
+  if Length(arg) = 2  and arg[2] <> true then
+    for f in RecNames(arg[2]) do
+      markup.(f) := arg[2].(f);
+    od;
+  elif IsBound(r.From) and IsBound(r.From.options) and
+            IsBound(r.From.options.markup) then
+    for f in RecNames(r.From.options.markup) do
+      markup.(f) := r.From.options.markup.(f);
+    od;
+  else
+  fi;
+  # some details are set differently for book-like references
+  if r.Type in [ "book", "booklet", "manual", "techreport", "mastersthesis",
+                 "phdthesis", "proceedings" ] then
+    booklike := true;
+  else
+    booklike := false;
+  fi;
+  
+  if not IsBound(r.Label) then
+    Info(InfoBibTools, 1, "#W WARNING: no .Label in Bib-record");
+    Info(InfoBibTools, 2, ":\n", r);
+    Info(InfoBibTools, 1, "\n");
+    return;
+  fi;
+  str := "";
+  # helper adds markup
+  txt := function(arg)
+    local field, s, pp, pre, post;
+    field := arg[1];
+    if Length(arg) > 1 then
+      s := arg[2];
+    elif IsBound(r.(field)) then
+      s := r.(field);
+    else
+      return;
+    fi;
+    if not IsBound(markup.(Concatenation("Bib_", field))) then
+      Append(str, s);
+    else
+      pp := markup.(Concatenation("Bib_", field));
+      if not IsString(pp) then
+        pre := pp[1];
+        post := pp[2];
+      else
+        Error( "this should not happen" );
+      fi;
+      Append(str, pre);
+      Append(str, s);
+      Append(str, post);
+    fi;
+  end;
+
+  # Start with the key in square brackets.
+  # If an MR number is available then create a link to the MR entry.
+  if IsBound(r.key) then
+    s := r.key;
+  elif IsBound(r.printedkey) then
+    s := r.printedkey;
+  else
+    s := r.Label;
+  fi;
+  Append(str, "\\[");
+  if IsBound( r.mrnumber ) then
+    Append( str, "[" );
+    txt( "Label", s );
+    Append( str, "](http://www.ams.org/mathscinet-getitem?mr=" );
+    if ' ' in r.mrnumber then
+      Append( str, r.mrnumber{ [ 1 .. Position( r.mrnumber, ' ' )-1 ] } );
+    else
+      Append( str, r.mrnumber );
+    fi;
+    Append( str, ")" );
+  else
+    txt("Label", s);
+  fi;
+  Append(str, "\\] ");
+  # we assume with the "," delimiters that at least one of .author,
+  # .editor or .title exist
+  txt("author");
+  if IsBound(r.editor) then
+    Append(str, " ("); txt("editor"); 
+    if PositionSublist( r.editor, " and " ) = fail then
+      Append(str, ", Ed.)");
+    else
+      Append(str, ", Eds.)");
+    fi;
+  fi;
+  if IsBound(r.title) then
+    if IsBound(r.author) or IsBound(r.editor) then
+      Append(str, ", ");
+    fi;
+    if IsBound( r.url ) then
+      # Add a link from the title to the location of the paper.
+      Append( str, "[" );
+      txt( "title" );
+      Append( str, "](" );
+      Append( str, r.url );
+      Append( str, ")" );
+    else
+      txt("title");
+    fi;
+  fi;
+
+  if IsBound(r.booktitle) then
+    Append(str, ", ");
+    if r.Type in ["inproceedings", "incollection"] then
+      Append(str, " in ");
+    fi;
+    txt("booktitle");
+  fi;
+  if IsBound(r.subtitle) then
+    Append(str, "–"); txt("subtitle");
+  fi;
+
+  # standard BibTeX-styles typeset a type if not given
+  if r.Type = "phdthesis" and not IsBound(r.type) then
+    r := ShallowCopy(r);
+    r.type := "Ph.D. thesis";
+  elif r.Type = "mastersthesis" and not IsBound(r.type) then
+    r := ShallowCopy(r);
+    r.type := "Master's thesis";
+  fi;
+  for field in [ "journal", "type", "organization", "institution", 
+                 "publisher", "school",
+                 "edition", "series", "volume", "number", "address",
+                 "year", "pages", "chapter", "note", "notes", 
+                 "howpublished" ] do
+    if IsBound(r.(field)) then
+      if field = "year" then
+        Append(str, " (");
+        txt(field);
+        Append(str, ")");
+      elif field = "pages" then
+        if booklike then
+          Append(str, ", ");
+          txt( field, ReplacedString( r.( field ), "--", "&ndash;" ) );
+          Append(str, " pages");
+        else
+          Append(str, ", ");
+          txt( field, ReplacedString( r.( field ), "--", "&ndash;" ) );
+        fi;
+      elif field = "edition" then
+        Append(str, ", ");
+        txt(field);
+        Append(str, " edition");
+      elif field in ["note", "notes"] then
+        Append(str, ", (");
+        txt(field);
+        Append(str, ")");
+      elif field = "chapter" then
+        Append(str, ", Chapter ");
+        txt(field);
+      elif field = "number" then   # Text version has comma before, HTML not
+        Append(str, " "); 
+        txt(field);
+      else
+        Append(str, ", "); 
+        txt(field);
+      fi;
+    fi;
+  od;
+  
+  # some LDFM specific
+  if IsBound(r.BUCHSTABE) then
+    Append(str, Concatenation(", Einsortiert unter ", r.BUCHSTABE));
+  fi;
+  if IsBound(r.LDFM) then
+    Append(str, Concatenation(", Signatur ", r.LDFM));
+  fi;
+
+  Add(str, '.');
+  NormalizeWhitespace( str );
+  Add(str, '\n');
+  return str;
+end);
+
+InstallGlobalFunction(PrintBibAsMarkdown, function(arg)
+  PrintFormattedString(CallFuncList(StringBibAsMarkdown, arg));
+end);
+
 ##  <#GAPDoc Label="SearchMRSection">
 ##  <Section Label="MathSciNet">
 ##  <Heading>Getting &BibTeX; entries from 
