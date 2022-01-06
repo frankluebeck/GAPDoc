@@ -1781,7 +1781,7 @@ end);
 ##  version.
 ##  </Item>
 ##  </List>
-##  ## 
+##   
 ##  We use again the file shown in the example for <Ref
 ##  Func="ParseBibXMLextFiles"/>.
 ##  <Example>

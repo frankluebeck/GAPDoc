@@ -10,9 +10,9 @@ SetPackageInfo( rec(
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
-Version := "1.dev",
+Version := "1.6.5",
 ##  DD/MM/YYYY format:
-Date := "11/08/2020",
+Date := "06/01/2022",
 License := "GPL-2.0-or-later",
 SourceRepository := rec(
     Type := "git",
@@ -20,7 +20,7 @@ SourceRepository := rec(
 ),
 IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
 ArchiveURL := 
-          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.6.4",
+          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.6.5",
 ArchiveFormats := ".tar.bz2 .tar.gz -win.zip",
 Persons := [
   rec(
@@ -31,8 +31,8 @@ Persons := [
   Email := "Frank.Luebeck@Math.RWTH-Aachen.De",
   WWWHome := "http://www.math.rwth-aachen.de/~Frank.Luebeck",
   Place := "Aachen",
-  Institution := "Lehrstuhl D für Mathematik, RWTH Aachen",
-  PostalAddress := "Dr. Frank Lübeck\nLehrstuhl D für Mathematik\nRWTH Aachen\nTemplergraben 64\n52062 Aachen\nGERMANY\n"
+  Institution := "Lehrstuhl für Algebra und Zahlentheorie, RWTH Aachen",
+  PostalAddress := "Dr. Frank Lübeck\nLehrstuhl für Algebra und Zahlentheorie\nRWTH Aachen\nPontdriesch 14/16\n52062 Aachen\nGERMANY\n"
   ),
   rec(
   LastName := "Neunhöffer",
