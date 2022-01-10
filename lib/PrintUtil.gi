@@ -200,9 +200,9 @@ end);
 ##  
 ##  moved into lib/string.g{d,i}
 
-# GAP3 tyœe dispatcher for viewing and printing records
+# GAP3 type dispatcher for viewing and printing records
 InstallMethod(ViewObj, [IsRecord], function(r)
-  if IsBound(r.operations) and IsBound(r.operations.ViewObj) then
+  if IsBound(r.operations) and IsRecord(r.operations) and IsBound(r.operations.ViewObj) then
     r.operations.ViewObj(r);
   else
     TryNextMethod();
@@ -210,7 +210,7 @@ InstallMethod(ViewObj, [IsRecord], function(r)
 end);
 
 InstallMethod(PrintObj, [IsRecord], function(r)
-  if IsBound(r.operations) and IsBound(r.operations.PrintObj) then
+  if IsBound(r.operations) and IsRecord(r.operations) and IsBound(r.operations.PrintObj) then
     r.operations.PrintObj(r);
   else
     TryNextMethod();
