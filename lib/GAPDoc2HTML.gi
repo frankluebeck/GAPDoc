@@ -2071,7 +2071,7 @@ GAPDoc2HTMLProcs.Table := function(r, s)
       GAPDoc2HTMLProcs.Row(a, str, al);
     fi;
   od;
-  Append(str, "</table><br /><p>&nbsp;</p><br />\n");
+  Append(str, "</table><br />\n");
   Append(str, "</div>\n\n");
   Add(s, r.count);
   Add(s, str);
