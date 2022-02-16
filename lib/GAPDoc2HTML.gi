@@ -800,6 +800,11 @@ GAPDoc2HTMLProcs.EscapeAttrVal := function(str)
   str := SubstitutionSublist(str, "&", "&amp;");
   str := SubstitutionSublist(str, "<", "&lt;");
   str := SubstitutionSublist(str, ">", "&gt;");
+  # for MathJax
+  str := SubstitutionSublist(str, "\\[", "<span>\\</span>[");
+  str := SubstitutionSublist(str, "\\]", "<span>\\</span>]");
+  str := SubstitutionSublist(str, "\\(", "<span>\\</span>(");
+  str := SubstitutionSublist(str, "\\)", "<span>\\</span>)");
   return str;
 end;
 
@@ -1739,7 +1744,8 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
         ref := Concatenation("<a href=\"", ref[6], "\">", rattr[1], 
                r.attributes.Text, rattr[2], "</a>");
       else
-        ref := Concatenation("<a href=\"", ref[6], "\">", rattr[1], ref[1],
+        ref := Concatenation("<a href=\"", ref[6], "\">", rattr[1], 
+               GAPDoc2HTMLProcs.EscapeAttrVal(ref[1]),
                rattr[2], "</a>");
       fi;
     elif ref <> fail then
