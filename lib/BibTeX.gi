@@ -250,7 +250,9 @@ end);
 ##  </Listing> 
 ##  
 ##  <Example>
-##  gap> bib := ParseBibFiles("doc/test.bib");
+##  gap> gddirs := DirectoriesPackageLibrary("gapdoc","doc");;
+##  gap> f := Filename(gddirs, "test.bib");;
+##  gap> bib := ParseBibFiles(f);
 ##  [ [ rec( From := rec( BibTeX := true ), Label := "AB2000", 
 ##            Type := "article", author := "Fritz A. First and Sec, X. Y."
 ##              , journal := "Important Journal", title := "Short", 
@@ -423,7 +425,9 @@ end);
 ##  We continue the example from <Ref  Func="ParseBibFiles"  />.
 ##  
 ##  <Example>
-##  gap> bib := ParseBibFiles("doc/test.bib");;
+##  gap> gddirs := DirectoriesPackageLibrary("gapdoc","doc");;
+##  gap> f := Filename(gddirs, "test.bib");;
+##  gap> bib := ParseBibFiles(f);;
 ##  gap> NormalizedNameAndKey(bib[1][1].author);
 ##  [ "First, F. A. and Sec, X. Y.", "FS", "firstsec", 
 ##    [ [ "First", "F. A.", "Fritz A." ], [ "Sec", "X. Y.", "X. Y." ] ] ]
@@ -1373,7 +1377,7 @@ end);
 ##  Func="ParseBibStrings"/>. It tries to generate some sensible input from this
 ##  information for <Ref Func="SearchMR"/> and calls that function. <P/>
 ##  
-##  <Example>
+##  <Log>
 ##  gap> ll := SearchMR(rec(Author:="Gauss", Title:="Disquisitiones"));;
 ##  gap> ll2 := List(ll, HeuristicTranslationsLaTeX2XML.Apply);;
 ##  gap> bib := ParseBibStrings(Concatenation(ll2));;
@@ -1397,7 +1401,7 @@ end);
 ##  Press, New Haven, Conn.-London, Translated into English by Arthur A.
 ##  Clarke, S. J (1966), xx+472 pages.
 ##  
-##  </Example>
+##  </Log>
 ##  </Description>
 ##  
 ##  

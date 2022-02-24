@@ -34,10 +34,10 @@ Each XML document should have a head which states that it is an XML document
 in  some encoding  and which  XML-defined  language is  used. In  case of  a
 &GAPDoc; document this should always look as in the following example.
 
-<Log>
+<Listing Type="Example">
 <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Book SYSTEM "gapdoc.dtd">]]>
-</Log>
+</Listing>
 
 See&nbsp;<Ref  Subsect="XMLenc"/>  for  a   remark  on  the  <Q>encoding</Q>
 statement.<P/>

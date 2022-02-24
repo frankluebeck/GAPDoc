@@ -36,13 +36,13 @@ First   we  construct   the   complete  XML-document   as   a  string   with
 <Ref   Func="ComposedDocument"/>.     This   interprets    recursively   the
 <C>&lt;#Include ...></C>-statements.
 
-<Log>
+<Listing Type="Example">
 gap> path := Directory("/my/book/path");;
 gap> main := "MyBook.xml";;
 gap> files := ["../lib/a.gd", "../lib/b.gi"];;
 gap> bookname := "MyBook";;
 gap> doc := ComposedDocument("GAPDoc", path, main, files, true);;
-</Log>
+</Listing>
 
 Now  <C>doc</C> is  a  list with  two  entries, the  first  is a  string
 containing  the XML-document,  the second  gives information  from which
@@ -53,11 +53,11 @@ Next  we parse  the document  and store  its structure  in a  tree-like data
 structure. The  commands for  this are <Ref  Func="ParseTreeXMLString"/> and
 <Ref Func="CheckAndCleanGapDocTree"/>. 
 
-<Log>
+<Listing Type="Example">
 gap> r := ParseTreeXMLString(doc[1], doc[2]);;
 gap> CheckAndCleanGapDocTree(r);
 true
-</Log>
+</Listing>
 
 We start  to produce  a text version  of the manual,  which can  be read
 in  a  terminal  (window).  The command  is  <Ref  Func="GAPDoc2Text"/>.
@@ -71,10 +71,10 @@ and  other  attributes.  For  the  bibliography we  have  to  tell  <Ref
 Func="GAPDoc2Text"/> the location of the &BibTeX; database by specifying
 a <C>path</C> as second argument.
 
-<Log>
+<Listing Type="Example">
 gap> t := GAPDoc2Text(r, path);;
 gap> GAPDoc2TextPrintTextFiles(t, path);
-</Log>
+</Listing>
 
 This   command  constructs   all   parts  of   the  document   including
 table  of   contents,  bibliography   and  index.  The   functions  <Ref
@@ -92,16 +92,16 @@ Func="GAPDoc2LaTeX"/> returns  a string  containing the  &LaTeX; source.
 The utility  function <Ref Func="FileString"/>  writes the content  of a
 string to a file, we choose <F>MyBook.tex</F>.
 
-<Log>
+<Listing Type="Example">
 gap> l := GAPDoc2LaTeX(r);;
 gap> FileString(Filename(path, Concatenation(bookname, ".tex")), l);
-</Log>
+</Listing>
 
 Assuming  that  you  have  a sufficiently  good  installation  of  &TeX;
 available  (see  <Ref Func="GAPDoc2LaTeX"/>  for  details)  this can  be
 processed with a series of commands like in the following example.
 
-<Log>
+<Listing Type="Example">
 cd /my/book/path
 pdflatex MyBook
 bibtex MyBook
@@ -109,7 +109,7 @@ pdflatex MyBook
 makeindex MyBook
 pdflatex MyBook
 mv MyBook.pdf manual.pdf
-</Log>
+</Listing>
 
 After this  we have  a <C>pdf</C>-version  of the  document in  the file
 <F>manual.pdf</F>. It  contains hyperlink information which  can be used
@@ -128,10 +128,10 @@ collected by the text converter  and then print a <F>manual.six</F> file
 which is read by &GAP; when the manual is loaded. This is done with <Ref
 Func="AddPageNumbersToSix"/> and <Ref Func="PrintSixFile"/>.
 
-<Log>
+<Listing Type="Example">
 gap> AddPageNumbersToSix(r, Filename(path, "MyBook.pnr"));
 gap> PrintSixFile(Filename(path, "manual.six"), r, bookname);
-</Log>
+</Listing>
 
 Finally  we  produce  an  HTML-version  of the  document  and  write  it
 (chapter-wise)  into  files   <F>chap0.html</F>,  <F>chap1.html</F>  and
@@ -143,10 +143,10 @@ see  <Ref Subsect="StyleSheets"/>  for   more  details.   The  argument
 <C>path</C>  of   <Ref  Func="GAPDoc2HTML"/>  specifies   the  directory
 containing the &BibTeX; database files.
 
-<Log>
+<Listing Type="Example">
 gap> h := GAPDoc2HTML(r, path);;
 gap> GAPDoc2HTMLPrintHTMLFiles(h, path);
-</Log>
+</Listing>
 
 <ManSection >
 <Func Arg="path, main, files, bookname[, gaproot][, ...]" Name="MakeGAPDocDoc" />

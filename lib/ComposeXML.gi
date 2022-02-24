@@ -63,10 +63,10 @@
 ##  document (e.g., when the missing  pieces are complete paragraphs or
 ##  sections).<P/>
 ##  
-##  <Log>
+##  <Listing Type="Example">
 ##  gap> doc := ComposedDocument("GAPDoc", "/my/dir", "manual.xml", 
 ##  > ["../lib/func.gd", "../lib/func.gi"], true);;
-##  </Log>
+##  </Listing>
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>

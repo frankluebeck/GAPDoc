@@ -208,9 +208,11 @@ end);
 ##  <Ref Sect="BibXMLformat"/>.
 ##  
 ##  <Example>
-##  gap> bib := ParseBibXMLextFiles("doc/testbib.xml");;
-##  gap> RecNames(bib);
-##  [ "entries", "strings", "entities" ]
+##  gap> gddirs := DirectoriesPackageLibrary("gapdoc","doc");;
+##  gap> f := Filename(gddirs, "testbib.xml");;
+##  gap> bib := ParseBibXMLextFiles(f);;
+##  gap> Set(RecNames(bib));
+##  [ "entities", "entries", "strings" ]
 ##  gap> bib.entries;
 ##  [ &lt;BibXMLext entry: AB2000> ]
 ##  gap> bib.strings;
@@ -368,7 +370,9 @@ end);
 ##  shown in the example for <Ref Func="ParseBibFiles"/>.
 ##  
 ##  <Example><![CDATA[
-##  gap> bib := ParseBibFiles("doc/test.bib");;
+##  gap> gddirs := DirectoriesPackageLibrary("gapdoc","doc");;
+##  gap> f := Filename(gddirs, "test.bib");;
+##  gap> bib := ParseBibFiles(f);;
 ##  gap> str := StringBibAsXMLext(bib[1][1], bib[2], bib[3]);;
 ##  gap> Print(str, "\n");
 ##  <entry id="AB2000"><article>
@@ -969,7 +973,9 @@ end;
 ##  <Ref Func="ParseBibXMLextFiles"/> to an equivalent XML file.
 ##  
 ##  <Example>
-##  gap> bib := ParseBibXMLextFiles("doc/testbib.xml");;
+##  gap> gddirs := DirectoriesPackageLibrary("gapdoc","doc");;
+##  gap> f := Filename(gddirs, "testbib.xml");;
+##  gap> bib := ParseBibXMLextFiles(f);;
 ##  gap> WriteBibXMLextFile("test.xml", bib);
 ##  </Example>
 ##  </Description>
@@ -1089,7 +1095,9 @@ end);
 ##  We use again the file shown in the example for <Ref
 ##  Func="ParseBibXMLextFiles"/>.
 ##  <Example>
-##  gap> bib := ParseBibXMLextFiles("doc/testbib.xml");;
+##  gap> gddirs := DirectoriesPackageLibrary("gapdoc","doc");;
+##  gap> f := Filename(gddirs, "testbib.xml");;
+##  gap> bib := ParseBibXMLextFiles(f);;
 ##  gap> e := bib.entries[1];; strs := bib.strings;;
 ##  gap> Print(RecBibXMLEntry(e, "BibTeX", strs), "\n");
 ##  rec(
@@ -1784,8 +1792,10 @@ end);
 ##   
 ##  We use again the file shown in the example for <Ref
 ##  Func="ParseBibXMLextFiles"/>.
-##  <Example>
-##  gap> bib := ParseBibXMLextFiles("doc/testbib.xml");;
+##  <Log>  <!-- edited for readability -->
+##  gap> gddirs := DirectoriesPackageLibrary("gapdoc","doc");;
+##  gap> f := Filename(gddirs, "testbib.xml");;
+##  gap> bib := ParseBibXMLextFiles(f);;
 ##  gap> e := bib.entries[1];; strs := bib.strings;;
 ##  gap> ebib := StringBibXMLEntry(e, "BibTeX", strs);;
 ##  gap> PrintFormattedString(ebib);
@@ -1811,6 +1821,7 @@ end);
 ##  formula  x^y  -  l_{i+1}  ?  R, Important Journal, 13 (2000), 13-25,
 ##  (Online        data        at        Bla        Bla        Publisher
 ##  (http://www.publish.com/~ImpJ/123#data)).
+##  
 ##  gap> ehtml := StringBibXMLEntry(e, "HTML", strs, rec(MathJax := true));;
 ##  gap> ehtml := Encode(Unicode(ehtml), GAPInfo.TermEncoding);;
 ##  gap> PrintFormattedString(ehtml);
@@ -1828,7 +1839,7 @@ end);
 ##  Publisher</a></span>).
 ##  </p>
 ##  ]]>
-##  </Example>
+##  </Log>
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
