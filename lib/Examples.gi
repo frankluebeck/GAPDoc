@@ -13,9 +13,9 @@
 
 ##  <#GAPDoc Label="ExtractExamples">
 ##  <ManSection >
-##  <Func Arg="path, main, files, units" Name="ExtractExamples" />
+##  <Func Arg="path, main, files, units[, withLog]" Name="ExtractExamples" />
 ##  <Returns>a list of lists</Returns>
-##  <Func Arg="tree, units" Name="ExtractExamplesXMLTree" />
+##  <Func Arg="tree, units[, withLog]" Name="ExtractExamplesXMLTree" />
 ##  <Returns>a list of lists</Returns>
 ##  <Description>
 ##  The  argument   <A>tree</A>  must   be  a   parse tree of a
@@ -34,7 +34,14 @@
 ##  The arguments <A>path</A>, <A>main</A> and <A>files</A> of <Ref
 ##  Func="ExtractExamples"/> are the same as for <Ref Func="ComposedDocument"/>.
 ##  This function first contructs and parses the &GAPDoc; document and then
-##  applies <Ref Func="ExtractExamplesXMLTree"/>.
+##  applies <Ref Func="ExtractExamplesXMLTree"/>.<P/>
+##  
+##  If the optional argument <A>withLog</A> is given and <K>true</K> then
+##  <C>&lt;Log></C> elements are handled like <C>&lt;Example></C> elements.
+##  This allows to put examples which can only run under certain conditions,
+##  e.g., when certain external programs are available, into <C>&lt;Log></C>
+##  elements. (Put example code which should also not be included by this
+##  variant into <C>&lt;Listing></C> elements.)
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
@@ -102,8 +109,9 @@ InstallGlobalFunction(ManualExamplesXMLTree, function( tree, units )
 end);
 fi;
 
-InstallGlobalFunction(ExtractExamplesXMLTree, function( tree, units )
-  local secelts, sec, exelts, orig, res, l, b, e, a, ex;
+InstallGlobalFunction(ExtractExamplesXMLTree, 
+function( tree, units, withLog... )
+  local secelts, sec, eltnames, exelts, orig, res, l, b, e, a, ex;
   if units = "Chapter" then
     secelts := ["Chapter", "Appendix"];
   elif units = "Section" then
@@ -120,7 +128,12 @@ InstallGlobalFunction(ExtractExamplesXMLTree, function( tree, units )
   else
     sec := [tree];
   fi;
-  exelts := List(sec, a-> XMLElements(a, ["Example"]));
+  if Length(withLog) > 0 and withLog[1] = true then
+    eltnames := ["Example", "Log"];
+  else
+    eltnames := ["Example"];
+  fi;
+  exelts := List(sec, a-> XMLElements(a, eltnames));
   if IsBound(tree.inputorigins) then
     orig := tree.inputorigins;
   elif IsBound(tree.root) and IsBound(tree.root.inputorigins) then
@@ -158,11 +171,17 @@ end);
 fi;
 
 # compose and parse document, then extract examples units-wise
-InstallGlobalFunction(ExtractExamples, function( path, main, files, units )
-  local str, xmltree;
+InstallGlobalFunction(ExtractExamples, 
+function( path, main, files, units, opt... )
+  local str, xmltree, withLog;
+  if Length(opt) > 0 and opt[1] = true then
+    withLog := true;
+  else
+    withLog := false;
+  fi;
   str:= ComposedDocument( "GAPDoc", path, main, files, true );
   xmltree:= ParseTreeXMLString( str[1], str[2] );
-  return ExtractExamplesXMLTree(xmltree, units);
+  return ExtractExamplesXMLTree(xmltree, units, withLog);
 end);
 
 ##  <#GAPDoc Label="TestExamples">
