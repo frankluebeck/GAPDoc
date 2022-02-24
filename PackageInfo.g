@@ -80,6 +80,7 @@ Dependencies := rec(
               "BibTeX installation to produce unified labels for refs"]
 ),
 AvailabilityTest := ReturnTrue,
+TestFile := "tst/test.tst",
 Keywords := ["GAP documentation", "help system", "XML", "pdf", "hyperlink",
             "unicode", "BibTeX", "BibXMLext"]
 ));

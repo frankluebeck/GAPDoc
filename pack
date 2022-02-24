@@ -37,6 +37,11 @@ echo "building documentation (twice for cross refs)"
 echo "" | ../../gap -r -l "../..;"  makedocrel.g 
 echo "" | ../../gap -r -l "../..;"  makedocrel.g 
 
+echo "creating test files"
+rm -rf tst
+mkdir tst
+echo "" | ../../gap -r -l "../..;" maketest.g
+
 echo "removing unwanted files . . ."
 rm -r pack TODO clean index.html pkgreadme.css
 rm -rf .git .gitignore
