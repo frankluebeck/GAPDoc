@@ -386,6 +386,7 @@ GAPDoc2LaTeXProcs.WHOLEDOCUMENT := function(r, str)
   ##  whole parse tree first to know the headings of text style forward
   ##  references
   GAPDoc2LaTeXProcs._labeledSections := rec();
+  r.root.norecursion := true;
   ApplyToNodesParseTree(r, function(rr) 
     if IsRecord(rr) and IsBound(rr.name)
        and rr.name in ["Chapter", "Section", "Subsection", "Appendix"] then
@@ -393,6 +394,7 @@ GAPDoc2LaTeXProcs.WHOLEDOCUMENT := function(r, str)
       GAPDoc2LaTeXProcs.(rr.name)(rr,"");
     fi;
   end);
+  Unbind(r.root.norecursion);
 
   ##  warn if no labels via .six available
   if not IsBound(r.six) then
@@ -722,9 +724,11 @@ GAPDoc2LaTeXProcs.ChapSect := function(r, str, sect)
       fi;
     fi;
     # the actual content
-    Append(str, "{\n");
-    GAPDoc2LaTeXContent(r, str);
-    Append(str, "}\n\n");
+    if not IsBound(r.root.norecursion) then
+      Append(str, "{\n");
+      GAPDoc2LaTeXContent(r, str);
+      Append(str, "}\n\n");
+    fi;
   fi;
 end;
 
