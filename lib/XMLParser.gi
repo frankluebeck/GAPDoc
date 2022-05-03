@@ -1096,8 +1096,8 @@ end);
 ##  The argument <A>doc</A>  must be a string which is  an XML document, and
 ##  <A>dtdpath</A> is a path containing the corresponding DTD file.
 ##  <P/>
-##  The function  returns <K>fail</K> if  the program <C>xmllint</C>  is not
-##  found.
+##  The function  returns <K>fail</K> if  the program <C>xmllint</C>  cannot
+##  be called.
 ##  <P/>
 ##  Otherwise    the    document    is   validated    via    the    external
 ##  program    <C>xmllint</C>    via   the    function <Ref    BookName="IO"
@@ -1114,11 +1114,11 @@ InstallGlobalFunction(XMLValidate, function(str, dtdpath)
   # find xmllint
   xmllint := Filename(DirectoriesSystemPrograms(), "xmllint");
   if xmllint = fail then
-    Error("XMLValidate needs 'xmllint' to be installed.");
+    Info(InfoWarning, 1, "Warning: XMLValidate needs 'xmllint' to be installed.");
     return fail;
   fi;
   if not IsBound(IO_PipeThroughWithError) then
-    Error("XMLValidate needs 'IO_PipeThroughWithError' from the 'IO' package.");
+    Info(InfoWarning, 1, "Warning: XMLValidate needs 'IO_PipeThroughWithError' from the 'IO' package.");
     return fail;
   fi;
   p := IO_PipeThroughWithError(xmllint,
@@ -1171,12 +1171,12 @@ InstallGlobalFunction(ValidateGAPDoc, function(str)
   # path to gapdoc.dtd
   dtdpath := Filename(DirectoriesPackageLibrary("GAPDoc", ""), "");
   if dtdpath = fail then
-    Error("ValidateGAPDoc: need to be run in GAP with GAPDoc.");
+    Info(InfoWarning, 1, "Warning: ValidateGAPDoc: need to be run in GAP with GAPDoc.");
     return fail;
   fi;
   p := XMLValidate(str, dtdpath);
   if p = fail then
-    Error("ValidateGAPDoc: cannot call 'XMLValidate'");
+    Info(InfoWarning, 1, "Warning: ValidateGAPDoc: cannot call 'XMLValidate'");
     return fail;
   fi;
   if p.status.WEXITSTATUS = 0 then

@@ -74,10 +74,11 @@ PackageDoc := [rec(
 Dependencies := rec(
   GAP := "4.7.6",
   NeededOtherPackages := [],
-  SuggestedOtherPackages := [["IO", ">= 2.3"]],
+  SuggestedOtherPackages := [["IO", ">= 4.7"]],
   ExternalConditions := 
             ["(La)TeX installation for converting documents to PDF",
-              "BibTeX installation to produce unified labels for refs"]
+              "BibTeX installation to produce unified labels for refs",
+              "xmllint for optional XML validation" ]
 ),
 AvailabilityTest := ReturnTrue,
 TestFile := "tst/test.tst",

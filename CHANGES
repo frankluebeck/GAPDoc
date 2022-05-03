@@ -2,6 +2,9 @@
 
 1.6.5 -> 1.6.6
 
+- Changed 'XMLValidate' and 'ValidateGAPDoc' to print a warning
+  without error, when the IO package  or 'xmllint' is not available.
+
 - Accelerated build of LaTeX source.
 
 - Introduced optional argument to `ExtractExamples` to include
