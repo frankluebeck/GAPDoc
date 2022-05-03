@@ -622,6 +622,9 @@ GAPDoc2TextProcs.WHOLEDOCUMENT := function(r, par)
   for a in r.index do
     if Length(a) > 5 then
       Add(r.six, [Concatenation(a[4], " ", a[6]), a[3], a[5]]);
+    elif Length(a[2]) > 0 then
+      # subkey given as attribute, no markup
+      Add(r.six, [Concatenation(a[4], " ", a[2]), a[3], a[5]]);
     else
       Add(r.six, [a[4],  a[3], a[5]]);
     fi;
