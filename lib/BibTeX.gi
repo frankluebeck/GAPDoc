@@ -1084,9 +1084,8 @@ InstallGlobalFunction(StringBibAsText, function(arg)
         Append(str, " edition");
         continue;
       elif field in ["note", "notes"] then
-        Append(str, ",\n (");
+        Append(str, ",\n ");
         txt(field);
-        Append(str, ")");
         continue;
       elif field = "chapter" then
         Append(str, ", Chapter ");
