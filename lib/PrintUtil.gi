@@ -11,7 +11,7 @@
 ##  
 
 ##  a hack: type for objects which only exist to print something
-InstallValue(DUMMYTBPTYPE, NewType(NewFamily(""), IsObjToBePrinted));
+BindGlobal("DUMMYTBPTYPE", NewType(NewFamily(""), IsObjToBePrinted));
 
 
 InstallMethod(PrintObj, "IsObjToBePrinted", true, [IsObjToBePrinted], 0, 

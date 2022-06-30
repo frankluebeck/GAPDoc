@@ -12,7 +12,6 @@
 
 ##  a filter for a bit tricky objects
 DeclareFilter("IsObjToBePrinted");
-DeclareGlobalVariable("DUMMYTBPTYPE");
 
 DeclareGlobalFunction("PrintTo1");
 DeclareGlobalFunction("AppendTo1");
