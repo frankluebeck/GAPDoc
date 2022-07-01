@@ -10,7 +10,7 @@ SetPackageInfo( rec(
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
-Version := "1.6.6",
+Version := "1.6.6.dev",
 ##  DD/MM/YYYY format:
 Date := "01/07/2022",
 License := "GPL-2.0-or-later",
@@ -72,7 +72,7 @@ PackageDoc := [rec(
   LongTitle := "example help book for GAPDoc",
   )],
 Dependencies := rec(
-  GAP := "4.7.6",
+  GAP := "4.11.0",
   NeededOtherPackages := [],
   SuggestedOtherPackages := [["IO", ">= 4.7"]],
   ExternalConditions := 
