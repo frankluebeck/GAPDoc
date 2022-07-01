@@ -1031,9 +1031,9 @@ GAPDoc2LaTeXProcs.Log := function(r, str)
 end;
 GAPDoc2LaTeXProcs.Listing := function(r, str)
   if IsBound(r.attributes.Type) then
-    GAPDoc2LaTeXProcs.ExampleLike(r, str, r.attributes.Type, false);
+    GAPDoc2LaTeXProcs.ExampleLike(r, str, r.attributes.Type, true);
   else
-    GAPDoc2LaTeXProcs.ExampleLike(r, str, "", false);
+    GAPDoc2LaTeXProcs.ExampleLike(r, str, "", true);
   fi;
 end;
 

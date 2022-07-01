@@ -1455,7 +1455,7 @@ GAPDoc2HTMLProcs.Log := function(r, par)
   GAPDoc2HTMLProcs.ExampleLike(r, par, "Log", true);
 end;
 GAPDoc2HTMLProcs.Listing := function(r, par)
-  GAPDoc2HTMLProcs.ExampleLike(r, par, "Code", false);
+  GAPDoc2HTMLProcs.ExampleLike(r, par, "Code", true);
 end;
 
 GAPDoc2HTMLProcs.Verb := function(r, par)
