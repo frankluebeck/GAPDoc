@@ -1434,9 +1434,6 @@ end
 
 SEARCHMRHOST := "www.ams.org";
 ##  SEARCHMRHOST := "ams.math.uni-bielefeld.de";
-if not IsBound(SingleHTTPRequest) then
-  SingleHTTPRequest := 0;
-fi;
 InstallGlobalFunction(SearchMR, function(r)
   local trans, uri, i, l, res, extr, a, b;
   trans := [["Author", "AUCN"], ["AuthorRelated","ICN"], ["Title","TI"],
@@ -1550,9 +1547,6 @@ InstallGlobalFunction(SearchMRBib, function(arg)
   fi;
   return SearchMR(r);
 end);
-if SingleHTTPRequest = 0 then
-  Unbind(SingleHTTPRequest);
-fi;
 
 ##  <#GAPDoc Label="LabelsFromBibTeX">
 ##  <ManSection >
