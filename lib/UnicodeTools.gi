@@ -521,7 +521,7 @@ end);
 ##  encoding in which non-ASCII characters are specified by XML character
 ##  entities. The encoding <C>"URL"</C> is for URL-encoded (also called
 ##  percent-encoded strings, as specified in RFC 3986 
-##  (<URL Text="see here">http://www.ietf.org/rfc/rfc3986.txt</URL>).
+##  (<URL Text="see here">https://www.ietf.org/rfc/rfc3986.txt</URL>).
 ##  The listed encodings <C>"LaTeX"</C> and aliases
 ##  cannot be used with <Ref Oper="Unicode" />.
 ##  See the operation <Ref Oper="Encode"/> for mapping  a unicode string 

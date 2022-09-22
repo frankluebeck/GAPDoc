@@ -17,7 +17,7 @@
   <organization>The GAP Group</organization>
   <address>Aachen, St Andrews</address>
   <year>2006</year>
-  <note><URL>http://www.gap-system.org</URL></note>
+  <note><URL>https://www.gap-system.org</URL></note>
   <key>GAP</key>
   <keywords>groups; *; gap; manual</keywords>
 </manual></entry>
@@ -29,7 +29,7 @@
   <title><Wrap Name="Package">IO</Wrap>,
          Bindings for low level <C>C</C> library <C>IO</C>,
          <C>V</C>ersion 2.2</title>
-  <howpublished><URL>http://gap-packages.github.io/io/</URL></howpublished>
+  <howpublished><URL>https://gap-packages.github.io/io/</URL></howpublished>
   <year>2007</year>
   <note><Wrap Name="Package">GAP</Wrap> package</note>
 </misc></entry>

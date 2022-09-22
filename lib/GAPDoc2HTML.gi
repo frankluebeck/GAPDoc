@@ -386,7 +386,7 @@ end;
 ##  <C>GAPDoc2HTMLProcs.MathJaxURL</C>   before   building  the  HTML
 ##  version   of   a   manual.   This  way   a   local   installation
 ##  of   <Package>MathJax</Package>   could   be   used.   See   <URL
-##  Text="http://www.mathjax.org/">http://www.mathjax.org/</URL>  for
+##  Text="https://www.mathjax.org/">https://www.mathjax.org/</URL> for
 ##  more details.<P/>
 ##  
 ##  The following  possibilities for <A>mtrans</A> are  still supported,
