@@ -42,12 +42,11 @@ InstallValue(GAPDoc2LaTeXProcs, rec());
 ##  needs    the   following    &LaTeX;   packages:
 ##  <C>amssymb</C>,  <C>inputenc</C>, <C>makeidx</C>,  <C>color</C>,
 ##  <C>fancyvrb</C>,  <C>psnfss</C>, <C>pslatex</C>, <C>enumitem</C>  
-##  and  <C>hyperref</C>.   These
-##  are  for  example  provided by  the  <Package>teTeX-1.0</Package>
-##  or <Package>texlive</Package> 
-##  distributions  of   &TeX;   (which    in   turn  are   used   for
+##  and  <C>hyperref</C>.   These are  for  example  provided by  the
+##  or <Package>texlive</Package>  distribution  of  &TeX; (which  in
+##  turn  is   used   for
 ##  most  &TeX;   packages  of  current  Linux   distributions);  see
-##  <URL>http://www.tug.org/tetex/</URL>. <P/>
+##  <URL>https://www.tug.org/texlive/</URL>. <P/>
 ##  
 ##  In  particular, the  resulting  <C>pdf</C>-output (and 
 ##  <C>dvi</C>-output)  
