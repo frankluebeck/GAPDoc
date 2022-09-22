@@ -38,7 +38,7 @@ This package provides:
 
 
 For further information see:
-   <http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/>
+   <https://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/>
 
 
 INSTALLATION

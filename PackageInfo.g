@@ -20,7 +20,7 @@ SourceRepository := rec(
 ),
 IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
 ArchiveURL := 
-          "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.6.6",
+          "https://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/GAPDoc-1.6.6",
 ArchiveFormats := ".tar.bz2 .tar.gz -win.zip",
 Persons := [
   rec(
@@ -29,7 +29,7 @@ Persons := [
   IsAuthor := true,
   IsMaintainer := true,
   Email := "Frank.Luebeck@Math.RWTH-Aachen.De",
-  WWWHome := "http://www.math.rwth-aachen.de/~Frank.Luebeck",
+  WWWHome := "https://www.math.rwth-aachen.de/~Frank.Luebeck",
   Place := "Aachen",
   Institution := "Lehrstuhl für Algebra und Zahlentheorie, RWTH Aachen",
   PostalAddress := "Dr. Frank Lübeck\nLehrstuhl für Algebra und Zahlentheorie\nRWTH Aachen\nPontdriesch 14/16\n52062 Aachen\nGERMANY\n"
@@ -40,7 +40,7 @@ Persons := [
   IsAuthor := true,
   IsMaintainer := false,
   #Email := "neunhoef at mcs.st-and.ac.uk",
-  #WWWHome := "http://www.math.rwth-aachen.de/~Max.Neunhoeffer/",
+  #WWWHome := "https://www.math.rwth-aachen.de/~Max.Neunhoeffer/",
   #Place := "St Andrews",
   #Institution := "School of Mathematics and Statistics, St Andrews",
   )
@@ -50,11 +50,11 @@ CommunicatedBy := "Steve Linton (St Andrews)",
 AcceptDate := "10/2006",
               
 README_URL := 
-"http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/README.txt",
+"https://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/README.txt",
 PackageInfoURL := 
-"http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/PackageInfo.g",
+"https://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/PackageInfo.g",
 AbstractHTML := "This package contains a definition of a structure for <span class='pkgname'>GAP</span> (package) documentation, based on XML. It also contains  conversion programs for producing text-, PDF- or HTML-versions of such documents, with hyperlinks if possible.",
-PackageWWWHome := "http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc",
+PackageWWWHome := "https://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc",
 PackageDoc := [rec(
   BookName := "GAPDoc",
   ArchiveURLSubset := ["doc", "example"],
