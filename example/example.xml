@@ -365,7 +365,7 @@ citation: <Cite Key="CR1" Where="(5.22)"/> is an interesting lemma.
 
 There are also URLs:<P/>
 
-<URL>http://www.math.rwth-aachen.de/</URL><P/>
+<URL>https://www.math.rwth-aachen.de/</URL><P/>
 
 Email addresses have a special element:
 <Email>Frank.Luebeck@Math.RWTH-Aachen.De</Email>
@@ -375,7 +375,7 @@ and Homepages another one:
 <Homepage>http://www-groups.mcs.st-and.ac.uk/~neunhoef/</Homepage>
 <P/>
 And here is a link to the <URL>
-<Link>http://www.math.rwth-aachen.de/~Frank.Luebeck/gap/EDIM/index.html#ARCHS</Link>
+<Link>https://www.math.rwth-aachen.de/~Frank.Luebeck/gap/EDIM/index.html#ARCHS</Link>
 <LinkText><Package>EDIM</Package> 
 archives</LinkText></URL>.
 <P/>
@@ -925,7 +925,7 @@ citation: <Cite Key="CR1" Where="(5.22)"/> is an interesting lemma.
 
 There are also URLs:<P/>
 
-<URL>http://www.math.rwth-aachen.de/LDfM/</URL><P/>
+<URL>https://www.math.rwth-aachen.de/LDfM/</URL><P/>
 
 Email addresses have a special element:
 <Email>Frank.Luebeck@Math.RWTH-Aachen.De</Email>
