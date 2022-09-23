@@ -111,21 +111,21 @@ GAPDoc2HTMLProcs.Head1 := "\
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 \n\
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n\
-         \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n\
+         \"https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n\
 \n\
-<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
+<html xmlns=\"https://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
 <head>\n\
 <title>GAP (";
 
-GAPDoc2HTMLProcs.MathJaxURL := "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+GAPDoc2HTMLProcs.MathJaxURL := "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
 
 GAPDoc2HTMLProcs.Head1MathJax := "\
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 \n\
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n\
-         \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n\
+         \"https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n\
 \n\
-<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
+<html xmlns=\"https://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
 <head>\n\
 <script type=\"text/javascript\"\n\
   src=\"MATHJAXURL\">\n\
@@ -136,9 +136,9 @@ GAPDoc2HTMLProcs.Head1Trans := "\
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
 \n\
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\
-         \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\
+         \"https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\
 \n\
-<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n\
+<html xmlns=\"https://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n\
 <head>\n\
 <title>GAP (";
 
@@ -147,11 +147,11 @@ GAPDoc2HTMLProcs.Head1MML := "\
 <?xml-stylesheet type=\"text/xsl\" href=\"mathml.xsl\"?>\n\
 \n\
 <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN\"\n\
-       \"http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd\" [\n\
-       <!ENTITY mathml \"http://www.w3.org/1998/Math/MathML\">\n\
+       \"https://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd\" [\n\
+       <!ENTITY mathml \"https://www.w3.org/1998/Math/MathML\">\n\
        ] >\n\
 \n\
-<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
+<html xmlns=\"https://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
 <head>\n\
 <link rel=\"stylesheet\" type=\"text/css\" href=\"mathml.css\" />\n\
 <title>GAP (";
@@ -347,7 +347,7 @@ end;
 ##  
 ##  The   HTML   code   produced   with   this   converter   conforms
 ##  to   the  W3C   specification   <Q>XHTML   1.0  strict</Q>,   see
-##  <URL>http://www.w3.org/TR/xhtml1</URL>.  First, this  means  that
+##  <URL>https://www.w3.org/TR/xhtml1</URL>.  First, this means  that
 ##  the   HTML   files   are   valid   XML   files.   Secondly,   the
 ##  extension  <Q>strict</Q>   says  in  particular  that   the  code
 ##  doesn't  contain  any explicit  font  or  color information.<P/>
@@ -379,15 +379,15 @@ end;
 ##  and    <C>\]</C>.   With    <Package>MathJax</Package>   webpages
 ##  can   contain   nicely    formatted   scalable   and   searchable
 ##  formulae.   The  resulting   files  link   by  default   to  <URL
-##  Text="http://cdn.mathjax.org">http://cdn.mathjax.org</URL> to get
-##  the  <Package>MathJax</Package>  script  and  fonts.  This  means
-##  that  they   can  only  be   used  on  computers   with  internet
+##  Text="https://www.jsdelivr.com/">https://www.jsdelivr.com/</URL>
+##  to  get the  <Package>MathJax</Package>  script  and fonts.  This
+##  means  that  they  can  only  be  used on computers with internet
 ##  access.   An  alternative   URL   can  be   set  by   overwriting
 ##  <C>GAPDoc2HTMLProcs.MathJaxURL</C>   before   building  the  HTML
 ##  version   of   a   manual.   This  way   a   local   installation
 ##  of   <Package>MathJax</Package>   could   be   used.   See   <URL
-##  Text="https://www.mathjax.org/">https://www.mathjax.org/</URL> for
-##  more details.<P/>
+##  Text="https://www.mathjax.org/">https://www.mathjax.org/</URL> 
+##  for more details.<P/>
 ##  
 ##  The following  possibilities for <A>mtrans</A> are  still supported,
 ##  but since the <Package>MathJax</Package> approach seems much better,
@@ -451,7 +451,7 @@ end;
 ##  
 ##  The  generated   HTML  files refer to  the   file  <F>manual.css</F>
 ##  which   conforms   to   the   W3C   specification   CSS   2.0,   see
-##  <URL>http://www.w3.org/TR/REC-CSS2</URL>,  and  the javascript  file
+##  <URL>https://www.w3.org/TR/REC-CSS2</URL>, and  the javascript  file
 ##  <F>manual.js</F> (only in browsers  which support CSS or javascript,
 ##  respectively;  but   the  HTML  files  are   also  readable  without
 ##  any  of  them).  To  add  a style  <C>mystyle</C>  one  or  both  of

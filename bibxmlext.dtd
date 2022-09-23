@@ -8,13 +8,13 @@
   - specified for LaTeX, or actually its content model.
   -
   - It is a variation of a file bibxml.dtd developed by the project
-  -   http://bibtexml.sf.net/
+  -   https://bibtexml.sf.net/
   - 
   - For documentation on BibTeX, see
-  -   http://www.ctan.org/tex-archive/biblio/bibtex/distribs/doc/
+  -   https://tug.org/bibtex/
   -
   - A previous version of the code originally developed by
-  - Vidar Bronken Gundersen, http://bibtexml.sf.net/
+  - Vidar Bronken Gundersen, https://bibtexml.sf.net/
   - Reuse and repurposing is approved as long as this
   - notification appears with the code.
   -

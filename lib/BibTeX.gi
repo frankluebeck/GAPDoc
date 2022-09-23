@@ -689,7 +689,7 @@ BindGlobal("LaTeXToHTMLString", function(str)
                 ["\\'a","&aacute;"], ["\\`a","&agrave;"],
                 ["\\c{c}", "&ccedil;"], ["\\c c", "&ccedil;"], 
                 # long Hungarian umlaut, substituted by unicode entity
-                #    (see http://www.unicode.org/charts/)
+                #    (see https://www.unicode.org/charts/)
                 ["\\H{o}", "&#x0151;"], ["\\H o", "&#x0151;"],
                 ["\\'A","&Aacute;"], ["\\'I","&Iacute;"], ["\\'O","&Oacute;"],
                 ["\\'U","&Uacute;"], ["\\'i","&iacute;"],
@@ -788,7 +788,7 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
       mrnumber:= mrnumber{ [ 1 .. Position( mrnumber, ' ' ) - 1 ] };
     fi;
     Append(res, Concatenation(
-      "<p class='BibEntry'>\n[<span class='BibKeyLink'><a href=\"http://www.ams.org/mathscinet-getitem?mr=",
+      "<p class='BibEntry'>\n[<span class='BibKeyLink'><a href=\"https://www.ams.org/mathscinet-getitem?mr=",
       mrnumber, "\">", key, "</a></span>]   "));
   else
     Append(res, Concatenation("<p class='BibEntry'>\n[<span class='BibKey'>", 
@@ -1206,7 +1206,7 @@ InstallGlobalFunction(StringBibAsMarkdown, function( arg )
   if IsBound( r.mrnumber ) then
     Append( str, "[" );
     txt( "Label", s );
-    Append( str, "](http://www.ams.org/mathscinet-getitem?mr=" );
+    Append( str, "](https://www.ams.org/mathscinet-getitem?mr=" );
     if ' ' in r.mrnumber then
       Append( str, r.mrnumber{ [ 1 .. Position( r.mrnumber, ' ' )-1 ] } );
     else
@@ -1326,7 +1326,7 @@ end);
 ##  <Heading>Getting &BibTeX; entries from 
 ##           <Package>MathSciNet</Package></Heading>
 ##  We provide utilities to access the <URL
-##  ><Link>http://www.ams.org/mathscinet/</Link><LinkText><Package>
+##  ><Link>https://www.ams.org/mathscinet/</Link><LinkText><Package>
 ##  MathSciNet</Package></LinkText></URL> 
 ##  data base from within GAP. The first condition for this to work is that 
 ##  one of the programs <C>wget</C> or <C>curl</C> is installed on your system.
@@ -1346,7 +1346,7 @@ end);
 ##  <Description>
 ##  The first function <Ref Func="SearchMR"/> provides the same functionality 
 ##  as the Web interface <URL
-##  ><Link>http://www.ams.org/mathscinet/</Link><LinkText><Package>
+##  ><Link>https://www.ams.org/mathscinet/</Link><LinkText><Package>
 ##  MathSciNet</Package></LinkText></URL>. The query strings must be given as
 ##  a record, and the following components of this record are recognized:
 ##  <C>Author</C>, <C>AuthorRelated</C>, <C>Title</C>, <C>ReviewText</C>, 

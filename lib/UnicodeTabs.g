@@ -1223,7 +1223,7 @@ InstallValue(LaTeXUnicodeTable,
 # Some translations of unicode characters (codepoint in first position
 # of each entry) to "simpler" ones, often ASCII or sequence of ASCII
 # characters. This table is started using  the  "transtab" data by
-# Markus Kuhn (http://www.cl.cam.ac.uk/~mgk25/download/transtab.tar.gz)
+# Markus Kuhn (https://www.cl.cam.ac.uk/~mgk25/download/transtab.tar.gz)
 InstallValue(SimplifiedUnicodeTable, [
 [160,32],
 [161,33],

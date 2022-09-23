@@ -496,7 +496,7 @@ end);
 ##  <Description>
 ##  Unicode characters are described by their <Emph>codepoint</Emph>, an
 ##  integer in the range from <M>0</M> to <M>2^{21}-1</M>. 
-##  For details about unicode, see <URL>http://www.unicode.org</URL>.<P/>
+##  For details about unicode, see <URL>https://www.unicode.org</URL>.<P/>
 ##  
 ##  The function <Ref Oper="UChar"/> wraps an integer <A>num</A> into
 ##  a &GAP; object lying in the filter <Ref Filt="IsUnicodeCharacter"/>.

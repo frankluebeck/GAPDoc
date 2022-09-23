@@ -31,7 +31,7 @@ in Chapter&nbsp;<Ref Chap="ch:conv"/>.
 
 The definition  of the  &GAPDoc; format uses  XML, the  <Q>eXtendible Markup
 Language</Q>.  This  is a  standard  (defined  by  the W3C  consortium,  see
-<URL>http://www.w3c.org</URL>) which lays down a syntax for adding markup to
+<URL>https://www.w3c.org</URL>) which lays down a syntax for adding markup to
 a document  or to  some data.  It allows to  define document  structures via
 introducing markup <E>elements</E> and  certain relations between them. This
 is done  in a  <E>document type  definition</E>. The  file <F>gapdoc.dtd</F>

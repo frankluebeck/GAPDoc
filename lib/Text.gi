@@ -1159,7 +1159,7 @@ fi;
 ##  string  contains  only  printable  ASCII   characters  and  is  used  in
 ##  various  data  transfer  protocols  (<C>MIME</C>  encoded  emails,  weak
 ##  password   encryption,  ...).   We   use  the   specification  in   <URL
-##  Text="RFC&#160;2045">http://tools.ietf.org/html/rfc2045</URL>.<P/>
+##  Text="RFC&#160;2045">https://www.rfc-editor.org/rfc/rfc2045</URL>.<P/>
 ##  
 ##  The second function  has the reverse functionality. Here  we also accept
 ##  the characters  <C>-_</C> instead of  <C>+/</C> as last  two 

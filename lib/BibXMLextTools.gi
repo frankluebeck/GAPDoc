@@ -319,7 +319,7 @@ end);
 ##  The record <C>HeuristicTranslationsLaTeX2XML</C> mainly contains
 ##  translations of &LaTeX; macros for special characters which were found 
 ##  in hundreds of &BibTeX; entries from 
-##  <URL Text="MathSciNet">http://www.ams.org/mathscinet/</URL>. Just look at
+##  <URL Text="MathSciNet">https://www.ams.org/mathscinet/</URL>. Just look at
 ##  this record if you want to know how it works. It is easy to extend, and if
 ##  you have improvements which may be of general interest, please send them 
 ##  to the &GAPDoc; author.

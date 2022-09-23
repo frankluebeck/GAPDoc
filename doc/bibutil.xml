@@ -3,8 +3,7 @@
 <Heading>Utilities for Bibliographies</Heading>
 
 A  standard for  collecting  references (in  particular to  mathematical
-texts) is &BibTeX; 
-(<URL>http://www.ctan.org/tex-archive/biblio/bibtex/distribs/doc/</URL>). 
+texts) is &BibTeX; (<URL>https://tug.org/bibtex/</URL>). 
 A disadvantage of &BibTeX; is that the format of the
 data is specified  with the use by  &LaTeX; in mind. The  data format is
 less suited  for conversion to other  document types like plain  text or
@@ -63,7 +62,7 @@ bibliographical data in &GAPDoc;, but the format and the tools are certainly
 useful for other purposes as well.<P/>
 
 We started from a DTD <F>bibxml.dtd</F> which is publicly available, say
-from <URL>http://bibtexml.sf.net/</URL>. This is essentially a
+from <URL>https://bibtexml.sf.net/</URL>. This is essentially a
 reformulation of the definition of the &BibTeX; format, including
 several of some widely used further fields. This has already the
 advantage that a generic XML parser can check  the validity of the
@@ -89,7 +88,7 @@ formulae which have a well defined plain text representation can be
 given in <C>&lt;M></C>-elements.</Item>
 <Mark>Encoding</Mark>
 <Item>Note that in XML files we can use the full range of unicode
-characters, see <URL>http://www.unicode.org/</URL>. All non-ASCII
+characters, see <URL>https://www.unicode.org/</URL>. All non-ASCII
 characters should be specified as unicode characters. This makes dealing
 with special characters easy for plain text or HTML, only for use with 
 &LaTeX; some sort of translation is necessary.</Item>
