@@ -10,18 +10,6 @@
 ##  strings.
 ##  
 
-##  some character lists
-DeclareGlobalVariable("WHITESPACE");
-DeclareGlobalVariable("CAPITALLETTERS");
-DeclareGlobalVariable("SMALLLETTERS");
-DeclareGlobalVariable("LETTERS");
-DeclareGlobalVariable("HEXDIGITS");
-DeclareGlobalVariable("DIGITS");
-DeclareGlobalVariable("BOXCHARS");
-
-##  record containing ANSI terminal text attributes
-DeclareGlobalVariable("TextAttr");
-
 ##  some utility functions for strings
 DeclareGlobalFunction("PositionLinenumber");
 DeclareGlobalFunction("NumberOfLines");

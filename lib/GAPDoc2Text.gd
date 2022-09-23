@@ -11,14 +11,11 @@
 ##  document on screen (GAP online help).
 ##  
 
-DeclareGlobalVariable("GAPDoc2TextProcs");
-
 DeclareGlobalFunction("GAPDoc2Text");
 
 DeclareGlobalFunction("GAPDoc2TextPrintTextFiles");
 
-# Just use this variable, will be really assigned in the .gi file.
-DeclareGlobalVariable("GAPDocTextTheme");
+BindGlobal("GAPDocTextTheme", rec());
 DeclareGlobalFunction("SetGAPDocTextTheme");
 
 

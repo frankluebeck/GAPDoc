@@ -13,15 +13,6 @@
 
 # for some recode information and functions for the ISO-8859 character sets
 BindGlobal("UNICODE_RECODE", rec());
-# more a hack, some unicode characters can be translated to LaTeX with
-# this table: this is a set of pairs [ codepoint, LaTeX text ]
-DeclareGlobalVariable("LaTeXUnicodeTable");
-# similar for simplification to ASCII
-DeclareGlobalVariable("SimplifiedUnicodeTable");
-# and for translation to lower case
-DeclareGlobalVariable("LowercaseUnicodeTable");
-# width of unicode characters on terminal
-DeclareGlobalVariable("WidthUnicodeTable");
 
 ##  declarations of unicode characters and strings as GAP objects
 DeclareFilter("IsUnicodeString", IsString and IsHomogeneousList and

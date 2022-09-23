@@ -46,16 +46,16 @@
 ##  </ManSection>
 ##  <#/GAPDoc>
 ##  
-InstallValue(WHITESPACE, " \n\t\r");
-InstallValue(CAPITALLETTERS, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+BindGlobal("WHITESPACE", " \n\t\r");
+BindGlobal("CAPITALLETTERS", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
 IsSet(CAPITALLETTERS);
-InstallValue(SMALLLETTERS, "abcdefghijklmnopqrstuvwxyz");
+BindGlobal("SMALLLETTERS", "abcdefghijklmnopqrstuvwxyz");
 IsSet(SMALLLETTERS);
-InstallValue(LETTERS, Concatenation(CAPITALLETTERS, SMALLLETTERS));
+BindGlobal("LETTERS", Concatenation(CAPITALLETTERS, SMALLLETTERS));
 IsSet(LETTERS);
-InstallValue(DIGITS, "0123456789");
-InstallValue(HEXDIGITS, "0123456789ABCDEFabcdef");
-InstallValue(BOXCHARS, "─│┌┬┐├┼┤└┴┘━┃┏┳┓┣╋┫┗┻┛═║╔╦╗╠╬╣╚╩╝");
+BindGlobal("DIGITS", "0123456789");
+BindGlobal("HEXDIGITS", "0123456789ABCDEFabcdef");
+BindGlobal("BOXCHARS", "─│┌┬┐├┼┤└┴┘━┃┏┳┓┣╋┫┗┻┛═║╔╦╗╠╬╣╚╩╝");
 
 MakeImmutable(WHITESPACE);
 MakeImmutable(CAPITALLETTERS);
@@ -143,7 +143,7 @@ end);
 ##  
 ##  <#/GAPDoc>
 ##  
-InstallValue(TextAttr, rec());
+BindGlobal("TextAttr", rec());
 TextAttr.CSI := "\033[";
 TextAttr.reset := Concatenation(TextAttr.CSI, "0m");
 TextAttr.normal := Concatenation(TextAttr.CSI, "22m");

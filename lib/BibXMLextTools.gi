@@ -590,8 +590,7 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
 end);
 
 # Heuristic LaTeX to BibXML markup translations
-InstallValue(HeuristicTranslationsLaTeX2XML,  rec(
-CharacterMarkup := [
+HeuristicTranslationsLaTeX2XML.CharacterMarkup := [
       ["\\accent127", "\\\""],
       ["{\\\"a}", "ä"],
       ["{\\\"{a}}", "ä"],
@@ -841,27 +840,27 @@ CharacterMarkup := [
       [ "\\sf\n", "\\sf " ],
       # delete hyphenation hints, should be done by end user
       [ "\\-", "" ]
-],
+];
 
-RepeatedTranslations:= [
+HeuristicTranslationsLaTeX2XML.RepeatedTranslations:= [
       [ "_ ", "_" ],
       [ "^ ", "^" ],
       [ "\\sf  ", "\\sf " ],
-],
+];
 
-TranslationsOfPairs := [
+HeuristicTranslationsLaTeX2XML.TranslationsOfPairs := [
       [ "\\sqrt{", "}", "\\sqrt{{", "}}" ],
       [ "\\sqrt{{{", "}}}", "\\sqrt{{", "}}" ],
       [ "^{", "}", "^{{", "}}" ],
       [ "^{{{", "}}}", "^{{", "}}" ],
       [ "_{", "}", "_{{", "}}" ],
       [ "_{{{", "}}}", "_{{", "}}" ],
-],
+];
 
 
 ##  replace <start>...<eend> by <rstart>...<rend>
 #T would of course be better to prescribe a MATCHING of brackets ...
-TranslationOfOnePair:= function( str, start, eend, rstart, rend )
+HeuristicTranslationsLaTeX2XML.TranslationOfOnePair:= function( str, start, eend, rstart, rend )
   local pos, pos2;
 
   pos:= 0;
@@ -879,8 +878,7 @@ TranslationOfOnePair:= function( str, start, eend, rstart, rend )
     fi;
   od;
   return str;
-end,
-));
+end;
 
 # SubstitutionSublist is not good enough when a pure macro must be
 # substituted (don't substitute \pm in \pmod).

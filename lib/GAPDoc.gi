@@ -720,7 +720,7 @@ end);
 ##  <#/GAPDoc>
 
 # language dependent string used in converted documents
-InstallValue(GAPDocTexts, rec());
+BindGlobal("GAPDocTexts", rec());
 # default is english
 GAPDocTexts.english := rec(
   # for title page

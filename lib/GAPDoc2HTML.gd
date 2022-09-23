@@ -11,7 +11,7 @@
 ##  document with a Web-browser.
 ##  
  
-DeclareGlobalVariable("GAPDoc2HTMLProcs");
+BindGlobal("GAPDoc2HTMLProcs", rec());
 
 DeclareGlobalFunction("GAPDoc2HTML");
 

@@ -39,7 +39,7 @@
 ##  and LaTeX must be run first. This produces a .pnr file.
 ##  
 
-InstallValue(GAPDoc2TextProcs, rec());
+BindGlobal("GAPDoc2TextProcs", rec());
 
 ##  Some text attributes for display on ANSI terminals
 ##  We do all the formatting with not used escape sequences of form

@@ -179,8 +179,6 @@ GAPDoc2TextProcs.OtherThemes.raggedright := rec(
   flush := "left",
 );
 
-InstallValue(GAPDocTextTheme, rec());
-
 # this is only relevant for HPCGAP, record is used by the handler functions
 # in the GAP help system
 if IsBound(HPCGAP) then

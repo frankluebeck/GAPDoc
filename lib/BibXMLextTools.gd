@@ -32,5 +32,4 @@ DeclareGlobalFunction("StringBibXMLEntry");
 
 # utilities
 DeclareGlobalFunction("SortKeyRecBib");
-DeclareGlobalVariable("HeuristicTranslationsLaTeX2XML");
-
+BindGlobal("HeuristicTranslationsLaTeX2XML", rec());

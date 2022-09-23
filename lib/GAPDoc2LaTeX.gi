@@ -21,7 +21,6 @@
 ##  commands  we  add some  commands  which  cause  LaTeX to  produce  a
 ##  GAP  readable .pnr  file which  contains  the page  numbers for  all
 ##  subsections.
-InstallValue(GAPDoc2LaTeXProcs, rec());
 
 ##  <#GAPDoc Label="GAPDoc2LaTeX">
 ##  <ManSection >

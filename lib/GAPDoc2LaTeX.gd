@@ -11,7 +11,7 @@
 ##  by LaTeX and pdfLaTeX.
 ##  
 
-DeclareGlobalVariable("GAPDoc2LaTeXProcs");
+BindGlobal("GAPDoc2LaTeXProcs", rec());
 
 DeclareGlobalFunction("GAPDoc2LaTeX");
 

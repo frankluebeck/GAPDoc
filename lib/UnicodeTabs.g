@@ -14,7 +14,7 @@
 # This table translates some unicode characters to LaTeX code. It is started
 # with data from various data files for supporting UTF-8 in LaTeX,
 # ("ucs" package, "enctex")
-InstallValue(LaTeXUnicodeTable,
+BindGlobal("LaTeXUnicodeTable",
  [
  # we actually start with the ASCII characters which are special characters
  # in  LaTeX
@@ -1225,7 +1225,7 @@ InstallValue(LaTeXUnicodeTable,
 # of each entry) to "simpler" ones, often ASCII or sequence of ASCII
 # characters. This table is started using  the  "transtab" data by
 # Markus Kuhn (https://www.cl.cam.ac.uk/~mgk25/download/transtab.tar.gz)
-InstallValue(SimplifiedUnicodeTable, [
+BindGlobal("SimplifiedUnicodeTable", [
 [160,32],
 [161,33],
 [162,99],
@@ -2316,7 +2316,7 @@ InstallValue(SimplifiedUnicodeTable, [
 
 # map to lower case, extracted from UnicodeData.txt field 14
 # [get uppercase map by Set(List(lcmap, Reverse));  ]
-InstallValue(LowercaseUnicodeTable, [
+BindGlobal("LowercaseUnicodeTable", [
 [65,97],[66,98],[67,99],[68,100],[69,101],[70,102],
 [71,103],[72,104],[73,105],[74,106],[75,107],
 [76,108],[77,109],[78,110],[79,111],[80,112],
@@ -2543,7 +2543,7 @@ IsSet(LowercaseUnicodeTable);
 # -1 (invalid/control) character) is returned.
 # entry [pos, w] means that unicode character p has width w when pos <= p
 # < the pos part of the next entry
-InstallValue(WidthUnicodeTable,
+BindGlobal("WidthUnicodeTable",
 [
 [0,0],
 [32,1],

@@ -36,5 +36,4 @@ BindGlobal("InfoGAPDoc", NewInfoClass("InfoGAPDoc"));
 SetInfoLevel(InfoGAPDoc, 1);
 SetInfoHandler(InfoGAPDoc, PlainInfoHandler);
 
-DeclareGlobalVariable("GAPDocTexts");
 DeclareGlobalFunction("SetGapDocLanguage");

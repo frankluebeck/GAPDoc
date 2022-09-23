@@ -61,8 +61,6 @@ end);
 
     
 
-InstallValue(GAPDoc2HTMLProcs, rec());
-
 ##  Some text attributes ([begin, end] pairs)
 GAPDoc2HTMLProcs.TextAttr := rec();
 GAPDoc2HTMLProcs.TextAttr.Heading := ["<span class=\"Heading\">", "</span>"];
