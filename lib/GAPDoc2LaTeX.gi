@@ -978,7 +978,10 @@ GAPDoc2LaTeXProcs.ExampleLike := function(r, str, label, findprompts)
   if findprompts then
     comchars := "";
     for c in Concatenation("!@|", LETTERS) do
-      if not c in cont then
+      if not c in cont and
+         not c in "Verbatim" and
+         not c in "gapinput" and
+         not c in "gapbrkprompt" then
         Add(comchars, c);
         if Length(comchars) = 3 then
           break;
