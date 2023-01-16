@@ -875,7 +875,7 @@ end;
 GAPDoc2TextProcs.SectionNumber := function(count, sect)
   local   res;
   res := "";
-  if IsString(count[1]) or count[1]>0 then
+  if IsString(count[1]) or count[1]>=0 then
     Append(res, String(count[1]));
   else
     res := "";
@@ -884,7 +884,7 @@ GAPDoc2TextProcs.SectionNumber := function(count, sect)
     return res;
   fi;
   Add(res, '.');
-  if count[2]>0 then
+  if count[2]>=0 then
     Append(res, String(count[2]));
   fi;
   if sect="Section" then
