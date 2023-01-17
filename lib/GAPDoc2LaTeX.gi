@@ -978,7 +978,9 @@ GAPDoc2LaTeXProcs.ExampleLike := function(r, str, label, findprompts)
   if findprompts then
     comchars := "";
     for c in Concatenation("!@|", LETTERS) do
-      if not c in cont then
+      if not c in cont and 
+         # avoid letters in used command names
+         not c in "Vabdegikmnoprtu" then
         Add(comchars, c);
         if Length(comchars) = 3 then
           break;
