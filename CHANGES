@@ -1,5 +1,13 @@
                        CHANGES of the GAPDoc package
 
+1.6.6 -> 1.6.7
+
+- Fixed a few problems with special characters in the LaTeX/PDF version
+  of manuals in texts shown in typewriter font (e.g., "--" was sometimes
+  displayed as single "-").
+
+- Updated various URLs.
+
 1.6.5 -> 1.6.6
 
 - Changed 'XMLValidate' and 'ValidateGAPDoc' to print a warning

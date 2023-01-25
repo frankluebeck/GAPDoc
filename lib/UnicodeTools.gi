@@ -880,7 +880,7 @@ end;
 # non-ASCII characters to LaTeX code, if known from LaTeXUnicodeTable
 # args: unicodestring[, leavemarkup[, leaveutf8]]
 UNICODE_RECODE.Encoder.("LaTeX") := function(arg)
-  local ustr, leavemarkup, tt, res, pos, s, n, leaveutf8;
+  local ustr, leavemarkup, tt, res, pos, s, n, leaveutf8, al;
   ustr := arg[1];
   if Length(arg) > 1 then
     leavemarkup := arg[2];
@@ -895,7 +895,8 @@ UNICODE_RECODE.Encoder.("LaTeX") := function(arg)
   tt := LaTeXUnicodeTable;
   res := "";
   for n in IntListUnicodeString(ustr) do
-    pos := Position([ 35, 36, 37, 38, 60, 62, 92, 94, 95, 123, 125, 126], n);
+    al := Set([ 35, 36, 37, 38, 45, 60, 62, 92, 94, 95, 123, 125, 126]);
+    pos := Position(al, n);
     if pos <> fail and not leavemarkup then
       Append(res, tt[pos][2]);
     elif n < 128 then
