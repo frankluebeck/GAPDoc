@@ -1376,9 +1376,9 @@ end;
 
 ##  quoted text
 GAPDoc2HTMLProcs.Q := function(r, str)
-  Append(str, "\"");
+  Append(str, "<q>");
   GAPDoc2HTMLContent(r, str);
-  Append(str, "\"");
+  Append(str, "</q>");
 end;
 
 ##  Package names
