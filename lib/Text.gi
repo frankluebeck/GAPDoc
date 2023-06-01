@@ -775,8 +775,15 @@ InstallGlobalFunction(FormatParagraph, function(arg)
   i := 1;
   lw := Length(words);
   while i <= lw do
+    # make sure that at least first chunk without space is added to
+    # next line (even, if too long)
     s := words[i][1];
-    j := i+1;
+    k := i+1;
+    while k <= lw and IsList(words[k]) do
+      s := s+words[k][1];
+      k := k+1;
+    od;
+    j := k;
     nsp := 0;
     while j <= lw and s+nsp < len do
       if IsInt(words[j]) then
