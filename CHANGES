@@ -2,6 +2,10 @@
 
 1.6.6 -> 1.6.7
 
+- Better handling of very long words in text version.
+
+- Nicer quotation marks in HTML version.
+
 - Fixed a few problems with special characters in the LaTeX/PDF version
   of manuals in texts shown in typewriter font (e.g., "--" was sometimes
   displayed as single "-").
