@@ -21,7 +21,7 @@
   <Author> Max Neunhöffer 
           <Email>neunhoef at mcs.st-and.ac.uk</Email>
   </Author>
-  <Date>July 2022</Date>
+  <Date>February 2024</Date>
   <Address>
   Lehrstuhl für Algebra und Zahlentheorie<Br/>  Pontdriesch
   14/16<Br/> 52062 Aachen<Br/> (Germany)
@@ -33,7 +33,7 @@
             source text. This should enable new users to learn &GAPDoc;
             quickly.
   </Abstract>
-  <Copyright>&copyright; 2000-2022 by Frank Lübeck and Max Neunhöffer
+  <Copyright>&copyright; 2000-2024 by Frank Lübeck and Max Neunhöffer
   </Copyright>
   <Acknowledgements>We thank Lehrstuhl für Algebra und Zahlentheorie
   (former Lehrstuhl D für Mathematik).
