@@ -1247,7 +1247,7 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
     # delete ref, if pointing to current subsection
     if not IsBound(r.attributes.BookName) and 
                  IsBound(GAPDoc2LaTeXProcs._currentSubsection) and 
-                 lab in GAPDoc2LaTeXProcs._currentSubsection then
+                 GAPDoc2LaTeXProcs.DeleteUsBs(lab) in GAPDoc2LaTeXProcs._currentSubsection then
       ref := "";
     fi;
     Append(str, Concatenation("\\texttt{", GAPDoc2LaTeXProcs.EscapeAttrVal(txt), 
