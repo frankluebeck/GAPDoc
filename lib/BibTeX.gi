@@ -768,9 +768,6 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
           r.(i) := str;
         fi;
         r.(i) := LaTeXToHTMLString(r.(i));
-        if i in ["title", "subtitle", "booktitle"] then
-          r.(i) := Filtered(r.(i), x -> not x in "{}");
-        fi;
       fi;
     od;
   fi;
