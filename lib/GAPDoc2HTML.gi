@@ -108,48 +108,31 @@ SetGapDocHTMLOptions := function(arg)
 end;
 
 GAPDoc2HTMLProcs.Head1 := "\
-<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+<!DOCTYPE html>\n\
 \n\
-<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n\
-         \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n\
-\n\
-<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
+<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n\
 <head>\n\
 <title>GAP (";
 
 GAPDoc2HTMLProcs.MathJaxURL := "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
 
 GAPDoc2HTMLProcs.Head1MathJax := "\
-<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+<!DOCTYPE html>\n\
 \n\
-<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\n\
-         \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n\
-\n\
-<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
+<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n\
 <head>\n\
-<script type=\"text/javascript\"\n\
-  src=\"MATHJAXURL\">\n\
-</script>\n\
+<script src=\"MATHJAXURL\"></script>\n\
 <title>GAP (";
 
 GAPDoc2HTMLProcs.Head1Trans := "\
-<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
-\n\
-<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\n\
-         \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n\
+<!DOCTYPE html>\n\
 \n\
 <html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n\
 <head>\n\
 <title>GAP (";
 
 GAPDoc2HTMLProcs.Head1MML := "\
-<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
-<?xml-stylesheet type=\"text/xsl\" href=\"mathml.xsl\"?>\n\
-\n\
-<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN\"\n\
-       \"http://www.w3.org/TR/MathML2/dtd/xhtml-math11-f.dtd\" [\n\
-       <!ENTITY mathml \"https://www.w3.org/1998/Math/MathML\">\n\
-       ] >\n\
+<!DOCTYPE html>\n\
 \n\
 <html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\">\n\
 <head>\n\
@@ -161,8 +144,8 @@ GAPDoc2HTMLProcs.Head2 := "\
 <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\" />\n\
 <meta name=\"generator\" content=\"GAPDoc2HTML\" />\n\
 <link rel=\"stylesheet\" type=\"text/css\" href=\"manual.css\" />\n\
-<script src=\"manual.js\" type=\"text/javascript\"></script>\n\
-<script type=\"text/javascript\">overwriteStyle();</script>\n\
+<script src=\"manual.js\"></script>\n\
+<script>overwriteStyle();</script>\n\
 </head>\n<body onload=\"jscontent()\">\n";
 
 GAPDoc2HTMLProcs.Tail := "\n\
@@ -279,8 +262,7 @@ GAPDoc2HTMLProcs.PutFilesTogether := function(l, r)
     if Length(n.ssnr)=0 or l[i-1]{[1..3]} <> n.ssnr[Length(n.ssnr)] then
       Add(n.ssnr, l[i-1]{[1..3]});
       tt := GAPDoc2HTMLProcs.SectionLabel(r, l[i-1], "Subsection")[2];
-      Append(n.text, Concatenation("<p><a id=\"", tt, "\" name=\"", tt, 
-                                   "\"></a></p>\n"));
+      Append(n.text, Concatenation("<p><a id=\"", tt, "\"></a></p>\n"));
     fi;
 
     Append(n.text, l[i]);
@@ -1606,8 +1588,7 @@ GAPDoc2HTMLProcs.LikeFunc := function(r, par, typ)
   GAPDoc2HTMLProcs.Label(rec(count := r.count, attributes := rec(Name
                                              := lab), root := r.root), par); 
   # adding  hint about the type of the variable  
-  s := Concatenation("<div class=\"func\"><table class=\"func\" ", 
-               "width=\"100%\">", 
+  s := Concatenation("<div class=\"func\"><table class=\"func\">", 
                "<tr><td class=\"tdleft\">", s,
                "</td><td class=\"tdright\">(&nbsp;", typ, 
                "&nbsp;)</td></tr></table></div>\n");
