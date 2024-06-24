@@ -717,7 +717,19 @@ BindGlobal("LaTeXToHTMLString", function(str)
   od;
   # throw away {}'s and "\-"'s
   if Position(str, '{') <> fail then
-    str := Filtered(str, c-> c <> '{' and c <> '}');
+    # ... but don't throw away all { used in Math mode
+    if Position(str, '$') <> fail then
+      str:=SplitString(str, "$");
+      if IsEvenInt(Length(str)) then
+        Add(str, "");
+      fi;
+      for i in [1,3..Length(str)] do
+        str[i] := Filtered(str[i], c-> c <> '{' and c <> '}');
+      od;
+      str := JoinStringsWithSeparator(str, "$");
+    else
+      str := Filtered(str, c-> c <> '{' and c <> '}');
+    fi;
   fi;
   str := ReplacedString(str, "\\-", "");
 
