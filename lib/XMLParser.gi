@@ -242,6 +242,9 @@ InstallGlobalFunction(GetEnt, function(str, pos)
     Info(InfoXMLParser, 1, "#W WARNING: Entity with name `", nam, 
              "' not known!\n#W", "        (Specify in <!DOCTYPE ...> tag or ",
              "in argument to parser!)\n");
+    GAPDocFailure("#W WARNING: Entity with name `", nam,
+             "' not known!\n#W", "        (Specify in <!DOCTYPE ...> tag or ",
+             "in argument to parser!)\n");
     doc := Concatenation("UNKNOWNEntity(", nam, ")");
   else
     doc := ENTITYDICT.(nam);

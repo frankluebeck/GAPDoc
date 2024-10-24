@@ -61,6 +61,7 @@ BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname, opts...)
     if Filename(DirectoriesSystemPrograms(), "pdflatex") = fail then
       Info(InfoGAPDoc, 1, "\n#W WARNING: cannot find 'pdflatex', please install TeX.\n");
       Info(InfoGAPDoc, 1, "#W WARNING: will NOT produce pdf version from LaTeX file.\n");
+      GAPDocFailure("#W WARNING: cannot find 'pdflatex', please install TeX.\n");
     else
       # call latex and pdflatex (with bibtex, makeindex and dvips)
       latex := "latex -interaction=nonstopmode ";
@@ -81,6 +82,8 @@ BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname, opts...)
       if log = fail then
         Info(InfoGAPDoc, 1, "\n#W WARNING: Something wrong, don't find log file ",
                               Filename(path, Concatenation(main, ".log")), "\n");
+        GAPDocFailure("#W WARNING: Something wrong, don't find log file ",
+                              Filename(path, Concatenation(main, ".log")), "\n");
       else
         log := SplitString(log, "\n", "");
         pos := Filtered([1..Length(log)], i-> Length(log[i]) > 0 
@@ -93,6 +96,7 @@ BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname, opts...)
             od;
             Info(InfoGAPDoc, 1, "____________________\n");
           od;
+          GAPDocFailure("#W There were LaTeX errors\n");
         fi;
         pos := Filtered([1..Length(log)], i-> Length(log[i]) > 13 
                                          and log[i]{[1..14]} = "LaTeX Warning:");

@@ -677,6 +677,8 @@ BindGlobal("GAPDocAddBibData", function(r)
   if Length(diff) > 0 then
     Info(InfoGAPDoc, 1, "#W WARNING: could not find these references: \n", 
                                                          diff, "\n");
+    GAPDocFailure("#W WARNING: could not find these references: \n",
+                                                         diff, "\n");
   fi;
   r.bibkeys := keys;
   r.biblabels := labels;
@@ -773,6 +775,8 @@ InstallGlobalFunction(SetGapDocLanguage, function(arg)
   lang := LowercaseString(lang);
   if not IsBound(GAPDocTexts.(lang)) then
     Info(InfoGAPDoc, 1, "#W No texts in language ", lang, " available - ",
+                         "using English.\n");
+    GAPDocFailure("#W No texts in language ", lang, " available - ",
                          "using English.\n");
     Info(InfoGAPDoc, 1, "#W Please, provide translation of GAPDocTexts.",
                           "english in GAPDocTexts.", lang, ".\n");

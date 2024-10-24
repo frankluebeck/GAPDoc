@@ -376,6 +376,7 @@ InstallGlobalFunction(GAPDoc2Text, function(arg)
   if not IsBound(GAPDoc2TextProcs.(name)) then
     Info(InfoGAPDoc, 1, "#W WARNING: Don't know how to process element ", name, 
           " ---- ignored\n");
+    GAPDocFailure("#W WARNING: Don't know how to process element ", name, "\n");
   else
     GAPDoc2TextProcs.(r.name)(r, str);
   fi;
@@ -834,6 +835,7 @@ GAPDoc2TextProcs.URL := function(arg)
     rr := First(r.content, a-> a.name = "Link");
     if rr = fail then
       Info(InfoGAPDoc, 1, "#W missing <Link> element for text ", txt, "\n");
+      GAPDocFailure("#W missing <Link> element for text ", txt, "\n");
       s := "MISSINGLINK";
     else
       s := "";
@@ -1509,6 +1511,8 @@ GAPDoc2TextProcs.Ref := function(r, str)
         if GAPDoc2TextProcs.FirstRun <> true then
           Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
+          GAPDocFailure("#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
         fi;
         ref := Concatenation(lab, "???");
       else
@@ -1521,6 +1525,8 @@ GAPDoc2TextProcs.Ref := function(r, str)
       else
         if GAPDoc2TextProcs.FirstRun <> true then
           Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
+          GAPDocFailure("#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
         fi;
         ref := Concatenation("???", lab, "???");
@@ -1553,6 +1559,8 @@ GAPDoc2TextProcs.Ref := function(r, str)
         if GAPDoc2TextProcs.FirstRun <> true then
           Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
+          GAPDocFailure("#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
         fi;
         ref := Concatenation(lab, "???");
       else
@@ -1573,6 +1581,8 @@ GAPDoc2TextProcs.Ref := function(r, str)
       else
         if GAPDoc2TextProcs.FirstRun <> true then
           Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
+          GAPDocFailure("#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
         fi;
         ref := Concatenation("???", lab, "???");

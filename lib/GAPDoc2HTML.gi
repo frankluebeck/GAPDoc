@@ -525,6 +525,7 @@ InstallGlobalFunction(GAPDoc2HTML, function(arg)
   if not IsBound(GAPDoc2HTMLProcs.(name)) then
     Info(InfoGAPDoc, 1, "#W WARNING: Don't know how to process element ", name, 
           " ---- ignored\n");
+    GAPDocFailure("#W WARNING: Don't know how to process element ", name, "\n");
   else
     GAPDoc2HTMLProcs.(r.name)(r, str);
   fi;
@@ -953,6 +954,7 @@ GAPDoc2HTMLProcs.URL := function(arg)
     rr := First(r.content, a-> a.name = "Link");
     if rr = fail then
       Info(InfoGAPDoc, 1, "#W missing <Link> element for text ", txt, "\n");
+      GAPDocFailure("#W missing <Link> element for text ", txt, "\n");
       s := "MISSINGLINK";
     else
       s := "";
@@ -1754,6 +1756,8 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
       if GAPDoc2HTMLProcs.FirstRun <> true then
         Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
+        GAPDocFailure("#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
       fi;
       ref := Concatenation(rattr[1], "???", rattr[2]);
     fi;
@@ -1770,6 +1774,8 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
     else
       if GAPDoc2HTMLProcs.FirstRun <> true then
         Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
+        GAPDocFailure("#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
       fi;
       ref := Concatenation(rattr[1], "???", rattr[2]);
@@ -1796,6 +1802,8 @@ GAPDoc2HTMLProcs.Ref := function(r, str)
     else
       if GAPDoc2HTMLProcs.FirstRun <> true then
         Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
+        GAPDocFailure("#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
       fi;
       txt := Concatenation(rattr[1], "???", rattr[2]);
