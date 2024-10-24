@@ -538,6 +538,8 @@ InstallGlobalFunction(StringBibAsXMLext,  function(arg)
         tmp := rec(name := a[1], attributes := rec(), content := ["\n  "]);
         nams := NormalizedNameAndKey(r.(a[1]));
         for b in nams[4] do
+          RemoveCharacters(b[3],"{}");
+          RemoveCharacters(b[1],"{}");
           Add(tmp.content, "  ");
           Add(tmp.content, rec(name := "name", attributes := rec(),
              content := [ rec(name := "first", attributes := rec(),
@@ -1409,8 +1411,10 @@ RECBIBXMLHNDLR.namstringlist := function(l, opts)
       fi;
       if IsBound(opts.namefirstlast) and opts.namefirstlast = true then
         Add(res, Concatenation(f, " ", a[1]));
-      else
+      elif Length(f) > 0 then
         Add(res, Concatenation(a[1], ", ", f));
+      else
+        Add(res, a[1]);
       fi;
     fi;
   od;
@@ -1419,14 +1423,25 @@ end;
 # now the default (BibTeX) version
 AddHandlerBuildRecBibXMLEntry(["author", "editor"], "default", 
 function(entry, elt, default, strings, opts)
-  local res, a;
-  res := RECBIBXMLHNDLR.namstringlist(elt.AsList, opts);
+  local res, l, a;
+  # put multi part last names in {}'s
+  # we use place holders here, because Encode below would escape {}'s
+  l := List(elt.AsList, ShallowCopy);
+  for a in l do
+    if ' ' in a[1] then
+      a[1] := Concatenation("NAMEWITHSPACESTART",a[1],"NAMEWITHSPACESTOP");
+    fi;
+  od;
+  res := RECBIBXMLHNDLR.namstringlist(l, opts);
   res := JoinStringsWithSeparator(res, " and ");
   if IsBound(opts.hasLaTeXmarkup) and opts.hasLaTeXmarkup = true then
-    return Encode(Unicode(res), "LaTeXleavemarkup");
+    res := Encode(Unicode(res), "LaTeXleavemarkup");
   else
-    return Encode(Unicode(res), "LaTeX");
+    res := Encode(Unicode(res), "LaTeX");
   fi;
+  res := SubstitutionSublist(res, "NAMEWITHSPACESTART", "{");
+  res := SubstitutionSublist(res, "NAMEWITHSPACESTOP", "}");
+  return res;
 end);
 # and Text and HTML with only one 'and'
 AddHandlerBuildRecBibXMLEntry(["author", "editor"], ["Text", "HTML"], 
