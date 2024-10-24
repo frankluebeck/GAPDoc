@@ -25,6 +25,15 @@ function ( infoclass, level, list )
     fi;
 end);
 
+BindGlobal("GAPDocFailure",
+function( arg )
+    local opt;
+    opt := ValueOption("GAPDocCollectErrors");
+    if IsList(opt) and IsMutable(opt) then
+      Add(opt, Concatenation(List(arg, String)));
+    fi;
+end);
+
 ReadPackage("GAPDoc", "lib/UnicodeTools.gd");
 ReadPackage("GAPDoc", "lib/PrintUtil.gd");
 ReadPackage("GAPDoc", "lib/Text.gd");

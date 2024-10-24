@@ -119,6 +119,8 @@ InstallGlobalFunction(ComposedDocument, function(arg)
     if str = fail then
       Info(InfoGAPDoc, 1, "#W WARNING: no file ", fname, 
                           " to compose document.\n");
+      GAPDocFailure("#W WARNING: no file ", fname,
+                          " to compose document.\n");
       continue;
     fi;
     posnl := Positions(str, '\n');
@@ -162,6 +164,11 @@ InstallGlobalFunction(ComposedDocument, function(arg)
       Info(InfoGAPDoc, 3, "Found piece ", name, "\n");
       if IsBound(pieces.(name)) then
         Info(InfoGAPDoc, 1, "#W WARNING: overwriting piece with label \"",
+             name,"\"\n#W   Previous occurrence: ",origin.(name)[1],
+             " line ", origin.(name)[2],"\n",
+             "#W   New occurrence: ",fname," line ",PositionSorted(posnl,
+             i+1),"\n");
+        GAPDocFailure("#W WARNING: overwriting piece with label \"",
              name,"\"\n#W   Previous occurrence: ",origin.(name)[1],
              " line ", origin.(name)[2],"\n",
              "#W   New occurrence: ",fname," line ",PositionSorted(posnl,

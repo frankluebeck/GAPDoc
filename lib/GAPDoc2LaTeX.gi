@@ -125,6 +125,7 @@ InstallGlobalFunction(GAPDoc2LaTeX, function(arg)
   if not IsBound(GAPDoc2LaTeXProcs.(name)) then
     Info(InfoGAPDoc, 1, "#W WARNING: Don't know how to process element ", name, 
           " ---- ignored\n");
+    GAPDocFailure("#W WARNING: Don't know how to process element ", name, "\n");
   else
     GAPDoc2LaTeXProcs.(r.name)(r, str);
   fi;
@@ -655,6 +656,7 @@ GAPDoc2LaTeXProcs.URL := function(arg)
     rr := First(r.content, a-> a.name = "Link");
     if rr = fail then
       Info(InfoGAPDoc, 1, "#W missing <Link> element for text ", txt, "\n");
+      GAPDocFailure("#W missing <Link> element for text ", txt, "\n");
       s := "MISSINGLINK";
     else
       s := "";
@@ -1233,6 +1235,8 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
       if ref = fail then
         Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
+        GAPDocFailure("#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
         ref := Concatenation(" (", Encode(Unicode(lab),
                GAPDoc2LaTeXProcs.Encoder)
                , "???)");
@@ -1271,6 +1275,8 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
       if ref = fail then
         Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
+        GAPDocFailure("#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
         ref := Concatenation(" (", lab, "???)");
       else
         # the search text for online help including book name
@@ -1282,6 +1288,8 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
                 GAPDoc2LaTeXProcs._labeledSections.(lab), WHITESPACE), "'}"); 
       else
         Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
+        GAPDocFailure("#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
         ref := "`???'";
       fi;
@@ -1306,6 +1314,8 @@ GAPDoc2LaTeXProcs.Ref := function(r, str)
                                         r.attributes.BookName, lab, 1);
     if ref = fail then
       Info(InfoGAPDoc, 1, "#W WARNING: non resolved reference: ",
+                            r.attributes, "\n");
+      GAPDocFailure("#W WARNING: non resolved reference: ",
                             r.attributes, "\n");
       ref := Concatenation(" ", GAPDoc2LaTeXProcs.EscapeAttrVal(lab), "??? ");
     else
