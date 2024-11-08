@@ -60,7 +60,7 @@ BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname, opts...)
   else
     if Filename(DirectoriesSystemPrograms(), "pdflatex") = fail then
       Info(InfoGAPDoc, 1, "\n#W WARNING: cannot find 'pdflatex', please install TeX.\n");
-      Info(InfoGAPDoc, 1, "#W WARNING: will NOT produce pdf version from LaTeX file.\n");
+      Info(InfoGAPDoc, 1, "#W will NOT produce pdf version from LaTeX file.\n");
     else
       # call latex and pdflatex (with bibtex, makeindex and dvips)
       latex := "latex -interaction=nonstopmode ";
@@ -79,14 +79,14 @@ BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname, opts...)
       log := Filename(path, Concatenation(main, ".log"));
       log := StringFile(log);
       if log = fail then
-        Info(InfoGAPDoc, 1, "\n#W WARNING: Something wrong, don't find log file ",
+        Info(InfoGAPDoc, 1, "\n#W WARNING: Something wrong, cannot find log file ",
                               Filename(path, Concatenation(main, ".log")), "\n");
       else
         log := SplitString(log, "\n", "");
         pos := Filtered([1..Length(log)], i-> Length(log[i]) > 0 
                                                      and log[i][1] = '!');
         if Length(pos) > 0 then
-          Info(InfoGAPDoc, 1, "\n#W There were LaTeX errors:\n");
+          Info(InfoGAPDoc, 1, "\n#W WARNING: There were LaTeX errors:\n");
           for i in pos do
             for j in [i..Minimum(i+2, Length(log))] do
               Info(InfoGAPDoc, 1, log[j], "\n");
@@ -97,7 +97,7 @@ BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname, opts...)
         pos := Filtered([1..Length(log)], i-> Length(log[i]) > 13 
                                          and log[i]{[1..14]} = "LaTeX Warning:");
         if Length(pos) > 0 then
-          Info(InfoGAPDoc, 1, "\n#W There were LaTeX Warnings:\n");
+          Info(InfoGAPDoc, 1, "\n#W WARNING: There were LaTeX Warnings:\n");
           for i in pos do
             for j in [i..Minimum(i+2, Length(log))] do
               Info(InfoGAPDoc, 1, log[j], "\n");

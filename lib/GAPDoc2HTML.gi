@@ -952,7 +952,7 @@ GAPDoc2HTMLProcs.URL := function(arg)
     GAPDoc2HTML(rr, txt);
     rr := First(r.content, a-> a.name = "Link");
     if rr = fail then
-      Info(InfoGAPDoc, 1, "#W missing <Link> element for text ", txt, "\n");
+      Info(InfoGAPDoc, 1, "#W WARNING: missing <Link> element for text ", txt, "\n");
       s := "MISSINGLINK";
     else
       s := "";
@@ -2188,11 +2188,11 @@ InstallGlobalFunction(CopyHTMLStyleFiles, function(dir)
   for f in todo do
     s := StringFile(Filename(d,f));
     if s = fail then
-      Info(InfoGAPDoc, 1, "Cannot read file ", Filename(d,f), "\n");
+      Info(InfoGAPDoc, 1, "#W WARNING: Cannot read file ", Filename(d,f), "\n");
     else
       e := FileString(Filename(dir,f), s);
       if e = fail then
-        Info(InfoGAPDoc, 1, "Cannot write file ", Filename(dir,f), "\n");
+        Info(InfoGAPDoc, 1, "#W WARNING: Cannot write file ", Filename(dir,f), "\n");
       fi;
     fi;
   od;

@@ -772,7 +772,7 @@ InstallGlobalFunction(SetGapDocLanguage, function(arg)
   fi;
   lang := LowercaseString(lang);
   if not IsBound(GAPDocTexts.(lang)) then
-    Info(InfoGAPDoc, 1, "#W No texts in language ", lang, " available - ",
+    Info(InfoGAPDoc, 1, "#W WARNING: No texts in language ", lang, " available - ",
                          "using English.\n");
     Info(InfoGAPDoc, 1, "#W Please, provide translation of GAPDocTexts.",
                           "english in GAPDocTexts.", lang, ".\n");

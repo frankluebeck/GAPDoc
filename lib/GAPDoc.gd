@@ -27,6 +27,12 @@ DeclareGlobalFunction("NormalizedArgList");
 ##  printing some information. You can suppress this by setting the 
 ##  level of <Ref InfoClass="InfoGAPDoc"/> to 0. With level 2 there
 ##  may be some more information for debugging purposes.
+##  
+##  Most info statements in GAPDoc just give information about the progress
+##  of functions. In some cases there are proper warnings which indicate
+##  that something should be fixed. The corresponding messages start with 
+##  the string <C>#W </C> (this can be used in automatized tests).
+##  In even more serious cases of errors the message starts with <C>#E </C>.
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>

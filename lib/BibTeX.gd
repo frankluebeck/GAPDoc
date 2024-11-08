@@ -38,6 +38,9 @@ DeclareGlobalFunction("LabelsFromBibTeX");
 ##  printing some information. You can suppress it by setting the 
 ##  level of <Ref InfoClass="InfoBibTools"/> to 0. With level 2 there
 ##  may be some more information for debugging purposes.
+##  
+##  Messages with warnings (indicating that something should be fixed)
+##  start with  the string <C>#W </C> (this can be used in automatized tests).
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>

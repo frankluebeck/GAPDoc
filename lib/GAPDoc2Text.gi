@@ -833,7 +833,7 @@ GAPDoc2TextProcs.URL := function(arg)
     GAPDoc2TextContent(rr, txt);
     rr := First(r.content, a-> a.name = "Link");
     if rr = fail then
-      Info(InfoGAPDoc, 1, "#W missing <Link> element for text ", txt, "\n");
+      Info(InfoGAPDoc, 1, "#W WARNIMG: missing <Link> element for text ", txt, "\n");
       s := "MISSINGLINK";
     else
       s := "";
