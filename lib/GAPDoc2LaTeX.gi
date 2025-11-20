@@ -455,7 +455,7 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
   s := "";
   GAPDoc2LaTeXContent(l[1], s);
   Append(str, s);
-  Append(str, "\\mbox{}}}\\\\\n\\vfill\n\n");
+  Append(str, "\\\\\n\\mbox{}}}\\\\\n\\vfill\n\n");
   # set title in info part of PDF document
   Append(str, "\\hypersetup{pdftitle=");
   Append(str, s);
@@ -471,7 +471,7 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
   if Length(l)>0 then
     Append(str, "{\\Huge \\textbf{");
     GAPDoc2LaTeXContent(l[1], str);
-    Append(str, "\\mbox{}}}\\\\\n\\vfill\n\n");
+    Append(str, "\\\\\n\\mbox{}}}\\\\\n\\vfill\n\n");
   fi;
   
   # version
