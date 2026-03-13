@@ -49,36 +49,40 @@ div.example {
 
 /* Links to chapters in all files at top and bottom. */
 div.chlinktop {
-  background: #b5b5b5;
-  color: black;
+  background: #22272e;
+  border-color: #3a414a;
+  color: #d7dde5;
 }
 
 div.chlinktop a:hover {
-  background: #fff;
+  background: #2f3742;
 }
 
 div.chlinkbot {
-  background: #b5b5b5;
-  color: black;
+  background: #22272e;
+  border-color: #3a414a;
+  color: #d7dde5;
 }
 
 /* and this is for the "Top", "Prev", "Next" links */
 div.chlinkprevnexttop {
-  background: #b5b5b5;
-  color: black;
+  background: #22272e;
+  border-color: #3a414a;
+  color: #d7dde5;
 }
 
 div.chlinkprevnexttop a:hover {
-  background: #fff;
+  background: #2f3742;
 }
 
 div.chlinkprevnextbot {
-  background: #b5b5b5;
-  color: black;
+  background: #22272e;
+  border-color: #3a414a;
+  color: #d7dde5;
 }
 
 div.chlinkprevnextbot a:hover {
-  background: #fff;
+  background: #2f3742;
 }
 
 div.ContChap div.ContSect:hover div.ContSSBlock {
