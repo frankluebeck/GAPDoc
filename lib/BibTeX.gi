@@ -246,7 +246,8 @@ end);
 ##  <Listing Type="doc/test.bib">
 ##  @string{ j  = "Important Journal" }
 ##  @article{ AB2000, Author=  "Fritz A. First and Sec, X. Y.", 
-##  TITLE="Short", journal = j, year = 2000 }
+##  TITLE="Short", journal = j, year = 2000,
+##  doi = "10.1007/3-540-08755-9_9" }
 ##  </Listing> 
 ##  
 ##  <Example>
@@ -255,7 +256,8 @@ end);
 ##  gap> bib := ParseBibFiles(f);
 ##  [ [ rec( From := rec( BibTeX := true ), Label := "AB2000", 
 ##            Type := "article", author := "Fritz A. First and Sec, X. Y."
-##              , journal := "Important Journal", title := "Short", 
+##              , doi := "10.1007/3-540-08755-9_9", 
+##            journal := "Important Journal", title := "Short", 
 ##            year := "2000" ) ], [ "j" ], [ "Important Journal" ] ]
 ##  </Example>
 ##  </Description>
@@ -436,8 +438,9 @@ end);
 ##  rec( From := rec( BibTeX := true ), Label := "AB2000", 
 ##    Type := "article", author := "First, F. A. and Sec, X. Y.", 
 ##    authororig := "Fritz A. First and Sec, X. Y.", 
-##    journal := "Important Journal", keylong := "firstsec2000", 
-##    printedkey := "FS00", title := "Short", year := "2000" )
+##    doi := "10.1007/3-540-08755-9_9", journal := "Important Journal", 
+##    keylong := "firstsec2000", printedkey := "FS00", title := "Short", 
+##    year := "2000" )
 ##  </Example>
 ##  </Description>
 ##  </ManSection>
@@ -563,6 +566,7 @@ InstallGlobalFunction(StringBibAsBib, function(arg)
                 "reviews", 
                 "source", 
                 "url",
+                "doi",
                 "keywords" ];
 
   Append(res, Concatenation("@", r.Type, "{ ", r.Label));
@@ -921,6 +925,10 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
   if IsBound(r.howpublished) then
     Append(res, Concatenation(",\n<span class='BibHowpublished'>", 
                 r.howpublished, "</span>"));
+  fi;
+  if IsBound(r.doi) then
+    Append(res, Concatenation(",\n <span class='BibDOI'><a href=\"https://doi.org/",
+                r.doi, "\">DOI: ", r.doi, "</a></span>"));
   fi;
   # a private extension of the author
   if IsBound(r.BUCHSTABE) then

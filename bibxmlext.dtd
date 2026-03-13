@@ -59,7 +59,7 @@
                         (isbn | issn)?, 
                         keywords?, language?, lccn?, 
                         location?, mrnumber?, mrclass?, mrreviewer?,
-                        price?, size?, url?, category?, other* ">
+                        price?, size?, url?, doi?, category?, other* ">
 
 <!ENTITY   %  n.common "key?, annotate?, crossref?,
                         %n.user;">
@@ -437,6 +437,7 @@
   - [URL] The WWW Universal Resource Locator that points to the item being
   -       referenced. This often is used for technical reports to point to the
   -       ftp site where the postscript source of the report is located.
+  - [doi]  The DOI of the referenced item.
   - 
   - When using BibTeX with LaTeX you need
   - BibTeX style files to print these data.
@@ -458,6 +459,7 @@
 <!ELEMENT   price           %withMURL; >
 <!ELEMENT   size            %withMURL; >
 <!ELEMENT   url             %withMURL; >
+<!ELEMENT   doi             %withMURL; >
 
 
 <!-- Added by Zeger W. Hendrikse

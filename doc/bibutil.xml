@@ -97,6 +97,9 @@ with special characters easy for plain text or HTML, only for use with
 represented by links in converted formats which allow this. It is used
 in the same way as the element with the same name in &GAPDoc;, see
 <Ref Subsect="URL"/>.</Item>
+<Mark><C>&lt;doi></C></Mark>
+<Item>This element stores the DOI of a bibliography entry. In HTML output
+it is rendered as a link to the DOI resolver.</Item>
 <Mark><C>&lt;Alt Only="..."></C> and <C>&lt;Alt Not="..."></C></Mark>
 <Item>Sometimes information should be given in different ways, depending
 on the output format of the data. This is possible with the 

@@ -103,6 +103,7 @@ MakeImmutable(BibXMLextStructure);
 ##    <price>X</price>*
 ##    <size>X</size>*
 ##    <url>X</url>*
+##    <doi>X</doi>*
 ##    <category>X</category>*
 ##    <other type="X">X</other>*+
 ##  </inbook></entry>
@@ -383,6 +384,7 @@ end);
 ##    <title>Short</title>
 ##    <journal><value key="j"/></journal>
 ##    <year>2000</year>
+##    <doi>10.1007/3-540-08755-9_9</doi>
 ##  </article></entry>]]>
 ##  </Example>
 ##  </Description>
@@ -1114,6 +1116,7 @@ end);
 ##    authorAsList := 
 ##     [ [ "First", "F. A.", "Fritz A." ], 
 ##        [ "Sec\305\221nd", "X. Y.", "X. Y." ] ],
+##    doi := "10.1007/3-540-08755-9_9",
 ##    journal := "Important Journal",
 ##    mycomment := "very useful",
 ##    note := 
@@ -1695,6 +1698,16 @@ function(entry, elt, text, strings, opts)
   return Concatenation( "[", txt, "](", res, ")" );
 end );
 
+AddHandlerBuildRecBibXMLEntry("doi", ["BibTeX", "LaTeX"],
+function(entry, elt, type, strings, opts)
+  local res;
+  RECBIBXMLHNDLR.recode := false;
+  res := ContentBuildRecBibXMLEntry(entry, elt, type, strings, opts);
+  RECBIBXMLHNDLR.recode := true;
+  NormalizeWhitespace(res);
+  return res;
+end);
+
 
 RECBIBXMLHNDLR.Finish := rec();
 # Finish functions
@@ -1825,6 +1838,7 @@ end);
 ##    note =             {Online          data          at         \href
 ##                        {http://www.publish.com/~ImpJ/123#data}   {Bla
 ##                        Bla Publisher}},
+##    doi =              {10.1007/3-540-08755-9_9},
 ##    mycomment =        {very useful},
 ##    printedkey =       {FS00}
 ##  }
@@ -1849,9 +1863,8 @@ end);
 ##  (<span class='BibNumber'>13</span>)
 ##   (<span class='BibYear'>2000</span>),
 ##   <span class='BibPages'>13–25</span><br />
-##  (<span class='BibNote'>Online data at 
-##  <a href="http://www.publish.com/~ImpJ/123#data">Bla Bla 
-##  Publisher</a></span>).
+##  (<span class='BibNote'>Online data at <a href="http://www.publish.com/~ImpJ/123#data">Bla Bla Publisher</a></span>),
+##   <span class='BibDOI'><a href="https://doi.org/10.1007/3-540-08755-9_9">DOI: 10.1007/3-540-08755-9_9</a></span>.
 ##  </p>
 ##  ]]>
 ##  </Log>
