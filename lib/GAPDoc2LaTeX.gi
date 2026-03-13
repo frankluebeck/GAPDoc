@@ -496,13 +496,13 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
   # collect author list for PDF info
   ll := [];
   for a in l do
-    Append(str, "{\\Large \\textbf{");
+    Append(str, "{\\Large \\textbf{\\strut ");
     s := "";
     GAPDoc2LaTeXContent(rec(content := Filtered(a.content, b->
                    not b.name in ["Email", "Homepage", "Address"])), s);
     Append(str, s);
     Add(ll, s);
-    Append(str, "\\mbox{}}}\\\\\n");
+    Append(str, " \\strut\\mbox{}}}\\\\\n");
   od;
   Append(str, "\\hypersetup{pdfauthor=");
   Append(str, JoinStringsWithSeparator(ll, "; "));
