@@ -75,6 +75,9 @@ Dependencies := rec(
   GAP := "4.11.0",
   NeededOtherPackages := [],
   SuggestedOtherPackages := [["IO", ">= 4.7"]],
+  NeededSystemPackages := rec(
+    Ubuntu := [["texlive"], ["texlive-latex-extra"]]
+  ),
   ExternalConditions := 
             ["(La)TeX installation for converting documents to PDF",
               "BibTeX installation to produce unified labels for refs",
