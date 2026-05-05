@@ -104,6 +104,7 @@ MakeImmutable(BibXMLextStructure);
 ##    <size>X</size>*
 ##    <url>X</url>*
 ##    <category>X</category>*
+##    <doi>X</doi>*
 ##    <other type="X">X</other>*+
 ##  </inbook></entry>
 ##  ]]></Example>

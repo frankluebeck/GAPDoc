@@ -59,7 +59,7 @@ gap> ThreeKPlusOneSequence(101);
   </Chapter>
 </Body>
 
-<Bibliography Databases="3k+1" />
+<Bibliography Databases="3k+1" Style="alphaurl" />
 <TheIndex/>
 
 </Book>

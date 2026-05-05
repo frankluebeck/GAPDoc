@@ -245,7 +245,7 @@ available in this format. The reference list in an  output version of the
 document is produced with the empty element 
 
 <Listing Type="from 3k+1.xml">
-<![CDATA[<Bibliography Databases="3k+1" />
+<![CDATA[<Bibliography Databases="3k+1" Style="alphaurl" />
 ]]></Listing>
 
 close  to  the end  of  our  example  file. The  attribute  <Q>Databases</Q>

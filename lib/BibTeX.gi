@@ -563,6 +563,7 @@ InstallGlobalFunction(StringBibAsBib, function(arg)
                 "reviews", 
                 "source", 
                 "url",
+                "doi",
                 "keywords" ];
 
   Append(res, Concatenation("@", r.Type, "{ ", r.Label));
@@ -922,6 +923,11 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
     Append(res, Concatenation(",\n<span class='BibHowpublished'>", 
                 r.howpublished, "</span>"));
   fi;
+  if IsBound(r.doi) then
+    Append(res, Concatenation(",\n<span class='BibDOI'> (<a href=\"", 
+                "http://dx.doi.org/",
+                r.doi, "\">", r.doi,"</a>)</span>"));
+  fi;
   # a private extension of the author
   if IsBound(r.BUCHSTABE) then
     Append(res, Concatenation("<br />\nEinsortiert unter ", 
@@ -1069,7 +1075,7 @@ InstallGlobalFunction(StringBibAsText, function(arg)
                  "publisher", "school",
                  "edition", "series", "volume", "number", "address",
                  "year", "pages", "chapter", "note", "notes", 
-                 "howpublished" ] do
+                 "howpublished", "doi" ] do
     if IsBound(r.(field)) then
       if field = "year" then
         Append(str, " (");
@@ -1099,6 +1105,11 @@ InstallGlobalFunction(StringBibAsText, function(arg)
       elif field = "chapter" then
         Append(str, ", Chapter ");
         txt(field);
+        continue;
+      elif field = "doi" then
+        Append(str, " (http://dx.doi.org/");
+        txt(field);
+        Append(str, ")");
         continue;
       else
         Append(str, ", "); 
@@ -1276,7 +1287,7 @@ InstallGlobalFunction(StringBibAsMarkdown, function( arg )
                  "publisher", "school",
                  "edition", "series", "volume", "number", "address",
                  "year", "pages", "chapter", "note", "notes", 
-                 "howpublished" ] do
+                 "howpublished", "doi" ] do
     if IsBound(r.(field)) then
       if field = "year" then
         Append(str, " (");
@@ -1305,6 +1316,11 @@ InstallGlobalFunction(StringBibAsMarkdown, function( arg )
       elif field = "number" then   # Text version has comma before, HTML not
         Append(str, " "); 
         txt(field);
+      elif field = "doi" then
+        Append(str, " (http://dx.doi.org/");
+        txt(field);
+        Append(str, ")");
+        continue;
       else
         Append(str, ", "); 
         txt(field);

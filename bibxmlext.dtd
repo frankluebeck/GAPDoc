@@ -59,7 +59,7 @@
                         (isbn | issn)?, 
                         keywords?, language?, lccn?, 
                         location?, mrnumber?, mrclass?, mrreviewer?,
-                        price?, size?, url?, category?, other* ">
+                        price?, size?, url?, category?, doi?, other* ">
 
 <!ENTITY   %  n.common "key?, annotate?, crossref?,
                         %n.user;">
