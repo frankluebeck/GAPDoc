@@ -4,7 +4,7 @@
 
 
 <!-- The documentation to the GAPDoc system. 
-     Copyright 2000-2022 by Frank Lübeck and Max Neunhöffer
+     Copyright 2000-2026 by Frank Lübeck and Max Neunhöffer
      Lehrstuhl für Algebra und Zahlentheorie, RWTH Aachen, Germany -->
      
 <Book Name="GAPDoc"> 
@@ -21,9 +21,9 @@
   </Author>
   <Author> Max Neunhöffer 
   </Author>
-  <Date>February 2024</Date>
+  <Date>May 2026</Date>
   <Copyright> <Index>License</Index>
-              &copyright; 2000-2024 by Frank Lübeck and Max Neunhöffer <P/>
+              &copyright; 2000-2026 by Frank Lübeck and Max Neunhöffer <P/>
               &GAPDoc;  is free software; you can redistribute it
               and/or modify it under the terms of the <URL Text="GNU
               General Public License">https://www.fsf.org/licenses/gpl.html</URL>
