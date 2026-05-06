@@ -925,7 +925,7 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
   fi;
   if IsBound(r.doi) then
     Append(res, Concatenation(",\n<span class='BibDOI'> (<a href=\"", 
-                "http://dx.doi.org/",
+                "https://doi.org/",
                 r.doi, "\">", r.doi,"</a>)</span>"));
   fi;
   # a private extension of the author
@@ -1107,7 +1107,7 @@ InstallGlobalFunction(StringBibAsText, function(arg)
         txt(field);
         continue;
       elif field = "doi" then
-        Append(str, " (http://dx.doi.org/");
+        Append(str, " (https://doi.org/");
         txt(field);
         Append(str, ")");
         continue;
@@ -1317,7 +1317,7 @@ InstallGlobalFunction(StringBibAsMarkdown, function( arg )
         Append(str, " "); 
         txt(field);
       elif field = "doi" then
-        Append(str, " (http://dx.doi.org/");
+        Append(str, " (https://doi.org/");
         txt(field);
         Append(str, ")");
         continue;
