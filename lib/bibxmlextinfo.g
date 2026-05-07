@@ -79,7 +79,7 @@ Bibxmlext :=
           "keywords", "optional", "language", "optional", "lccn", "optional", 
           "location", "optional", "mrnumber", "optional", "mrclass", 
           "optional", "mrreviewer", "optional", "price", "optional", "size", 
-          "optional", "url", "optional", "category", "doi", "optional", 
+          "optional", "url", "optional", "category", "optional", "doi",
           "optional", "other", "repeated" ],
       inproceedings := [ "author", "title", "booktitle", "year", "editor", 
           "optional", [ "volume", "or", "number" ], "optional", "series", 
@@ -103,7 +103,7 @@ Bibxmlext :=
           "keywords", "optional", "language", "optional", "lccn", "optional", 
           "location", "optional", "mrnumber", "optional", "mrclass", 
           "optional", "mrreviewer", "optional", "price", "optional", "size", 
-          "optional", "url", "optional", "category", "doi", "optional", 
+          "optional", "url", "optional", "category", "optional", "doi", 
           "optional", "other", "repeated" ],
       mastersthesis := 
        [ "author", "title", "school", "year", "type", "optional", "address", 
