@@ -14,6 +14,7 @@ DeclareGlobalFunction("ParseBibStrings");
 DeclareGlobalFunction("ParseBibFiles");
 DeclareGlobalFunction("NormalizedNameAndKey");
 DeclareGlobalFunction("NormalizeNameAndKey");
+DeclareGlobalFunction("URLDoi");
 DeclareGlobalFunction("WriteBibFile");
 DeclareGlobalFunction("StringBibAsBib");
 DeclareGlobalFunction("PrintBibAsBib");

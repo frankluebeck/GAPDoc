@@ -498,7 +498,17 @@ BindGlobal("AndToCommaNames", function(str)
   fi;
   return str;
 end);
-  
+ 
+# utility for DOI entries
+# this implements the suggestion in the "DOI resolution documentation"
+# (https://www.doi.org/the-identifier/resources/factsheets/doi-resolution-documentation)
+InstallGlobalFunction(URLDoi, function(doi)
+  local enc;
+  enc := Encode(Unicode(doi), "URL", "%\"# ?<>{}^[]`|\+");
+  enc := ReplacedString(enc, "/./", "/.%2F");
+  enc := ReplacedString(enc, "/../", "/..%2F");
+  return Concatenation("https://doi.org/", enc);
+end);
 
 # print out a bibtex entry, the ordering of fields is normalized and
 # type and field names are in lowercase, also some formatting is done
@@ -925,8 +935,7 @@ InstallGlobalFunction(StringBibAsHTML, function(arg)
   fi;
   if IsBound(r.doi) then
     Append(res, Concatenation(",\n<span class='BibDOI'> (<a href=\"", 
-                "http://dx.doi.org/",
-                r.doi, "\">", r.doi,"</a>)</span>"));
+                URLDoi(r.doi), "\">", r.doi,"</a>)</span>"));
   fi;
   # a private extension of the author
   if IsBound(r.BUCHSTABE) then
@@ -1107,8 +1116,8 @@ InstallGlobalFunction(StringBibAsText, function(arg)
         txt(field);
         continue;
       elif field = "doi" then
-        Append(str, " (http://dx.doi.org/");
-        txt(field);
+        Append(str, " (");
+        txt(field, URLDoi(r.doi));
         Append(str, ")");
         continue;
       else
@@ -1317,8 +1326,8 @@ InstallGlobalFunction(StringBibAsMarkdown, function( arg )
         Append(str, " "); 
         txt(field);
       elif field = "doi" then
-        Append(str, " (http://dx.doi.org/");
-        txt(field);
+        Append(str, " (");
+        txt(field, URLDoi(r.doi));
         Append(str, ")");
         continue;
       else
