@@ -457,9 +457,9 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
   Append(str, s);
   Append(str, "\\\\\n\\mbox{}}}\\\\\n\\vfill\n\n");
   # set title in info part of PDF document
-  Append(str, "\\hypersetup{pdftitle=");
+  Append(str, "\\hypersetup{pdftitle={");
   Append(str, s);
-  Append(str, "}\n");
+  Append(str, "}}\n");
   
   # the title is also used for the page headings
   Append(str, "\\markright{\\scriptsize \\mbox{}\\hfill ");
@@ -504,9 +504,9 @@ GAPDoc2LaTeXProcs.TitlePage := function(r, str)
     Add(ll, s);
     Append(str, " \\strut\\mbox{}}}\\\\\n");
   od;
-  Append(str, "\\hypersetup{pdfauthor=");
+  Append(str, "\\hypersetup{pdfauthor={");
   Append(str, JoinStringsWithSeparator(ll, "; "));
-  Append(str, "}\n");
+  Append(str, "}}\n");
 
   # extra comment for front page
   l := Filtered(r.content, a-> a.name = "TitleComment");
