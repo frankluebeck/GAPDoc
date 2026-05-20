@@ -1518,6 +1518,8 @@ guaranteed to be translated accordingly by text (and HTML) converters
  <HorLine/>
   <Row><Item>\mid</Item>            <Item><C>|</C></Item></Row>
  <HorLine/>
+  <Row><Item>\neq</Item>            <Item><C>&lt;&gt;</C></Item></Row>
+ <HorLine/>
   <Row><Item>\pmod</Item>           <Item><C>mod</C></Item></Row>
  <HorLine/>
   <Row><Item>\prime</Item>           <Item><C>'</C></Item></Row>
