@@ -27,10 +27,10 @@ mkdir -p gaptmp
 cd gaptmp
 rsync -av $USEGAP/ ./
 cd pkg
-rm -rf GAPDoc*
+rm -rf GAPDoc* gapdoc*
 echo "Checking out current version into /cache/gaptmp/pkg/"$dirnam" . . ."
-mkdir $dirnam
-cd $dirnam
+mkdir gapdoc
+cd gapdoc
 cp -a $CDIR/.git .
 git co master .
 echo "building documentation (twice for cross refs)"
@@ -50,6 +50,7 @@ rm -f ./makedoc.g ./maketxt ./doku toweb
 
 echo "creating archive . . ."
 cd ..
+mv gapdoc $dirnam
 tar cf $dirnam.tar $dirnam
 bzip2 -9 $dirnam.tar
 echo Cleaning up
