@@ -10,7 +10,7 @@ SetPackageInfo( rec(
 
 PackageName := "GAPDoc",
 Subtitle := "A Meta Package for GAP Documentation",
-Version := "1.6.10",
+Version := "1.6.10.dev",
 ##  DD/MM/YYYY format:
 Date := "20/05/2026",
 License := "GPL-2.0-or-later",
