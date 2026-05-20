@@ -33,7 +33,7 @@
             source text. This should enable new users to learn &GAPDoc;
             quickly.
   </Abstract>
-  <Copyright>&copyright; 2000-2024 by Frank Lübeck and Max Neunhöffer
+  <Copyright>&copyright; 2000-2026 by Frank Lübeck and Max Neunhöffer
   </Copyright>
   <Acknowledgements>We thank Lehrstuhl für Algebra und Zahlentheorie
   (former Lehrstuhl D für Mathematik).
@@ -556,7 +556,7 @@ This is an appendix.
             source text. This should enable new users to learn &GAPDoc;
             quickly.
   </Abstract>
-  <Copyright>&copyright; 2000-2022 by Frank Lübeck and Max Neunhöffer
+  <Copyright>&copyright; 2000-2026 by Frank Lübeck and Max Neunhöffer
   </Copyright>
   <Acknowledgements>We thank Lehrstuhl für Algebra und Zahlentheorie 
   (former Lehrstuhl D für Mathematik).
