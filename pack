@@ -66,8 +66,9 @@ if [ $start'X' == 'yX' ]; then
 fi
 
 echo New archive in ./$dirnam.tar.bz2
-echo If ok then call
+echo If ok then call (-win.zip no longer needed)
 echo "      repack.py "$dirnam".tar.bz2"
+echo "      rm -f "$dirnam"-win.zip"
 
 echo "If you are happy with this archive 
 #tag the current state before"

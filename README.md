@@ -49,7 +49,6 @@ installation. The archive is available in several formats:
 
   - `GAPDoc-XXX.tar.gz`  (GNU tar archive, gzip'ed)
   - `GAPDoc-XXX.tar.bz2` (GNU tar archive, bzip2'ed)
-  - `GAPDoc-XXX-win.zip` (with DOS/Windows style line breaks in text files)
 
 Unpacking generates a subdirectory of form `GAPDoc-x.y.z`. 
 
