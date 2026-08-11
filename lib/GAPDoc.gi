@@ -783,7 +783,7 @@ end);
 # default
 SetGapDocLanguage();
 
-# translation to Russian and Ukrainian, provided by Alexander Konovalov
+# translation to Ukrainian and Russian, provided by Olexandr Konovalov
 GAPDocTexts.russian := rec(
   # for title page
   Titlepage := "Титульная страница",
