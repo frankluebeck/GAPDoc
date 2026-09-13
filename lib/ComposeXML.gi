@@ -98,7 +98,9 @@ InstallGlobalFunction(ComposedDocument, function(arg)
     local res;
     if Length(str) > 6 and str{[1..6]} = "gap://" then
       res := FilenameGAP(str);
-    elif Length(str) = 0 or str[1] <> '/' then
+    # absolute: /x, or on Windows C:/x
+    elif Length(str) = 0 or not (str[1] = '/' or
+        (ARCH_IS_WINDOWS() and Length(str) > 2 and str[2] = ':')) then
       res := Filename(path, str);
     else
       res := str;
