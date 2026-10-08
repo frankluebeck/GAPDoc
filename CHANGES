@@ -1,5 +1,11 @@
                        CHANGES of the GAPDoc package
 
+1.6.8 -> 1.6.11
+
+- Better handling of file paths under Windows.
+
+- Just a number of minor changes.
+
 1.6.7 -> 1.6.8
 
 - Added a "dark" mode for the HTML manuals (experimental).
