@@ -1657,9 +1657,12 @@ InstallGlobalFunction(LabelsFromBibTeX, function(path, keys, bibfiles, style)
   dstr := Filename(d, "");
   auxfile := Filename(d, "temp.aux");
   FileString(auxfile, aux);
-  Exec(Concatenation("(export TEXMFOUTPUT=", dstr, "; cd ", Filename(path, ""), 
+  # run in 'path' via Process, not 'cd', so it may contain spaces
+  Process(path, Filename(DirectoriesSystemPrograms(), "sh"),
+          InputTextUser(), OutputTextUser(), ["-c", Concatenation(
+                 "export TEXMFOUTPUT=", dstr,
                  "; bibtex ", dstr, "/temp > /dev/null 2>&1 ; ",
-                 "grep '^\\\\bibitem' ", dstr, "/temp.bbl > ", dstr, "/out )"));
+                 "grep '^\\\\bibitem' ", dstr, "/temp.bbl > ", dstr, "/out")]);
   out := StringFile(Filename(d, "out"));
   if out = fail then
     Error("Call of 'bibtex' was not successful.\n");

@@ -67,14 +67,16 @@ BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname, opts...)
       # sh-syntax for redirecting stderr and stdout to /dev/null
       null := " > /dev/null 2>&1 ";
       Info(InfoGAPDoc, 1, "4 x pdflatex with bibtex and makeindex, \c");
-      Exec(Concatenation("sh -c \" cd ", Filename(path,""),
-      "; rm -f ", main, ".aux ", main, ".pdf ", main, ".log ",
+      # run in 'path' via Process, not 'cd', so it may contain spaces
+      Process(path, Filename(DirectoriesSystemPrograms(), "sh"),
+      InputTextUser(), OutputTextUser(), ["-c", Concatenation(
+      "rm -f ", main, ".aux ", main, ".pdf ", main, ".log ",
       "; pdf", latex, main, null,
       "; bibtex ", main, null,
       "; pdf", latex, main, null,
       "; makeindex ", main, null,
       "; pdf", latex, main, null,
-      "; pdf", latex, main, null,"\""));
+      "; pdf", latex, main, null)]);
       # check log file for errors, warning, overfull boxes
       log := Filename(path, Concatenation(main, ".log"));
       log := StringFile(log);
@@ -129,9 +131,9 @@ BindGlobal("MakeGAPDocDoc", function(path, main, files, bookname, opts...)
         Info(InfoGAPDoc, 1, "\n#I ERROR: no .pdf file produced (writing incomplete .six file)\n");
         PrintSixFile(Filename(path, "manual.six"), r, bookname);
       else
-        Exec(Concatenation("sh -c \" cd ", Filename(path,""),
-        "; mv ", main, ".pdf manual.pdf; ", 
-        "\""));
+        Process(path, Filename(DirectoriesSystemPrograms(), "mv"),
+        InputTextUser(), OutputTextUser(),
+        [Concatenation(main, ".pdf"), "manual.pdf"]);
         Info(InfoGAPDoc, 1, "\n");
         # read page number information for .six file
         Info(InfoGAPDoc, 1, "#I Writing manual.six file ... \c");
